@@ -4,6 +4,8 @@ using CrytonCoreNext.Stores;
 using CrytonCoreNext.ViewModels;
 using System;
 using System.Windows;
+using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.InformationsServices;
 
 namespace CrytonCoreNext
 {
@@ -18,8 +20,9 @@ namespace CrytonCoreNext
             _ = services
                 .AddSingleton<NavigationStore>()
                 .AddSingleton<ModalNavigationStore>()
-                .AddSingleton<INavigationService>(s => CreateHomeNavigationService(s))
+                .AddSingleton(CreateHomeNavigationService)
                 .AddSingleton<CloseModalNavigationService>()
+                .AddSingleton<ITimeDate, TimeDate>()
                 .AddTransient<HomeViewModel>()      
                 .AddTransient<CryptingViewModel>()
                 .AddTransient<PdfManagerViewModel>()

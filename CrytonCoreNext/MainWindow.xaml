@@ -9,6 +9,7 @@
     xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
     xmlns:views="clr-namespace:CrytonCoreNext.Views"
     Title="Navigation"
+    MinWidth="1800"
     d:DesignHeight="700"
     d:DesignWidth="1700"
     mc:Ignorable="d"

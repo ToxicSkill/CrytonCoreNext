@@ -6,7 +6,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace CrytonCoreNext.Services
+namespace CrytonCoreNext.InformationsServices
 {
     public class Web : IService
     {

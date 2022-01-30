@@ -97,7 +97,7 @@
                 <Label Name="LiveTimeLabel" Content="{Binding CurrentTime}" VerticalAlignment="Top" VerticalContentAlignment="Top" Opacity="0.75"
                        FontSize="200" FontWeight="Normal" Foreground="White"  FontFamily="Lato Light" Height="210" Margin="10,0,0,0" />
                 <Label Name="LiveTimeDayLabel" Content="{Binding CurrentDay}"  VerticalAlignment="Top" Opacity="0.75"
-                       Foreground="{DynamicResource font}" VerticalContentAlignment="Center"
+                       Foreground="White"  VerticalContentAlignment="Center"
                        FontSize="34" FontFamily="Corbel Light" Margin="40,210,0,0" Height="60"/>
 
             </Grid>

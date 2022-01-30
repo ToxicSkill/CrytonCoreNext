@@ -5,7 +5,7 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace CrytonCoreNext.Services
+namespace CrytonCoreNext.InformationsServices
 {
     public class InternetConnection : IService
     {
