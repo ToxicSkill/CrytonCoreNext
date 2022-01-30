@@ -23,6 +23,7 @@ namespace CrytonCoreNext
                 .AddSingleton(CreateHomeNavigationService)
                 .AddSingleton<CloseModalNavigationService>()
                 .AddSingleton<ITimeDate, TimeDate>()
+                .AddSingleton<IInternetConnection, InternetConnection>()
                 .AddTransient<HomeViewModel>()      
                 .AddTransient<CryptingViewModel>()
                 .AddTransient<PdfManagerViewModel>()

@@ -5,6 +5,8 @@ using System;
 using System.Threading.Tasks;
 using CrytonCoreNext.Services;
 using System.Threading;
+using System.Windows.Media;
+using System.Collections.Generic;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -14,15 +16,20 @@ namespace CrytonCoreNext.ViewModels
         private const int MinuteInterval = 1;
 
         private readonly ITimeDate _timeDate;
+        private readonly IInternetConnection _internetConnection;
 
         public ICommand NavigateLoginCommand { get; }
 
         public string CurrentTime { get; private set; }
         public string CurrentDay { get; private set; }
+        public SolidColorBrush FillDiode { get; private set; }
 
-        public HomeViewModel(INavigationService loginNavigationService, ITimeDate timeDate)
+        public HomeViewModel(INavigationService loginNavigationService, 
+            ITimeDate timeDate,
+            IInternetConnection internetConnection)
         {
             _timeDate = timeDate;
+            _internetConnection = internetConnection;
 
             RefreshTime();
             RefreshDay();
@@ -33,8 +40,24 @@ namespace CrytonCoreNext.ViewModels
 
         private void InitializeTimers()
         {
-            _ = RunTimer(TimeSpan.FromSeconds(SecondsInterval), () => RefreshTime());
-            _ = RunTimer(TimeSpan.FromMinutes(MinuteInterval), () => RefreshDay());
+            _ = RunTimer(TimeSpan.FromSeconds(SecondsInterval), 
+                new List<Action>() 
+                { 
+                    () => RefreshTime(),
+                    () => RefreshInternetConnection(),
+                });
+
+            _ = RunTimer(TimeSpan.FromMinutes(MinuteInterval), 
+                new List<Action>() 
+                { 
+                    () => RefreshDay() 
+                });
+        }
+
+        private void RefreshInternetConnection()
+        {
+            FillDiode = _internetConnection.GetColorInternetStatus();
+            OnPropertyChanged(nameof(FillDiode));
         }
 
         private void RefreshTime()
@@ -49,12 +72,15 @@ namespace CrytonCoreNext.ViewModels
             OnPropertyChanged(nameof(CurrentDay));
         }
 
-        private static async Task RunTimer(TimeSpan timeSpan, Action action)
+        private static async Task RunTimer(TimeSpan timeSpan, List<Action> actions)
         {
             var periodicTimer = new PeriodicTimer(timeSpan);
             while (await periodicTimer.WaitForNextTickAsync())
             {
-                action();
+                foreach (var action in actions)
+                {
+                    action();
+                }
             }
         }
     }

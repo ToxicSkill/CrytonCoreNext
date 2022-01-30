@@ -8,15 +8,14 @@ using System.Threading.Tasks;
 
 namespace CrytonCoreNext.InformationsServices
 {
-    public class Web : IService
+    public class Web : IWeb
     {
         public JsonWeb WebInfo { get; set; }
-        public bool Status { get; set; }
+        private bool _status;
 
-        public bool GetStatus()
-        {
-            return Status;
-        }
+
+        public bool GetWebStatus() => _status;
+        
 
         public async Task InitializeService(object obj)
         {
@@ -50,7 +49,7 @@ namespace CrytonCoreNext.InformationsServices
                 }
                 catch (Exception)
                 {
-                    Status = false;
+                    _status = false;
                     return (latitude: -1, longnitude: -1);
                 }
             });
@@ -72,11 +71,11 @@ namespace CrytonCoreNext.InformationsServices
                     address = address.Substring(first, last - first);
                     string info = new WebClient().DownloadString("http://ipinfo.io/" + address);
                     WebInfo = JsonConvert.DeserializeObject<JsonWeb>(info);
-                    Status = true;
+                    _status = true;
                 }
                 catch (Exception)
                 {
-                    Status = false;
+                    _status = false;
                 }
             });
         }

@@ -2,82 +2,85 @@
 using System;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace CrytonCoreNext.InformationsServices
 {
-    public class InternetConnection : IService
+    public class InternetConnection : IInternetConnection
     {
-        private const string PingString = "http://www.google.com";
-        public string InternetStatusString { get; set; }
-        public bool Status { get; set; }
-        public SolidColorBrush InternetSatusColor { get; set; }
-        public string InternetString { get; set; }
+        private const string PingStringFirst = "http://www.google.com";
+        private const string PingStringSecond = "google.com";
+        private const int SecondsDelay = 5;
+        private const int InformationBuffer = 32;
+        private const int TimeoutLimit = 1000;
 
-        public bool GetStatus()
+        private readonly static Color RedColor = Color.FromRgb(255, 0, 0);
+        private readonly static Color GreenColor = Color.FromRgb(0, 255, 0);
+
+        private SolidColorBrush _internetSatusColor = new () { Color = RedColor };
+        private bool _status;
+
+        public InternetConnection()
         {
-            return Status;
+            InitializeTimer();
         }
 
-        public async Task InitializeService(object obj)
+        public bool GetInternetStatus() => _status;
+
+        public SolidColorBrush GetColorInternetStatus() => _internetSatusColor;
+
+        private void InitializeTimer()
         {
-            await Task.Run(() => UpdateInternetStatus()).ConfigureAwait(true);
+            _ = RunTimer(TimeSpan.FromSeconds(SecondsDelay), () => UpdateInternetStatus());
         }
 
-        internal string GetInternetStatusString()
+        private void UpdateInternetStatus()
         {
-            return Status ? "Connected to internet" : "Not connected to internet";
+            _status = CheckForInternetConnection() || CheckForInternetConnectionSecond();
+            _internetSatusColor.Color = _status ? GreenColor : RedColor;
         }
-        internal async Task<bool> GetInternetStatus()
+
+        private static async Task RunTimer(TimeSpan timeSpan, Action action)
         {
-            return await CheckForInternetConnection() || await CheckForInternetConnectionSec();
-        }
-        internal async Task UpdateInternetStatus()
-        {
-            Status = await GetInternetStatus();
-            InternetString = Status ? "Connected to internet" : "Not connected to internet";
-            InternetSatusColor = Status ? new SolidColorBrush(Colors.YellowGreen) : new SolidColorBrush(Colors.Red);
-        }
-        internal SolidColorBrush GetInternetStatusColor()
-        {
-            return Status ? new SolidColorBrush(Colors.YellowGreen) : new SolidColorBrush(Colors.Red);
-        }
-        private async Task<bool> CheckForInternetConnection()
-        {
-            return await Task.Run(() =>
+            var periodicTimer = new PeriodicTimer(timeSpan);
+            while (await periodicTimer.WaitForNextTickAsync())
             {
-                try
-                {
-                    using WebClient client = new();
-                    using System.IO.Stream stream = client.OpenRead(PingString);
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            });
+                action();
+            }
         }
-        private async Task<bool> CheckForInternetConnectionSec()
+
+        private bool CheckForInternetConnection()
         {
-            return await Task.Run(() =>
+            try
             {
-                try
-                {
-                    Ping myPing = new();
-                    string host = "google.com";
-                    byte[] buffer = new byte[32];
-                    int timeout = 1000;
-                    PingOptions pingOptions = new();
-                    PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
-                    return reply.Status == IPStatus.Success;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            });
+                using WebClient client = new();
+                using System.IO.Stream stream = client.OpenRead(PingStringFirst);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool CheckForInternetConnectionSecond()
+        {
+            try
+            {
+                Ping myPing = new();
+                string host = PingStringSecond;
+                byte[] buffer = new byte[InformationBuffer];
+                int timeout = TimeoutLimit;
+                PingOptions pingOptions = new();
+                PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
+                return reply.Status == IPStatus.Success;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
