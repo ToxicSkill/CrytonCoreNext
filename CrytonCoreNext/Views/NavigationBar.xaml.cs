@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace CrytonCoreNext.Components
+namespace CrytonCoreNext.Views
 {
     /// <summary>
     /// Interaction logic for NavigationBar.xaml

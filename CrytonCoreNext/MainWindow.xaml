@@ -2,13 +2,11 @@
     x:Class="CrytonCoreNext.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:components="clr-namespace:CrytonCoreNext.Components"
-    xmlns:custom="clr-namespace:ModalControl;assembly=ModalControl"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
     xmlns:views="clr-namespace:CrytonCoreNext.Views"
-    Title="Navigation"
+    xmlns:ViewModels="clr-namespace:CrytonCoreNext.ViewModels"
+    Title="CrytonNXT"
     MinWidth="1800"
     d:DesignHeight="700"
     d:DesignWidth="1700"
@@ -24,24 +22,24 @@
 
     <Grid>
         <Grid.Resources>
-            <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
+            <DataTemplate DataType="{x:Type ViewModels:HomeViewModel}">
                 <views:HomeView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewmodels:CryptingViewModel}">
+            <DataTemplate DataType="{x:Type ViewModels:CryptingViewModel}">
                 <views:CryptingView />
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type viewmodels:PdfManagerViewModel}">
-                <views:CryptingView />
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type viewmodels:LayoutViewModel}">
-                <components:Layout />
             </DataTemplate>
         </Grid.Resources>
 
-        <custom:Modal Panel.ZIndex="1" IsOpen="{Binding IsOpen}">
-            <ContentControl Content="{Binding CurrentModalViewModel}" />
-        </custom:Modal>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <ContentControl Content="{Binding CurrentViewModel}" />
+        <views:NavigationBar Grid.Column ="0" DataContext="{Binding NavigationView}" />
+
+        <ContentControl
+            Grid.Column="1"
+            Content="{Binding ViewModel}" />
+
     </Grid>
 </Window>

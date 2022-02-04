@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace CrytonCoreNext.ViewModels
+namespace CrytonCoreNext.Abstract
 {
     public class ViewModelBase : INotifyPropertyChanged, IDisposable
     {

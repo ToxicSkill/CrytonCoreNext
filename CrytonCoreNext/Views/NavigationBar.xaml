@@ -1,9 +1,8 @@
 ﻿<UserControl
-    x:Class="CrytonCoreNext.Components.NavigationBar"
+    x:Class="CrytonCoreNext.Views.NavigationBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:CrytonCoreNext.Components"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     MinWidth="250"
     MaxWidth="300"
@@ -45,6 +44,7 @@
     
     <Grid MaxHeight="1000" Margin="20 10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
             <RowDefinition Height="75"/>
             <RowDefinition Height="75"/>
             <RowDefinition Height="75"/>
@@ -150,5 +150,28 @@
             FontSize="22"
             Command="{Binding NavigateLoginCommand}"
             Content="Help" />
+
+
+        <Image Grid.Row="5" Source="/Assets/Inform.png"
+               HorizontalAlignment="Left"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="45">
+            <Image.ToolTip>
+                <ToolTip
+                    Visibility="Visible"
+                    Content="Secure"
+                    Width="150"/>
+            </Image.ToolTip>
+
+        </Image>
+        <Button
+            Grid.Row="5"
+            VerticalAlignment="Center"
+            Margin="65 0 0 0"
+            FontSize="22"
+            Command="{Binding NavigateHomeCommand}"
+            Content="Home" />
     </Grid>
 </UserControl>

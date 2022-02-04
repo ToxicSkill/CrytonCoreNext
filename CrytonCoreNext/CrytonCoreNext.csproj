@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Abstarct\**" />
+    <EmbeddedResource Remove="Abstarct\**" />
+    <None Remove="Abstarct\**" />
+    <Page Remove="Abstarct\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Assets\Back.png" />
     <None Remove="Assets\Cloud.png" />
     <None Remove="Assets\Cogs.png" />
@@ -254,7 +261,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Commands\" />
     <Folder Include="InformationServices\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

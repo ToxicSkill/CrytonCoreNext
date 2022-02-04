@@ -1,34 +1,25 @@
-﻿using CrytonCoreNext.Stores;
+﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Interfaces;
 
 namespace CrytonCoreNext.ViewModels
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase, INavigate
     {
-        private readonly NavigationStore _navigationStore;
-        private readonly ModalNavigationStore _modalNavigationStore;
+        public ViewModelBase ViewModel { get; set; }
 
-        public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
-        public ViewModelBase CurrentModalViewModel => _modalNavigationStore.CurrentViewModel;
-        public bool IsOpen => _modalNavigationStore.IsOpen;
+        public NavigationViewModel NavigationView { get; set; }
 
-        public MainViewModel(NavigationStore navigationStore, ModalNavigationStore modalNavigationStore)
+        public MainViewModel(ViewModelBase homeViewModel,
+            ViewModelBase cryptingViewModel)
         {
-            _navigationStore = navigationStore;
-            _modalNavigationStore = modalNavigationStore;
-
-            _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
-            _modalNavigationStore.CurrentViewModelChanged += OnCurrentModalViewModelChanged;
+            ViewModel = homeViewModel;
+            NavigationView = new (this, homeViewModel, cryptingViewModel);
         }
 
-        private void OnCurrentViewModelChanged()
+        public void Navigate(ViewModelBase viewModel)
         {
-            OnPropertyChanged(nameof(CurrentViewModel));
-        }
-
-        private void OnCurrentModalViewModelChanged()
-        {
-            OnPropertyChanged(nameof(CurrentModalViewModel));
-            OnPropertyChanged(nameof(IsOpen));
+            ViewModel = viewModel;
+            OnPropertyChanged(nameof(ViewModel));
         }
     }
 }

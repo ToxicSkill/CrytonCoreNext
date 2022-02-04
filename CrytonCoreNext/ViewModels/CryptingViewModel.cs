@@ -1,9 +1,4 @@
-﻿using CrytonCoreNext.Commands;
-using CrytonCoreNext.Services;
-using CrytonCoreNext.Stores;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
+﻿using CrytonCoreNext.Abstract;
 
 namespace CrytonCoreNext.ViewModels
 {

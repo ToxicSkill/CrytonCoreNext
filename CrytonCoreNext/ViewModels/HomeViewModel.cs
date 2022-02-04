@@ -1,12 +1,10 @@
-﻿using CrytonCoreNext.Commands;
-using System.Windows.Input;
-using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces;
 using System;
 using System.Threading.Tasks;
-using CrytonCoreNext.Services;
 using System.Threading;
 using System.Windows.Media;
 using System.Collections.Generic;
+using CrytonCoreNext.Abstract;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -18,14 +16,11 @@ namespace CrytonCoreNext.ViewModels
         private readonly ITimeDate _timeDate;
         private readonly IInternetConnection _internetConnection;
 
-        public ICommand NavigateLoginCommand { get; }
-
         public string CurrentTime { get; private set; }
         public string CurrentDay { get; private set; }
         public SolidColorBrush FillDiode { get; private set; }
 
-        public HomeViewModel(INavigationService loginNavigationService, 
-            ITimeDate timeDate,
+        public HomeViewModel(ITimeDate timeDate,
             IInternetConnection internetConnection)
         {
             _timeDate = timeDate;
@@ -34,8 +29,6 @@ namespace CrytonCoreNext.ViewModels
             RefreshTime();
             RefreshDay();
             InitializeTimers();
-
-            NavigateLoginCommand = new NavigateCommand(loginNavigationService);
         }
 
         private void InitializeTimers()

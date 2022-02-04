@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using CrytonCoreNext.Services;
-using CrytonCoreNext.Stores;
 using CrytonCoreNext.ViewModels;
 using System;
 using System.Windows;
@@ -18,17 +16,11 @@ namespace CrytonCoreNext
             IServiceCollection services = new ServiceCollection();
 
             _ = services
-                .AddSingleton<NavigationStore>()
-                .AddSingleton<ModalNavigationStore>()
-                .AddSingleton(CreateHomeNavigationService)
-                .AddSingleton<CloseModalNavigationService>()
-                .AddSingleton<ITimeDate, TimeDate>()
                 .AddSingleton<IInternetConnection, InternetConnection>()
-                .AddTransient<HomeViewModel>()      
-                .AddTransient<CryptingViewModel>()
-                .AddTransient<PdfManagerViewModel>()
-                .AddTransient(CreateNavigationBarViewModel)
-                .AddSingleton<MainViewModel>()
+                .AddSingleton<ITimeDate, TimeDate>()
+                .AddSingleton(CreateHomeViewModel)
+                .AddSingleton(CreateCrytpingViewModel)
+                .AddSingleton(CreateMainWindowViewModel)
                 .AddSingleton(s => new MainWindow()
                 {
                     DataContext = s.GetRequiredService<MainViewModel>()
@@ -39,62 +31,31 @@ namespace CrytonCoreNext
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            INavigationService initialNavigationService = _serviceProvider.GetRequiredService<INavigationService>();
-            initialNavigationService.Navigate();
-
             MainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             MainWindow.Show();
 
             base.OnStartup(e);
         }
 
-        private INavigationService CreatePdfManagerNavigationService(IServiceProvider serviceProvider)
+        private HomeViewModel CreateHomeViewModel(IServiceProvider provider)
         {
-            return new LayoutNavigationService<CryptingViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<CryptingViewModel>(),
-                () => serviceProvider.GetRequiredService<NavigationBarViewModel>());
+            var timeDate = provider.GetService<ITimeDate>();
+            var internetConnection = provider.GetService<IInternetConnection>();
+
+            return new HomeViewModel(timeDate, internetConnection);
         }
 
-        private INavigationService CreateHelpNavigationService(IServiceProvider serviceProvider)
+        private CryptingViewModel CreateCrytpingViewModel(IServiceProvider provider)
         {
-            return new ModalNavigationService<CryptingViewModel>(
-                serviceProvider.GetRequiredService<ModalNavigationStore>(),
-                () => serviceProvider.GetRequiredService<CryptingViewModel>());
+            return new CryptingViewModel();
         }
 
-        private INavigationService CreateSettingsNavigationService(IServiceProvider serviceProvider)
+        private MainViewModel CreateMainWindowViewModel(IServiceProvider provider)
         {
-            return new ModalNavigationService<CryptingViewModel>(
-                serviceProvider.GetRequiredService<ModalNavigationStore>(),
-                () => serviceProvider.GetRequiredService<CryptingViewModel>());
-        }
+            var homeView = provider.GetService<HomeViewModel>();
+            var cryptingView = provider.GetService<CryptingViewModel>();
 
-        private INavigationService CreateCryptingNavigationService(IServiceProvider serviceProvider)
-        {
-            return new LayoutNavigationService<CryptingViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<CryptingViewModel>(),
-                () => serviceProvider.GetRequiredService<NavigationBarViewModel>());
-        }
-
-        private INavigationService CreateHomeNavigationService(IServiceProvider serviceProvider)
-        {
-            return new LayoutNavigationService<HomeViewModel>(
-                serviceProvider.GetRequiredService<NavigationStore>(),
-                () => serviceProvider.GetRequiredService<HomeViewModel>(),
-                () => serviceProvider.GetRequiredService<NavigationBarViewModel>());
-        }
-
-        private NavigationBarViewModel CreateNavigationBarViewModel(IServiceProvider serviceProvider)
-        {
-            return new NavigationBarViewModel(
-                CreateHomeNavigationService(serviceProvider),
-                CreateCryptingNavigationService(serviceProvider),
-                CreateSettingsNavigationService(serviceProvider),
-                CreatePdfManagerNavigationService(serviceProvider),
-                CreateHelpNavigationService(serviceProvider)
-                );
+            return new MainViewModel(homeView, cryptingView);
         }
     }
 }
