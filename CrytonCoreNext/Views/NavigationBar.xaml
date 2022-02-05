@@ -41,25 +41,78 @@
         </Style>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
-    
-    <Grid MaxHeight="1000" Margin="20 10">
+    <Grid>
+
+        <Grid MaxHeight="1000" Margin="20 10" VerticalAlignment="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75"/>
+            </Grid.RowDefinitions>
+
+
+            <Image Grid.Row="1" Source="/Assets/Inform.png"
+               HorizontalAlignment="Left"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="45">
+                <Image.ToolTip>
+                    <ToolTip
+                    Visibility="Visible"
+                    Content="Secure"
+                    Width="150"/>
+                </Image.ToolTip>
+
+            </Image>
+            <Button
+            Grid.Row="1"
+            VerticalAlignment="Center"
+            Margin="65 0 0 0"
+            FontSize="22"
+            Command="{Binding NavigateLoginCommand}"
+            Content="Help" />
+
+        </Grid>
+
+        <Grid MaxHeight="1000" Margin="20 10" VerticalAlignment="Top">
         <Grid.RowDefinitions>
             <RowDefinition Height="75"/>
             <RowDefinition Height="75"/>
             <RowDefinition Height="75"/>
             <RowDefinition Height="75"/>
-            <RowDefinition Height="75"/>
-            <RowDefinition Height="75"/>
-        </Grid.RowDefinitions>
+                <RowDefinition Height="75"/>
+            </Grid.RowDefinitions>
 
         <TextBlock
             Grid.Row="0"
             FontSize="34"
             Foreground="White"
-            Text="Cryton" />
+            Text="Cryton NXT" />
 
 
-        <Image Grid.Row="1" Source="/Assets/Lock.png"
+            <Image Grid.Row="1" Source="/Assets/menu.png"
+               HorizontalAlignment="Left"
+                   Margin="5"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="35">
+                <Image.ToolTip>
+                    <ToolTip
+                    Visibility="Visible"
+                    Content="Secure"
+                    Width="150"/>
+                </Image.ToolTip>
+
+            </Image>
+            <Button
+                Grid.Row="1"
+                VerticalAlignment="Center"
+                Margin="65 0 0 0"
+                FontSize="22"
+                Command="{Binding NavigateHomeCommand}"
+                Content="Home" />
+
+            <Image Grid.Row="2" Source="/Assets/Lock.png"
                HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
@@ -74,7 +127,7 @@
 
         </Image>
         <Button
-            Grid.Row="1"
+            Grid.Row="2"
             VerticalAlignment="Center"
             Margin="65 0 0 0"
             FontSize="22"
@@ -82,31 +135,7 @@
             Content="Crypting" />
 
 
-        <Image Grid.Row="2" Source="/Assets/Cogs.png"
-               HorizontalAlignment="Left"
-                       Stretch="Uniform"
-                       RenderOptions.EdgeMode="Aliased"
-                       RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="45">
-            <Image.ToolTip>
-                <ToolTip
-                    Visibility="Visible"
-                    Content="Secure"
-                    Width="150"/>
-            </Image.ToolTip>
-
-        </Image>
-        <Button
-            Grid.Row="2"
-            VerticalAlignment="Center"
-            Margin="65 0 0 0"
-            FontSize="22"
-            Command="{Binding NavigateSettingsCommand}"
-            Content="Settings" />
-        
-        
-        
-        <Image Grid.Row="3" Source="/Assets/Secure.png"
+        <Image Grid.Row="3" Source="/Assets/Cogs.png"
                HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
@@ -125,11 +154,12 @@
             VerticalAlignment="Center"
             Margin="65 0 0 0"
             FontSize="22"
-            Command="{Binding NavigatePdfManagerCommand}"
-            Content="Pdf Manager" />
+            Command="{Binding NavigateSettingsCommand}"
+            Content="Settings" />
         
-
-        <Image Grid.Row="4" Source="/Assets/Inform.png"
+        
+        
+        <Image Grid.Row="4" Source="/Assets/Secure.png"
                HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
@@ -148,30 +178,8 @@
             VerticalAlignment="Center"
             Margin="65 0 0 0"
             FontSize="22"
-            Command="{Binding NavigateLoginCommand}"
-            Content="Help" />
-
-
-        <Image Grid.Row="5" Source="/Assets/Inform.png"
-               HorizontalAlignment="Left"
-                       Stretch="Uniform"
-                       RenderOptions.EdgeMode="Aliased"
-                       RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="45">
-            <Image.ToolTip>
-                <ToolTip
-                    Visibility="Visible"
-                    Content="Secure"
-                    Width="150"/>
-            </Image.ToolTip>
-
-        </Image>
-        <Button
-            Grid.Row="5"
-            VerticalAlignment="Center"
-            Margin="65 0 0 0"
-            FontSize="22"
-            Command="{Binding NavigateHomeCommand}"
-            Content="Home" />
+            Command="{Binding NavigatePdfManagerCommand}"
+            Content="Pdf Manager" />
+        </Grid>
     </Grid>
 </UserControl>

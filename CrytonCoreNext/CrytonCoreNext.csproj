@@ -39,6 +39,7 @@
     <None Remove="Assets\Lock2.png" />
     <None Remove="Assets\Maximize.png" />
     <None Remove="Assets\Maximize_Mo.png" />
+    <None Remove="Assets\menu.png" />
     <None Remove="Assets\menu_bars — kopia.png" />
     <None Remove="Assets\menu_bars.png" />
     <None Remove="Assets\Merge.png" />
@@ -156,7 +157,7 @@
     <Resource Include="Assets\Maximize_Mo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\menu_bars — kopia.png">
+    <Resource Include="Assets\menu.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\menu_bars.png">

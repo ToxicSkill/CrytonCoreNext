@@ -7,7 +7,7 @@
     xmlns:views="clr-namespace:CrytonCoreNext.Views"
     xmlns:ViewModels="clr-namespace:CrytonCoreNext.ViewModels"
     Title="CrytonNXT"
-    MinWidth="1800"
+    MinWidth="1600"
     d:DesignHeight="700"
     d:DesignWidth="1700"
     mc:Ignorable="d"

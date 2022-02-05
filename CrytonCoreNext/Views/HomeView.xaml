@@ -93,7 +93,7 @@
             </Grid>
 
 
-            <Grid  VerticalAlignment="Bottom" Margin="673,0,10,190" Height="270" Width="660" >
+            <Grid  VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5 190" Height="270" Width="660" >
                 <Label Name="LiveTimeLabel" Content="{Binding CurrentTime}" VerticalAlignment="Top" VerticalContentAlignment="Top" Opacity="0.75"
                        FontSize="200" FontWeight="Normal" Foreground="White"  FontFamily="Lato Light" Height="210" Margin="10,0,0,0" />
                 <Label Name="LiveTimeDayLabel" Content="{Binding CurrentDay}"  VerticalAlignment="Top" Opacity="0.75"
@@ -112,7 +112,7 @@
                 </Rectangle.Fill>
             </Rectangle>
 
-            <Label Content="C R Y T O N" Margin="286,135,0,0"  HorizontalContentAlignment="Center" VerticalAlignment="Top"  HorizontalAlignment="Left"
+            <Label Content="C R Y T O N" Margin="235,135,0,0"  HorizontalContentAlignment="Center" VerticalAlignment="Top"  HorizontalAlignment="Left"
                 FontSize="76" Foreground="White"  FontFamily="Lato Light" Height="100" FontWeight="Normal" FontStyle="Normal"/>
 
             <Rectangle x:Name="internetConnectionDiode" Fill="{Binding FillDiode}" ToolTip="{Binding ToolTip}" 
