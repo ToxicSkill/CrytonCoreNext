@@ -10,7 +10,7 @@ namespace CrytonCoreNext.InformationsServices
 {
     public class Web : IWeb
     {
-        public JsonWeb WebInfo { get; set; }
+        public JsonWeb? _webInfo;
         private bool _status;
 
 
@@ -27,7 +27,7 @@ namespace CrytonCoreNext.InformationsServices
                 await Task.Run(() => GetIPAddressPublic()).ConfigureAwait(false);
         }
 
-        public JsonWeb GetAllWebInfo() => WebInfo;
+        public JsonWeb GetAllWebInfo() => _webInfo;
         
 
         public async Task<(double latitude, double longnitude)> GetGlobalCoordinates()
@@ -38,9 +38,9 @@ namespace CrytonCoreNext.InformationsServices
                 {
                     var info = new WebClient();
                     string respond = "";
-                    info.DownloadStringAsync(new Uri("http://ipinfo.io/" + WebInfo?.Ip), respond);
+                    info.DownloadStringAsync(new Uri("http://ipinfo.io/" + _webInfo?.Ip), respond);
 
-                    var gelocString = WebInfo?.Loc.Split(',');
+                    var gelocString = _webInfo?.Loc.Split(',');
                     if (gelocString is null)
                         throw new Exception("Data was null");
                     var resOne = double.Parse(gelocString[0], CultureInfo.InvariantCulture);
@@ -70,7 +70,7 @@ namespace CrytonCoreNext.InformationsServices
                     int last = address.LastIndexOf("</body>");
                     address = address.Substring(first, last - first);
                     string info = new WebClient().DownloadString("http://ipinfo.io/" + address);
-                    WebInfo = JsonConvert.DeserializeObject<JsonWeb>(info);
+                    _webInfo = JsonConvert.DeserializeObject<JsonWeb>(info);
                     _status = true;
                 }
                 catch (Exception)
@@ -82,27 +82,27 @@ namespace CrytonCoreNext.InformationsServices
 
         public string GetCurrentCity()
         {
-            return WebInfo?.City;
+            return _webInfo?.City;
         }
         public string GetCurrentCountry()
         {
-            return WebInfo?.Country;
+            return _webInfo?.Country;
         }
         public string GetCurrentRegion()
         {
-            return WebInfo?.Region;
+            return _webInfo?.Region;
         }
         public string GetOrganization()
         {
-            return WebInfo?.Org;
+            return _webInfo?.Org;
         }
         public string GetPostalCode()
         {
-            return WebInfo?.Postal;
+            return _webInfo?.Postal;
         }
         public string GetHostname()
         {
-            return WebInfo?.Hostname;
+            return _webInfo?.Hostname;
         }
 
         public class JsonWeb

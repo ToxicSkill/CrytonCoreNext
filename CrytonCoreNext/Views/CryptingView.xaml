@@ -8,6 +8,7 @@
     d:DesignHeight="450"
     d:DesignWidth="1400"
     mc:Ignorable="d">
+
     <UserControl.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF0B4052"/>
@@ -15,7 +16,56 @@
             <GradientStop Color="#FF0E1B29" Offset="0.249"/>
         </LinearGradientBrush>
     </UserControl.Background>
+
+    <UserControl.Resources>
+        <Storyboard x:Key="UnFoldInfo">
+            <DoubleAnimation   
+                Storyboard.Target = "{Binding ElementName=informationBar}"
+                Storyboard.TargetProperty="Height"
+                From="0"
+                To="100"
+                BeginTime="0:0:0"
+                Duration="0:0:0.5"/>
+        </Storyboard>
+
+        <Storyboard x:Key="FoldInfo">
+            <DoubleAnimation   
+                Storyboard.Target = "{Binding ElementName=informationBar}"
+                Storyboard.TargetProperty="Height"
+                From="100"
+                To="0"
+                BeginTime="0:0:0"
+                Duration="0:0:0.3"/>
+        </Storyboard>
+
+    </UserControl.Resources>
+
     <Grid>
-        <Label FontSize="42" Foreground="White" Content="CRYTPING PAGE" Margin="10 10"/>
+        <Label Content="Crypting" FontSize="42" Foreground="White" Margin="10, 0, 10, 0" />
+
+        <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="100">
+            <ToggleButton
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderThickness="0"
+                BorderBrush="Transparent" 
+                Foreground="Transparent" 
+                Background="Transparent"
+                IsChecked="{Binding InformationBar}">
+
+                <ToggleButton.Triggers>
+                    <EventTrigger RoutedEvent="ToggleButton.Checked">
+                        <BeginStoryboard Storyboard="{StaticResource UnFoldInfo}"/>
+                    </EventTrigger>
+
+                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                        <BeginStoryboard Storyboard="{StaticResource FoldInfo}"/>
+                    </EventTrigger>
+
+                </ToggleButton.Triggers>
+            </ToggleButton>
+
+            <ContentControl Content="{Binding InformationPopupViewModel}"/>
+        </Grid>
     </Grid>
 </UserControl>

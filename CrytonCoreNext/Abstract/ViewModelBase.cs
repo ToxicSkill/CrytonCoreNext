@@ -12,6 +12,14 @@ namespace CrytonCoreNext.Abstract
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public bool InformationBar { get; set; }
+
+        public void ShowInformationBar(bool show)
+        {
+            InformationBar = show;
+            OnPropertyChanged(nameof(InformationBar));
+        }
+
         public virtual void Dispose() { }
     }
 }

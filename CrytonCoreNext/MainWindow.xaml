@@ -8,6 +8,7 @@
     xmlns:ViewModels="clr-namespace:CrytonCoreNext.ViewModels"
     Title="CrytonNXT"
     MinWidth="1600"
+    MinHeight="670"
     d:DesignHeight="700"
     d:DesignWidth="1700"
     mc:Ignorable="d"
@@ -27,6 +28,9 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type ViewModels:CryptingViewModel}">
                 <views:CryptingView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModels:InformationPopupViewModel}">
+                <views:InformationPage />
             </DataTemplate>
         </Grid.Resources>
 

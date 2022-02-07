@@ -68,7 +68,6 @@
             VerticalAlignment="Center"
             Margin="65 0 0 0"
             FontSize="22"
-            Command="{Binding NavigateLoginCommand}"
             Content="Help" />
 
         </Grid>
@@ -89,7 +88,7 @@
             Text="Cryton NXT" />
 
 
-            <Image Grid.Row="1" Source="/Assets/menu.png"
+            <Image Grid.Row="1" Source="/Assets/menu2.png"
                HorizontalAlignment="Left"
                    Margin="5"
                        Stretch="Uniform"
@@ -154,7 +153,6 @@
             VerticalAlignment="Center"
             Margin="65 0 0 0"
             FontSize="22"
-            Command="{Binding NavigateSettingsCommand}"
             Content="Settings" />
         
         
@@ -178,7 +176,6 @@
             VerticalAlignment="Center"
             Margin="65 0 0 0"
             FontSize="22"
-            Command="{Binding NavigatePdfManagerCommand}"
             Content="Pdf Manager" />
         </Grid>
     </Grid>

@@ -24,7 +24,7 @@ namespace CrytonCoreNext.InformationsServices
 
         public InternetConnection()
         {
-            InitializeTimer();
+            //InitializeTimer();
         }
 
         public bool GetInternetStatus() => _status;
@@ -55,7 +55,7 @@ namespace CrytonCoreNext.InformationsServices
         {
             try
             {
-                using WebClient client = new();
+                using WebClient client = new ();
                 using System.IO.Stream stream = client.OpenRead(PingStringFirst);
                 return true;
             }
