@@ -24,7 +24,7 @@ namespace CrytonCoreNext.InformationsServices
 
         public InternetConnection()
         {
-            //InitializeTimer();
+            InitializeTimer();
         }
 
         public bool GetInternetStatus() => _status;

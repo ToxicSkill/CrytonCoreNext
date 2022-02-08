@@ -23,12 +23,12 @@ namespace CrytonCoreNext.ViewModels
         public HomeViewModel(ITimeDate timeDate,
             IInternetConnection internetConnection)
         {
-            //_timeDate = timeDate;
-            //_internetConnection = internetConnection;
+            _timeDate = timeDate;
+            _internetConnection = internetConnection;
 
-            //RefreshTime();
-            //RefreshDay();
-            //InitializeTimers();
+            RefreshTime();
+            RefreshDay();
+            InitializeTimers();
         }
 
         private void InitializeTimers()

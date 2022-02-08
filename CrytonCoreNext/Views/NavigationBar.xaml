@@ -27,156 +27,159 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="Button">
-                                <TextBlock Text="{TemplateBinding Content}" TextDecorations="Underline" />
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-            </Style.Triggers>
         </Style>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
+
     <Grid>
-
-        <Grid MaxHeight="1000" Margin="20 10" VerticalAlignment="Bottom">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="75"/>
-            </Grid.RowDefinitions>
-
-
-            <Image Grid.Row="1" Source="/Assets/Inform.png"
-               HorizontalAlignment="Left"
-                       Stretch="Uniform"
-                       RenderOptions.EdgeMode="Aliased"
-                       RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="45">
-                <Image.ToolTip>
-                    <ToolTip
-                    Visibility="Visible"
-                    Content="Secure"
-                    Width="150"/>
-                </Image.ToolTip>
-
-            </Image>
-            <Button
-            Grid.Row="1"
-            VerticalAlignment="Center"
-            Margin="65 0 0 0"
-            FontSize="22"
-            Content="Help" />
-
-        </Grid>
-
-        <Grid MaxHeight="1000" Margin="20 10" VerticalAlignment="Top">
+        <Grid Margin="20 10" VerticalAlignment="Top">
         <Grid.RowDefinitions>
             <RowDefinition Height="75"/>
             <RowDefinition Height="75"/>
             <RowDefinition Height="75"/>
             <RowDefinition Height="75"/>
-                <RowDefinition Height="75"/>
-            </Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+        </Grid.RowDefinitions>
 
-        <TextBlock
-            Grid.Row="0"
-            FontSize="34"
-            Foreground="White"
-            Text="Cryton NXT" />
+            <TextBlock
+                Grid.Row="0"
+                FontSize="34"
+                Foreground="White"
+                Text="Cryton NXT">
+            </TextBlock>
 
-
-            <Image Grid.Row="1" Source="/Assets/menu2.png"
-               HorizontalAlignment="Left"
-                   Margin="5"
+            <Grid Grid.Row="1">
+                <Grid.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <Trigger Property="Grid.IsMouseOver" Value="True">
+                                <Setter Property="Grid.Effect" Value="{StaticResource EffectBlue}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Image Grid.Row="1" Source="/Assets/menu2.png"
+                       HorizontalAlignment="Left"
+                       Margin="1"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="35">
-                <Image.ToolTip>
-                    <ToolTip
-                    Visibility="Visible"
-                    Content="Secure"
-                    Width="150"/>
-                </Image.ToolTip>
+                       Width="40">
+                </Image>
+                <Button
+                    Grid.Row="1"
+                    VerticalAlignment="Center"
+                    Margin="65 0 0 0"
+                    FontSize="22"
+                    Command="{Binding NavigateHomeCommand}"
+                    Content="Home" />
+            </Grid>
 
+            <Grid Grid.Row="2">
+                <Grid.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <Trigger Property="Grid.IsMouseOver" Value="True">
+                                <Setter Property="Grid.Effect" Value="{StaticResource EffectRed}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Image Grid.Row="2" 
+                       Source="/Assets/Lockv2.png"
+                       HorizontalAlignment="Left"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="45">
+                </Image>
+                <Button
+                    Grid.Row="2"
+                    VerticalAlignment="Center"
+                    Margin="65 0 0 0"
+                    FontSize="22"
+                    Command="{Binding NavigateCrytpingCommand}"
+                    Content="Crypting" />
+            </Grid>
+
+
+            <Grid Grid.Row="3">
+                <Grid.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <Trigger Property="Grid.IsMouseOver" Value="True">
+                                <Setter Property="Grid.Effect" Value="{StaticResource EffectGreen}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Image Grid.Row="3" Source="/Assets/Cogsv2.png"
+                       HorizontalAlignment="Left"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="45">
+
+                </Image>
+                <Button
+                    Grid.Row="3"
+                    VerticalAlignment="Center"
+                    Margin="65 0 0 0"
+                    FontSize="22"
+                    Content="Settings" />
+            </Grid>
+
+
+
+            <Grid Grid.Row="4">
+                <Grid.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <Trigger Property="Grid.IsMouseOver" Value="True">
+                                <Setter Property="Grid.Effect" Value="{StaticResource EffectYellow}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Image Grid.Row="4" 
+                       Source="/Assets/Securev2.png"
+                       HorizontalAlignment="Left"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="45">
+                </Image>
+                <Button
+                    Grid.Row="4"
+                    VerticalAlignment="Center"
+                    Margin="65 0 0 0"
+                    FontSize="22"
+                    Content="Pdf Manager" />
+            </Grid>
+        </Grid>
+
+        <Grid Margin="20 10" Height="75" VerticalAlignment="Bottom">
+            <Grid.Style>
+                <Style>
+                    <Style.Triggers>
+                        <Trigger Property="Grid.IsMouseOver" Value="True">
+                            <Setter Property="Grid.Effect" Value="{StaticResource EffectPurple}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Image Source="/Assets/Informv2.png"
+                       HorizontalAlignment="Left"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="45">
             </Image>
             <Button
-                Grid.Row="1"
-                VerticalAlignment="Center"
-                Margin="65 0 0 0"
-                FontSize="22"
-                Command="{Binding NavigateHomeCommand}"
-                Content="Home" />
-
-            <Image Grid.Row="2" Source="/Assets/Lock.png"
-               HorizontalAlignment="Left"
-                       Stretch="Uniform"
-                       RenderOptions.EdgeMode="Aliased"
-                       RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="45">
-            <Image.ToolTip>
-                <ToolTip
-                            Visibility="Visible"
-                            Content="Crypt"
-                            Width="150"/>
-            </Image.ToolTip>
-
-        </Image>
-        <Button
-            Grid.Row="2"
-            VerticalAlignment="Center"
-            Margin="65 0 0 0"
-            FontSize="22"
-            Command="{Binding NavigateCrytpingCommand}"
-            Content="Crypting" />
-
-
-        <Image Grid.Row="3" Source="/Assets/Cogs.png"
-               HorizontalAlignment="Left"
-                       Stretch="Uniform"
-                       RenderOptions.EdgeMode="Aliased"
-                       RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="45">
-            <Image.ToolTip>
-                <ToolTip
-                    Visibility="Visible"
-                    Content="Secure"
-                    Width="150"/>
-            </Image.ToolTip>
-
-        </Image>
-        <Button
-            Grid.Row="3"
-            VerticalAlignment="Center"
-            Margin="65 0 0 0"
-            FontSize="22"
-            Content="Settings" />
-        
-        
-        
-        <Image Grid.Row="4" Source="/Assets/Secure.png"
-               HorizontalAlignment="Left"
-                       Stretch="Uniform"
-                       RenderOptions.EdgeMode="Aliased"
-                       RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="45">
-            <Image.ToolTip>
-                <ToolTip
-                    Visibility="Visible"
-                    Content="Secure"
-                    Width="150"/>
-            </Image.ToolTip>
-
-        </Image>
-        <Button
-            Grid.Row="4"
-            VerticalAlignment="Center"
-            Margin="65 0 0 0"
-            FontSize="22"
-            Content="Pdf Manager" />
+                    VerticalAlignment="Center"
+                    Margin="65 0 0 0"
+                    FontSize="22"
+                    Content="Help" />
         </Grid>
     </Grid>
 </UserControl>
