@@ -6,5 +6,16 @@
       mc:Ignorable="d" 
       d:DesignHeight="100" d:DesignWidth="800">
 
-    <Grid Background="#FF131313"/>
+    <Grid Background="#FF131313" Margin="-1">
+        <Label Margin="10" FontSize="21" Foreground="White" Content="{Binding InformationString}" RenderTransformOrigin="0.5,0.5">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="6"/>
+                    <TranslateTransform Y="67"/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+    </Grid>
 </UserControl>

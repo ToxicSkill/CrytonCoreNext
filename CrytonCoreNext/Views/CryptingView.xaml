@@ -23,7 +23,7 @@
                 Storyboard.Target = "{Binding ElementName=informationBar}"
                 Storyboard.TargetProperty="Height"
                 From="0"
-                To="100"
+                To="200"
                 BeginTime="0:0:0"
                 Duration="0:0:0.5"/>
         </Storyboard>
@@ -32,7 +32,7 @@
             <DoubleAnimation   
                 Storyboard.Target = "{Binding ElementName=informationBar}"
                 Storyboard.TargetProperty="Height"
-                From="100"
+                From="200"
                 To="0"
                 BeginTime="0:0:0"
                 Duration="0:0:0.3"/>
@@ -43,7 +43,19 @@
     <Grid>
         <Label Content="Crypting" FontSize="42" Foreground="White" Margin="10, 0, 10, 0" />
 
-        <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="100">
+        <Button Width="100" Height="20" Content="Show error" HorizontalAlignment="Left" Command="{Binding ShowErrorCommand}"/>
+        <Button Width="100" Height="20" Content="Show info" HorizontalAlignment="Right" Command="{Binding ShowInfoCommand}"/>
+
+        <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
+              Height="200" RenderTransformOrigin="0.5,0.5" Margin="-20">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-6"/>
+                    <TranslateTransform X="0" Y="55"/>
+                </TransformGroup>
+            </Grid.RenderTransform>
             <ToggleButton
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"

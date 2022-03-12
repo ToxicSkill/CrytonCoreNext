@@ -58,7 +58,7 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Image Grid.Row="1" Source="/Assets/menu2.png"
+                <Image Grid.Row="1" Source="/Assets/menu.png"
                        HorizontalAlignment="Left"
                        Margin="1"
                        Stretch="Uniform"
@@ -86,7 +86,7 @@
                     </Style>
                 </Grid.Style>
                 <Image Grid.Row="2" 
-                       Source="/Assets/Lockv2.png"
+                       Source="/Assets/Lock.png"
                        HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
@@ -113,7 +113,7 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Image Grid.Row="3" Source="/Assets/Cogsv2.png"
+                <Image Grid.Row="3" Source="/Assets/Cogs.png"
                        HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
@@ -142,7 +142,7 @@
                     </Style>
                 </Grid.Style>
                 <Image Grid.Row="4" 
-                       Source="/Assets/Securev2.png"
+                       Source="/Assets/Secure.png"
                        HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
@@ -168,7 +168,7 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
-            <Image Source="/Assets/Informv2.png"
+            <Image Source="/Assets/Inform.png"
                        HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
