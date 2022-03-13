@@ -77,7 +77,7 @@
                 </ToggleButton.Triggers>
             </ToggleButton>
 
-            <ContentControl Content="{Binding InformationPopupViewModel}"/>
+            <ContentControl Content="{Binding PopupViewModel}"/>
         </Grid>
     </Grid>
 </UserControl>

@@ -6,8 +6,6 @@ namespace CrytonCoreNext.ViewModels
 {
     public class CryptingViewModel : ViewModelBase
     {
-        public ViewModelBase InformationPopupViewModel { get; set; }
-
         public ICommand ShowInfoCommand { get; }
         public ICommand ShowErrorCommand { get; }
 
@@ -19,19 +17,12 @@ namespace CrytonCoreNext.ViewModels
 
         private void ShowInfo()
         {
-            InformationPopupViewModel = new InformationPopupViewModel("Info");
-            ShowInformationBar(false);
-            ShowInformationBar(true);
-            OnPropertyChanged(nameof(InformationPopupViewModel));
-
+            PostPopup("Info");
         }
 
         private void ShowError()
         {
-            InformationPopupViewModel = new InformationPopupViewModel("Error");
-            ShowInformationBar(false);
-            ShowInformationBar(true);
-            OnPropertyChanged(nameof(InformationPopupViewModel));
+            PostPopup("Error");
         }
     }
 }
