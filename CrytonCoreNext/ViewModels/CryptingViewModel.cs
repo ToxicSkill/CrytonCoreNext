@@ -17,12 +17,12 @@ namespace CrytonCoreNext.ViewModels
 
         private void ShowInfo()
         {
-            PostPopup("Info");
+            PostPopup("Info", new (0, 0, 5));
         }
 
         private void ShowError()
         {
-            PostPopup("Error");
+            PostPopup("Error", new (0, 0, 5));
         }
     }
 }
