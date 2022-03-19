@@ -32,6 +32,9 @@
             <DataTemplate DataType="{x:Type ViewModels:InformationPopupViewModel}">
                 <views:InformationPage />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModels:FilesViewViewModel}">
+                <views:FileViewViewPage />
+            </DataTemplate>
         </Grid.Resources>
 
         <Grid.ColumnDefinitions>

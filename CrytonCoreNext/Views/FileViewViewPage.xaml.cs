@@ -3,11 +3,11 @@
 namespace CrytonCoreNext.Views
 {
     /// <summary>
-    /// Interaction logic for InformationPage.xaml
+    /// Interaction logic for FileViewView.xaml
     /// </summary>
-    public partial class InformationPage : UserControl
+    public partial class FileViewViewPage : UserControl
     {
-        public InformationPage()
+        public FileViewViewPage()
         {
             InitializeComponent();
         }

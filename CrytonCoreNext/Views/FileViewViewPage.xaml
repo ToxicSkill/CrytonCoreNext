@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="CrytonCoreNext.Views.FileViewViewPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ViewModels="clr-namespace:CrytonCoreNext.ViewModels"
+      mc:Ignorable="d" 
+      d:DesignHeight="900" d:DesignWidth="300">
+
+
+    <UserControl.Resources>
+        <Storyboard x:Key="UnFoldFilesView">
+            <DoubleAnimation   
+                Storyboard.Target = "{Binding ElementName=FilesView}"
+                Storyboard.TargetProperty="Width"
+                From="20"
+                To="200"
+                BeginTime="0:0:0"
+                Duration="0:0:0.5"/>
+        </Storyboard>
+
+        <Storyboard x:Key="FoldFilesView">
+            <DoubleAnimation   
+                Storyboard.Target = "{Binding ElementName=FilesView}"
+                Storyboard.TargetProperty="Width"
+                From="200"
+                To="20"
+                BeginTime="0:0:0"
+                Duration="0:0:0.3"/>
+        </Storyboard>
+
+    </UserControl.Resources>
+ 
+    <Grid>
+        <Grid x:Name="FilesView" Background="#FF131313" Margin="-1" HorizontalAlignment="Right">
+            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding Text, FallbackValue='A'}" Foreground="White"/>
+            <ToggleButton
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Width="20" 
+                Height="100"
+                BorderThickness="0"
+                Background="DarkBlue">
+
+                <ToggleButton.Triggers>
+                    <EventTrigger RoutedEvent="ToggleButton.Checked">
+                        <BeginStoryboard Storyboard="{StaticResource UnFoldFilesView}"/>
+                    </EventTrigger>
+
+                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                        <BeginStoryboard Storyboard="{StaticResource FoldFilesView}"/>
+                    </EventTrigger>
+
+                </ToggleButton.Triggers>
+            </ToggleButton>
+        </Grid>
+    </Grid>
+</UserControl>

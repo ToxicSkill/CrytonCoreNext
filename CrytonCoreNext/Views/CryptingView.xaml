@@ -43,16 +43,13 @@
     <Grid>
         <Label Content="Crypting" FontSize="42" Foreground="White" Margin="10, 0, 10, 0" />
 
-        <Button Width="100" Height="20" Content="Show error" HorizontalAlignment="Left" Command="{Binding ShowErrorCommand}"/>
-        <Button Width="100" Height="20" Content="Show info" HorizontalAlignment="Right" Command="{Binding ShowInfoCommand}"/>
-
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
-              Height="200" RenderTransformOrigin="0.5,0.5" Margin="-20">
+              Height="0" RenderTransformOrigin="0.5,0.5" Margin="-2, 0, 0, 30">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="-6"/>
+                    <RotateTransform Angle="-2"/>
                     <TranslateTransform X="0" Y="55"/>
                 </TransformGroup>
             </Grid.RenderTransform>
@@ -63,7 +60,7 @@
                 BorderBrush="Transparent" 
                 Foreground="Transparent" 
                 Background="Transparent"
-                IsChecked="{Binding InformationBar}">
+                IsChecked="{Binding ShowPopup}">
 
                 <ToggleButton.Triggers>
                     <EventTrigger RoutedEvent="ToggleButton.Checked">
@@ -78,6 +75,9 @@
             </ToggleButton>
 
             <ContentControl Content="{Binding PopupViewModel}"/>
+        </Grid>
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="200">
+            <ContentControl Content="{Binding FilesViewViewModel}"/>
         </Grid>
     </Grid>
 </UserControl>
