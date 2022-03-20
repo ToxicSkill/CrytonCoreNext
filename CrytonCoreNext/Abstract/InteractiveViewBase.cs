@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace CrytonCoreNext.Abstract
@@ -12,8 +13,6 @@ namespace CrytonCoreNext.Abstract
         public InformationPopupViewModel PopupViewModel { get; set; }
 
         public FilesViewViewModel FilesViewViewModel { get; set; }
-
-        public bool ShowPopup { get; set; }
 
         public InteractiveViewBase()
         {
@@ -27,10 +26,9 @@ namespace CrytonCoreNext.Abstract
             }.ToArray());
         }
 
-        public void PostPopup(string informationString, TimeSpan delayTime)
+        public void PostPopup(string informationString, TimeSpan delayTime, Color color = default)
         {
-            PopupViewModel = new (informationString);
-            ShowInformationBar(false);
+            PopupViewModel = new (informationString, color);
             ShowInformationBar(true);
             OnPropertyChanged(nameof(PopupViewModel));
             InitializeTimerWithAction(CollapsePopup, delayTime);
@@ -44,8 +42,7 @@ namespace CrytonCoreNext.Abstract
 
         private void ShowInformationBar(bool show)
         {
-            ShowPopup = show;
-            OnPropertyChanged(nameof(ShowPopup));
+            PopupViewModel.ShowPopup = show;
         }
 
         private void InitializeTimerWithAction(Action<object, EventArgs> obj, TimeSpan delayTime)
@@ -59,7 +56,6 @@ namespace CrytonCoreNext.Abstract
         private void CollapsePopup(object sender, EventArgs e)
         {
             ShowInformationBar(false);
-            OnPropertyChanged(nameof(PopupViewModel));
             _timer?.Stop();
         }
 

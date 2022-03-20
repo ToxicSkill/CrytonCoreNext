@@ -7,5 +7,9 @@
         <DropShadowEffect x:Key="EffectRed" ShadowDepth="0" Color="Red" Opacity="1" BlurRadius="20"/>
         <DropShadowEffect x:Key="EffectGreen" ShadowDepth="0" Color="LightGreen" Opacity="1" BlurRadius="20"/>
         <DropShadowEffect x:Key="EffectYellow" ShadowDepth="0" Color="Yellow" Opacity="1" BlurRadius="20"/>
+
+ 
+
     </Application.Resources>
+    
 </Application>

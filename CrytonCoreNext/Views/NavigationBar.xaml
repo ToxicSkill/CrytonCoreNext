@@ -13,7 +13,7 @@
     <UserControl.Background>
         <SolidColorBrush Color="#FF131313"/>
     </UserControl.Background>
-    
+
     <UserControl.Resources>
         <Style TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
@@ -33,13 +33,13 @@
 
     <Grid>
         <Grid Margin="20 10" VerticalAlignment="Top">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="75"/>
-            <RowDefinition Height="75"/>
-            <RowDefinition Height="75"/>
-            <RowDefinition Height="75"/>
-            <RowDefinition Height="75"/>
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75"/>
+                <RowDefinition Height="75"/>
+                <RowDefinition Height="75"/>
+                <RowDefinition Height="75"/>
+                <RowDefinition Height="75"/>
+            </Grid.RowDefinitions>
 
             <TextBlock
                 Grid.Row="0"
@@ -58,14 +58,13 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Image Grid.Row="1" Source="/Assets/menu.png"
+                <Image Source="/Assets/menu.png"
                        HorizontalAlignment="Left"
-                       Margin="1"
+                       Margin="7,1,0,1"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="40">
-                </Image>
+                       Width="30"/>
                 <Button
                     Grid.Row="1"
                     VerticalAlignment="Center"
@@ -80,7 +79,7 @@
                     <Style>
                         <Style.Triggers>
                             <Trigger Property="Grid.IsMouseOver" Value="True">
-                                <Setter Property="Grid.Effect" Value="{StaticResource EffectRed}" />
+                                <Setter Property="Grid.Effect" Value="{StaticResource EffectBlue}" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -108,7 +107,7 @@
                     <Style>
                         <Style.Triggers>
                             <Trigger Property="Grid.IsMouseOver" Value="True">
-                                <Setter Property="Grid.Effect" Value="{StaticResource EffectGreen}" />
+                                <Setter Property="Grid.Effect" Value="{StaticResource EffectYellow}" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -136,7 +135,7 @@
                     <Style>
                         <Style.Triggers>
                             <Trigger Property="Grid.IsMouseOver" Value="True">
-                                <Setter Property="Grid.Effect" Value="{StaticResource EffectYellow}" />
+                                <Setter Property="Grid.Effect" Value="{StaticResource EffectRed}" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>

@@ -13,8 +13,8 @@
             <DoubleAnimation   
                 Storyboard.Target = "{Binding ElementName=FilesView}"
                 Storyboard.TargetProperty="Width"
-                From="20"
-                To="200"
+                From="30"
+                To="300"
                 BeginTime="0:0:0"
                 Duration="0:0:0.5"/>
         </Storyboard>
@@ -23,24 +23,22 @@
             <DoubleAnimation   
                 Storyboard.Target = "{Binding ElementName=FilesView}"
                 Storyboard.TargetProperty="Width"
-                From="200"
-                To="20"
+                From="300"
+                To="30"
                 BeginTime="0:0:0"
                 Duration="0:0:0.3"/>
         </Storyboard>
 
     </UserControl.Resources>
- 
+
     <Grid>
         <Grid x:Name="FilesView" Background="#FF131313" Margin="-1" HorizontalAlignment="Right">
-            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding Text, FallbackValue='A'}" Foreground="White"/>
+            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding Text}" Foreground="White"/>
             <ToggleButton
-                HorizontalAlignment="Left" 
-                VerticalAlignment="Top" 
-                Width="20" 
-                Height="100"
-                BorderThickness="0"
-                Background="DarkBlue">
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Width="30"
+                Height="100">
 
                 <ToggleButton.Triggers>
                     <EventTrigger RoutedEvent="ToggleButton.Checked">

@@ -17,66 +17,14 @@
         </LinearGradientBrush>
     </UserControl.Background>
 
-    <UserControl.Resources>
-        <Storyboard x:Key="UnFoldInfo">
-            <DoubleAnimation   
-                Storyboard.Target = "{Binding ElementName=informationBar}"
-                Storyboard.TargetProperty="Height"
-                From="0"
-                To="200"
-                BeginTime="0:0:0"
-                Duration="0:0:0.5"/>
-        </Storyboard>
-
-        <Storyboard x:Key="FoldInfo">
-            <DoubleAnimation   
-                Storyboard.Target = "{Binding ElementName=informationBar}"
-                Storyboard.TargetProperty="Height"
-                From="200"
-                To="0"
-                BeginTime="0:0:0"
-                Duration="0:0:0.3"/>
-        </Storyboard>
-
-    </UserControl.Resources>
-
     <Grid>
-        <Label Content="Crypting" FontSize="42" Foreground="White" Margin="10, 0, 10, 0" />
+        <Label Content="Crypting" FontSize="42" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 0, 10, 0" />
 
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
-              Height="0" RenderTransformOrigin="0.5,0.5" Margin="-2, 0, 0, 30">
-            <Grid.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="-2"/>
-                    <TranslateTransform X="0" Y="55"/>
-                </TransformGroup>
-            </Grid.RenderTransform>
-            <ToggleButton
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                BorderThickness="0"
-                BorderBrush="Transparent" 
-                Foreground="Transparent" 
-                Background="Transparent"
-                IsChecked="{Binding ShowPopup}">
-
-                <ToggleButton.Triggers>
-                    <EventTrigger RoutedEvent="ToggleButton.Checked">
-                        <BeginStoryboard Storyboard="{StaticResource UnFoldInfo}"/>
-                    </EventTrigger>
-
-                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                        <BeginStoryboard Storyboard="{StaticResource FoldInfo}"/>
-                    </EventTrigger>
-
-                </ToggleButton.Triggers>
-            </ToggleButton>
-
+              Height="110" Margin="20, 0, 50, 20">
             <ContentControl Content="{Binding PopupViewModel}"/>
         </Grid>
-        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="200">
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
             <ContentControl Content="{Binding FilesViewViewModel}"/>
         </Grid>
     </Grid>

@@ -3,33 +3,77 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ViewModels="clr-namespace:CrytonCoreNext.ViewModels"
       mc:Ignorable="d" 
-      d:DesignHeight="100" d:DesignWidth="800">
+      d:DesignHeight="150" d:DesignWidth="800">
 
-    <Grid Margin="-1">
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FF131313" Offset="0"/>
-                <GradientStop Color="#FF091227" Offset="0.077"/>
-                <GradientStop Color="#FF131313" Offset="0.146"/>
-            </LinearGradientBrush>
-        </Grid.Background>
+    <UserControl.Resources>
+        
+        <Storyboard x:Key="FadeInfo" Storyboard.Target = "{Binding ElementName=Popup}">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="0.0" To="1.0" Duration="0:0:1"/>
+        </Storyboard>
 
-        <DockPanel x:Name="Grid" Margin="20,-10,0,0" Height="148">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
-                <TextBlock FontSize="18" TextWrapping="Wrap" VerticalAlignment="Top"
-                               TextAlignment="Center" Foreground="White" 
-                               Text="{Binding InformationString}"
-                               MaxWidth="{Binding ElementName=Grid, Path=ActualWidth}">
-                </TextBlock>
-            </ScrollViewer>
-            <DockPanel.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="2"/>
-                </TransformGroup>
-            </DockPanel.RenderTransform>
-        </DockPanel>
+        <Storyboard x:Key="UnFadeInfo" Storyboard.Target = "{Binding ElementName=Popup}">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="1.0" To="0.0" BeginTime="0:0:0.5" Duration="0:0:2"/>
+        </Storyboard>
+
+        <Storyboard x:Key="FadeShadow" Storyboard.Target = "{Binding ElementName=ShadowPopupEffect}">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="0.0" To="0.8" BeginTime="0:0:0.5" Duration="0:0:2"/>
+        </Storyboard>
+
+        <Storyboard x:Key="UnFadeShadow" Storyboard.Target = "{Binding ElementName=ShadowPopupEffect}">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="0.8" To="0.0" Duration="0:0:2"/>
+        </Storyboard>
+    </UserControl.Resources>
+
+
+    <Grid x:Name="PopupGrid" Height="110">
+
+        <Grid Margin="-1" Background="#FF131313" Opacity="0" x:Name="ShadowPopupEffect">
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="25" ShadowDepth="0" Color="{Binding BackgroundColor}"/>
+            </Grid.Effect>
+        </Grid>
+
+        <Grid x:Name="Popup" Margin="-1" Background="#FF131313" Opacity="0">
+            <DockPanel x:Name="Grid" Height="110" HorizontalAlignment="Stretch">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="{Binding VerticalScrollBarVisbility}" HorizontalAlignment="Stretch">
+                    <TextBlock FontSize="18" TextWrapping="Wrap" VerticalAlignment="Top" Margin="20"
+                                   TextAlignment="Center" Foreground="White" 
+                                   Text="{Binding InformationString}"
+                                   MaxWidth="{Binding ElementName=PopupGrid, Path=ActualWidth}">
+                    </TextBlock>
+                </ScrollViewer>
+            </DockPanel>
+
+            <Grid Width="0" Height="0">
+                <ToggleButton IsChecked="{Binding ShowPopup}">
+
+                    <ToggleButton.Triggers>
+
+                        <EventTrigger RoutedEvent="ToggleButton.Checked">
+                            <BeginStoryboard Storyboard="{StaticResource FadeInfo}"/>
+                        </EventTrigger>
+
+                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                            <BeginStoryboard Storyboard="{StaticResource UnFadeInfo}"/>
+                        </EventTrigger>
+
+                        <EventTrigger RoutedEvent="ToggleButton.Checked">
+                            <BeginStoryboard Storyboard="{StaticResource FadeShadow}"/>
+                        </EventTrigger>
+
+                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                            <BeginStoryboard Storyboard="{StaticResource UnFadeShadow}"/>
+                        </EventTrigger>
+
+                    </ToggleButton.Triggers>
+                </ToggleButton>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
