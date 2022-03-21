@@ -8,17 +8,16 @@
     d:DesignHeight="450"
     d:DesignWidth="1400"
     mc:Ignorable="d">
-
+    
     <UserControl.Background>
-        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="#FF0B4052"/>
-            <GradientStop Color="#FF0E1B29" Offset="1"/>
-            <GradientStop Color="#FF0E1B29" Offset="0.249"/>
+        <LinearGradientBrush  StartPoint="0.3,0" EndPoint="0.4,1">
+            <GradientStop Color="{StaticResource BackgroundColor}" Offset="1"/>
+            <GradientStop Color="#FF203E65" Offset="0"/>
         </LinearGradientBrush>
     </UserControl.Background>
 
     <Grid>
-        <Label Content="Crypting" FontSize="42" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 0, 10, 0" />
+        <Label Content="Crypting" FontSize="48" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 0, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
 
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
               Height="110" Margin="20, 0, 50, 20">

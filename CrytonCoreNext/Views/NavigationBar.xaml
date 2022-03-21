@@ -11,7 +11,7 @@
     mc:Ignorable="d">
 
     <UserControl.Background>
-        <SolidColorBrush Color="#FF131313"/>
+        <SolidColorBrush Color="{StaticResource BackgroundColor}"/>
     </UserControl.Background>
 
     <UserControl.Resources>
@@ -41,7 +41,8 @@
                 <RowDefinition Height="75"/>
             </Grid.RowDefinitions>
 
-            <TextBlock
+            <TextBlock FontFamily="Segoe UI Variable Text Light"
+                       Margin="10"
                 Grid.Row="0"
                 FontSize="34"
                 Foreground="White"
@@ -65,7 +66,7 @@
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="30"/>
-                <Button
+                <Button FontFamily="Segoe UI Variable Text Light"
                     Grid.Row="1"
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
@@ -92,7 +93,7 @@
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="45">
                 </Image>
-                <Button
+                <Button FontFamily="Segoe UI Variable Text Light"
                     Grid.Row="2"
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
@@ -120,7 +121,7 @@
                        Width="45">
 
                 </Image>
-                <Button
+                <Button FontFamily="Segoe UI Variable Text Light"
                     Grid.Row="3"
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
@@ -148,7 +149,7 @@
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="45">
                 </Image>
-                <Button
+                <Button FontFamily="Segoe UI Variable Text Light"
                     Grid.Row="4"
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
@@ -174,7 +175,7 @@
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="45">
             </Image>
-            <Button
+            <Button FontFamily="Segoe UI Variable Text Light"
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
                     FontSize="22"

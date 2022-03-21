@@ -1,14 +1,18 @@
 ﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Models;
+using System.Collections.ObjectModel;
 
 namespace CrytonCoreNext.ViewModels
 {
     public class FilesViewViewModel : ViewModelBase
     {
-        public string? Text { get; init; }
+        public int SelectedItemIndex { get; set; } = -1;
 
-        public FilesViewViewModel(string text = null)
+        public ObservableCollection<File> FilesView { get; init; }
+
+        public FilesViewViewModel()
         {
-            Text = text;
+            FilesView = new ();
         }
     }
 }

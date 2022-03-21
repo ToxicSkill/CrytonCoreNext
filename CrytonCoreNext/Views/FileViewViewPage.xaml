@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:ViewModels="clr-namespace:CrytonCoreNext.ViewModels"
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="300">
 
@@ -16,7 +15,7 @@
                 From="30"
                 To="300"
                 BeginTime="0:0:0"
-                Duration="0:0:0.5"/>
+                Duration="0:0:1"/>
         </Storyboard>
 
         <Storyboard x:Key="FoldFilesView">
@@ -26,19 +25,26 @@
                 From="300"
                 To="30"
                 BeginTime="0:0:0"
-                Duration="0:0:0.3"/>
+                Duration="0:0:0.8"/>
         </Storyboard>
 
     </UserControl.Resources>
 
     <Grid>
-        <Grid x:Name="FilesView" Background="#FF131313" Margin="-1" HorizontalAlignment="Right">
-            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding Text}" Foreground="White"/>
+        <Grid x:Name="FilesView" Margin="-1" HorizontalAlignment="Right">
+
+            <Grid.Background>
+                <SolidColorBrush Color="{StaticResource BackgroundColor}"></SolidColorBrush>
+            </Grid.Background>
+
             <ToggleButton
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Width="30"
-                Height="100">
+                Height="100"
+                Style="{StaticResource OnOffToggleImageStyle}"
+                IsChecked="False">
+
 
                 <ToggleButton.Triggers>
                     <EventTrigger RoutedEvent="ToggleButton.Checked">
@@ -51,6 +57,39 @@
 
                 </ToggleButton.Triggers>
             </ToggleButton>
+
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,100,0,-20" >
+                <SelectiveScrollingGrid>
+                    <ListView HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" BorderBrush="{StaticResource BackgroundColorBrush}"
+                              VerticalAlignment="Stretch" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
+                              Visibility="Visible"
+                              IsSynchronizedWithCurrentItem="True" Foreground="White"
+                              FontSize="20" ItemsSource="{Binding FilesView}" Background="{StaticResource BackgroundColorBrush}">
+
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Height="60" Width="290" HorizontalAlignment="Stretch" Margin="-3,0,-3,0">
+                                    <Grid.Background>
+                                        <SolidColorBrush Opacity="0.5" Color="{StaticResource BackgroundColor}"/>
+                                    </Grid.Background>
+                                    <TextBlock Text="{Binding Name, Mode=OneWay}" FontFamily="Corbel Light" FontWeight="Thin" Margin="30,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="28"  TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding Id, Mode=OneWay}" FontFamily="Dubai Light" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                    </ListView>
+                    
+
+                </SelectiveScrollingGrid>
+                </Grid>
         </Grid>
     </Grid>
 </UserControl>

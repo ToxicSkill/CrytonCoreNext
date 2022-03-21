@@ -34,9 +34,9 @@ namespace CrytonCoreNext.Abstract
             InitializeTimerWithAction(CollapsePopup, delayTime);
         }
 
-        public void UpdateFilesView(string txt)
+        public void UpdateFilesView()
         {
-            FilesViewViewModel = new(txt);
+            FilesViewViewModel = new ();
             OnPropertyChanged(nameof(FilesViewViewModel));
         }
 

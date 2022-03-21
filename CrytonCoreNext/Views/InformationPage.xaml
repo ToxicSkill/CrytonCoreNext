@@ -39,9 +39,14 @@
             </Grid.Effect>
         </Grid>
 
-        <Grid x:Name="Popup" Margin="-1" Background="#FF131313" Opacity="0">
+        <Grid x:Name="Popup" Margin="-1" Opacity="0">
+            <Grid.Background>
+                <SolidColorBrush Color="{StaticResource BackgroundColor}"></SolidColorBrush>
+            </Grid.Background>
             <DockPanel x:Name="Grid" Height="110" HorizontalAlignment="Stretch">
-                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="{Binding VerticalScrollBarVisbility}" HorizontalAlignment="Stretch">
+                <ScrollViewer HorizontalAlignment="Stretch"
+                    HorizontalScrollBarVisibility="Disabled" 
+                    VerticalScrollBarVisibility="{Binding VerticalScrollBarVisbility}">
                     <TextBlock FontSize="18" TextWrapping="Wrap" VerticalAlignment="Top" Margin="20"
                                    TextAlignment="Center" Foreground="White" 
                                    Text="{Binding InformationString}"

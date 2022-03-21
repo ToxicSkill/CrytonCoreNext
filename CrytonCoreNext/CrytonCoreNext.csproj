@@ -283,7 +283,6 @@
 
   <ItemGroup>
     <Folder Include="InformationServices\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

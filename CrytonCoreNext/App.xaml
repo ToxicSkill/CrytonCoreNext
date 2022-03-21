@@ -8,7 +8,57 @@
         <DropShadowEffect x:Key="EffectGreen" ShadowDepth="0" Color="LightGreen" Opacity="1" BlurRadius="20"/>
         <DropShadowEffect x:Key="EffectYellow" ShadowDepth="0" Color="Yellow" Opacity="1" BlurRadius="20"/>
 
- 
+        <Color x:Key="BackgroundColor">#FF131313</Color>
+        <SolidColorBrush x:Key="BackgroundColorBrush" Color="#FF131313"/>
+
+
+        <Style x:Key="OnOffToggleImageStyle" TargetType="ToggleButton">
+            <Setter Property="Background"
+                    Value="{StaticResource BackgroundColorBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="border"
+                            BorderBrush="{StaticResource BackgroundColorBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter x:Name="contentPresenter"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                                  Focusable="False"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  RecognizesAccessKey="True"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <!--<Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Content" Value="Done"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Trigger>-->
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Image Source="/Assets/Error.png" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="False">
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Image Source="/Assets/Exit.png" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
 
     </Application.Resources>
     
