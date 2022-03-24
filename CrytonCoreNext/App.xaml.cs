@@ -18,8 +18,10 @@ namespace CrytonCoreNext
             _ = services
                 .AddSingleton<IInternetConnection, InternetConnection>()
                 .AddSingleton<ITimeDate, TimeDate>()
+                .AddTransient<FilesViewViewModel>()
+                .AddTransient<InformationPopupViewModel>()
                 .AddSingleton(CreateHomeViewModel)
-                .AddSingleton(CreateCrytpingViewModel)
+                .AddSingleton<CryptingViewModel>()
                 .AddSingleton(CreateMainWindowViewModel)
                 .AddSingleton(s => new MainWindow()
                 {
@@ -42,20 +44,16 @@ namespace CrytonCoreNext
             var timeDate = provider.GetService<ITimeDate>();
             var internetConnection = provider.GetService<IInternetConnection>();
 
-            return new HomeViewModel(timeDate, internetConnection);
+            return new (timeDate, internetConnection);
         }
 
-        private CryptingViewModel CreateCrytpingViewModel(IServiceProvider provider)
-        {
-            return new CryptingViewModel();
-        }
 
         private MainViewModel CreateMainWindowViewModel(IServiceProvider provider)
         {
             var homeView = provider.GetService<HomeViewModel>();
             var cryptingView = provider.GetService<CryptingViewModel>();
 
-            return new MainViewModel(homeView, cryptingView);
+            return new (homeView, cryptingView);
         }
     }
 }
