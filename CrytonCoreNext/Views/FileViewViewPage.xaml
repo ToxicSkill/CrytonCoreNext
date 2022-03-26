@@ -4,7 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d" 
-      d:DesignHeight="900" d:DesignWidth="300">
+      d:DesignHeight="900"
+      d:DesignWidth="300">
 
 
     <UserControl.Resources>
@@ -12,7 +13,7 @@
             <DoubleAnimation   
                 Storyboard.Target = "{Binding ElementName=FilesView}"
                 Storyboard.TargetProperty="Width"
-                From="30"
+                From="50"
                 To="300"
                 BeginTime="0:0:0"
                 Duration="0:0:1"/>
@@ -23,7 +24,7 @@
                 Storyboard.Target = "{Binding ElementName=FilesView}"
                 Storyboard.TargetProperty="Width"
                 From="300"
-                To="30"
+                To="50"
                 BeginTime="0:0:0"
                 Duration="0:0:0.8"/>
         </Storyboard>
@@ -40,10 +41,10 @@
             <ToggleButton
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Width="30"
+                Width="50"
                 Height="100"
                 Style="{DynamicResource OnOffToggleImageStyle}"
-                IsChecked="False">
+                IsChecked="True">
 
 
                 <ToggleButton.Triggers>
@@ -58,7 +59,12 @@
                 </ToggleButton.Triggers>
             </ToggleButton>
 
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,100,0,-20" >
+            <Label Content="Files" VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                   Margin="50, 0, 50, 0" Height="100" 
+                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                   FontFamily="Segoe UI Variable Text Light" FontSize="36" Foreground="White"/>
+
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,100,0,-20" MaxWidth="300">
                 <SelectiveScrollingGrid>
                     <ListView HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" BorderBrush="{StaticResource BackgroundColorBrush}"
                               VerticalAlignment="Stretch" SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
@@ -83,8 +89,6 @@
                         </ListView.ItemContainerStyle>
 
                     </ListView>
-                    
-
                 </SelectiveScrollingGrid>
             </Grid>
         </Grid>

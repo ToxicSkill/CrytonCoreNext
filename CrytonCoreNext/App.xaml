@@ -45,14 +45,14 @@
                 <Trigger Property="IsChecked" Value="True">
                     <Setter Property="Content">
                         <Setter.Value>
-                            <Image Source="/Assets/Error.png" />
+                            <Image Source="/Assets/FilesSelect.png" Margin="8"/>
                         </Setter.Value>
                     </Setter>
                 </Trigger>
                 <Trigger Property="IsChecked" Value="False">
                     <Setter Property="Content">
                         <Setter.Value>
-                            <Image Source="/Assets/Exit.png" />
+                            <Image Source="/Assets/FilesSelect.png" Margin="8"/>
                         </Setter.Value>
                     </Setter>
                 </Trigger>

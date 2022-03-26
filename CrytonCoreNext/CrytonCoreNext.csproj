@@ -29,6 +29,7 @@
     <None Remove="Assets\FatalError.png" />
     <None Remove="Assets\FileOpen.png" />
     <None Remove="Assets\FileOpenError.png" />
+    <None Remove="Assets\FilesSelect.png" />
     <None Remove="Assets\FolderLocked.png" />
     <None Remove="Assets\FolderUnlocked.png" />
     <None Remove="Assets\HeavyStorm.png" />
@@ -131,6 +132,9 @@
     </Resource>
     <Resource Include="Assets\FileOpenError.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\FilesSelect.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\FolderLocked.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
