@@ -46,8 +46,17 @@
                 Grid.Row="0"
                 FontSize="34"
                 Foreground="White"
-                Text="Cryton NXT">
+                Text="Cryton">
             </TextBlock>
+
+            <Image Source="/Assets/2nxt.png"
+                   Margin="110,0,0,9"
+                       HorizontalAlignment="Left"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="100"/>
+
 
             <Grid Grid.Row="1">
                 <Grid.Style>
