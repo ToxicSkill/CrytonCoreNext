@@ -41,17 +41,17 @@
                 <RowDefinition Height="75"/>
             </Grid.RowDefinitions>
 
-            <TextBlock FontFamily="Segoe UI Variable Text Light"
+            <!--<TextBlock FontFamily="Segoe UI Variable Text Light"
                        Margin="10"
                 Grid.Row="0"
                 FontSize="34"
                 Foreground="White"
                 Text="Cryton">
-            </TextBlock>
+            </TextBlock>-->
 
             <Image Source="/Assets/2nxt.png"
-                   Margin="110,0,0,9"
-                       HorizontalAlignment="Left"
+                   Margin="60, 0, 0, 0"
+                   HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
@@ -68,13 +68,13 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Image Source="/Assets/menu.png"
+                <Image Source="/Assets/menu_home.png"
                        HorizontalAlignment="Left"
                        Margin="7,1,0,1"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="30"/>
+                       Width="36"/>
                 <Button FontFamily="Segoe UI Variable Text Light"
                     Grid.Row="1"
                     VerticalAlignment="Center"
