@@ -14,16 +14,20 @@ namespace CrytonCoreNext.ViewModels
 
         private int _selectedItemIndex = 0;
 
-        public event PropertyChangedEventHandler SelectedFilesViewItemPropertyChanged;
+        //public event PropertyChangedEventHandler SelectedFilesViewItemPropertyChanged;
 
         public int SelectedItemIndex
         {
             get => _selectedItemIndex;
             set
             {
-                _selectedItemIndex = value;
-                OnPropertyChanged(nameof(SelectedItemIndex));
-                SelectedFilesViewItemPropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedItemIndex)));
+                if (_selectedItemIndex != value)
+                {
+                    _selectedItemIndex = value;
+                    OnPropertyChanged(nameof(SelectedItemIndex));
+                    //if (value != -1)
+                    //    SelectedFilesViewItemPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedItemIndex)));
+                }
             }
         }
 

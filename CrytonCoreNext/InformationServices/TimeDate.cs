@@ -16,9 +16,9 @@ namespace CrytonCoreNext.InformationsServices
 
         public TimeDate()
         {
-            SetCurrentTime();
-            SetCurrentDay();
-            InitializeTimers();
+            //SetCurrentTime();
+            //SetCurrentDay();
+            //InitializeTimers();
         }
 
         private void InitializeTimers()

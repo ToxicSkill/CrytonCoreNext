@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -14,6 +16,8 @@ namespace CrytonCoreNext.Abstract
         public InformationPopupViewModel PopupViewModel { get; set; }
 
         public FilesViewViewModel FilesViewViewModel { get; set; }
+
+        public string FileSize { get; set; }
 
         public InteractiveViewBase()
         {
@@ -38,7 +42,14 @@ namespace CrytonCoreNext.Abstract
         public void UpdateFilesView(ObservableCollection<Models.File>? files = null)
         {
             FilesViewViewModel = new (files);
+            FilesViewViewModel.PropertyChanged += SelectedItem_PropertyChanged;
             OnPropertyChanged(nameof(FilesViewViewModel));
+        }
+
+        private void SelectedItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            FileSize = FilesViewViewModel.FilesView.ElementAt(FilesViewViewModel.SelectedItemIndex).Size;
+            OnPropertyChanged(nameof(FileSize));
         }
 
         public void ShowFilesView(bool show)

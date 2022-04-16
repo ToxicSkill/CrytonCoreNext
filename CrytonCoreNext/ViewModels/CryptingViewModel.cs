@@ -12,21 +12,12 @@ namespace CrytonCoreNext.ViewModels
 {
     public class CryptingViewModel : InteractiveViewBase
     {
-        public string FileSize { get; set; }
-
         public ICommand PostFilesCommand { get; set; }
 
         public CryptingViewModel()
         {
             PostFilesCommand = new Command(UpdateFiles, true);
-            FilesViewViewModel.SelectedFilesViewItemPropertyChanged += SelectedItem_PropertyChanged;
             //PostPopup("Hello world!", 5, EPopopColor.Information);
-        }
-
-        private void SelectedItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            FileSize = FilesViewViewModel.FilesView.ElementAt(FilesViewViewModel.SelectedItemIndex).Size;
-            OnPropertyChanged(nameof(FileSize));
         }
 
         private void UpdateFiles()
