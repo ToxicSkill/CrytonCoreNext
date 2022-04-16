@@ -63,7 +63,7 @@
                     <Style>
                         <Style.Triggers>
                             <Trigger Property="Grid.IsMouseOver" Value="True">
-                                <Setter Property="Grid.Effect" Value="{StaticResource EffectBlue}" />
+                                <Setter Property="Grid.Effect" Value="{StaticResource EffectYellow}" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -74,7 +74,7 @@
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="36"/>
+                       Width="34"/>
                 <Button FontFamily="Segoe UI Variable Text Light"
                     Grid.Row="1"
                     VerticalAlignment="Center"
@@ -172,7 +172,7 @@
                 <Style>
                     <Style.Triggers>
                         <Trigger Property="Grid.IsMouseOver" Value="True">
-                            <Setter Property="Grid.Effect" Value="{StaticResource EffectPurple}" />
+                            <Setter Property="Grid.Effect" Value="{StaticResource EffectBlue}" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>

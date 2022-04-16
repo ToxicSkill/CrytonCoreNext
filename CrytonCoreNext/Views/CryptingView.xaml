@@ -19,6 +19,8 @@
     <Grid>
         <Label Content="Crypting" FontSize="48" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 0, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
 
+        <Label Content="{Binding FileSize}" FontSize="32" Foreground="White" Height="60" VerticalAlignment="Top" Margin="10, 100, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
+
         <Button Width="100" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding PostFilesCommand}"/>
 
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 

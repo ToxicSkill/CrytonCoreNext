@@ -76,8 +76,8 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Height="60" MaxWidth="290" HorizontalAlignment="Stretch" Margin="-3,0,-3,0">
-                                    <TextBlock Text="{Binding Name, Mode=OneWay}" FontFamily="Corbel Light" FontWeight="Thin" Margin="30,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="28" TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Text="{Binding Id, Mode=OneWay}" FontFamily="Dubai Light" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0" />
+                                    <TextBlock Text="{Binding Id, Mode=OneWay}" FontFamily="Segoe UI Variable Text Light" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="18,0,0,0" />
+                                    <TextBlock Text="{Binding Name, Mode=OneWay}" FontFamily="Segoe UI Variable Text Light" FontSize="18" Margin="45,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>

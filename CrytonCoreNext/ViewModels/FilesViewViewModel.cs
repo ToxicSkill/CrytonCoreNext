@@ -3,6 +3,7 @@ using CrytonCoreNext.Commands;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 
 namespace CrytonCoreNext.ViewModels
@@ -11,7 +12,20 @@ namespace CrytonCoreNext.ViewModels
     {
         private bool _showFilesView = false;
 
-        public int SelectedItemIndex { get; set; } = -1;
+        private int _selectedItemIndex = 0;
+
+        public event PropertyChangedEventHandler SelectedFilesViewItemPropertyChanged;
+
+        public int SelectedItemIndex
+        {
+            get => _selectedItemIndex;
+            set
+            {
+                _selectedItemIndex = value;
+                OnPropertyChanged(nameof(SelectedItemIndex));
+                SelectedFilesViewItemPropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedItemIndex)));
+            }
+        }
 
         public ObservableCollection<File>? FilesView { get; init; }
 
