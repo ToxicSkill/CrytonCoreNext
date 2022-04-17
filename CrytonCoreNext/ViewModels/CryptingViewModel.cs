@@ -14,7 +14,7 @@ namespace CrytonCoreNext.ViewModels
     {
         public ICommand PostFilesCommand { get; set; }
 
-        public CryptingViewModel()
+        public CryptingViewModel() : base(new List<string>() { nameof(FileSize) })
         {
             PostFilesCommand = new Command(UpdateFiles, true);
             //PostPopup("Hello world!", 5, EPopopColor.Information);
