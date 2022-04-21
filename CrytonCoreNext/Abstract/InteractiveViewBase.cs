@@ -51,6 +51,7 @@ namespace CrytonCoreNext.Abstract
 
         private void SelectedItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+<<<<<<< Updated upstream
             foreach (var property in SubsribeProperties)
             {
                 switch (property)
@@ -71,6 +72,14 @@ namespace CrytonCoreNext.Abstract
             //    this.GetType().GetProperty(propertyReference.name).SetValue(this, FilesViewViewModel.FilesView[(int)this.GetType().GetProperty(propertyDependece.property).PropertyType.GetProperty(propertyDependece.name).GetValue(FilesViewViewModel, null)].Size);
             //    OnPropertyChanged(propertyReference.name);
             //}
+=======
+            var tempSelectedItemIndex = FilesViewViewModel.SelectedItemIndex;
+            if (tempSelectedItemIndex != -1)
+            {
+                FileSize = FilesViewViewModel.FilesView.ElementAt(tempSelectedItemIndex).Size;
+            }
+            OnPropertyChanged(nameof(FileSize));
+>>>>>>> Stashed changes
         }
 
         public void ShowFilesView(bool show)
