@@ -11,7 +11,6 @@
         <Color x:Key="BackgroundColor">#FF131313</Color>
         <SolidColorBrush x:Key="BackgroundColorBrush" Color="#FF131313"/>
 
-
         <Style x:Key="OnOffToggleImageStyle" TargetType="ToggleButton">
             <Setter Property="Background"
                     Value="{StaticResource BackgroundColorBrush}"/>
@@ -58,6 +57,16 @@
                 </Trigger>
             </Style.Triggers>
 
+        </Style>
+
+        <Style x:Key="FileInformations" TargetType="Label">
+            <Setter Property="Margin" Value="10, 0, 0, 0"/>
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
+            <Setter Property="FontWeight" Value="Normal"/>
         </Style>
 
     </Application.Resources>

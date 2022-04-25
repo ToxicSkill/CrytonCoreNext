@@ -19,7 +19,7 @@ namespace CrytonCoreNext.ViewModels
             get => _selectedItemIndex;
             set
             {
-                if (_selectedItemIndex != value)
+                if (_selectedItemIndex != value || value == 0)
                 {
                     _selectedItemIndex = value;
                     OnPropertyChanged(nameof(SelectedItemIndex));

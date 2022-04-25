@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d" 
       d:DesignHeight="900"
-      d:DesignWidth="400">
+      d:DesignWidth="300">
 
 
     <UserControl.Resources>
@@ -77,16 +77,27 @@
                             <DataTemplate>
                                 <Grid Height="60" MaxWidth="290" HorizontalAlignment="Stretch" Margin="-3,0,-3,0">
                                     <TextBlock Text="{Binding Id, Mode=OneWay}" FontFamily="Segoe UI Variable Text Light" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="18,0,0,0" />
-                                    <TextBlock Text="{Binding Name, Mode=OneWay}" FontFamily="Segoe UI Variable Text Light" FontSize="18" Margin="45,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding NameWithExtension, Mode=OneWay}" FontFamily="Segoe UI Variable Text Light" FontSize="18" Margin="45,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
+                        
+                        <!--<ListBox.Resources>
+                                <Style TargetType="ListBoxItem">
+                                    <Style.Resources>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.Con}" Color="Black"/>
+                                    </Style.Resources>
+                                </Style>
+                            </ListBox.Resources>-->
 
-                        <ListView.ItemContainerStyle>
+                            <!--<ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
-                        </ListView.ItemContainerStyle>
+                        </ListView.ItemContainerStyle>-->
 
                     </ListView>
                 </SelectiveScrollingGrid>

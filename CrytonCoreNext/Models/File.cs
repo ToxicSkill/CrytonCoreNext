@@ -1,22 +1,40 @@
-﻿namespace CrytonCoreNext.Models
+﻿using System;
+
+namespace CrytonCoreNext.Models
 {
     public class File
     {
-        public File(File file)
-        {
-            Name = file.Name;
-            Path = file.Path;
-            Size = file.Size;
-            Id = file.Id;
-            Bytes = file.Bytes;
-        }
+        public string Name { get; init; }
+
+        public string NameWithExtension { get; init; }
+
+        public string Path { get; init; }
+
+        public string Size { get; init; }
+
+        public DateTime Date { get; init; }
+
+        public string Extension { get; init; }
+
+        public int Id { get; set; }
+
+        public byte[] Bytes { get; init; }
+
+        public Guid Guid { get; init; }
 
         public File() { }
 
-        public string Name { get; init; }
-        public string Path { get; init; }
-        public string Size { get; init; }
-        public int Id { get; set; }
-        public byte[] Bytes { get; init; }
+        public File(string name, string path, string size, string nameWithExtension, DateTime date, string extension, int id, byte[] bytes)
+        {
+            Name = name;
+            NameWithExtension = nameWithExtension;
+            Path = path;
+            Size = size;
+            Date = date;
+            Extension = extension;
+            Id = id;
+            Bytes = bytes;
+            Guid = new Guid();
+        }
     }
 }

@@ -12,13 +12,7 @@ namespace CrytonCoreNext.Services
                 return null;
 
             var byteArray = File.ReadAllBytes(path);
-            return new Models.File()
-            {
-                Id = currentFilesCount++,
-                Name = Path.GetFileName(path), 
-                Path = path, 
-                Bytes = byteArray 
-            };
+            return InitializeNewFile(currentFilesCount, path, byteArray);
         }
 
         public static List<Models.File> LoadFiles(string[] paths, int currentFilesCount = 0)
@@ -42,22 +36,30 @@ namespace CrytonCoreNext.Services
             {
                 currentFilesCount += 1;
                 var byteArray = File.ReadAllBytes(path);
-                var newFile = new Models.File()
-                {
-                    Id = currentFilesCount,
-                    Name = Path.GetFileName(path), 
-                    Size = GetSizeString(byteArray.Length), 
-                    Path = path, 
-                    Bytes = byteArray 
-                };
+                Models.File newFile = InitializeNewFile(currentFilesCount, path, byteArray);
                 files.Add(newFile);
             }
 
             return files;
         }
 
+        private static Models.File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)
+        {
+            var fileInfo = new FileInfo(path);
+            return new Models.File()
+            {
+                Id = currentFilesCount,
+                Name = Path.GetFileNameWithoutExtension(fileInfo.FullName),
+                NameWithExtension = fileInfo.Name,
+                Extension = fileInfo.Extension.Substring(1),
+                Date = fileInfo.CreationTimeUtc,
+                Size = GetSizeString(fileInfo.Length),
+                Path = path,
+                Bytes = byteArray
+            };
+        }
 
-        private static string GetSizeString(int bytesCount)
+        private static string GetSizeString(long bytesCount)
         {
             string[] sizes = { "B", "KB", "MB", "GB", "TB" };
             double len = bytesCount;

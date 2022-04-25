@@ -1,8 +1,10 @@
-﻿using CrytonCoreNext.ViewModels;
+﻿using CrytonCoreNext.Models;
+using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -12,15 +14,17 @@ namespace CrytonCoreNext.Abstract
     {
         private DispatcherTimer? _timer;
 
+        protected int _lastSelectedItemIndex = 0;
+
         protected List<string> SubsribeProperties;
 
         public InformationPopupViewModel PopupViewModel { get; set; }
 
         public FilesViewViewModel FilesViewViewModel { get; set; }
 
-        public string FileSize { get; set; }
+        public File? CurrentFile { get; set; }
 
-        public InteractiveViewBase(List<string> subsribeProperties)
+        public InteractiveViewBase()
         {
             PopupViewModel = new ();
             FilesViewViewModel = new ();
@@ -30,8 +34,6 @@ namespace CrytonCoreNext.Abstract
                 nameof(PopupViewModel),
                 nameof(FilesViewViewModel)
             }.ToArray());
-
-            SubsribeProperties = subsribeProperties;
         }
 
         public void PostPopup(string informationString, int seconds, Color color = default)
@@ -47,39 +49,17 @@ namespace CrytonCoreNext.Abstract
             FilesViewViewModel = new (files);
             FilesViewViewModel.PropertyChanged += SelectedItem_PropertyChanged;
             OnPropertyChanged(nameof(FilesViewViewModel));
+            FilesViewViewModel.SelectedItemIndex = _lastSelectedItemIndex;
         }
 
         private void SelectedItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-<<<<<<< Updated upstream
-            foreach (var property in SubsribeProperties)
-            {
-                switch (property)
-                {
-                    case nameof(FileSize):
-                        FileSize = FilesViewViewModel.FilesView[FilesViewViewModel.SelectedItemIndex].Size;
-                        break;
-                    default:
-                        break;
-                }
-                OnPropertyChanged(property);
-            }
-
-            //var propertyReference = SubsribeProperties.Where(x => x.dependecy.name == e.PropertyName).Select(v => v.reference).FirstOrDefault();
-            //var propertyDependece = SubsribeProperties.Where(x => x.dependecy.name == e.PropertyName).Select(v => v.dependecy).FirstOrDefault();
-            //if (SubsribeProperties.Any(x => x.dependecy.name == e.PropertyName))
-            //{
-            //    this.GetType().GetProperty(propertyReference.name).SetValue(this, FilesViewViewModel.FilesView[(int)this.GetType().GetProperty(propertyDependece.property).PropertyType.GetProperty(propertyDependece.name).GetValue(FilesViewViewModel, null)].Size);
-            //    OnPropertyChanged(propertyReference.name);
-            //}
-=======
             var tempSelectedItemIndex = FilesViewViewModel.SelectedItemIndex;
             if (tempSelectedItemIndex != -1)
             {
-                FileSize = FilesViewViewModel.FilesView.ElementAt(tempSelectedItemIndex).Size;
+                CurrentFile = FilesViewViewModel.FilesView.ElementAt(tempSelectedItemIndex);
             }
-            OnPropertyChanged(nameof(FileSize));
->>>>>>> Stashed changes
+            OnPropertyChanged(nameof(CurrentFile));
         }
 
         public void ShowFilesView(bool show)

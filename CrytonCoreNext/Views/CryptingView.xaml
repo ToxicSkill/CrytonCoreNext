@@ -19,8 +19,15 @@
     <Grid>
         <Label Content="Crypting" FontSize="48" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 0, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
 
-        <Label Content="{Binding FileSize}" FontSize="32" Foreground="White" Height="60" VerticalAlignment="Top" Margin="10, 100, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
-
+        <Grid Margin="0, 80, 0, 0">
+            <StackPanel>
+                <Label Content="{Binding CurrentFile.Name}" Style="{StaticResource FileInformations}"/>
+                <Label Content="{Binding CurrentFile.Extension}" Style="{StaticResource FileInformations}"/>
+                <Label Content="{Binding CurrentFile.Size}" Style="{StaticResource FileInformations}"/>
+                <Label Content="{Binding CurrentFile.Date}" Style="{StaticResource FileInformations}"/>
+            </StackPanel>            
+        </Grid>
+        
         <Button Width="100" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding PostFilesCommand}"/>
 
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
