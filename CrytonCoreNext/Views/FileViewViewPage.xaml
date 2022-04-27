@@ -37,7 +37,8 @@
             <Grid.Background>
                 <SolidColorBrush Color="{StaticResource BackgroundColor}"></SolidColorBrush>
             </Grid.Background>
-
+            
+            
             <ToggleButton
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
@@ -76,8 +77,8 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Height="60" MaxWidth="290" HorizontalAlignment="Stretch" Margin="-3,0,-3,0">
-                                    <TextBlock Text="{Binding Id, Mode=OneWay}" FontFamily="Segoe UI Variable Text Light" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="18,0,0,0" />
-                                    <TextBlock Text="{Binding NameWithExtension, Mode=OneWay}" FontFamily="Segoe UI Variable Text Light" FontSize="18" Margin="45,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding Id, Mode=OneWay}" Style="{StaticResource TextBlockDefault}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="18,0,0,0" />
+                                    <TextBlock Text="{Binding NameWithExtension, Mode=OneWay}" Style="{StaticResource TextBlockDefault}" Margin="45,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>

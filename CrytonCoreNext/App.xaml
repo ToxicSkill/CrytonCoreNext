@@ -44,14 +44,18 @@
                 <Trigger Property="IsChecked" Value="True">
                     <Setter Property="Content">
                         <Setter.Value>
-                            <Image Source="/Assets/FilesSelect.png" Margin="8"/>
+                            <Image Source="/Assets/FilesSelect.png" Margin="8"
+                                   RenderOptions.EdgeMode="Aliased"
+                                   RenderOptions.BitmapScalingMode="HighQuality" />
                         </Setter.Value>
                     </Setter>
                 </Trigger>
                 <Trigger Property="IsChecked" Value="False">
                     <Setter Property="Content">
                         <Setter.Value>
-                            <Image Source="/Assets/FilesSelect.png" Margin="8"/>
+                            <Image Source="/Assets/FilesSelect.png" Margin="8"
+                                   RenderOptions.EdgeMode="Aliased"
+                                   RenderOptions.BitmapScalingMode="HighQuality" />
                         </Setter.Value>
                     </Setter>
                 </Trigger>
@@ -67,6 +71,12 @@
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
             <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+
+        <Style x:Key="TextBlockDefault" TargetType="TextBlock">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
+            <Setter Property="FontSize" Value="18"/>
         </Style>
 
     </Application.Resources>
