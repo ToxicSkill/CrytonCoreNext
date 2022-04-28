@@ -4,6 +4,7 @@ using System;
 using System.Windows;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.InformationsServices;
+using System.Collections.Generic;
 
 namespace CrytonCoreNext
 {
@@ -11,8 +12,16 @@ namespace CrytonCoreNext
     {
         private readonly IServiceProvider _serviceProvider;
 
+        private readonly List<ResourceDictionary> LanguagesDictionaries;
+
         public App()
         {
+            LanguagesDictionaries = new List<ResourceDictionary>(){
+                new ResourceDictionary() { Source = new Uri("..\\Dictionaries\\EnglishDictionary.xaml", UriKind.Relative) }
+            };
+
+            InitializeDictionary();
+
             IServiceCollection services = new ServiceCollection();
 
             _ = services
@@ -54,6 +63,12 @@ namespace CrytonCoreNext
             var cryptingView = provider.GetService<CryptingViewModel>();
 
             return new (homeView, cryptingView);
+        }
+
+        private void InitializeDictionary()
+        {
+            this.Resources.MergedDictionaries.Clear();
+            this.Resources.MergedDictionaries.Add(LanguagesDictionaries[0]);
         }
     }
 }

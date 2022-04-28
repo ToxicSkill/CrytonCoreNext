@@ -20,12 +20,22 @@
         <Label Content="Crypting" FontSize="48" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 0, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
 
         <Grid Margin="0, 80, 0, 0">
-            <StackPanel>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Content="{DynamicResource CurrentFileName}" Style="{StaticResource FileInformations}"/>
+                <Label Content="{DynamicResource CurrentFileExtension}" Style="{StaticResource FileInformations}"/>
+                <Label Content="{DynamicResource CurrentFileSize}" Style="{StaticResource FileInformations}"/>
+                <Label Content="{DynamicResource CurrentFileDate}" Style="{StaticResource FileInformations}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
                 <Label Content="{Binding CurrentFile.Name}" Style="{StaticResource FileInformations}"/>
                 <Label Content="{Binding CurrentFile.Extension}" Style="{StaticResource FileInformations}"/>
                 <Label Content="{Binding CurrentFile.Size}" Style="{StaticResource FileInformations}"/>
                 <Label Content="{Binding CurrentFile.Date}" Style="{StaticResource FileInformations}"/>
-            </StackPanel>            
+            </StackPanel>
         </Grid>
         
         <Button Width="100" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding PostFilesCommand}"/>
