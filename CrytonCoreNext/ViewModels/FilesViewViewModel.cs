@@ -1,10 +1,7 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Models;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Input;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -39,8 +36,9 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
-        public FilesViewViewModel(ObservableCollection<File>? files = null)
+        public FilesViewViewModel(ObservableCollection<File>? files = null, bool showFilesView = false)
         {
+            ShowFilesView = showFilesView;
             FilesView = files?.Copy();
             InitializeFiles();
         }

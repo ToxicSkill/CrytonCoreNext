@@ -6,5 +6,9 @@
     <system:String x:Key="CurrentFileName">Name</system:String>
     <system:String x:Key="CurrentFileExtension">Extension</system:String>
     <system:String x:Key="CurrentFileSize">Size</system:String>
-    <system:String x:Key="CurrentFileDate">Date</system:String>
+    <system:String x:Key="CurrentFileDate">Creation time</system:String>
+    
+    
+    
+    <system:String x:Key="OpenFileDialog">Open file(s)</system:String>
 </ResourceDictionary>

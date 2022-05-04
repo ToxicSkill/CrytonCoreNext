@@ -45,7 +45,7 @@
                 Width="50"
                 Height="100"
                 Style="{DynamicResource OnOffToggleImageStyle}"
-                IsChecked="False">
+                IsChecked="{Binding ShowFilesView}">
 
 
                 <ToggleButton.Triggers>

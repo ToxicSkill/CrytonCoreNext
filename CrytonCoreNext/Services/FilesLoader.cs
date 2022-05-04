@@ -1,21 +1,12 @@
-﻿using Microsoft.Win32;
+﻿using CrytonCoreNext.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 
 namespace CrytonCoreNext.Services
 {
-    public class FilesLoader
+    public class FilesLoader : IFilesLoader
     {
-        public static Models.File LoadFile(string path, int currentFilesCount = 0)
-        {
-            if (!File.Exists(path))
-                return null;
-
-            var byteArray = File.ReadAllBytes(path);
-            return InitializeNewFile(currentFilesCount, path, byteArray);
-        }
-
-        public static List<Models.File> LoadFiles(string[] paths, int currentFilesCount = 0)
+        public List<Models.File> LoadFiles(string[] paths, int currentFilesCount = 0)
         {
             var validPaths = new List<string>();
 
@@ -55,7 +46,8 @@ namespace CrytonCoreNext.Services
                 Date = fileInfo.CreationTimeUtc,
                 Size = GetSizeString(fileInfo.Length),
                 Path = path,
-                Bytes = byteArray
+                Bytes = byteArray,
+                Guid = System.Guid.NewGuid()
             };
         }
 

@@ -5,6 +5,7 @@ using System.Windows;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.InformationsServices;
 using System.Collections.Generic;
+using CrytonCoreNext.Services;
 
 namespace CrytonCoreNext
 {
@@ -27,10 +28,12 @@ namespace CrytonCoreNext
             _ = services
                 .AddSingleton<IInternetConnection, InternetConnection>()
                 .AddSingleton<ITimeDate, TimeDate>()
+                .AddSingleton<IFilesLoader, FilesLoader>()
+                .AddSingleton<IFilesManager>(CreateFilesManager)
                 .AddTransient<FilesViewViewModel>()
                 .AddTransient<InformationPopupViewModel>()
                 .AddSingleton(CreateHomeViewModel)
-                .AddSingleton<CryptingViewModel>()
+                .AddSingleton(CreateCryptingViewModel)
                 .AddSingleton(CreateMainWindowViewModel)
                 .AddSingleton(s => new MainWindow()
                 {
@@ -63,6 +66,18 @@ namespace CrytonCoreNext
             var cryptingView = provider.GetService<CryptingViewModel>();
 
             return new (homeView, cryptingView);
+        }
+
+        private FilesManager CreateFilesManager(IServiceProvider provider)
+        {
+            var filesLoader = provider.GetRequiredService<IFilesLoader>();
+            return new FilesManager(filesLoader);
+        }
+
+        private CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
+        {
+            var filesManager = provider.GetRequiredService<IFilesManager>();
+            return new (filesManager);
         }
 
         private void InitializeDictionary()

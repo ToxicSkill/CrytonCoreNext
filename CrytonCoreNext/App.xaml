@@ -53,7 +53,7 @@
                 <Trigger Property="IsChecked" Value="False">
                     <Setter Property="Content">
                         <Setter.Value>
-                            <Image Source="/Assets/FilesSelect.png" Margin="8"
+                            <Image Source="/Assets/FilesSelectHover.png" Margin="8"
                                    RenderOptions.EdgeMode="Aliased"
                                    RenderOptions.BitmapScalingMode="HighQuality" />
                         </Setter.Value>
@@ -67,7 +67,7 @@
             <Setter Property="Margin" Value="10, 0, 0, 0"/>
             <Setter Property="FontSize" Value="26"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Height" Value="60"/>
+            <Setter Property="Height" Value="50"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
             <Setter Property="FontWeight" Value="Normal"/>
