@@ -22,11 +22,7 @@ namespace CrytonCoreNext.Extensions
             {
                 if (filesView.FilesView != null)
                 {
-                    if (!filesView.FilesView.IsCollectionEmpty())
-                    {
-                        return false;
-                    }
-                    return true;
+                    return false;
                 }
                 return true;
             }

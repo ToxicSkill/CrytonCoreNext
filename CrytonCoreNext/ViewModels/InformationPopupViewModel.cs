@@ -11,11 +11,11 @@ namespace CrytonCoreNext.ViewModels
     {
         private bool _showPopup = false;
 
+        public string InformationString { get; init; }
+
         private Color _defaultColor = EPopopColor.Information;
 
         public Color BackgroundColor { get; set; }
-
-        public string InformationString { get; init; }
 
         public ICommand CollapsePopupCommand { get; set; }
 

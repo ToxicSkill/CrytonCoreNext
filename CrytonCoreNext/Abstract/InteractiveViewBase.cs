@@ -21,8 +21,6 @@ namespace CrytonCoreNext.Abstract
 
         private DispatcherTimer? _timer;
 
-        protected int _lastSelectedItemIndex = 0;
-
         public InformationPopupViewModel PopupViewModel { get; set; }
 
         public FilesViewViewModel FilesViewViewModel { get; set; }
@@ -44,6 +42,14 @@ namespace CrytonCoreNext.Abstract
             }.ToArray());
         }
 
+        public void PostPopup(string informationString, int seconds, Color color = default)
+        {
+            PopupViewModel = new(informationString, color);
+            ShowInformationBar(true);
+            OnPropertyChanged(nameof(PopupViewModel));
+            InitializeTimerWithAction(CollapsePopup, seconds);
+        }
+
         public void AddFiles()
         {
             WindowDialog.OpenDialog openDialog = new(new DialogHelper()
@@ -56,7 +62,6 @@ namespace CrytonCoreNext.Abstract
             if (chosenPaths.Count > 0)
             {
                 var filesCount = FilesViewViewModel.FilesView == null ? 0 : FilesViewViewModel.FilesView.Count;
-                _lastSelectedItemIndex = FilesViewViewModel.SelectedItemIndex != -1 ? FilesViewViewModel.SelectedItemIndex : 0;
                 var newFiles = _filesManager.AddFiles(chosenPaths.ToArray(), filesCount);
                 var newFilesCollection = filesCount > 0 ?
                     FilesViewViewModel.FilesView?.ToList().Concat(newFiles) :
@@ -66,47 +71,63 @@ namespace CrytonCoreNext.Abstract
             }
         }
 
-        public void PostPopup(string informationString, int seconds, Color color = default)
-        {
-            PopupViewModel = new (informationString, color);
-            ShowInformationBar(true);
-            OnPropertyChanged(nameof(PopupViewModel));
-            InitializeTimerWithAction(CollapsePopup, seconds);
-        }
-
         public void ClearAllFiles()
         {
             _ = _filesManager.ClearAllFiles(FilesViewViewModel.FilesView);
+            FilesViewViewModel.SelectedItemIndex = -1;
             UpdateFilesView();
         }
 
         public void DeleteFile()
         {
             _ = _filesManager.DeleteItem(FilesViewViewModel.FilesView, CurrentFile.Guid);
+            FilesViewViewModel.SelectedItemIndex--;
             UpdateFilesView();
         }
 
         public void SetFileAsFirst()
         {
             _ = _filesManager.SetItemAsFirst(FilesViewViewModel.FilesView, CurrentFile.Guid);
+            FilesViewViewModel.SelectedItemIndex = 0;
             UpdateFilesView();
         }
 
         public void SetFileAsLast()
         {
             _ = _filesManager.SetItemAsLast(FilesViewViewModel.FilesView, CurrentFile.Guid);
+            FilesViewViewModel.SelectedItemIndex = FilesViewViewModel.FilesView.Count - 1;
             UpdateFilesView();
         }
 
         public void MoveFileUp()
         {
+            var index = FilesViewViewModel.SelectedItemIndex;
             _ = _filesManager.MoveItemUp(FilesViewViewModel.FilesView, CurrentFile.Guid);
+            if (index <= 0)
+            {
+                FilesViewViewModel.SelectedItemIndex = 0;
+            }
+            else
+            {
+                FilesViewViewModel.SelectedItemIndex = index - 1;
+            }
+
             UpdateFilesView();
         }
 
         public void MoveFileDown()
         {
+            var index = FilesViewViewModel.SelectedItemIndex;
             _ = _filesManager.MoveItemDown(FilesViewViewModel.FilesView, CurrentFile.Guid);
+            if (index == FilesViewViewModel.FilesView.Count - 1)
+            { 
+                FilesViewViewModel.SelectedItemIndex = index;
+            }
+            else
+            {
+                FilesViewViewModel.SelectedItemIndex = index + 1;
+            }
+
             UpdateFilesView();
         }
 
@@ -115,6 +136,7 @@ namespace CrytonCoreNext.Abstract
 
         private void UpdateFilesView(ObservableCollection<Models.File>? files = null)
         {
+            var index = FilesViewViewModel.SelectedItemIndex;
             if (files == null)
             {
                 files = FilesViewViewModel.FilesView;
@@ -122,7 +144,8 @@ namespace CrytonCoreNext.Abstract
             FilesViewViewModel = new(files, FilesViewViewModel.ShowFilesView);
             FilesViewViewModel.PropertyChanged += SelectedItem_PropertyChanged;
             OnPropertyChanged(nameof(FilesViewViewModel));
-            FilesViewViewModel.SelectedItemIndex = _lastSelectedItemIndex;
+            FilesViewViewModel.SelectedItemIndex = index;
+            OnPropertyChanged(nameof(FilesViewViewModel.SelectedItemIndex));
             UpdateFilesVisibility();
         }
 
