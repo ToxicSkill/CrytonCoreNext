@@ -1,8 +1,10 @@
 ﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
@@ -22,17 +24,18 @@ namespace CrytonCoreNext.Services
             return _filesLoader.LoadFiles(paths, currentIndex);
         }
 
-        public bool DeleteItem(FilesViewViewModel filesViewViewModel, Guid guid)
+        public bool DeleteItem(ObservableCollection<Models.File> files, Guid guid)
         {
-            if (filesViewViewModel == null)
+            if (files.IsCollectionEmpty())
             {
+                return false;
             }
-            var fileToDelete = filesViewViewModel?.FilesView?.Where(x => x.Guid == guid).Select(x => x).FirstOrDefault();
+            var fileToDelete = GetFileByGuid(files, guid);
             if (fileToDelete != null)
             {
                 var fileId = fileToDelete?.Id;
-                filesViewViewModel?.FilesView?.Remove(fileToDelete);
-                foreach (var file in filesViewViewModel?.FilesView)
+                files.Remove(fileToDelete);
+                foreach (var file in files)
                 {
                    if (file.Id > fileId)
                    {
@@ -44,32 +47,112 @@ namespace CrytonCoreNext.Services
             return false;
         }
 
-        public bool DeleteItem(FilesViewViewModel filesViewViewModel, int index)
+        public bool SetItemAsFirst(ObservableCollection<Models.File> files, Guid guid)
         {
-            return filesViewViewModel == null ?
-                false :
-                filesViewViewModel.FilesView.Remove(filesViewViewModel.FilesView.ElementAt(index));
-        }
-
-        public bool ClearAllFiles(FilesViewViewModel filesViewViewModel)
-        {
-            if (filesViewViewModel == null)
+            if (files.IsCollectionEmpty())
             {
                 return false;
             }
-            if (filesViewViewModel.FilesView.Count == 0)
+            var chosen = GetFileByGuid(files, guid);
+            if (chosen != null && chosen.Id != 1)
             {
-                return false;
+                files.Remove(chosen);
+                files.Insert(0, chosen);
+                foreach (var file in files.Select((value, i) => new { i, value }))
+                {
+                    file.value.Id = file.i + 1;
+                }
             }
-
-
-            filesViewViewModel.FilesView.Clear();
-            filesViewViewModel.SelectedItemIndex = -1;
-
-            OnPropertyChanged(nameof(filesViewViewModel.SelectedItemIndex));
-            OnPropertyChanged(nameof(filesViewViewModel.FilesView));
 
             return true;
+        }
+
+        public bool SetItemAsLast(ObservableCollection<Models.File> files, Guid guid)
+        {
+            if (files.IsCollectionEmpty())
+            {
+                return false;
+            }
+            var chosen = GetFileByGuid(files, guid);
+            if (chosen != null && chosen.Id != files.Count)
+            {
+                files.Remove(chosen);
+                files.Insert(files.Count, chosen);
+                foreach (var file in files.Select((value, i) => new { i, value }))
+                {
+                    file.value.Id = file.i + 1;
+                }
+            }
+
+            return true;
+        }
+
+        public bool MoveItemUp(ObservableCollection<Models.File> files, Guid guid)
+        {
+            if (files.IsCollectionEmpty())
+            {
+                return false;
+            }
+            var chosen = GetFileByGuid(files, guid);
+            if (chosen != null && chosen.Id != 1)
+            {
+                files.Remove(chosen);
+                files?.Insert(chosen.Id - 2, chosen);
+                foreach (var file in files.Select((value, i) => new { i, value }))
+                {
+                    file.value.Id = file.i + 1;
+                }
+            }
+
+            return true;
+        }
+
+        public bool MoveItemDown(ObservableCollection<Models.File> files, Guid guid)
+        {
+            if (files.IsCollectionEmpty())
+            {
+                return false;
+            }
+            var chosen = GetFileByGuid(files, guid);
+            if (chosen != null && chosen.Id < files.Count)
+            {
+                files.Remove(chosen);
+                files.Insert(chosen.Id, chosen);
+                foreach (var file in files.Select((value, i) => new { i, value }))
+                {
+                    file.value.Id = file.i + 1;
+                }
+            }
+
+            return true;
+        }
+
+
+        public bool DeleteItem(ObservableCollection<Models.File> files, int index)
+        {
+            if (!files.IsCollectionEmpty())
+            {
+                return files.Remove(files.ElementAt(index));
+            }
+
+            return false;                
+        }
+
+        public bool ClearAllFiles(ObservableCollection<Models.File> files)
+        {
+            if (files.IsCollectionEmpty())
+            {
+                return false;
+            }
+
+            files.Clear();
+
+            return true;
+        }
+
+        private Models.File? GetFileByGuid(ObservableCollection<Models.File> files, Guid guid)
+        {
+            return files.Where(x => x.Guid == guid).Select(x => x).FirstOrDefault();
         }
     }
 }

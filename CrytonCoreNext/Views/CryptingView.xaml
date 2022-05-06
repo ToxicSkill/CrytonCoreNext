@@ -37,11 +37,6 @@
                 <Label Content="{Binding CurrentFile.Date}" Style="{StaticResource FileInformations}"/>
             </StackPanel>
         </Grid>
-
-        <Button Width="100" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding PostFilesCommand}"/>
-        <Button Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Command="{Binding ClearFilesCommand}"/>
-        <Button Width="100" Height="40" HorizontalAlignment="Left" Margin="200, 0, 0, 0" VerticalAlignment="Center" Command="{Binding DeleteCurrentFileCommand}"/>
-
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
               Height="110" Margin="20, 0, 70, 20">
             <ContentControl Content="{Binding PopupViewModel}"/>
@@ -49,5 +44,14 @@
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
             <ContentControl Content="{Binding FilesViewViewModel}"/>
         </Grid>
+
+        <Button Width="150" Height="40" Content="Open files" Command="{Binding PostFilesCommand}" Margin="39,375,1211,35"/>
+        <Button Width="150" Height="40" Content="Clear files" Command="{Binding ClearFilesCommand}" Margin="39,310,1211,100"/>
+        <Button Width="150" Height="40" Content="Delete selected" Command="{Binding DeleteCurrentFileCommand}" Margin="39,240,1211,170"/>
+        <Button Width="150" Height="40" Content="Set as first" Command="{Binding SetFileAsFirstCommand}" Margin="250,240,1000,170"/>
+        <Button Width="150" Height="40" Content="Set as last" Command="{Binding SetFileAsLastCommand}" Margin="250,310,1000,100"/>
+        <Button Width="150" Height="40" Content="Move up" Command="{Binding MoveFileUpCommand}" Margin="478,240,772,170" />
+        <Button Width="150" Height="40" Content="Move down" Command="{Binding MoveFileDownCommand}" Margin="478,310,772,100" />
+
     </Grid>
 </UserControl>

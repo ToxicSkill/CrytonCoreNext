@@ -10,6 +10,14 @@ namespace CrytonCoreNext.Interfaces
 
         void PostPopup(string informationString, int seconds, Color color = default);
 
-        void DeleteItem();
+        void DeleteFile();
+
+        void SetFileAsFirst();
+
+        void SetFileAsLast();
+
+        void MoveFileUp();
+
+        void MoveFileDown();
     }
 }

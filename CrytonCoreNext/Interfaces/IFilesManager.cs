@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace CrytonCoreNext.Interfaces
 {
@@ -8,10 +9,18 @@ namespace CrytonCoreNext.Interfaces
     {
         List<Models.File> AddFiles(string[] paths, int currentIndex = 0);
 
-        bool DeleteItem(FilesViewViewModel filesViewViewModel, int index);
+        bool DeleteItem(ObservableCollection<Models.File> files, int index);
 
-        bool DeleteItem(FilesViewViewModel filesViewViewModel, Guid guid);
+        bool DeleteItem(ObservableCollection<Models.File> files, Guid guid);
 
-        bool ClearAllFiles(FilesViewViewModel filesViewViewMode);
+        bool ClearAllFiles(ObservableCollection<Models.File> files);
+
+        bool SetItemAsFirst(ObservableCollection<Models.File> files, Guid guid);
+
+        bool SetItemAsLast(ObservableCollection<Models.File> files, Guid guid);
+
+        bool MoveItemUp(ObservableCollection<Models.File> files, Guid guid);
+
+        bool MoveItemDown(ObservableCollection<Models.File> files, Guid guid);
     }
 }

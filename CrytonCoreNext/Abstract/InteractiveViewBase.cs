@@ -44,12 +44,6 @@ namespace CrytonCoreNext.Abstract
             }.ToArray());
         }
 
-        public void ClearAllFiles()
-        {
-            _filesManager.ClearAllFiles(FilesViewViewModel);
-            UpdateFilesVisibility();
-        }
-
         public void AddFiles()
         {
             WindowDialog.OpenDialog openDialog = new(new DialogHelper()
@@ -80,16 +74,51 @@ namespace CrytonCoreNext.Abstract
             InitializeTimerWithAction(CollapsePopup, seconds);
         }
 
-        public void DeleteItem()
+        public void ClearAllFiles()
         {
-            _filesManager.DeleteItem(FilesViewViewModel, CurrentFile.Guid);
-            UpdateFilesView(FilesViewViewModel.FilesView);
+            _ = _filesManager.ClearAllFiles(FilesViewViewModel.FilesView);
+            UpdateFilesView();
+        }
+
+        public void DeleteFile()
+        {
+            _ = _filesManager.DeleteItem(FilesViewViewModel.FilesView, CurrentFile.Guid);
+            UpdateFilesView();
+        }
+
+        public void SetFileAsFirst()
+        {
+            _ = _filesManager.SetItemAsFirst(FilesViewViewModel.FilesView, CurrentFile.Guid);
+            UpdateFilesView();
+        }
+
+        public void SetFileAsLast()
+        {
+            _ = _filesManager.SetItemAsLast(FilesViewViewModel.FilesView, CurrentFile.Guid);
+            UpdateFilesView();
+        }
+
+        public void MoveFileUp()
+        {
+            _ = _filesManager.MoveItemUp(FilesViewViewModel.FilesView, CurrentFile.Guid);
+            UpdateFilesView();
+        }
+
+        public void MoveFileDown()
+        {
+            _ = _filesManager.MoveItemDown(FilesViewViewModel.FilesView, CurrentFile.Guid);
+            UpdateFilesView();
         }
 
         public virtual void Dispose() { }
 
+
         private void UpdateFilesView(ObservableCollection<Models.File>? files = null)
         {
+            if (files == null)
+            {
+                files = FilesViewViewModel.FilesView;
+            }
             FilesViewViewModel = new(files, FilesViewViewModel.ShowFilesView);
             FilesViewViewModel.PropertyChanged += SelectedItem_PropertyChanged;
             OnPropertyChanged(nameof(FilesViewViewModel));
@@ -102,11 +131,11 @@ namespace CrytonCoreNext.Abstract
             if (filesCollection != null)
             {
                 UpdateFilesView(new ObservableCollection<File>(filesCollection));
-                PostPopup("File(s) where loaded successfuly", 5, EPopopColor.Information);
+                PostPopup("File(s) where loaded successfuly", 2, EPopopColor.Information);
             }
             else
             {
-                PostPopup("Error occured when loading file(s)", 5, EPopopColor.Error);
+                PostPopup("Error occured when loading file(s)", 2, EPopopColor.Error);
             }
         }
 
@@ -127,6 +156,7 @@ namespace CrytonCoreNext.Abstract
             else
             {
                 FileInformationVisibility = Visibility.Hidden;
+                ShowFilesView(false);
             }
             OnPropertyChanged(nameof(FileInformationVisibility));
         }

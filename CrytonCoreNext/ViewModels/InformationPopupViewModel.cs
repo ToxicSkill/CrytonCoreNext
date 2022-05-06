@@ -1,6 +1,8 @@
 ﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Commands;
 using CrytonCoreNext.Enums;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace CrytonCoreNext.ViewModels
@@ -14,6 +16,8 @@ namespace CrytonCoreNext.ViewModels
         public Color BackgroundColor { get; set; }
 
         public string InformationString { get; init; }
+
+        public ICommand CollapsePopupCommand { get; set; }
 
         public ScrollBarVisibility VerticalScrollBarVisbility { get; set; }
 
@@ -37,6 +41,12 @@ namespace CrytonCoreNext.ViewModels
             BackgroundColor = color;
             InformationString = informationString;
             VerticalScrollBarVisbility = ScrollBarVisibility.Hidden;
+            CollapsePopupCommand = new Command(CollapsePopup, true);
+        }
+
+        private void CollapsePopup()
+        {
+            ShowPopup = false;
         }
     }
 }
