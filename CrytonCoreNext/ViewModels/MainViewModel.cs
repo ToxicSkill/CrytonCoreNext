@@ -10,10 +10,11 @@ namespace CrytonCoreNext.ViewModels
         public NavigationViewModel NavigationView { get; set; }
 
         public MainViewModel(ViewModelBase homeViewModel,
-            ViewModelBase cryptingViewModel)
+            ViewModelBase cryptingViewModel,
+            ViewModelBase pdfManagerViewModel)
         {
             ViewModel = homeViewModel;
-            NavigationView = new (this, homeViewModel, cryptingViewModel);
+            NavigationView = new (this, homeViewModel, cryptingViewModel, pdfManagerViewModel);
         }
 
         public void Navigate(ViewModelBase viewModel)

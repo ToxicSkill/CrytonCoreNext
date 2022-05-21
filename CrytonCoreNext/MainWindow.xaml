@@ -29,6 +29,9 @@
             <DataTemplate DataType="{x:Type ViewModels:CryptingViewModel}">
                 <views:CryptingView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModels:PdfManagerViewModel}">
+                <views:PdfManagerView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type ViewModels:InformationPopupViewModel}">
                 <views:InformationPage />
             </DataTemplate>

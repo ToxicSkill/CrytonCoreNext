@@ -34,6 +34,7 @@ namespace CrytonCoreNext
                 .AddTransient<InformationPopupViewModel>()
                 .AddSingleton(CreateHomeViewModel)
                 .AddSingleton(CreateCryptingViewModel)
+                .AddSingleton(CreatePdfManagerViewModel)
                 .AddSingleton(CreateMainWindowViewModel)
                 .AddSingleton(s => new MainWindow()
                 {
@@ -64,8 +65,9 @@ namespace CrytonCoreNext
         {
             var homeView = provider.GetService<HomeViewModel>();
             var cryptingView = provider.GetService<CryptingViewModel>();
+            var pdfManagerView = provider.GetService<PdfManagerViewModel>();
 
-            return new (homeView, cryptingView);
+            return new (homeView, cryptingView, pdfManagerView);
         }
 
         private FilesManager CreateFilesManager(IServiceProvider provider)
@@ -78,6 +80,12 @@ namespace CrytonCoreNext
         {
             var filesManager = provider.GetRequiredService<IFilesManager>();
             return new (filesManager);
+        }
+
+        private PdfManagerViewModel CreatePdfManagerViewModel(IServiceProvider provider)
+        {
+            var filesManager = provider.GetRequiredService<IFilesManager>();
+            return new(filesManager);
         }
 
         private void InitializeDictionary()

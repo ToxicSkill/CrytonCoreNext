@@ -163,7 +163,8 @@
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
                     FontSize="22"
-                    Content="Pdf Manager" />
+                    Content="Pdf Manager"
+                    Command="{Binding NavigatePdfManagerCommand}"/>
             </Grid>
         </Grid>
 

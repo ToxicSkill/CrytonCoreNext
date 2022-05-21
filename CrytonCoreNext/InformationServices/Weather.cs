@@ -144,22 +144,22 @@ namespace CrytonCoreNext.InformationsServices
             {
                 case "rain":
                     if (liftedIndex < -5)
-                        ActualWeatherIcon = "/CrytonCore;component/Assets/HeavyStorm.png";
+                        ActualWeatherIcon = "/CrytonCoreNext;component/Assets/HeavyStorm.png";
                     else
-                        ActualWeatherIcon = "/CrytonCore;component/Assets/Rain.png";
+                        ActualWeatherIcon = "/CrytonCoreNext;component/Assets/Rain.png";
                     return;
                 case "snow":
-                    ActualWeatherIcon = "/CrytonCore;component/Assets/Snow.png";
+                    ActualWeatherIcon = "/CrytonCoreNext;component/Assets/Snow.png";
                     return;
                 case "none":
                     if (cloundIndex < 3 && liftedIndex > -5)
-                        ActualWeatherIcon = night ? "/CrytonCore;component/Assets/Moon.png" : "/CrytonCore;component/Assets/Sun.png";
+                        ActualWeatherIcon = night ? "/CrytonCoreNext;component/Assets/Moon.png" : "/CrytonCoreNext;component/Assets/Sun.png";
                     if (cloundIndex > 2 && cloundIndex < 9 && liftedIndex > -5)
-                        ActualWeatherIcon = night ? "/CrytonCore;component/Assets/MoonCloud.png" : "/CrytonCore;component/Assets/PartialSun.png";
+                        ActualWeatherIcon = night ? "/CrytonCoreNext;component/Assets/MoonCloud.png" : "/CrytonCoreNext;component/Assets/PartialSun.png";
                     if (cloundIndex == 9 && liftedIndex > -5)
-                        ActualWeatherIcon = "/CrytonCore;component/Assets/Cloud.png";
+                        ActualWeatherIcon = "/CrytonCoreNext;component/Assets/Cloud.png";
                     if (liftedIndex < -5)
-                        ActualWeatherIcon = "/CrytonCore;component/Assets/Storm.png";
+                        ActualWeatherIcon = "/CrytonCoreNext;component/Assets/Storm.png";
                     break;
                 default:
                     break;

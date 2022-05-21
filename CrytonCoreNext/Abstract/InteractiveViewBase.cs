@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Enums;
+﻿using CrytonCoreNext.Crypting;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
@@ -81,7 +82,6 @@ namespace CrytonCoreNext.Abstract
         public void DeleteFile()
         {
             _ = _filesManager.DeleteItem(FilesViewViewModel.FilesView, CurrentFile.Guid);
-            FilesViewViewModel.SelectedItemIndex--;
             UpdateFilesView();
         }
 
@@ -166,15 +166,7 @@ namespace CrytonCoreNext.Abstract
         {
             if (FilesViewViewModel.SelectedItemIndex != -1 && FilesViewViewModel != null)
             {
-                if (FilesViewViewModel.FilesView.Count > 0)
-                {
-                    FileInformationVisibility = Visibility.Visible;
-                }
-                else
-                {
-                    FileInformationVisibility = Visibility.Hidden;
-                    ShowFilesView(false);
-                }
+                FileInformationVisibility = Visibility.Visible;
             }
             else
             {

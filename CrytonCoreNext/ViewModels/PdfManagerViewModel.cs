@@ -2,11 +2,10 @@
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Interfaces;
 using System.Windows.Input;
-using CrytonCoreNext.Crypting;
 
 namespace CrytonCoreNext.ViewModels
 {
-    public class CryptingViewModel : InteractiveViewBase
+    public class PdfManagerViewModel : InteractiveViewBase
     {
         public ICommand PostFilesCommand { get; set; }
 
@@ -22,7 +21,7 @@ namespace CrytonCoreNext.ViewModels
 
         public ICommand MoveFileDownCommand { get; set; }
 
-        public CryptingViewModel(IFilesManager filesManager) : base(filesManager)
+        public PdfManagerViewModel(IFilesManager filesManager) : base(filesManager)
         {
             PostFilesCommand = new Command(AddFiles, true);
             ClearFilesCommand = new Command(ClearAllFiles, true);
@@ -31,9 +30,6 @@ namespace CrytonCoreNext.ViewModels
             SetFileAsLastCommand = new Command(SetFileAsLast, true);
             MoveFileUpCommand = new Command(MoveFileUp, true);
             MoveFileDownCommand = new Command(MoveFileDown, true);
-
-            //var t = new Crypting.Crypting(new () { new (new AES(), ECrypting.EnumToString(ECrypting.Methods.aes)) });
-            //t.Encrypt(FilesViewViewModel.FilesView[0].Bytes, ECrypting.EnumToString(ECrypting.Methods.aes));
         }
     }
 }
