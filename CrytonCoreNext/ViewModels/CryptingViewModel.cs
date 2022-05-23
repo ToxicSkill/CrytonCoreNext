@@ -2,7 +2,6 @@
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Interfaces;
 using System.Windows.Input;
-using CrytonCoreNext.Crypting;
 
 namespace CrytonCoreNext.ViewModels
 {

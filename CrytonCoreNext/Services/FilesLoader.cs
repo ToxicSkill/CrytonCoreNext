@@ -47,6 +47,7 @@ namespace CrytonCoreNext.Services
                 Size = GetSizeString(fileInfo.Length),
                 Path = path,
                 Bytes = byteArray,
+                Text = Parsers.FileContentParser.GetStringFromBytes(byteArray),
                 Guid = System.Guid.NewGuid()
             };
         }
