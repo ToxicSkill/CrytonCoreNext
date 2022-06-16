@@ -6,6 +6,8 @@ namespace CrytonCoreNext.Services
 {
     public class FilesLoader : IFilesLoader
     {
+        private static string[] Sizes = { "B", "KB", "MB", "GB", "TB" };
+
         public List<Models.File> LoadFiles(string[] paths, int currentFilesCount = 0)
         {
             var validPaths = new List<string>();
@@ -47,22 +49,21 @@ namespace CrytonCoreNext.Services
                 Size = GetSizeString(fileInfo.Length),
                 Path = path,
                 Bytes = byteArray,
-                Text = Parsers.FileContentParser.GetStringFromBytes(byteArray),
+                //Text = Parsers.FileContentParser.GetStringFromBytes(byteArray),
                 Guid = System.Guid.NewGuid()
             };
         }
 
         private static string GetSizeString(long bytesCount)
         {
-            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
             double len = bytesCount;
             int order = 0;
-            while (len >= 1024 && order < sizes.Length - 1)
+            while (len >= 1024 && order < Sizes.Length - 1)
             {
                 ++order;
                 len /= 1024;
             }
-            return string.Format("{0:0.## }{1}", len, sizes[order]);
+            return string.Format("{0:0.## }{1}", len, Sizes[order]);
         }
     }
 }

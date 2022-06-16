@@ -53,7 +53,7 @@
         <Button Width="150" Height="40" Content="Move up" Command="{Binding MoveFileUpCommand}" Margin="478,240,772,170" />
         <Button Width="150" Height="40" Content="Move down" Command="{Binding MoveFileDownCommand}" Margin="478,310,772,100" />
 
-        <TextBox Width="1000" Height="100" VerticalAlignment="Top" Margin="0, 100" Text="{Binding CurrentFile.Text}"/>
+        <!--<TextBox Width="1000" Height="100" VerticalAlignment="Top" Margin="0, 100" Text="{Binding CurrentFile.Text}"/>-->
 
     </Grid>
 </UserControl>
