@@ -7,7 +7,7 @@ namespace CrytonCoreNext.Crypting
 {
     public class AES : ICrypting
     {
-        public ViewModelBase ViewModel { get; set; }
+        private const string Name = "AES";
 
         private readonly int _keySize = 128;
         private readonly int _blockSize = 128;
@@ -15,6 +15,8 @@ namespace CrytonCoreNext.Crypting
         private readonly byte[] _key;
         private readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
         private readonly bool _status = true;
+
+        public ViewModelBase ViewModel { get; set; }
 
         public AES(ViewModelBase viewModel)
         {
@@ -40,6 +42,12 @@ namespace CrytonCoreNext.Crypting
             _key = key;
             _status = SanityCheck();
         }
+
+        public ViewModelBase GetViewModel() => ViewModel;
+        
+
+        public string GetName() =>  Name;
+        
 
         private bool SanityCheck()
         {
@@ -108,11 +116,6 @@ namespace CrytonCoreNext.Crypting
 
                 return ms.ToArray();
             }
-        }
-
-        public ViewModelBase GetViewModel()
-        {
-            return ViewModel;
         }
     }
 }

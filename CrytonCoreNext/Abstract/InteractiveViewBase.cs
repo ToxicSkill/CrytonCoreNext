@@ -26,8 +26,6 @@ namespace CrytonCoreNext.Abstract
 
         public FilesViewViewModel FilesViewViewModel { get; set; }
 
-        public ViewModelBase CryptingOptionsViewModel { get; set; }
-
         public File? CurrentFile { get; set; }
 
         public Visibility FileInformationVisibility { get; set; } = Visibility.Hidden;
@@ -37,7 +35,6 @@ namespace CrytonCoreNext.Abstract
             _filesManager = filesManager;
             PopupViewModel = new ();
             FilesViewViewModel = new ();
-            CryptingOptionsViewModel = new ();
 
             NotifyObjectChangeByName(new List<string>()
             { 

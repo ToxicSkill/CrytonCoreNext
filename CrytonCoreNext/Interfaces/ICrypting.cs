@@ -9,5 +9,7 @@ namespace CrytonCoreNext.Interfaces
         byte[] Decrypt(byte[] data);
 
         ViewModelBase GetViewModel();
+
+        string GetName();
     }
 }

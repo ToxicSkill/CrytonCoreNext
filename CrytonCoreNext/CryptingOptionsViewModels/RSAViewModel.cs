@@ -3,7 +3,7 @@ using CrytonCoreNext.Crypting;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
 {
-    public class AESViewModel : ViewModelBase
+    public class RSAViewModel : ViewModelBase
     {
     }
 }

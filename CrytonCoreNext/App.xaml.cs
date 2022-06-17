@@ -33,7 +33,8 @@ namespace CrytonCoreNext
                 .AddSingleton<IFilesLoader, FilesLoader>()
                 .AddSingleton<IFilesManager>(CreateFilesManager)
                 .AddTransient<FilesViewViewModel>()
-                .AddTransient<ICrypting>(CreateAES)
+                .AddTransient(CreateAES)
+                .AddTransient(CreateRSA)
                 .AddTransient<CryptingOptionsViewModel>()
                 .AddTransient<InformationPopupViewModel>()
                 .AddSingleton(CreateHomeViewModel)
@@ -97,6 +98,12 @@ namespace CrytonCoreNext
         {
             var viewModel = new AESViewModel();
             return new AES(viewModel);
+        }
+
+        private ICrypting CreateRSA(IServiceProvider provider)
+        {
+            var viewModel = new RSAViewModel();
+            return new RSA(viewModel);
         }
 
         private void InitializeDictionary()
