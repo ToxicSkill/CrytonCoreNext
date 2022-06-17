@@ -31,7 +31,7 @@
                 <Label Content="{DynamicResource CurrentFileDate}" Style="{StaticResource FileInformations}"/>
             </StackPanel>
             <StackPanel Grid.Column="1">
-                <Label Content="{Binding CurrentFile.Name}" Style="{StaticResource FileInformations}"/>
+                <Label Content="{Binding CurrentFile.Name}" Style="{StaticResource FileInformations}" ContentStringFormat="{}{0:xxxx}"/>
                 <Label Content="{Binding CurrentFile.Extension}" Style="{StaticResource FileInformations}"/>
                 <Label Content="{Binding CurrentFile.Size}" Style="{StaticResource FileInformations}"/>
                 <Label Content="{Binding CurrentFile.Date}" Style="{StaticResource FileInformations}"/>
@@ -43,6 +43,9 @@
         </Grid>
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
             <ContentControl Content="{Binding FilesViewViewModel}"/>
+        </Grid>
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="700,50,300,50">
+            <ContentControl Content="{Binding CryptingOptionsViewModel}"/>
         </Grid>
 
         <Button Width="150" Height="40" Content="Open files" Command="{Binding PostFilesCommand}" Margin="39,375,1211,35"/>

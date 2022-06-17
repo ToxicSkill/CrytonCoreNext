@@ -5,7 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:CrytonCoreNext.Views"
+    xmlns:cryptingViews="clr-namespace:CrytonCoreNext.CryptingOptionsViews"
     xmlns:ViewModels="clr-namespace:CrytonCoreNext.ViewModels"
+    xmlns:CryptingViewModels="clr-namespace:CrytonCoreNext.CryptingOptionsViewModels"
     Title="CrytonNXT"
     MinWidth="1600"
     MinHeight="670"
@@ -37,6 +39,9 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type ViewModels:FilesViewViewModel}">
                 <views:FileViewViewPage />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type CryptingViewModels:AESViewModel}">
+                <cryptingViews:AESView />
             </DataTemplate>
         </Grid.Resources>
 

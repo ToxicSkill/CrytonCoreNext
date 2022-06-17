@@ -1,11 +1,14 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Interfaces;
 using System.IO;
 using System.Security.Cryptography;
 
 namespace CrytonCoreNext.Crypting
 {
-    internal class AES : ICrypting
+    public class AES : ICrypting
     {
+        public ViewModelBase ViewModel { get; set; }
+
         private readonly int _keySize = 128;
         private readonly int _blockSize = 128;
         private readonly byte[] _iv;
@@ -13,8 +16,9 @@ namespace CrytonCoreNext.Crypting
         private readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
         private readonly bool _status = true;
 
-        public AES()
+        public AES(ViewModelBase viewModel)
         {
+            ViewModel = viewModel;
             _iv = GenerateRandomBytes(_blockSize / 8);
             _key = GenerateRandomBytes(_keySize / 8);
             _status = SanityCheck();
@@ -104,6 +108,11 @@ namespace CrytonCoreNext.Crypting
 
                 return ms.ToArray();
             }
+        }
+
+        public ViewModelBase GetViewModel()
+        {
+            return ViewModel;
         }
     }
 }

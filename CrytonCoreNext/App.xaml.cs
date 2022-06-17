@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using CrytonCoreNext.ViewModels;
+using CrytonCoreNext.CryptingOptionsViewModels;
 using System;
 using System.Windows;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.InformationsServices;
 using System.Collections.Generic;
 using CrytonCoreNext.Services;
+using CrytonCoreNext.Crypting;
 
 namespace CrytonCoreNext
 {
@@ -31,6 +33,8 @@ namespace CrytonCoreNext
                 .AddSingleton<IFilesLoader, FilesLoader>()
                 .AddSingleton<IFilesManager>(CreateFilesManager)
                 .AddTransient<FilesViewViewModel>()
+                .AddTransient<ICrypting>(CreateAES)
+                .AddTransient<CryptingOptionsViewModel>()
                 .AddTransient<InformationPopupViewModel>()
                 .AddSingleton(CreateHomeViewModel)
                 .AddSingleton(CreateCryptingViewModel)
@@ -79,13 +83,20 @@ namespace CrytonCoreNext
         private CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
         {
             var filesManager = provider.GetRequiredService<IFilesManager>();
-            return new (filesManager);
+            var cryptors = provider.GetServices<ICrypting>();
+            return new (filesManager, cryptors);
         }
 
         private PdfManagerViewModel CreatePdfManagerViewModel(IServiceProvider provider)
         {
             var filesManager = provider.GetRequiredService<IFilesManager>();
             return new(filesManager);
+        }
+
+        private ICrypting CreateAES(IServiceProvider provider)
+        {
+            var viewModel = new AESViewModel();
+            return new AES(viewModel);
         }
 
         private void InitializeDictionary()
