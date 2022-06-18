@@ -1,5 +1,7 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
+using CrytonCoreNext.Crypting;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,6 +29,8 @@ namespace CrytonCoreNext.ViewModels
         public ICommand MoveFileUpCommand { get; set; }
 
         public ICommand MoveFileDownCommand { get; set; }
+
+        public ICommand CryptCommand { get; set; }
 
         public ObservableCollection<string> CryptingComboBox { get; private set; }
 
@@ -57,12 +61,13 @@ namespace CrytonCoreNext.ViewModels
             SetFileAsLastCommand = new Command(SetFileAsLast, true);
             MoveFileUpCommand = new Command(MoveFileUp, true);
             MoveFileDownCommand = new Command(MoveFileDown, true);
+            CryptCommand = new Command(DoCrypt, true);
             CurrentCryptingViewModel = new();
             CryptingComboBox = new();
             _cryptors = cryptors;
             InitializeCryptingComboBox();
-            
-            //var t = new Crypting.Crypting(new () { new (new AES(), ECrypting.EnumToString(ECrypting.Methods.aes)) });
+
+            //var t = new Crypting.Crypting(new() { new(new AES(), ECrypting.EnumToString(ECrypting.Methods.aes)) });
             //t.Encrypt(FilesViewViewModel.FilesView[0].Bytes, ECrypting.EnumToString(ECrypting.Methods.aes));
         }
 
@@ -88,6 +93,11 @@ namespace CrytonCoreNext.ViewModels
             CurrentCrypting = _cryptors.Where(x => x.GetName() == _currentCryptingName).First();
             CurrentCryptingViewModel = CurrentCrypting.GetViewModel();
             OnPropertyChanged(nameof(CurrentCryptingViewModel));
+        }
+
+        private void DoCrypt()
+        {
+            CurrentCrypting.Encrypt(FilesViewViewModel.FilesView[0].Bytes);
         }
     }
 }

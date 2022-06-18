@@ -1,5 +1,6 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Interfaces;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -26,6 +27,11 @@ namespace CrytonCoreNext.Crypting
         }
 
         public byte[] Encrypt(byte[] data)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void ParseSettingsObjects(Dictionary<string, object> objects)
         {
             throw new System.NotImplementedException();
         }

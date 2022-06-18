@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Abstract;
+using System.Collections.Generic;
 
 namespace CrytonCoreNext.Interfaces
 {
@@ -11,5 +12,7 @@ namespace CrytonCoreNext.Interfaces
         ViewModelBase GetViewModel();
 
         string GetName();
+
+        void ParseSettingsObjects(Dictionary<string, object> objects);
     }
 }

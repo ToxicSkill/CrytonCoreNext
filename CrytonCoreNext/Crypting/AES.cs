@@ -1,5 +1,8 @@
 ﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.CryptingOptionsViewModels;
 using CrytonCoreNext.Interfaces;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -7,40 +10,19 @@ namespace CrytonCoreNext.Crypting
 {
     public class AES : ICrypting
     {
+        private static readonly string[] SettingsKeys = { "Key", "Block" };
         private const string Name = "AES";
 
-        private readonly int _keySize = 128;
-        private readonly int _blockSize = 128;
-        private readonly byte[] _iv;
-        private readonly byte[] _key;
         private readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
         private readonly bool _status = true;
+        private readonly AesCng _aes;
 
-        public ViewModelBase ViewModel { get; set; }
+        public ViewModelBase ViewModel { get; init; }
 
-        public AES(ViewModelBase viewModel)
+        public AES()
         {
-            ViewModel = viewModel;
-            _iv = GenerateRandomBytes(_blockSize / 8);
-            _key = GenerateRandomBytes(_keySize / 8);
-            _status = SanityCheck();
-        }
-
-        public AES(int keySize, int blockSize, byte[] iv, byte[] key, PaddingMode paddingMode)
-        {
-            _keySize = keySize;
-            _blockSize = blockSize;
-            _iv = iv;
-            _key = key;
-            _paddingMode = paddingMode;
-            _status = SanityCheck();
-        }
-
-        public AES(byte[] iv, byte[] key)
-        {
-            _iv = iv;
-            _key = key;
-            _status = SanityCheck();
+            _aes = new ();
+            ViewModel = new AESViewModel(_aes);
         }
 
         public ViewModelBase GetViewModel() => ViewModel;
@@ -49,61 +31,46 @@ namespace CrytonCoreNext.Crypting
         public string GetName() =>  Name;
         
 
-        private bool SanityCheck()
-        {
-            if ((_keySize % 2 != 0 && _keySize <= 0) ||
-                (_blockSize % 2 != 0 && _blockSize <= 0) ||
-                (_key.Length != _keySize / 8) ||
-                (_iv.Length != _blockSize / 8))
-                return false;
-            return true;
-        }
-
-        private byte[] GenerateRandomBytes(int size)
-        {
-            return RandomNumberGenerator.GetBytes(size);
-        }
-
         public byte[] Encrypt(byte[] data)
         {
+            ParseSettingsObjects(ViewModel.GetObjects());
+
             if (!_status)
                 return default;
 
-            using (var aes = Aes.Create())
+            _aes.Padding = _paddingMode;
+
+            _aes.GenerateKey();
+            _aes.GenerateIV();
+
+            using (var encryptor = _aes.CreateEncryptor(_aes.Key, _aes.IV))
             {
-                aes.KeySize = _keySize;
-                aes.BlockSize = _blockSize;
-                aes.Padding = _paddingMode;
-
-                aes.Key = _key;
-                aes.IV = _iv;
-
-                using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
-                {
-                    return PerformCryptography(data, encryptor);
-                }
+                return PerformCryptography(data, encryptor);
             }
         }
 
         public byte[] Decrypt(byte[] data)
         {
+            ParseSettingsObjects(ViewModel.GetObjects());
+
             if (!_status)
                 return default;
+            
+            _aes.Padding = _paddingMode;
 
-            using (var aes = Aes.Create())
+            //_aes.Key = _key;
+            //_aes.IV = _iv;
+
+            using (var decryptor = _aes.CreateDecryptor(_aes.Key, _aes.IV))
             {
-                aes.KeySize = _keySize;
-                aes.BlockSize = _blockSize;
-                aes.Padding = _paddingMode;
-
-                aes.Key = _key;
-                aes.IV = _iv;
-
-                using (var decryptor = aes.CreateDecryptor(aes.Key, aes.IV))
-                {
-                    return PerformCryptography(data, decryptor);
-                }
+                return PerformCryptography(data, decryptor);
             }
+        }
+
+        public void ParseSettingsObjects(Dictionary<string, object> objects)
+        {
+            _aes.KeySize = Convert.ToInt32(objects[SettingsKeys[0]]);
+            _aes.BlockSize = Convert.ToInt32(objects[SettingsKeys[1]]);
         }
 
         private byte[] PerformCryptography(byte[] data, ICryptoTransform cryptoTransform)
@@ -116,6 +83,11 @@ namespace CrytonCoreNext.Crypting
 
                 return ms.ToArray();
             }
+        }
+
+        private byte[] GenerateRandomBytes(int size)
+        {
+            return RandomNumberGenerator.GetBytes(size);
         }
     }
 }

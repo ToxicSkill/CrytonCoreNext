@@ -96,8 +96,7 @@ namespace CrytonCoreNext
 
         private ICrypting CreateAES(IServiceProvider provider)
         {
-            var viewModel = new AESViewModel();
-            return new AES(viewModel);
+            return new AES();
         }
 
         private ICrypting CreateRSA(IServiceProvider provider)

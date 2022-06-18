@@ -17,12 +17,12 @@
     </UserControl.Background>
 
     <Grid>
-        <Label Content="Crypting" FontSize="48" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 0, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
+        <Label Content="Crypting" FontSize="50" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 5, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
 
         <Grid Margin="0, 110, 0, 0" Visibility="{Binding FileInformationVisibility}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="400"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
                 <Label Content="{DynamicResource CurrentFileName}" Style="{StaticResource FileInformations}"/>
@@ -31,10 +31,18 @@
                 <Label Content="{DynamicResource CurrentFileDate}" Style="{StaticResource FileInformations}"/>
             </StackPanel>
             <StackPanel Grid.Column="1">
-                <Label Content="{Binding CurrentFile.Name}" Style="{StaticResource FileInformations}" ContentStringFormat="{}{0:xxxx}"/>
-                <Label Content="{Binding CurrentFile.Extension}" Style="{StaticResource FileInformations}"/>
-                <Label Content="{Binding CurrentFile.Size}" Style="{StaticResource FileInformations}"/>
-                <Label Content="{Binding CurrentFile.Date}" Style="{StaticResource FileInformations}"/>
+                <Label Style="{StaticResource FileInformations}">
+                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentFile.Name}"/>
+                </Label>
+                <Label Style="{StaticResource FileInformations}">
+                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentFile.Extension}"/>
+                </Label>
+                <Label Style="{StaticResource FileInformations}">
+                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentFile.Size}"/>
+                </Label>
+                <Label Style="{StaticResource FileInformations}">
+                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentFile.Date}"/>
+                </Label>
             </StackPanel>
         </Grid>
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
@@ -44,7 +52,7 @@
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
             <ContentControl Content="{Binding FilesViewViewModel}"/>
         </Grid>        
-        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="700,50,300,50">
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="700,0,300,50">
             <ContentControl Content="{Binding CurrentCryptingViewModel}"/>
         </Grid>
 
@@ -55,6 +63,7 @@
         <Button Width="150" Height="40" Content="Set as last" Command="{Binding SetFileAsLastCommand}" Margin="250,310,1000,100"/>
         <Button Width="150" Height="40" Content="Move up" Command="{Binding MoveFileUpCommand}" Margin="478,240,772,170" />
         <Button Width="150" Height="40" Content="Move down" Command="{Binding MoveFileDownCommand}" Margin="478,310,772,100" />
+        <Button Width="150" Height="40" Content="Crypt" Command="{Binding CryptCommand}" Margin="250,370,1000,40" />
         <ComboBox ItemsSource="{Binding CryptingComboBox}" SelectedItem="{Binding CurrentCryptingName}" HorizontalAlignment="Left" Margin="508,80,0,0" VerticalAlignment="Top" Width="120"/>
 
         <!--<TextBox Width="1000" Height="100" VerticalAlignment="Top" Margin="0, 100" Text="{Binding CurrentFile.Text}"/>-->
