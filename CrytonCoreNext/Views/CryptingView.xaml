@@ -8,7 +8,7 @@
     d:DesignHeight="450"
     d:DesignWidth="1400"
     mc:Ignorable="d">
-    
+
     <UserControl.Background>
         <LinearGradientBrush  StartPoint="0.3,0" EndPoint="0.4,1">
             <GradientStop Color="{StaticResource BackgroundColor}" Offset="1"/>
@@ -51,7 +51,7 @@
         </Grid>
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
             <ContentControl Content="{Binding FilesViewViewModel}"/>
-        </Grid>        
+        </Grid>
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="700,0,300,50">
             <ContentControl Content="{Binding CurrentCryptingViewModel}"/>
         </Grid>
@@ -64,7 +64,9 @@
         <Button Width="150" Height="40" Content="Move up" Command="{Binding MoveFileUpCommand}" Margin="478,240,772,170" />
         <Button Width="150" Height="40" Content="Move down" Command="{Binding MoveFileDownCommand}" Margin="478,310,772,100" />
         <Button Width="150" Height="40" Content="Crypt" Command="{Binding CryptCommand}" Margin="250,370,1000,40" />
-        <ComboBox ItemsSource="{Binding CryptingComboBox}" SelectedItem="{Binding CurrentCryptingName}" HorizontalAlignment="Left" Margin="508,80,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox ItemsSource="{Binding CryptingComboBox}" SelectedItem="{Binding CurrentCryptingName}"
+                  ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}"
+                  HorizontalAlignment="Left" Margin="550,28,0,0" VerticalAlignment="Top" Width="120"/>
 
         <!--<TextBox Width="1000" Height="100" VerticalAlignment="Top" Margin="0, 100" Text="{Binding CurrentFile.Text}"/>-->
 

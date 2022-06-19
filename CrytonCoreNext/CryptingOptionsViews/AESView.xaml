@@ -26,21 +26,18 @@
         <Label Content="{Binding IVName}" Foreground="White" HorizontalAlignment="Stretch" Margin="5,400,0,0" Style="{StaticResource CryptingSettings}"/>
 
         <ComboBox ItemsSource="{Binding BlockSizesComboBox}" SelectedItem="{Binding SelectedBlockSize}" 
-                  SelectedIndex="0" Width="200" Height="20" 
                   ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
-                  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,150"/>
+                  SelectedIndex="0" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,150"/>
         <ComboBox ItemsSource="{Binding KeySizesComboBox}" SelectedItem="{Binding SelectedKey}" 
                   ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
                   SelectedIndex="0" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,250"/>
 
         <TextBox     Height="40" MaxLength="{Binding SelectedKeySize}"
                      FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                     Foreground="White" 
-                     HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,350,0,0"/>
+                     Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,350,10,0"/>
 
         <TextBox     Height="40" MaxLength="{Binding SelectedKeySize}"
                      FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                     Foreground="White" 
-                     HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,450,10,0"/>
+                     Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,450,10,0"/>
     </Grid>
 </UserControl>

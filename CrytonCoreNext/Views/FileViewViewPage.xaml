@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
       d:DesignHeight="900"
       d:DesignWidth="300">
@@ -37,8 +38,8 @@
             <Grid.Background>
                 <SolidColorBrush Color="{StaticResource BackgroundColor}"></SolidColorBrush>
             </Grid.Background>
-            
-            
+
+
             <ToggleButton
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
@@ -65,7 +66,8 @@
                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                    FontFamily="Segoe UI Variable Text Light" FontSize="36" Foreground="White"/>
 
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,100,0,-20" MaxWidth="300">
+
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,100,0,280" MaxWidth="300">
                 <SelectiveScrollingGrid>
                     <ListView BorderBrush="{StaticResource BackgroundColorBrush}"
                               SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
@@ -86,7 +88,7 @@
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
-                        
+
                         <!--<ListBox.Resources>
                                 <Style TargetType="ListBoxItem">
                                     <Style.Resources>
@@ -98,7 +100,7 @@
                                 </Style>
                             </ListBox.Resources>-->
 
-                            <!--<ListView.ItemContainerStyle>
+                        <!--<ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
@@ -106,6 +108,120 @@
 
                     </ListView>
                 </SelectiveScrollingGrid>
+            </Grid>
+
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="300" MaxWidth="300">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Style="{StaticResource TransparentButton}">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <Image Source="/Assets/UpUpSharp.png"
+                                       Stretch="Uniform"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" 
+                                       Margin="4,0,0,0" Width="25"/>
+                        <TextBlock Text="Set as first" Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="1" Style="{StaticResource TransparentButton}">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <Image Source="/Assets/UpSharp.png"
+                                       Stretch="Uniform"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" 
+                                       Margin="4,0,0,0" Width="25"/>
+                        <TextBlock Text="Move up"  Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="2" Style="{StaticResource TransparentButton}">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <Image Source="/Assets/UpSharp.png"                                        
+                                       Stretch="Uniform"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" 
+                                       Margin="4,0,0,0" Width="25" RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="180"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Image.RenderTransform>
+                        </Image>
+                        <TextBlock Text="Move down" Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="3" Style="{StaticResource TransparentButton}">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <Image Source="/Assets/UpUpSharp.png"
+                                       Stretch="Uniform"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" 
+                                       Margin="4,0,0,0" Width="25" RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="180"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Image.RenderTransform>
+                        </Image>
+                        <TextBlock Text="Set as last" Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="4" Style="{StaticResource TransparentButton}">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <Image Source="/Assets/Rubbish.png"
+                                       Stretch="Uniform"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" 
+                                       Margin="4,0,0,0" Width="25"/>
+                        <TextBlock Text="Remove" Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
             </Grid>
         </Grid>
     </Grid>

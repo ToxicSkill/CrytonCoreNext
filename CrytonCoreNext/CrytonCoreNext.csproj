@@ -81,7 +81,9 @@
     <None Remove="Assets\Temperature.png" />
     <None Remove="Assets\unnamed.png" />
     <None Remove="Assets\Up.png" />
+    <None Remove="Assets\UpSharp.png" />
     <None Remove="Assets\UpTop.png" />
+    <None Remove="Assets\UpUpSharp.png" />
     <None Remove="Assets\Warning.png" />
     <None Remove="Assets\Wind.png" />
   </ItemGroup>
@@ -294,8 +296,14 @@
     <Resource Include="Assets\Up.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\UpSharp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\UpTop.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\UpUpSharp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Warning.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
