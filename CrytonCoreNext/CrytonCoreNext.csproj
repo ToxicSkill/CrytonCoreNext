@@ -33,6 +33,7 @@
     <None Remove="Assets\FileOpenError.png" />
     <None Remove="Assets\FilesSelect.png" />
     <None Remove="Assets\FilesSelectHover.png" />
+    <None Remove="Assets\FilesSelectSharp.png" />
     <None Remove="Assets\FolderLocked.png" />
     <None Remove="Assets\FolderUnlocked.png" />
     <None Remove="Assets\HeavyStorm.png" />
@@ -153,6 +154,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\FilesSelectHover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\FilesSelectSharp.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\FolderLocked.png">

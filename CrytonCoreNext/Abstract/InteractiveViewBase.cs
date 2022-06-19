@@ -1,13 +1,10 @@
-﻿using CrytonCoreNext.Crypting;
-using CrytonCoreNext.Enums;
-using CrytonCoreNext.Helpers;
+﻿using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -16,7 +13,7 @@ using System.Windows.Threading;
 
 namespace CrytonCoreNext.Abstract
 {
-    public class InteractiveViewBase : ViewModelBase, IInteractiveFiles, IDisposable
+    public class InteractiveViewBase : ViewModelBase, IDisposable
     {
         private readonly IFilesManager _filesManager;
 
@@ -34,13 +31,15 @@ namespace CrytonCoreNext.Abstract
         {
             _filesManager = filesManager;
             PopupViewModel = new ();
-            FilesViewViewModel = new ();
+            FilesViewViewModel = new (_filesManager);
 
             NotifyObjectChangeByName(new List<string>()
             { 
                 nameof(PopupViewModel),
                 nameof(FilesViewViewModel)
             }.ToArray());
+
+            FilesViewViewModel.FilesChanged += HandleFilecChanged;
         }
 
         public void PostPopup(string informationString, int seconds, Color color = default)
@@ -49,6 +48,13 @@ namespace CrytonCoreNext.Abstract
             ShowInformationBar(true);
             OnPropertyChanged(nameof(PopupViewModel));
             InitializeTimerWithAction(CollapsePopup, seconds);
+        }
+
+        public void HandleFilecChanged(object sender, EventArgs e)
+        {
+            CurrentFile = FilesViewViewModel.CurrentFile;
+            UpdateFilesVisibility();
+            OnPropertyChanged(nameof(CurrentFile));
         }
 
         public void AddFiles()
@@ -68,99 +74,99 @@ namespace CrytonCoreNext.Abstract
                     FilesViewViewModel.FilesView?.ToList().Concat(newFiles) :
                     newFiles;
 
-                UpdateFiles(newFilesCollection);
+                FilesViewViewModel.Update(newFilesCollection);
             }
         }
 
-        public void ClearAllFiles()
-        {
-            _ = _filesManager.ClearAllFiles(FilesViewViewModel.FilesView);
-            FilesViewViewModel.SelectedItemIndex = -1;
-            UpdateFilesView();
-        }
+        //public void ClearAllFiles()
+        //{
+        //    _ = _filesManager.ClearAllFiles(FilesViewViewModel.FilesView);
+        //    FilesViewViewModel.SelectedItemIndex = -1;
+        //    UpdateFilesView();
+        //}
 
-        public void DeleteFile()
-        {
-            _ = _filesManager.DeleteItem(FilesViewViewModel.FilesView, CurrentFile.Guid);
-            UpdateFilesView();
-        }
+        //public void DeleteFile()
+        //{
+        //    _ = _filesManager.DeleteItem(FilesViewViewModel.FilesView, CurrentFile.Guid);
+        //    UpdateFilesView();
+        //}
 
-        public void SetFileAsFirst()
-        {
-            _ = _filesManager.SetItemAsFirst(FilesViewViewModel.FilesView, CurrentFile.Guid);
-            FilesViewViewModel.SelectedItemIndex = 0;
-            UpdateFilesView();
-        }
+        //public void SetFileAsFirst()
+        //{
+        //    _ = _filesManager.SetItemAsFirst(FilesViewViewModel.FilesView, CurrentFile.Guid);
+        //    FilesViewViewModel.SelectedItemIndex = 0;
+        //    UpdateFilesView();
+        //}
 
-        public void SetFileAsLast()
-        {
-            _ = _filesManager.SetItemAsLast(FilesViewViewModel.FilesView, CurrentFile.Guid);
-            FilesViewViewModel.SelectedItemIndex = FilesViewViewModel.FilesView.Count - 1;
-            UpdateFilesView();
-        }
+        //public void SetFileAsLast()
+        //{
+        //    _ = _filesManager.SetItemAsLast(FilesViewViewModel.FilesView, CurrentFile.Guid);
+        //    FilesViewViewModel.SelectedItemIndex = FilesViewViewModel.FilesView.Count - 1;
+        //    UpdateFilesView();
+        //}
 
-        public void MoveFileUp()
-        {
-            var index = FilesViewViewModel.SelectedItemIndex;
-            _ = _filesManager.MoveItemUp(FilesViewViewModel.FilesView, CurrentFile.Guid);
-            if (index <= 0)
-            {
-                FilesViewViewModel.SelectedItemIndex = 0;
-            }
-            else
-            {
-                FilesViewViewModel.SelectedItemIndex = index - 1;
-            }
+        //public void MoveFileUp()
+        //{
+        //    var index = FilesViewViewModel.SelectedItemIndex;
+        //    _ = _filesManager.MoveItemUp(FilesViewViewModel.FilesView, CurrentFile.Guid);
+        //    if (index <= 0)
+        //    {
+        //        FilesViewViewModel.SelectedItemIndex = 0;
+        //    }
+        //    else
+        //    {
+        //        FilesViewViewModel.SelectedItemIndex = index - 1;
+        //    }
 
-            UpdateFilesView();
-        }
+        //    UpdateFilesView();
+        //}
 
-        public void MoveFileDown()
-        {
-            var index = FilesViewViewModel.SelectedItemIndex;
-            _ = _filesManager.MoveItemDown(FilesViewViewModel.FilesView, CurrentFile.Guid);
-            if (index == FilesViewViewModel.FilesView.Count - 1)
-            { 
-                FilesViewViewModel.SelectedItemIndex = index;
-            }
-            else
-            {
-                FilesViewViewModel.SelectedItemIndex = index + 1;
-            }
+        //public void MoveFileDown()
+        //{
+        //    var index = FilesViewViewModel.SelectedItemIndex;
+        //    _ = _filesManager.MoveItemDown(FilesViewViewModel.FilesView, CurrentFile.Guid);
+        //    if (index == FilesViewViewModel.FilesView.Count - 1)
+        //    { 
+        //        FilesViewViewModel.SelectedItemIndex = index;
+        //    }
+        //    else
+        //    {
+        //        FilesViewViewModel.SelectedItemIndex = index + 1;
+        //    }
 
-            UpdateFilesView();
-        }
+        //    UpdateFilesView();
+        //}
 
         public virtual void Dispose() { }
 
 
-        private void UpdateFilesView(ObservableCollection<Models.File>? files = null)
-        {
-            var index = FilesViewViewModel.SelectedItemIndex;
-            if (files == null)
-            {
-                files = FilesViewViewModel.FilesView;
-            }
-            FilesViewViewModel = new(files, FilesViewViewModel.ShowFilesView);
-            FilesViewViewModel.PropertyChanged += SelectedItem_PropertyChanged;
-            OnPropertyChanged(nameof(FilesViewViewModel));
-            FilesViewViewModel.SelectedItemIndex = index;
-            OnPropertyChanged(nameof(FilesViewViewModel.SelectedItemIndex));
-            UpdateFilesVisibility();
-        }
+        //private void UpdateFilesView(ObservableCollection<Models.File>? files = null)
+        //{
+        //    var index = FilesViewViewModel.SelectedItemIndex;
+        //    if (files == null)
+        //    {
+        //        files = FilesViewViewModel.FilesView;
+        //    }
+        //    FilesViewViewModel = new(files, FilesViewViewModel.ShowFilesView);
+        //    FilesViewViewModel.PropertyChanged += SelectedItem_PropertyChanged;
+        //    OnPropertyChanged(nameof(FilesViewViewModel));
+        //    FilesViewViewModel.SelectedItemIndex = index;
+        //    OnPropertyChanged(nameof(FilesViewViewModel.SelectedItemIndex));
+        //    UpdateFilesVisibility();
+        //}
 
-        private void UpdateFiles(IEnumerable<File>? filesCollection)
-        {
-            if (filesCollection != null)
-            {
-                UpdateFilesView(new ObservableCollection<File>(filesCollection));
-                PostPopup("File(s) where loaded successfuly", 2, EPopopColor.Information);
-            }
-            else
-            {
-                PostPopup("Error occured when loading file(s)", 2, EPopopColor.Error);
-            }
-        }
+        //private void UpdateFiles(IEnumerable<File>? filesCollection)
+        //{
+        //    if (filesCollection != null)
+        //    {
+        //        UpdateFilesView(new ObservableCollection<File>(filesCollection));
+        //        PostPopup("File(s) where loaded successfuly", 2, EPopopColor.Information);
+        //    }
+        //    else
+        //    {
+        //        PostPopup("Error occured when loading file(s)", 2, EPopopColor.Error);
+        //    }
+        //}
 
         private void UpdateFilesVisibility()
         {
@@ -171,7 +177,7 @@ namespace CrytonCoreNext.Abstract
             else
             {
                 FileInformationVisibility = Visibility.Hidden;
-                ShowFilesView(false);
+                //ShowFilesView(false);
             }
             OnPropertyChanged(nameof(FileInformationVisibility));
         }

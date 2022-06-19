@@ -9,18 +9,16 @@ namespace CrytonCoreNext.Interfaces
     {
         List<Models.File> AddFiles(string[] paths, int currentIndex = 0);
 
-        bool DeleteItem(ObservableCollection<Models.File> files, int index);
-
-        bool DeleteItem(ObservableCollection<Models.File> files, Guid guid);
+        (bool result, int newIndex) DeleteItem(ObservableCollection<Models.File> files, Guid guid);
 
         bool ClearAllFiles(ObservableCollection<Models.File> files);
 
-        bool SetItemAsFirst(ObservableCollection<Models.File> files, Guid guid);
+        (bool result, int newIndex) SetItemAsFirst(ObservableCollection<Models.File> files, Guid guid);
 
-        bool SetItemAsLast(ObservableCollection<Models.File> files, Guid guid);
+        (bool result, int newIndex) SetItemAsLast(ObservableCollection<Models.File> files, Guid guid);
 
-        bool MoveItemUp(ObservableCollection<Models.File> files, Guid guid);
+        (bool result, int newIndex) MoveItemUp(ObservableCollection<Models.File> files, Guid guid);
 
-        bool MoveItemDown(ObservableCollection<Models.File> files, Guid guid);
+        (bool result, int newIndex) MoveItemDown(ObservableCollection<Models.File> files, Guid guid);
     }
 }

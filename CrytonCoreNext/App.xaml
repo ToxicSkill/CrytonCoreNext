@@ -37,27 +37,11 @@
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
-                <!--<Trigger Property="IsMouseOver" Value="true">
-                    <Setter Property="Content" Value="Done"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                </Trigger>-->
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter Property="Content">
-                        <Setter.Value>
-                            <Image Source="/Assets/FilesSelect.png" Margin="8"
-                                   RenderOptions.EdgeMode="Aliased"
-                                   RenderOptions.BitmapScalingMode="HighQuality" />
-                        </Setter.Value>
-                    </Setter>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.7"/>
                 </Trigger>
-                <Trigger Property="IsChecked" Value="False">
-                    <Setter Property="Content">
-                        <Setter.Value>
-                            <Image Source="/Assets/FilesSelectHover.png" Margin="8"
-                                   RenderOptions.EdgeMode="Aliased"
-                                   RenderOptions.BitmapScalingMode="HighQuality" />
-                        </Setter.Value>
-                    </Setter>
+                <Trigger Property="IsMouseOver" Value="False">
+                    <Setter Property="Opacity" Value="1"/>
                 </Trigger>
             </Style.Triggers>
 
@@ -117,6 +101,24 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <ControlTemplate x:Key="TransparnetButtonControlTemplate" TargetType="{x:Type Button}">
+            <Border x:Name="border" BorderThickness="0">
+                <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                  Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" 
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" 
+                                  RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.7"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="False">
+                    <Setter Property="Opacity" Value="1"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
 
 
 

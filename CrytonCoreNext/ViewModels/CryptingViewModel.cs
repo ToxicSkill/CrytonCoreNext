@@ -18,18 +18,6 @@ namespace CrytonCoreNext.ViewModels
 
         public ICommand PostFilesCommand { get; set; }
 
-        public ICommand ClearFilesCommand { get; set; }
-
-        public ICommand DeleteCurrentFileCommand { get; set; }
-
-        public ICommand SetFileAsFirstCommand { get; set; }
-
-        public ICommand SetFileAsLastCommand { get; set; }
-
-        public ICommand MoveFileUpCommand { get; set; }
-
-        public ICommand MoveFileDownCommand { get; set; }
-
         public ICommand CryptCommand { get; set; }
 
         public ObservableCollection<string> CryptingComboBox { get; private set; }
@@ -54,14 +42,8 @@ namespace CrytonCoreNext.ViewModels
 
         public CryptingViewModel(IFilesManager filesManager, IEnumerable<ICrypting> cryptors) : base(filesManager)
         {
-            PostFilesCommand = new Command(AddFiles, true);
-            ClearFilesCommand = new Command(ClearAllFiles, true);
-            DeleteCurrentFileCommand = new Command(DeleteFile, true);
-            SetFileAsFirstCommand = new Command(SetFileAsFirst, true);
-            SetFileAsLastCommand = new Command(SetFileAsLast, true);
-            MoveFileUpCommand = new Command(MoveFileUp, true);
-            MoveFileDownCommand = new Command(MoveFileDown, true);
             CryptCommand = new Command(DoCrypt, true);
+            PostFilesCommand = new Command(AddFiles, true);
             CurrentCryptingViewModel = new();
             CryptingComboBox = new();
             _cryptors = cryptors;

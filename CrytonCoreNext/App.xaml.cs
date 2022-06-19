@@ -35,7 +35,6 @@ namespace CrytonCoreNext
                 .AddTransient<FilesViewViewModel>()
                 .AddTransient(CreateAES)
                 .AddTransient(CreateRSA)
-                .AddTransient<CryptingOptionsViewModel>()
                 .AddTransient<InformationPopupViewModel>()
                 .AddSingleton(CreateHomeViewModel)
                 .AddSingleton(CreateCryptingViewModel)

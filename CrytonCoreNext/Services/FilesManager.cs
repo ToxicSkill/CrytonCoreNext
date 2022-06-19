@@ -22,15 +22,16 @@ namespace CrytonCoreNext.Services
             return _filesLoader.LoadFiles(paths, currentIndex);
         }
 
-        public bool DeleteItem(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) DeleteItem(ObservableCollection<Models.File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
-                return false;
+                return new(false, -1);
             }
             var fileToDelete = GetFileByGuid(files, guid);
             if (fileToDelete != null)
             {
+                var trigger = false;
                 var fileId = fileToDelete?.Id;
                 files.Remove(fileToDelete);
                 foreach (var file in files)
@@ -38,18 +39,21 @@ namespace CrytonCoreNext.Services
                    if (file.Id > fileId)
                    {
                         file.Id--;
+                        trigger = true;
                    }
                 }
-                return true;
+                return new(true, trigger ? fileToDelete.Id - 1 : fileToDelete.Id);
             }
-            return false;
+            ReorderFiles(files);
+
+            return new(false, -1);
         }
 
-        public bool SetItemAsFirst(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) SetItemAsFirst(ObservableCollection<Models.File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
-                return false;
+                return new(false, -1);
             }
             var chosen = GetFileByGuid(files, guid);
             if (chosen != null && chosen.Id != 1)
@@ -61,15 +65,16 @@ namespace CrytonCoreNext.Services
                     file.value.Id = file.i + 1;
                 }
             }
+            ReorderFiles(files);
 
-            return true;
+            return new(true, 0);
         }
 
-        public bool SetItemAsLast(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) SetItemAsLast(ObservableCollection<Models.File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
-                return false;
+                return new(false, -1);
             }
             var chosen = GetFileByGuid(files, guid);
             if (chosen != null && chosen.Id != files.Count)
@@ -81,17 +86,19 @@ namespace CrytonCoreNext.Services
                     file.value.Id = file.i + 1;
                 }
             }
+            ReorderFiles(files);
 
-            return true;
+            return new(true, files.Count - 1);
         }
 
-        public bool MoveItemUp(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) MoveItemUp(ObservableCollection<Models.File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
-                return false;
+                return new(false, -1);
             }
             var chosen = GetFileByGuid(files, guid);
+            var index = chosen.Id - 1;
             if (chosen != null && chosen.Id != 1)
             {
                 files.Remove(chosen);
@@ -101,17 +108,26 @@ namespace CrytonCoreNext.Services
                     file.value.Id = file.i + 1;
                 }
             }
+            ReorderFiles(files);
 
-            return true;
+            if (index <= 0)
+            {
+                return new(true, 0);
+            }
+            else
+            {
+                return new(true, index - 1);
+            }
         }
 
-        public bool MoveItemDown(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) MoveItemDown(ObservableCollection<Models.File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
-                return false;
+                return new(false, -1);
             }
             var chosen = GetFileByGuid(files, guid);
+            var index = chosen.Id - 1;
             if (chosen != null && chosen.Id < files.Count)
             {
                 files.Remove(chosen);
@@ -121,19 +137,16 @@ namespace CrytonCoreNext.Services
                     file.value.Id = file.i + 1;
                 }
             }
+            ReorderFiles(files);
 
-            return true;
-        }
-
-
-        public bool DeleteItem(ObservableCollection<Models.File> files, int index)
-        {
-            if (!files.IsCollectionEmpty())
+            if (index == files.Count - 1)
             {
-                return files.Remove(files.ElementAt(index));
+                return new(true, index);
             }
-
-            return false;                
+            else
+            {
+                return new(true, index + 1);
+            }
         }
 
         public bool ClearAllFiles(ObservableCollection<Models.File> files)
@@ -151,6 +164,14 @@ namespace CrytonCoreNext.Services
         private Models.File? GetFileByGuid(ObservableCollection<Models.File> files, Guid guid)
         {
             return files.Where(x => x.Guid == guid).Select(x => x).FirstOrDefault();
+        }
+
+        private void ReorderFiles(ObservableCollection<Models.File> files)
+        {
+            foreach (var item in files.Select((file, i) => new { i, file }))
+            {
+                item.file.Id = item.i + 1;
+            }
         }
     }
 }

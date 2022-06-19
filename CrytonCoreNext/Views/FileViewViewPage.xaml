@@ -36,7 +36,7 @@
         <Grid x:Name="FilesView" Margin="-1" HorizontalAlignment="Right" Width="50">
 
             <Grid.Background>
-                <SolidColorBrush Color="{StaticResource BackgroundColor}"></SolidColorBrush>
+                <SolidColorBrush Color="{StaticResource BackgroundColor}"/>
             </Grid.Background>
 
 
@@ -59,6 +59,9 @@
                     </EventTrigger>
 
                 </ToggleButton.Triggers>
+                <Image Source="/Assets/FilesSelectSharp.png" Margin="8"
+                                   RenderOptions.EdgeMode="Aliased"
+                                   RenderOptions.BitmapScalingMode="HighQuality" />
             </ToggleButton>
 
             <Label Content="Files" VerticalAlignment="Top" HorizontalAlignment="Stretch"
@@ -67,7 +70,7 @@
                    FontFamily="Segoe UI Variable Text Light" FontSize="36" Foreground="White"/>
 
 
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,100,0,280" MaxWidth="300">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,100,0,300" MaxWidth="300">
                 <SelectiveScrollingGrid>
                     <ListView BorderBrush="{StaticResource BackgroundColorBrush}"
                               SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
@@ -75,7 +78,9 @@
                               Background="{StaticResource BackgroundColorBrush}" 
                               HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" 
                               VerticalAlignment="Stretch" 
-                              Visibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                              Visibility="Visible" 
+                              ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                              ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                               IsSynchronizedWithCurrentItem="True" Foreground="White"
                               FontSize="20">
 
@@ -119,11 +124,11 @@
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Row="0" Style="{StaticResource TransparentButton}">
+                <Button Grid.Row="0" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                            <i:InvokeCommandAction Command="{Binding SetFileAsFirstCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
 
@@ -136,11 +141,11 @@
                         <TextBlock Text="Set as first" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Row="1" Style="{StaticResource TransparentButton}">
+                <Button Grid.Row="1" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                            <i:InvokeCommandAction Command="{Binding MoveFileUpCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
 
@@ -153,11 +158,11 @@
                         <TextBlock Text="Move up"  Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Row="2" Style="{StaticResource TransparentButton}">
+                <Button Grid.Row="2" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                            <i:InvokeCommandAction Command="{Binding MoveFileDownCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
 
@@ -179,11 +184,11 @@
                         <TextBlock Text="Move down" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Row="3" Style="{StaticResource TransparentButton}">
+                <Button Grid.Row="3" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                            <i:InvokeCommandAction Command="{Binding SetFileAsLastCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
 
@@ -205,11 +210,11 @@
                         <TextBlock Text="Set as last" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Row="4" Style="{StaticResource TransparentButton}">
+                <Button Grid.Row="4" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding GoCrypting}"/>
+                            <i:InvokeCommandAction Command="{Binding DeleteCurrentFileCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
 
