@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Helpers;
+﻿using CrytonCoreNext.Enums;
+using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Services;
@@ -32,14 +33,7 @@ namespace CrytonCoreNext.Abstract
             _filesManager = filesManager;
             PopupViewModel = new ();
             FilesViewViewModel = new (_filesManager);
-
-            NotifyObjectChangeByName(new List<string>()
-            { 
-                nameof(PopupViewModel),
-                nameof(FilesViewViewModel)
-            }.ToArray());
-
-            FilesViewViewModel.FilesChanged += HandleFilecChanged;
+            FilesViewViewModel.FilesChanged += HandleFileChanged;
         }
 
         public void PostPopup(string informationString, int seconds, Color color = default)
@@ -50,7 +44,7 @@ namespace CrytonCoreNext.Abstract
             InitializeTimerWithAction(CollapsePopup, seconds);
         }
 
-        public void HandleFilecChanged(object sender, EventArgs e)
+        public void HandleFileChanged(object sender, EventArgs e)
         {
             CurrentFile = FilesViewViewModel.CurrentFile;
             UpdateFilesVisibility();
@@ -75,110 +69,19 @@ namespace CrytonCoreNext.Abstract
                     newFiles;
 
                 FilesViewViewModel.Update(newFilesCollection);
+                PostPopup("File(s) where loaded successfuly", 2, EPopopColor.Information);
             }
         }
-
-        //public void ClearAllFiles()
-        //{
-        //    _ = _filesManager.ClearAllFiles(FilesViewViewModel.FilesView);
-        //    FilesViewViewModel.SelectedItemIndex = -1;
-        //    UpdateFilesView();
-        //}
-
-        //public void DeleteFile()
-        //{
-        //    _ = _filesManager.DeleteItem(FilesViewViewModel.FilesView, CurrentFile.Guid);
-        //    UpdateFilesView();
-        //}
-
-        //public void SetFileAsFirst()
-        //{
-        //    _ = _filesManager.SetItemAsFirst(FilesViewViewModel.FilesView, CurrentFile.Guid);
-        //    FilesViewViewModel.SelectedItemIndex = 0;
-        //    UpdateFilesView();
-        //}
-
-        //public void SetFileAsLast()
-        //{
-        //    _ = _filesManager.SetItemAsLast(FilesViewViewModel.FilesView, CurrentFile.Guid);
-        //    FilesViewViewModel.SelectedItemIndex = FilesViewViewModel.FilesView.Count - 1;
-        //    UpdateFilesView();
-        //}
-
-        //public void MoveFileUp()
-        //{
-        //    var index = FilesViewViewModel.SelectedItemIndex;
-        //    _ = _filesManager.MoveItemUp(FilesViewViewModel.FilesView, CurrentFile.Guid);
-        //    if (index <= 0)
-        //    {
-        //        FilesViewViewModel.SelectedItemIndex = 0;
-        //    }
-        //    else
-        //    {
-        //        FilesViewViewModel.SelectedItemIndex = index - 1;
-        //    }
-
-        //    UpdateFilesView();
-        //}
-
-        //public void MoveFileDown()
-        //{
-        //    var index = FilesViewViewModel.SelectedItemIndex;
-        //    _ = _filesManager.MoveItemDown(FilesViewViewModel.FilesView, CurrentFile.Guid);
-        //    if (index == FilesViewViewModel.FilesView.Count - 1)
-        //    { 
-        //        FilesViewViewModel.SelectedItemIndex = index;
-        //    }
-        //    else
-        //    {
-        //        FilesViewViewModel.SelectedItemIndex = index + 1;
-        //    }
-
-        //    UpdateFilesView();
-        //}
 
         public virtual void Dispose() { }
 
 
-        //private void UpdateFilesView(ObservableCollection<Models.File>? files = null)
-        //{
-        //    var index = FilesViewViewModel.SelectedItemIndex;
-        //    if (files == null)
-        //    {
-        //        files = FilesViewViewModel.FilesView;
-        //    }
-        //    FilesViewViewModel = new(files, FilesViewViewModel.ShowFilesView);
-        //    FilesViewViewModel.PropertyChanged += SelectedItem_PropertyChanged;
-        //    OnPropertyChanged(nameof(FilesViewViewModel));
-        //    FilesViewViewModel.SelectedItemIndex = index;
-        //    OnPropertyChanged(nameof(FilesViewViewModel.SelectedItemIndex));
-        //    UpdateFilesVisibility();
-        //}
-
-        //private void UpdateFiles(IEnumerable<File>? filesCollection)
-        //{
-        //    if (filesCollection != null)
-        //    {
-        //        UpdateFilesView(new ObservableCollection<File>(filesCollection));
-        //        PostPopup("File(s) where loaded successfuly", 2, EPopopColor.Information);
-        //    }
-        //    else
-        //    {
-        //        PostPopup("Error occured when loading file(s)", 2, EPopopColor.Error);
-        //    }
-        //}
-
         private void UpdateFilesVisibility()
         {
-            if (FilesViewViewModel.SelectedItemIndex != -1 && FilesViewViewModel != null)
-            {
-                FileInformationVisibility = Visibility.Visible;
-            }
-            else
-            {
-                FileInformationVisibility = Visibility.Hidden;
-                //ShowFilesView(false);
-            }
+            FileInformationVisibility = 
+                FilesViewViewModel.SelectedItemIndex != -1 && FilesViewViewModel != null ? 
+                Visibility.Visible : 
+                Visibility.Hidden;
             OnPropertyChanged(nameof(FileInformationVisibility));
         }
 
@@ -190,12 +93,6 @@ namespace CrytonCoreNext.Abstract
                 CurrentFile = FilesViewViewModel.FilesView.ElementAt(tempSelectedItemIndex);
             }
             OnPropertyChanged(nameof(CurrentFile));
-        }
-
-        private void ShowFilesView(bool show)
-        {
-            FilesViewViewModel.ShowFilesView = show;
-            OnPropertyChanged(nameof(FilesViewViewModel.ShowFilesView));
         }
 
         private void ShowInformationBar(bool show)
@@ -218,12 +115,12 @@ namespace CrytonCoreNext.Abstract
             _timer?.Stop();
         }
 
-        private void NotifyObjectChangeByName(string[] objects)
-        {
-            foreach (var obj in objects)
-            {
-                OnPropertyChanged(obj);
-            }
-        }
+        //private void NotifyObjectChangeByName(string[] objects)
+        //{
+        //    foreach (var obj in objects)
+        //    {
+        //        OnPropertyChanged(obj);
+        //    }
+        //}
     }
 }

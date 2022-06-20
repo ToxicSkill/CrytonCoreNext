@@ -149,16 +149,16 @@ namespace CrytonCoreNext.Services
             }
         }
 
-        public bool ClearAllFiles(ObservableCollection<Models.File> files)
+        public (bool result, int newIndex) ClearAllFiles(ObservableCollection<Models.File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
-                return false;
+                return new(false, -1);
             }
 
             files.Clear();
 
-            return true;
+            return new(true, -1);
         }
 
         private Models.File? GetFileByGuid(ObservableCollection<Models.File> files, Guid guid)

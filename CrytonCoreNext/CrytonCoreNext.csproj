@@ -23,6 +23,7 @@
     <None Remove="Assets\Cogsv2.png" />
     <None Remove="Assets\Continue.png" />
     <None Remove="Assets\cryton.png" />
+    <None Remove="Assets\DeleteAll.png" />
     <None Remove="Assets\Down.png" />
     <None Remove="Assets\DownBottom.png" />
     <None Remove="Assets\Error.png" />
@@ -64,6 +65,7 @@
     <None Remove="Assets\PasswordKeeper.png" />
     <None Remove="Assets\Rain.png" />
     <None Remove="Assets\Ratio.png" />
+    <None Remove="Assets\RemoveSelected.png" />
     <None Remove="Assets\Rotate — kopia.png" />
     <None Remove="Assets\Rotate.png" />
     <None Remove="Assets\Rubbish.png" />
@@ -125,6 +127,9 @@
     </Resource>
     <Resource Include="Assets\cryton.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\DeleteAll.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Down.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -245,6 +250,9 @@
     </Resource>
     <Resource Include="Assets\Ratio.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\RemoveSelected.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Rotate — kopia.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

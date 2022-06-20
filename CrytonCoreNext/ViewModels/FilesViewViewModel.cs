@@ -44,7 +44,7 @@ namespace CrytonCoreNext.ViewModels
             get => _selectedItemIndex;
             set
             {
-                if ((_selectedItemIndex != value || value == 0) && !_fileChangeBlocker && value != -1)
+                if ((_selectedItemIndex != value || value == 0) && !_fileChangeBlocker)
                 {
                     _selectedItemIndex = value;
                     UpdateCurrentFile();
@@ -85,58 +85,29 @@ namespace CrytonCoreNext.ViewModels
             InitializeFiles();
         }
 
-        public void ClearAllFiles()
-        {
-            _ = _filesManager.ClearAllFiles(FilesView);
-            SelectedItemIndex = -1;
-            OnPropertyChanged(nameof(FilesView));
-        }
+        public void ClearAllFiles() => DoAction(_filesManager.ClearAllFiles);
 
-        public void DeleteFile()
+        public void DeleteFile() => DoAction(_filesManager.DeleteItem);  
+
+        public void SetFileAsFirst() => DoAction(_filesManager.SetItemAsFirst);
+
+        public void SetFileAsLast() => DoAction(_filesManager.SetItemAsLast);
+
+        public void MoveFileUp() => DoAction(_filesManager.MoveItemUp);
+
+        public void MoveFileDown() => DoAction(_filesManager.MoveItemDown);         
+        
+
+        private void DoAction(Func<ObservableCollection<File>, Guid,(bool result, int newIndex)> function)
         {
             _fileChangeBlocker = true;
-            var results = CurrentFile != null ? _filesManager.DeleteItem(FilesView, CurrentFile.Guid) : DefaultResult;
+            var (result, newIndex) = CurrentFile != null ? function(FilesView, CurrentFile.Guid) : DefaultResult;
             _fileChangeBlocker = false;
-            SelectedItemIndex = results.newIndex;
-            OnPropertyChanged(nameof(FilesView));
-        }
-
-        public void SetFileAsFirst()
-        {
-            _fileChangeBlocker = true;
-            var results = CurrentFile != null ? _filesManager.SetItemAsFirst(FilesView, CurrentFile.Guid) : DefaultResult;
-            _fileChangeBlocker = false;
-            SelectedItemIndex = results.newIndex;
-            OnPropertyChanged(nameof(FilesView));
-            
-        }
-
-        public void SetFileAsLast()
-        {
-            _fileChangeBlocker = true;
-            var results = CurrentFile != null ? _filesManager.SetItemAsLast(FilesView, CurrentFile.Guid) : DefaultResult;
-            _fileChangeBlocker = false;
-            SelectedItemIndex = results.newIndex;
-            OnPropertyChanged(nameof(FilesView));
-        }
-
-        public void MoveFileUp()
-        {
-            _fileChangeBlocker = true;
-            var results = CurrentFile != null ? _filesManager.MoveItemUp(FilesView, CurrentFile.Guid) : DefaultResult;
-            _fileChangeBlocker = false;
-            SelectedItemIndex = results.newIndex;
-            OnPropertyChanged(nameof(FilesView));
-            
-        }
-
-        public void MoveFileDown()
-        {
-            _fileChangeBlocker = true;
-            var results = CurrentFile != null ? _filesManager.MoveItemDown(FilesView, CurrentFile.Guid) : DefaultResult;
-            _fileChangeBlocker = false;
-            SelectedItemIndex = results.newIndex;
-            OnPropertyChanged(nameof(FilesView));            
+            if (result)
+            {
+                SelectedItemIndex = newIndex;
+                OnPropertyChanged(nameof(FilesView));
+            }
         }
 
         private void NotifyFilesView(object o = null, EventArgs s = null)

@@ -219,12 +219,29 @@
                     </i:Interaction.Triggers>
 
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <Image Source="/Assets/Rubbish.png"
+                        <Image Source="/Assets/RemoveSelected.png"
                                        Stretch="Uniform"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" 
                                        Margin="4,0,0,0" Width="25"/>
                         <TextBlock Text="Remove" Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="5" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding ClearFilesCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <Image Source="/Assets/DeleteAll.png"
+                                       Stretch="Uniform"
+                                       RenderOptions.EdgeMode="Aliased"
+                                       RenderOptions.BitmapScalingMode="HighQuality" 
+                                       Margin="4,0,0,0" Width="25"/>
+                        <TextBlock Text="Clear" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
             </Grid>
