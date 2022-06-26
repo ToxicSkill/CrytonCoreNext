@@ -43,10 +43,8 @@ namespace CrytonCoreNext.Crypting
             _aes.GenerateKey();
             _aes.GenerateIV();
 
-            using (var encryptor = _aes.CreateEncryptor(_aes.Key, _aes.IV))
-            {
-                return PerformCryptography(data, encryptor);
-            }
+            using var encryptor = _aes.CreateEncryptor(_aes.Key, _aes.IV);
+            return PerformCryptography(data, encryptor);
         }
 
         public byte[] Decrypt(byte[] data)
@@ -61,10 +59,8 @@ namespace CrytonCoreNext.Crypting
             //_aes.Key = _key;
             //_aes.IV = _iv;
 
-            using (var decryptor = _aes.CreateDecryptor(_aes.Key, _aes.IV))
-            {
-                return PerformCryptography(data, decryptor);
-            }
+            using var decryptor = _aes.CreateDecryptor(_aes.Key, _aes.IV);
+            return PerformCryptography(data, decryptor);
         }
 
         public void ParseSettingsObjects(Dictionary<string, object> objects)
@@ -75,14 +71,12 @@ namespace CrytonCoreNext.Crypting
 
         private byte[] PerformCryptography(byte[] data, ICryptoTransform cryptoTransform)
         {
-            using (var ms = new MemoryStream())
-            using (var cryptoStream = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write))
-            {
-                cryptoStream.Write(data, 0, data.Length);
-                cryptoStream.FlushFinalBlock();
+            using var ms = new MemoryStream();
+            using var cryptoStream = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write);
+            cryptoStream.Write(data, 0, data.Length);
+            cryptoStream.FlushFinalBlock();
 
-                return ms.ToArray();
-            }
+            return ms.ToArray();
         }
 
         private byte[] GenerateRandomBytes(int size)

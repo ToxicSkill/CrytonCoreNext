@@ -11,6 +11,18 @@
     <system:String x:Key="CurrentFileMethod">Method</system:String>
     
     
+    <system:String x:Key="SaveFile">Save file</system:String>
+    <system:String x:Key="AddFile">Add file</system:String>
+    
+    
+    <system:String x:Key="SetAsFirst">Set as first</system:String>
+    <system:String x:Key="MoveUp">Move up</system:String>
+    <system:String x:Key="MoveDown">Move down</system:String>
+    <system:String x:Key="SetAsLast">Set as last</system:String>
+    <system:String x:Key="RemoveSelected">Remove selcted</system:String>
+    <system:String x:Key="RemoveAll">Remove all</system:String>
+    <system:String x:Key="FilesView">Files panel</system:String>
+    
     
     <system:String x:Key="OpenFileDialog">Open file(s)</system:String>
 </ResourceDictionary>

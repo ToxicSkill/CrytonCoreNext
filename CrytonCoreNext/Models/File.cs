@@ -18,12 +18,12 @@ namespace CrytonCoreNext.Models
 
         public int Id { get; set; }
 
-        public byte[] Bytes { get; init; }
+        public byte[] Bytes { get; set; }
 
         public bool Status { get; set; }
 
         public string StatusInfo => Status ? "Encrypted" : "Decrypted";
-        
+
         public Guid Guid { get; init; }
 
         public File() { }

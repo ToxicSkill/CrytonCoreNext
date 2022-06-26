@@ -72,6 +72,14 @@ namespace CrytonCoreNext.Abstract
             }
         }
 
+        public bool ModifyFile(byte[] bytes, bool status)
+        {
+            var result =_filesManager.ModifyFile(FilesViewViewModel.FilesView, FilesViewViewModel.CurrentFile.Guid, bytes, status);
+            OnPropertyChanged(nameof(FilesViewViewModel.FilesView));
+            OnPropertyChanged(nameof(CurrentFile));
+            return result.result;
+        }
+
         public virtual void Dispose() { }
 
 

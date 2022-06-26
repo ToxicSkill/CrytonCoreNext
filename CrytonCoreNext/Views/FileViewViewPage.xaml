@@ -46,7 +46,8 @@
                 Width="50"
                 Height="100"
                 Style="{DynamicResource OnOffToggleImageStyle}"
-                IsChecked="{Binding ShowFilesView}">
+                IsChecked="{Binding ShowFilesView}"
+                ToolTip="{DynamicResource FilesView}">
 
 
                 <ToggleButton.Triggers>
@@ -147,7 +148,8 @@
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Row="0" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
+                <Button Grid.Row="0" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource SetAsFirst}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -164,7 +166,8 @@
                         <TextBlock Text="Set as first" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Row="1" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
+                <Button Grid.Row="1" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource MoveUp}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -181,7 +184,8 @@
                         <TextBlock Text="Move up"  Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Row="2" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
+                <Button Grid.Row="2" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource MoveDown}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -207,7 +211,8 @@
                         <TextBlock Text="Move down" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Row="3" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
+                <Button Grid.Row="3" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource SetAsLast}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -233,7 +238,8 @@
                         <TextBlock Text="Set as last" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Row="4" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
+                <Button Grid.Row="4" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource RemoveSelected}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -250,7 +256,8 @@
                         <TextBlock Text="Remove" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
-                <Button Grid.Row="5" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}">
+                <Button Grid.Row="5" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource RemoveAll}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">

@@ -61,7 +61,7 @@
             <ContentControl Content="{Binding CurrentCryptingViewModel}" Visibility="{Binding FileInformationVisibility}"/>
         </Grid>
 
-        <Grid Height="40" Width="150" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,50" >
+        <Grid Height="50" Width="200" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,20" >
             <TabPanel>
                 <Image Source="/Assets/AddFile.png"
                        HorizontalAlignment="Left"
@@ -70,12 +70,42 @@
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="15"/>
-                <Button Content="Add file" Command="{Binding PostFilesCommand}" Foreground="#e4e5fe"
+                <Button Content="{DynamicResource AddFile}" Command="{Binding PostFilesCommand}" Foreground="#e4e5fe" Margin="8,0,0,0" MinWidth="173"
                         Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"/>
             </TabPanel>
         </Grid>
 
-        <Button Width="100" Height="100" Command="{Binding CryptCommand}" Margin="198,445,1102,105"/>
+
+        <Grid Height="50" Width="200" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,90"
+                  Visibility="{Binding FileInformationVisibility}">
+            <TabPanel>
+                <Image Source="/Assets/SaveFile.png"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="15"/>
+                <Button Content="{DynamicResource SaveFile}" Command="{Binding SaveFileCommand}" Foreground="#e4e5fe" Margin="8,0,0,0" MinWidth="173"
+                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"/>
+            </TabPanel>
+        </Grid>
+
+
+        <Grid Height="50" Width="200" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="22,0,0,175" 
+                  Visibility="{Binding FileInformationVisibility}">
+            <TabPanel>
+                <Image Source="/Assets/Lock2.png"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="25"/>
+                <Button Content="{Binding CryptButtonName}" Command="{Binding CryptCommand}" Foreground="#e4e5fe" FontSize="32" Margin="8,0,0,0" MinWidth="173"
+                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"/>
+            </TabPanel>
+        </Grid>
         <ComboBox ItemsSource="{Binding CryptingComboBox}" SelectedItem="{Binding CurrentCryptingName}"
                   ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
                   Visibility="{Binding FileInformationVisibility}"
