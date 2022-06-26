@@ -29,6 +29,8 @@
                 <Label Content="{DynamicResource CurrentFileExtension}" Style="{StaticResource FileInformations}"/>
                 <Label Content="{DynamicResource CurrentFileSize}" Style="{StaticResource FileInformations}"/>
                 <Label Content="{DynamicResource CurrentFileDate}" Style="{StaticResource FileInformations}"/>
+                <Label Content="{DynamicResource CurrentFileStatus}" Style="{StaticResource FileInformations}"/>
+                <Label Content="{DynamicResource CurrentFileMethod}" Style="{StaticResource FileInformations}"/>
             </StackPanel>
             <StackPanel Grid.Column="1">
                 <Label Style="{StaticResource FileInformations}">
@@ -43,10 +45,13 @@
                 <Label Style="{StaticResource FileInformations}">
                     <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentFile.Date}"/>
                 </Label>
+                <Label Style="{StaticResource FileInformations}">
+                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentFile.StatusInfo}"/>
+                </Label>
             </StackPanel>
         </Grid>
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
-              Height="110" Margin="20, 0, 70, 20">
+              Height="70" Margin="180, 0, 180, 20">
             <ContentControl Content="{Binding PopupViewModel}"/>
         </Grid>
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
@@ -56,11 +61,24 @@
             <ContentControl Content="{Binding CurrentCryptingViewModel}" Visibility="{Binding FileInformationVisibility}"/>
         </Grid>
 
-        <Button Width="150" Height="40" Content="Open files" Command="{Binding PostFilesCommand}" Margin="39,375,1211,35"/>
-        <Button Width="150" Height="40" Content="Crypt" Command="{Binding CryptCommand}" Margin="250,370,1000,40" />
+        <Grid Height="40" Width="150" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,50" >
+            <TabPanel>
+                <Image Source="/Assets/AddFile.png"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="15"/>
+                <Button Content="Add file" Command="{Binding PostFilesCommand}" Foreground="#e4e5fe"
+                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"/>
+            </TabPanel>
+        </Grid>
+
+        <Button Width="100" Height="100" Command="{Binding CryptCommand}" Margin="198,445,1102,105"/>
         <ComboBox ItemsSource="{Binding CryptingComboBox}" SelectedItem="{Binding CurrentCryptingName}"
                   ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
                   Visibility="{Binding FileInformationVisibility}"
-                  HorizontalAlignment="Left" Margin="39,363,0,0" VerticalAlignment="Top" Width="120"/>
+                  HorizontalAlignment="Left" Margin="275,368,0,0" VerticalAlignment="Top" Width="120"/>
     </Grid>
 </UserControl>

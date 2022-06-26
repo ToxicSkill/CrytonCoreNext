@@ -84,7 +84,6 @@
                               IsSynchronizedWithCurrentItem="True" Foreground="White"
                               FontSize="20">
 
-
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Height="60" MaxWidth="290" HorizontalAlignment="Stretch" Margin="-3,0,-3,0">
@@ -94,23 +93,47 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
 
-                        <!--<ListBox.Resources>
-                                <Style TargetType="ListBoxItem">
-                                    <Style.Resources>
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
-                                        <SolidColorBrush x:Key="{x:Static SystemColors.Con}" Color="Black"/>
-                                    </Style.Resources>
-                                </Style>
-                            </ListBox.Resources>-->
-
-                        <!--<ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                            <Border x:Name="brdr" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True"/>
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Background" TargetName="brdr" Value="#1F26A0DA"/>
+                                                    <Setter Property="BorderBrush" TargetName="brdr" Value="#a826A0Da"/>
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                                        <Condition Property="IsSelected" Value="True"/>
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Background" TargetName="brdr" Value="#FF26A0DA"/>
+                                                    <Setter Property="BorderBrush" TargetName="brdr" Value="#FF26A0DA"/>
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                                        <Condition Property="IsSelected" Value="True"/>
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Background" TargetName="brdr" Value="#FF26A0DA"/>
+                                                    <Setter Property="BorderBrush" TargetName="brdr" Value="#FF26A0DA"/>
+                                                </MultiTrigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="TextElement.Foreground" TargetName="brdr" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
-                        </ListView.ItemContainerStyle>-->
-
+                        </ListView.ItemContainerStyle>
                     </ListView>
                 </SelectiveScrollingGrid>
             </Grid>

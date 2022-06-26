@@ -5,7 +5,6 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -20,13 +19,13 @@ namespace CrytonCoreNext.Abstract
 
         private DispatcherTimer? _timer;
 
-        public InformationPopupViewModel PopupViewModel { get; set; }
+        public InformationPopupViewModel PopupViewModel { get; private set; }
 
-        public FilesViewViewModel FilesViewViewModel { get; set; }
+        public FilesViewViewModel FilesViewViewModel { get; init; }
 
-        public File? CurrentFile { get; set; }
+        public File? CurrentFile { get; private set; }
 
-        public Visibility FileInformationVisibility { get; set; } = Visibility.Hidden;
+        public Visibility FileInformationVisibility { get; private set; } = Visibility.Hidden;
 
         public InteractiveViewBase(IFilesManager filesManager)
         {
@@ -38,7 +37,7 @@ namespace CrytonCoreNext.Abstract
 
         public void PostPopup(string informationString, int seconds, Color color = default)
         {
-            PopupViewModel = new(informationString, color);
+            PopupViewModel = new (informationString, color);
             ShowInformationBar(true);
             OnPropertyChanged(nameof(PopupViewModel));
             InitializeTimerWithAction(CollapsePopup, seconds);
