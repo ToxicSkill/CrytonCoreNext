@@ -13,6 +13,6 @@ namespace CrytonCoreNext.Interfaces
 
         string GetName();
 
-        void ParseSettingsObjects(Dictionary<string, object> objects);
+        bool ParseSettingsObjects(Dictionary<string, object> objects, bool encryption);
     }
 }

@@ -16,5 +16,10 @@ namespace CrytonCoreNext.Abstract
         {
             return default;
         }
+
+        public virtual void SetObjects(Dictionary<string, object> objects)
+        {
+            return;
+        }
     }
 }

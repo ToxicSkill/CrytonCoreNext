@@ -35,5 +35,10 @@ namespace CrytonCoreNext.Crypting
         {
             throw new System.NotImplementedException();
         }
+
+        public bool ParseSettingsObjects(Dictionary<string, object> objects, bool encryption)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

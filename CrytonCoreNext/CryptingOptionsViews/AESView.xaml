@@ -33,11 +33,16 @@
                   SelectedIndex="0" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,250"/>
 
         <TextBox     Height="40" MaxLength="{Binding SelectedKeySize}"
+                     Text="{Binding Key}"
                      FontSize="18" FontFamily="Segoe UI Variable Text Light"   
                      Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,350,10,0"/>
 
-        <TextBox     Height="40" MaxLength="{Binding SelectedKeySize}"
+        <TextBox     Height="40" MaxLength="{Binding SelectedIVSize}"
+                     Text="{Binding IV}"
                      FontSize="18" FontFamily="Segoe UI Variable Text Light"   
                      Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,450,10,0"/>
+        <Label      Height="40" Content="{Binding Error}"
+                     FontSize="18" FontFamily="Segoe UI Variable Text Light"   
+                     Foreground="Red" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,550,10,0"/>
     </Grid>
 </UserControl>

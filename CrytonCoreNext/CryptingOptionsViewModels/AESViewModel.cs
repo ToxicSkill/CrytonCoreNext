@@ -4,19 +4,34 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
 {
     public class AESViewModel : ViewModelBase
     {
+        private readonly string[] SettingsKeys;
         private string _selectedKey;
         private string _selectedBlock;
 
         public ObservableCollection<string> BlockSizesComboBox { get; init; }
 
-        public string SelectedBlockSize { get; set; }
-
         public ObservableCollection<string> KeySizesComboBox { get; init; }
+
+        public string SelectedBlockSize
+        {
+            get => _selectedBlock;
+            set
+            {
+                if (_selectedBlock != value)
+                {
+                    _selectedBlock = value;
+                    SelectedIVSize = Convert.ToInt32(_selectedBlock) / 4;
+                    OnPropertyChanged(nameof(SelectedBlockSize));
+                    OnPropertyChanged(nameof(SelectedIVSize));
+                }
+            }
+        }
 
         public string SelectedKey 
         {
@@ -26,7 +41,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 if (_selectedKey != value)
                 {
                     _selectedKey = value;
-                    SelectedKeySize = Convert.ToInt32(_selectedKey);
+                    SelectedKeySize = Convert.ToInt32(_selectedKey) / 4;
                     OnPropertyChanged(nameof(SelectedKey));
                     OnPropertyChanged(nameof(SelectedKeySize));
                 }
@@ -34,6 +49,8 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         }
 
         public int SelectedKeySize { get; set; }
+
+        public int SelectedIVSize { get; set; }
 
         public string CryptorName { get; init; }
 
@@ -45,8 +62,15 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public string KeysName { get; init; }
 
-        public AESViewModel(AesCng aes)
+        public string Key { get; set; }
+
+        public string IV { get; set; }
+
+        public string Error { get; private set; }
+
+        public AESViewModel(AesCng aes, string[] settingKeys)
         {
+            SettingsKeys = settingKeys;
             CryptorName = "AES";
             BlocksSizeName = "Block size";
             KeysName = "Key size";
@@ -81,6 +105,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             {
                 BlockSizesComboBox.Add(legalBlocks.MinSize.ToString());
             }
+
             SelectedBlockSize = BlockSizesComboBox.First();
             SelectedKey = KeySizesComboBox.First();
             OnPropertyChanged(nameof(BlockSizesComboBox));
@@ -91,9 +116,44 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             return new ()
             {
-                { "Key", SelectedKey },
-                { "Block", SelectedBlockSize }
+                { SettingsKeys[0], Key },
+                { SettingsKeys[1], IV },
+                { SettingsKeys[2], SelectedKey },
+                { SettingsKeys[3], SelectedBlockSize },
+                { SettingsKeys[4], string.Empty }
             };
+        }
+
+        public override void SetObjects(Dictionary<string, object> objects)
+        {
+            foreach (var setting in SettingsKeys)
+            {
+                if (!objects.ContainsKey(setting))
+                {
+                    return;
+                }
+            }
+
+            if (objects[SettingsKeys[4]] is string error)
+            {
+                Error = error;
+                OnPropertyChanged(nameof(Error));
+                if (!string.IsNullOrEmpty(error))
+                {
+                    return;
+                }
+            }
+
+            var key = objects[SettingsKeys[0]] as byte[];
+            var iv = objects[SettingsKeys[1]] as byte[];
+            if (key != null &&
+                iv != null)
+            {
+                Key = Convert.ToHexString(key);
+                IV = Convert.ToHexString(iv);
+                OnPropertyChanged(nameof(Key));
+                OnPropertyChanged(nameof(IV));
+            }
         }
     }
 }
