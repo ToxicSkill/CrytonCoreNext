@@ -19,7 +19,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Label Content="{Binding CryptorName}" FontSize="45" Foreground="White" Height="60" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,10" />
+        <Label Content="{Binding PageName}" FontSize="45" Foreground="White" Height="60" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,10" />
         <Label Content="{Binding BlocksSizeName}" Foreground="White" HorizontalAlignment="Stretch" Margin="5,100,0,0" Style="{StaticResource CryptingSettings}"/>
         <Label Content="{Binding KeysName}" Foreground="White" HorizontalAlignment="Stretch" Margin="5,200,0,0" Style="{StaticResource CryptingSettings}"/>
         <Label Content="{Binding KeyName}" Foreground="White" HorizontalAlignment="Stretch" Margin="5,300,0,0" Style="{StaticResource CryptingSettings}"/>

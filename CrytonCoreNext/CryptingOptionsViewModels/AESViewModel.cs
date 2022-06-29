@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
 {
@@ -48,12 +47,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        public int SelectedKeySize { get; set; }
-
-        public int SelectedIVSize { get; set; }
-
-        public string CryptorName { get; init; }
-
         public string BlocksSizeName { get; init; }
 
         public string KeyName { get; init; }
@@ -62,23 +55,26 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public string KeysName { get; init; }
 
+        public int SelectedKeySize { get; set; }
+
+        public int SelectedIVSize { get; set; }
+
         public string Key { get; set; }
 
         public string IV { get; set; }
 
         public string Error { get; private set; }
 
-        public AESViewModel(AesCng aes, string[] settingKeys)
+        public AESViewModel(AesCng aes, string[] settingKeys, string pageName) : base(pageName)
         {
             SettingsKeys = settingKeys;
-            CryptorName = "AES";
             BlocksSizeName = "Block size";
             KeysName = "Key size";
             KeyName = "Key";
             IVName = "IV";
 
             BlockSizesComboBox = new ();
-            KeySizesComboBox = new();
+            KeySizesComboBox = new ();
 
             var legalKeys = aes.LegalKeySizes[0];
             var legalBlocks = aes.LegalBlockSizes[0];

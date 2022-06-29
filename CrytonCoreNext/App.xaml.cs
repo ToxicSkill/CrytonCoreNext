@@ -100,8 +100,7 @@ namespace CrytonCoreNext
 
         private ICrypting CreateRSA(IServiceProvider provider)
         {
-            var viewModel = new RSAViewModel();
-            return new RSA(viewModel);
+            return new RSA();
         }
 
         private void InitializeDictionary()

@@ -5,6 +5,13 @@ namespace CrytonCoreNext.Abstract
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
+        public string? PageName { get; set; }
+
+        public ViewModelBase(string? pageName = null)
+        {
+            PageName = pageName;
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName = null)

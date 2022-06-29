@@ -1,20 +1,24 @@
 ﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.CryptingOptionsViewModels;
 using CrytonCoreNext.Interfaces;
 using System.Collections.Generic;
-using System.IO;
 using System.Security.Cryptography;
 
 namespace CrytonCoreNext.Crypting
 {
     public class RSA : ICrypting
     {
+        private static readonly string[] SettingsKeys = { "Key", "IV", "KeySize", "BlockSize", "Error" };
         private const string Name = "RSA";
 
         public ViewModelBase ViewModel { get; set; }
 
-        public RSA(ViewModelBase viewModel)
+        private readonly RSACng _rsa;
+
+        public RSA()
         {
-            ViewModel = viewModel;
+            _rsa = new RSACng();
+            ViewModel = new RSAViewModel(_rsa, SettingsKeys, Name);
         }
 
         public ViewModelBase GetViewModel() => ViewModel;

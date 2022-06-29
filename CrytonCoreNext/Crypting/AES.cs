@@ -22,7 +22,7 @@ namespace CrytonCoreNext.Crypting
         public AES()
         {
             _aes = new ();
-            ViewModel = new AESViewModel(_aes, SettingsKeys);
+            ViewModel = new AESViewModel(_aes, SettingsKeys, Name);
         }
 
         public ViewModelBase GetViewModel() => ViewModel;
