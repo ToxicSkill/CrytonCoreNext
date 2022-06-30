@@ -1,9 +1,17 @@
 ﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Commands;
+using CrytonCoreNext.Crypting;
+using CrytonCoreNext.Helpers;
+using CrytonCoreNext.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.Json;
+using System.Windows;
+using System.Windows.Input;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
 {
@@ -55,6 +63,12 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public string KeysName { get; init; }
 
+        public string GenerateRandomKeyName { get; init; }
+
+        public string GenerateRandomIVName { get; init; }
+
+        public string SaveCryptorName { get; init; }
+
         public int SelectedKeySize { get; set; }
 
         public int SelectedIVSize { get; set; }
@@ -65,13 +79,26 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public string Error { get; private set; }
 
+        public ICommand GenerateRandomKeyCommand { get; init; }
+
+        public ICommand GenerateRandomIVCommand { get; init; }
+
+        public ICommand SaveCryptorCommand { get; init; }
+
         public AESViewModel(AesCng aes, string[] settingKeys, string pageName) : base(pageName)
         {
+            GenerateRandomKeyCommand = new Command(GenerateRandomKey, true);
+            GenerateRandomIVCommand = new Command(GenerateRandomIV, true);
+            SaveCryptorCommand = new Command(SaveCryptor, true);
+
             SettingsKeys = settingKeys;
             BlocksSizeName = "Block size";
             KeysName = "Key size";
             KeyName = "Key";
             IVName = "IV";
+            GenerateRandomKeyName = "Generate random Key";
+            GenerateRandomIVName = "Generate random IV";
+            SaveCryptorName = "Save";
 
             BlockSizesComboBox = new ();
             KeySizesComboBox = new ();
@@ -150,6 +177,43 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 OnPropertyChanged(nameof(Key));
                 OnPropertyChanged(nameof(IV));
             }
+        }
+
+        private void SaveCryptor()
+        {
+            var cryptorOutput = CrytonCoreNext.Serializers.JsonSerializer.SerializeList(new List<string>()
+            {
+                SelectedKeySize.ToString(), Key, SelectedBlockSize.ToString(), IV
+            });
+            WindowDialog.SaveDialog saveDialog = new(new DialogHelper()
+            {
+                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.All),
+                Multiselect = false,
+                Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
+            });
+
+            var saveDestination = saveDialog.RunDialog();
+            if (saveDestination != null)
+            {
+                TextWriter tw = new StreamWriter(saveDestination.First());
+
+                foreach (var s in cryptorOutput)
+                    tw.WriteLine(s);
+
+                tw.Close();
+            }
+        }
+
+        private void GenerateRandomKey()
+        {
+            Key = RandomCryptoGenerator.GetCryptoRandomBytesString(SelectedKeySize / 2);
+            OnPropertyChanged(nameof(Key));
+        }
+
+        private void GenerateRandomIV()
+        {
+            IV = RandomCryptoGenerator.GetCryptoRandomBytesString(SelectedIVSize / 2);
+            OnPropertyChanged(nameof(IV));
         }
     }
 }

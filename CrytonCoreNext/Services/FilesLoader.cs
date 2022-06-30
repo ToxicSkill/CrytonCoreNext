@@ -6,7 +6,7 @@ namespace CrytonCoreNext.Services
 {
     public class FilesLoader : IFilesLoader
     {
-        private static string[] Sizes = { "B", "KB", "MB", "GB", "TB" };
+        private static readonly string[] Sizes = { "B", "KB", "MB", "GB", "TB" };
 
         public List<Models.File> LoadFiles(string[] paths, int currentFilesCount = 0)
         {

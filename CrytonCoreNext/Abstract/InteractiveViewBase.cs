@@ -54,7 +54,7 @@ namespace CrytonCoreNext.Abstract
         {
             WindowDialog.OpenDialog openDialog = new(new DialogHelper()
             {
-                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.All),
+                Filters = EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.All),
                 Multiselect = true,
                 Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
             });

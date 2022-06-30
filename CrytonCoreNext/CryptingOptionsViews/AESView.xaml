@@ -22,8 +22,8 @@
         <Label Content="{Binding PageName}" FontSize="45" Foreground="White" Height="60" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,10" />
         <Label Content="{Binding BlocksSizeName}" Foreground="White" HorizontalAlignment="Stretch" Margin="5,100,0,0" Style="{StaticResource CryptingSettings}"/>
         <Label Content="{Binding KeysName}" Foreground="White" HorizontalAlignment="Stretch" Margin="5,200,0,0" Style="{StaticResource CryptingSettings}"/>
-        <Label Content="{Binding KeyName}" Foreground="White" HorizontalAlignment="Stretch" Margin="5,300,0,0" Style="{StaticResource CryptingSettings}"/>
-        <Label Content="{Binding IVName}" Foreground="White" HorizontalAlignment="Stretch" Margin="5,400,0,0" Style="{StaticResource CryptingSettings}"/>
+        <Label Content="{Binding KeyName}" Foreground="White" HorizontalAlignment="Stretch" Margin="25,300,0,0" Style="{StaticResource CryptingSettings}"/>
+        <Label Content="{Binding IVName}" Foreground="White" HorizontalAlignment="Stretch" Margin="25,400,0,0" Style="{StaticResource CryptingSettings}"/>
 
         <ComboBox ItemsSource="{Binding BlockSizesComboBox}" SelectedItem="{Binding SelectedBlockSize}" 
                   ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
@@ -41,8 +41,50 @@
                      Text="{Binding IV}"
                      FontSize="18" FontFamily="Segoe UI Variable Text Light"   
                      Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,450,10,0"/>
-        <Label      Height="40" Content="{Binding Error}"
-                     FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                     Foreground="Red" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,550,10,0"/>
+
+        <Button ToolTip="{Binding GenerateRandomKeyName}" Style="{StaticResource RoundButton}" 
+                Height="16" Width="16" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Margin="5,313,10,0">
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                    <i:InvokeCommandAction Command="{Binding GenerateRandomKeyCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+
+        <Button ToolTip="{Binding GenerateRandomIVName}" Style="{StaticResource RoundButton}" 
+                Height="16" Width="16" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Margin="5,413,10,0">
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                    <i:InvokeCommandAction Command="{Binding GenerateRandomIVCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+
+        <Button ToolTip="{Binding SaveCryptorName}" Content="Test"
+                Width="30" Height="30" BorderThickness="0"
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Margin="5,512,0,0">
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                    <i:InvokeCommandAction Command="{Binding SaveCryptorCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            
+            <Button.Background>
+                <ImageBrush ImageSource="/Assets/SaveFile.png" RenderOptions.BitmapScalingMode="HighQuality"
+                            RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+            </Button.Background>
+        </Button>
+
+
+        <Label     Height="40" Content="{Binding Error}"
+                   FontSize="18" FontFamily="Segoe UI Variable Text Light"   
+                    Foreground="Red" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="5,550,10,0"/>
     </Grid>
 </UserControl>
