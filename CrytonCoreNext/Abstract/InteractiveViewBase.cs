@@ -125,13 +125,5 @@ namespace CrytonCoreNext.Abstract
             ShowInformationBar(false);
             _timer?.Stop();
         }
-
-        //private void NotifyObjectChangeByName(string[] objects)
-        //{
-        //    foreach (var obj in objects)
-        //    {
-        //        OnPropertyChanged(obj);
-        //    }
-        //}
     }
 }

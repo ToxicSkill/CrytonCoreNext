@@ -53,12 +53,13 @@ namespace CrytonCoreNext.Services
         private static Models.File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)
         {
             var fileInfo = new FileInfo(path);
+            var fileExtension = fileInfo.Extension.Contains('.') ? fileInfo.Extension.Substring(1) : "N/A";
             return new Models.File()
             {
                 Id = currentFilesCount,
                 Name = Path.GetFileNameWithoutExtension(fileInfo.FullName),
                 NameWithExtension = fileInfo.Name,
-                Extension = fileInfo.Extension.Substring(1),
+                Extension = fileExtension,
                 Date = fileInfo.CreationTimeUtc,
                 Size = GetSizeString(fileInfo.Length),
                 Path = path,

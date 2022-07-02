@@ -100,7 +100,7 @@ namespace CrytonCoreNext.ViewModels
 
         private void DoAction(Func<ObservableCollection<File>, Guid,(bool result, int newIndex)> function)
         {
-            if (FilesView == null || CurrentFile == null)
+            if (FilesView == null)
                 return;
 
             _fileChangeBlocker = true;
