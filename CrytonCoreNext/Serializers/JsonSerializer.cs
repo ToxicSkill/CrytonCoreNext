@@ -1,12 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using CrytonCoreNext.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace CrytonCoreNext.Serializers
 {
-    public static class JsonSerializer
+    public class JsonSerializer : IJsonSerializer
     {
-        public static string SerializeList(List<string> objects)
+        public void Serialize(object obj, string filePath)
         {
-           return System.Text.Json.JsonSerializer.Serialize(objects);
+            var serializer = new Newtonsoft.Json.JsonSerializer();
+
+            using (var sw = new StreamWriter(filePath))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, obj);
+            }
+        }
+
+        public object Deserialize(string path, Type type)
+        {
+            var serializer = new Newtonsoft.Json.JsonSerializer();
+
+            using (var sw = new StreamReader(path))
+            using (var reader = new JsonTextReader(sw))
+            {
+                return serializer.Deserialize(reader, type);
+            }
         }
     }
 }

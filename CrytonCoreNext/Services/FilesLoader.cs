@@ -1,4 +1,6 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Enums;
+using CrytonCoreNext.Helpers;
+using CrytonCoreNext.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 
@@ -8,32 +10,44 @@ namespace CrytonCoreNext.Services
     {
         private static readonly string[] Sizes = { "B", "KB", "MB", "GB", "TB" };
 
-        public List<Models.File> LoadFiles(string[] paths, int currentFilesCount = 0)
+        public List<Models.File>? LoadFiles(EDialogFilters.DialogFilters filter, string title, bool multiselect = false, int currentIndex = 0)
         {
-            var validPaths = new List<string>();
-
-            foreach (var path in paths)
+            WindowDialog.OpenDialog openDialog = new(new DialogHelper()
             {
-                if (File.Exists(path))
-                    validPaths.Add(path);
+                Filters = EDialogFilters.ExtensionToFilter(filter),
+                Multiselect = multiselect,
+                Title = title
+            });
+            var chosenPaths = openDialog.RunDialog();
+            if (chosenPaths.Count > 0)
+            {
+                var validPaths = new List<string>();
+
+                foreach (var path in chosenPaths)
+                {
+                    if (File.Exists(path))
+                        validPaths.Add(path);
+                }
+
+                if (validPaths.Count == 0)
+                {
+                    return new List<Models.File>();
+                }
+
+                var files = new List<Models.File>();
+
+                foreach (var path in validPaths)
+                {
+                    currentIndex += 1;
+                    var byteArray = File.ReadAllBytes(path);
+                    Models.File newFile = InitializeNewFile(currentIndex, path, byteArray);
+                    files.Add(newFile);
+                }
+
+                return files;
             }
 
-            if (validPaths.Count == 0)
-            {
-                return new List<Models.File>();
-            }
-
-            var files = new List<Models.File>();
-
-            foreach (var path in validPaths)
-            {
-                currentFilesCount += 1;
-                var byteArray = File.ReadAllBytes(path);
-                Models.File newFile = InitializeNewFile(currentFilesCount, path, byteArray);
-                files.Add(newFile);
-            }
-
-            return files;
+            return null;
         }
 
         private static Models.File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)

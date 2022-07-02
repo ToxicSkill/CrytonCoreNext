@@ -12,6 +12,8 @@ namespace CrytonCoreNext.Enums
             gif,
             tiff,
             pdf,
+            txt,
+            json
         }
 
         public static string EnumToString(Extensions extensions)
@@ -24,6 +26,8 @@ namespace CrytonCoreNext.Enums
                 Extensions.gif => nameof(Extensions.gif),
                 Extensions.tiff => nameof(Extensions.tiff),
                 Extensions.pdf => nameof(Extensions.pdf),
+                Extensions.txt => nameof(Extensions.txt),
+                Extensions.json => nameof(Extensions.json),
                 _ => throw new ArgumentOutOfRangeException(nameof(extensions), extensions, null),
             };
         }

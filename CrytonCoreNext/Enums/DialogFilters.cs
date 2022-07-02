@@ -4,7 +4,9 @@
     {
         public enum DialogFilters
         {
-            Images = 0,
+            Json = 0,
+            Txt,
+            Images,
             Pdf,
             All
         }
@@ -25,6 +27,12 @@
                 case DialogFilters.Pdf:
                     return nameof(DialogFilters.Pdf) + " file(s) |*." +
                         Enums.EExtensions.EnumToString(EExtensions.Extensions.pdf) + ";";
+                case DialogFilters.Json:
+                    return nameof(DialogFilters.Json) + " file(s) |*." +
+                        Enums.EExtensions.EnumToString(EExtensions.Extensions.json) + ";";
+                case DialogFilters.Txt:
+                    return nameof(DialogFilters.Txt) + " file(s) |*." +
+                        Enums.EExtensions.EnumToString(EExtensions.Extensions.txt) + ";";
                 default:
                     return string.Empty;
             }

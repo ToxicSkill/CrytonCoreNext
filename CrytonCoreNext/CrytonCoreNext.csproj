@@ -44,6 +44,7 @@
     <None Remove="Assets\Inform.png" />
     <None Remove="Assets\Information.png" />
     <None Remove="Assets\Informv2.png" />
+    <None Remove="Assets\LoadObjects.png" />
     <None Remove="Assets\Lock.png" />
     <None Remove="Assets\Lock2.png" />
     <None Remove="Assets\Lockv2.png" />
@@ -72,6 +73,7 @@
     <None Remove="Assets\Rubbish.png" />
     <None Remove="Assets\SaveFile.png" />
     <None Remove="Assets\SaveFiles.png" />
+    <None Remove="Assets\SaveObjects.png" />
     <None Remove="Assets\Secure.png" />
     <None Remove="Assets\Securev2.png" />
     <None Remove="Assets\Snow.png" />
@@ -192,6 +194,9 @@
     <Resource Include="Assets\Informv2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\LoadObjects.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Lock.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -272,6 +277,9 @@
     </Resource>
     <Resource Include="Assets\SaveFiles.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\SaveObjects.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Secure.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

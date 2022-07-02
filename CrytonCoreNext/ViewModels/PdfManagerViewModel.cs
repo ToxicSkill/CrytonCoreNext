@@ -1,7 +1,5 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
 using CrytonCoreNext.Interfaces;
-using System.Windows.Input;
 
 namespace CrytonCoreNext.ViewModels
 {

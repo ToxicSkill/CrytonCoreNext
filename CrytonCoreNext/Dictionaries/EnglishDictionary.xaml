@@ -24,5 +24,18 @@
     <system:String x:Key="FilesView">Files panel</system:String>
     
     
+    <!--AES View Model-->
+    <system:String x:Key="BlockSize">Block size</system:String>
+    <system:String x:Key="KeySize">Key size</system:String>
+    <system:String x:Key="Key">Key</system:String>
+    <system:String x:Key="IV">IV</system:String>
+    <system:String x:Key="GenerateRandomKey">Generate random Key</system:String>
+    <system:String x:Key="GenerateRandomIV">Generate random IV</system:String>
+    <system:String x:Key="SaveToolTip">Save</system:String>
+    <system:String x:Key="LoadToolTip">Load</system:String>
+    
+    
+    
+    
     <system:String x:Key="OpenFileDialog">Open file(s)</system:String>
 </ResourceDictionary>

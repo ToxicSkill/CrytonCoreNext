@@ -70,8 +70,8 @@
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="15"/>
-                <Button Content="{DynamicResource AddFile}" Command="{Binding PostFilesCommand}" Foreground="#e4e5fe" Margin="8,0,0,0" MinWidth="173"
-                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"/>
+                <Button Content="{DynamicResource AddFile}" Command="{Binding LoadFilesCommand}" Foreground="#e4e5fe" Margin="8,0,0,0" MinWidth="173"
+                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>
         </Grid>
 
@@ -87,7 +87,7 @@
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="15"/>
                 <Button Content="{DynamicResource SaveFile}" Command="{Binding SaveFileCommand}" Foreground="#e4e5fe" Margin="8,0,0,0" MinWidth="173"
-                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"/>
+                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>
         </Grid>
 
@@ -103,7 +103,7 @@
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="25"/>
                 <Button Content="{Binding CryptButtonName}" Command="{Binding CryptCommand}" Foreground="#e4e5fe" FontSize="32" Margin="8,0,0,0" MinWidth="173"
-                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"/>
+                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>
         </Grid>
         <ComboBox ItemsSource="{Binding CryptingComboBox}" SelectedItem="{Binding CurrentCryptingName}"

@@ -1,8 +1,6 @@
 ﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
-using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
 using System;
 using System.ComponentModel;
@@ -43,32 +41,38 @@ namespace CrytonCoreNext.Abstract
             InitializeTimerWithAction(CollapsePopup, seconds);
         }
 
-        public void HandleFileChanged(object sender, EventArgs e)
+        public void HandleFileChanged(object? sender, EventArgs? e)
         {
             CurrentFile = FilesViewViewModel.CurrentFile;
             UpdateFilesVisibility();
             OnPropertyChanged(nameof(CurrentFile));
         }
 
-        public void AddFiles()
+        public void LoadFiles()
         {
-            WindowDialog.OpenDialog openDialog = new(new DialogHelper()
+            var filesCount = FilesViewViewModel.FilesView == null ? 0 : FilesViewViewModel.FilesView.Count;
+            var newFiles = _filesManager.LoadFiles(EDialogFilters.DialogFilters.All, "Open files", true, filesCount);
+            if (newFiles != null)
             {
-                Filters = EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.All),
-                Multiselect = true,
-                Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
-            });
-            var chosenPaths = openDialog.RunDialog();
-            if (chosenPaths.Count > 0)
-            {
-                var filesCount = FilesViewViewModel.FilesView == null ? 0 : FilesViewViewModel.FilesView.Count;
-                var newFiles = _filesManager.AddFiles(chosenPaths.ToArray(), filesCount);
                 var newFilesCollection = filesCount > 0 ?
                     FilesViewViewModel.FilesView?.ToList().Concat(newFiles) :
                     newFiles;
 
                 FilesViewViewModel.Update(newFilesCollection);
                 PostPopup("File(s) where loaded successfuly", 2, EPopopColor.Information);
+            }
+        }
+
+        public void SaveFile()
+        {
+            var result = _filesManager.SaveFile(EDialogFilters.DialogFilters.All, "Save file", CurrentFile);
+            if (result)
+            {
+                PostPopup("File has been saved successfuly", 2, EPopopColor.Information);
+            }
+            if (!result)
+            {
+                PostPopup("Error when saving file", 2, EPopopColor.Error);
             }
         }
 

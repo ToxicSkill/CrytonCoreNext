@@ -6,7 +6,9 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface IFilesManager
     {
-        List<Models.File> AddFiles(string[] paths, int currentIndex = 0);
+        List<Models.File>? LoadFiles(Enums.EDialogFilters.DialogFilters filter, string title, bool multiselect = false, int currentIndex = 0);
+
+        bool SaveFile(Enums.EDialogFilters.DialogFilters filter, string title, Models.File? file);
 
         (bool result, int newIndex) DeleteItem(ObservableCollection<Models.File> files, Guid guid);
 

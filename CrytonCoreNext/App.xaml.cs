@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using CrytonCoreNext.ViewModels;
-using CrytonCoreNext.CryptingOptionsViewModels;
 using System;
 using System.Windows;
 using CrytonCoreNext.Interfaces;
@@ -8,6 +7,7 @@ using CrytonCoreNext.InformationsServices;
 using System.Collections.Generic;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.Crypting;
+using CrytonCoreNext.Serializers;
 
 namespace CrytonCoreNext
 {
@@ -31,6 +31,8 @@ namespace CrytonCoreNext
                 .AddSingleton<IInternetConnection, InternetConnection>()
                 .AddSingleton<ITimeDate, TimeDate>()
                 .AddSingleton<IFilesLoader, FilesLoader>()
+                .AddSingleton<IFilesSaver, FilesSaver>()
+                .AddSingleton<IJsonSerializer, JsonSerializer>()
                 .AddSingleton<IFilesManager>(CreateFilesManager)
                 .AddTransient<FilesViewViewModel>()
                 .AddTransient(CreateAES)
@@ -77,7 +79,8 @@ namespace CrytonCoreNext
         private FilesManager CreateFilesManager(IServiceProvider provider)
         {
             var filesLoader = provider.GetRequiredService<IFilesLoader>();
-            return new FilesManager(filesLoader);
+            var filesSaver = provider.GetRequiredService<IFilesSaver>();
+            return new FilesManager(filesLoader, filesSaver);
         }
 
         private CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
@@ -95,7 +98,8 @@ namespace CrytonCoreNext
 
         private ICrypting CreateAES(IServiceProvider provider)
         {
-            return new AES();
+            var serialzer = provider.GetRequiredService<IJsonSerializer>();
+            return new AES(serialzer);
         }
 
         private ICrypting CreateRSA(IServiceProvider provider)

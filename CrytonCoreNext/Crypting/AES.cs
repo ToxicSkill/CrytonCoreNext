@@ -19,10 +19,10 @@ namespace CrytonCoreNext.Crypting
 
         public ViewModelBase ViewModel { get; init; }
 
-        public AES()
+        public AES(IJsonSerializer jsonSerializer)
         {
             _aes = new ();
-            ViewModel = new AESViewModel(_aes, SettingsKeys, Name);
+            ViewModel = new AESViewModel(jsonSerializer, _aes, SettingsKeys, Name);
         }
 
         public ViewModelBase GetViewModel() => ViewModel;
@@ -31,7 +31,7 @@ namespace CrytonCoreNext.Crypting
         public string GetName() =>  Name;
         
 
-        public byte[] Encrypt(byte[] data)
+        public byte[]? Encrypt(byte[] data)
         {
             if (!ParseSettingsObjects(ViewModel.GetObjects(), true))
                 return default;
@@ -42,7 +42,7 @@ namespace CrytonCoreNext.Crypting
             return PerformCryptography(data, encryptor);
         }
 
-        public byte[] Decrypt(byte[] data)
+        public byte[]? Decrypt(byte[] data)
         {
             if (!ParseSettingsObjects(ViewModel.GetObjects(), false))
                 return default;
@@ -92,7 +92,7 @@ namespace CrytonCoreNext.Crypting
             return false;
         }
 
-        private byte[] PerformCryptography(byte[] data, ICryptoTransform cryptoTransform)
+        private byte[]? PerformCryptography(byte[] data, ICryptoTransform cryptoTransform)
         {
             using var ms = new MemoryStream();
             using var cryptoStream = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write);

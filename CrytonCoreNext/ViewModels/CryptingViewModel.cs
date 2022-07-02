@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,15 +13,17 @@ namespace CrytonCoreNext.ViewModels
     {
         private readonly IEnumerable<ICrypting> _cryptors;
 
-        private string _currentCryptingName;
+        private string _currentCryptingName = "";
 
-        public ICommand PostFilesCommand { get; init; }
+        public ICommand LoadFilesCommand { get; init; }
+
+        public ICommand SaveFileCommand { get; init; }
 
         public ICommand CryptCommand { get; init; }
 
         public ObservableCollection<string> CryptingComboBox { get; private set; }
 
-        public ICrypting CurrentCrypting { get; private set; }
+        public ICrypting? CurrentCrypting { get; private set; }
 
         public string CryptButtonName => GetCryptName();
 
@@ -43,14 +46,21 @@ namespace CrytonCoreNext.ViewModels
         public CryptingViewModel(IFilesManager filesManager, IEnumerable<ICrypting> cryptors) : base(filesManager)
         {
             CryptCommand = new Command(DoCrypt, true);
-            PostFilesCommand = new Command(AddFiles, true);
+            LoadFilesCommand = new Command(LoadFiles, true);
+            SaveFileCommand = new Command(SaveFile, true);
             CurrentCryptingViewModel = new ();
             CryptingComboBox = new ();
             _cryptors = cryptors;
             InitializeCryptingComboBox();
+            FilesViewViewModel.FilesChanged += HandleFileChanged;
 
             //var t = new Crypting.Crypting(new() { new(new AES(), ECrypting.EnumToString(ECrypting.Methods.aes)) });
             //t.Encrypt(FilesViewViewModel.FilesView[0].Bytes, ECrypting.EnumToString(ECrypting.Methods.aes));
+        }
+
+        private new void HandleFileChanged(object? sender, EventArgs? e)
+        {
+            OnPropertyChanged(nameof(CryptButtonName));
         }
 
         private bool InitializeCryptingComboBox()
@@ -74,6 +84,7 @@ namespace CrytonCoreNext.ViewModels
         {
             CurrentCrypting = _cryptors.Where(x => x.GetName() == _currentCryptingName).First();
             CurrentCryptingViewModel = CurrentCrypting.GetViewModel();
+
             OnPropertyChanged(nameof(CurrentCryptingViewModel));
         }
 
@@ -83,10 +94,9 @@ namespace CrytonCoreNext.ViewModels
             {
                 if (FilesViewViewModel.CurrentFile.Bytes != null)
                 {
-
                     var result = FilesViewViewModel.CurrentFile.Status ?
-                        CurrentCrypting.Decrypt(FilesViewViewModel.CurrentFile.Bytes) :
-                        CurrentCrypting.Encrypt(FilesViewViewModel.CurrentFile.Bytes);
+                        CurrentCrypting?.Decrypt(FilesViewViewModel.CurrentFile.Bytes) :
+                        CurrentCrypting?.Encrypt(FilesViewViewModel.CurrentFile.Bytes);
                     if (result != null)
                     {
                         ModifyFile(result, !FilesViewViewModel.CurrentFile.Status);

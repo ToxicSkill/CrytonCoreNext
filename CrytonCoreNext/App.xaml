@@ -55,7 +55,6 @@
             </Style.Resources>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
-            <Setter Property="Background" Value="White"/>
         </Style>
 
         <Style x:Key="FileInformations" TargetType="Label">

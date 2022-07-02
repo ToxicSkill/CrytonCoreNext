@@ -2,14 +2,13 @@
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Crypting;
 using CrytonCoreNext.Helpers;
+using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
 
@@ -20,12 +19,13 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         private readonly string[] SettingsKeys;
         private string _selectedKey;
         private string _selectedBlock;
+        private readonly IJsonSerializer _jsonSerializer;
 
         public ObservableCollection<string> BlockSizesComboBox { get; init; }
 
         public ObservableCollection<string> KeySizesComboBox { get; init; }
 
-        public string SelectedBlockSize
+        public string SelectedBlock
         {
             get => _selectedBlock;
             set
@@ -34,7 +34,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 {
                     _selectedBlock = value;
                     SelectedIVSize = Convert.ToInt32(_selectedBlock) / 4;
-                    OnPropertyChanged(nameof(SelectedBlockSize));
+                    OnPropertyChanged(nameof(SelectedBlock));
                     OnPropertyChanged(nameof(SelectedIVSize));
                 }
             }
@@ -55,27 +55,13 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        public string BlocksSizeName { get; init; }
+        public string Key { get; set; }
 
-        public string KeyName { get; init; }
-
-        public string IVName { get; init; }
-
-        public string KeysName { get; init; }
-
-        public string GenerateRandomKeyName { get; init; }
-
-        public string GenerateRandomIVName { get; init; }
-
-        public string SaveCryptorName { get; init; }
+        public string IV { get; set; }
 
         public int SelectedKeySize { get; set; }
 
         public int SelectedIVSize { get; set; }
-
-        public string Key { get; set; }
-
-        public string IV { get; set; }
 
         public string Error { get; private set; }
 
@@ -85,20 +71,17 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public ICommand SaveCryptorCommand { get; init; }
 
-        public AESViewModel(AesCng aes, string[] settingKeys, string pageName) : base(pageName)
+        public ICommand LoadCryptorCommand { get; init; }
+
+        public AESViewModel(IJsonSerializer json, AesCng aes, string[] settingKeys, string pageName) : base(pageName)
         {
+            _jsonSerializer = json;
             GenerateRandomKeyCommand = new Command(GenerateRandomKey, true);
             GenerateRandomIVCommand = new Command(GenerateRandomIV, true);
             SaveCryptorCommand = new Command(SaveCryptor, true);
+            LoadCryptorCommand = new Command(LoadCryptor, true);
 
             SettingsKeys = settingKeys;
-            BlocksSizeName = "Block size";
-            KeysName = "Key size";
-            KeyName = "Key";
-            IVName = "IV";
-            GenerateRandomKeyName = "Generate random Key";
-            GenerateRandomIVName = "Generate random IV";
-            SaveCryptorName = "Save";
 
             BlockSizesComboBox = new ();
             KeySizesComboBox = new ();
@@ -129,7 +112,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 BlockSizesComboBox.Add(legalBlocks.MinSize.ToString());
             }
 
-            SelectedBlockSize = BlockSizesComboBox.First();
+            SelectedBlock = BlockSizesComboBox.First();
             SelectedKey = KeySizesComboBox.First();
             OnPropertyChanged(nameof(BlockSizesComboBox));
             OnPropertyChanged(nameof(KeySizesComboBox));
@@ -142,7 +125,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 { SettingsKeys[0], Key },
                 { SettingsKeys[1], IV },
                 { SettingsKeys[2], SelectedKey },
-                { SettingsKeys[3], SelectedBlockSize },
+                { SettingsKeys[3], SelectedBlock },
                 { SettingsKeys[4], string.Empty }
             };
         }
@@ -179,29 +162,86 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
+        private struct ToSerialzieObjects
+        {
+            public string Key;
+            public string IV;
+            public string SelectedKeySize;
+            public string SelectedBlockSize;
+        }
+
+        private struct Objects
+        {
+            public ToSerialzieObjects ToSerialzie;
+            public string Name;
+        }
+
+
         private void SaveCryptor()
         {
-            var cryptorOutput = CrytonCoreNext.Serializers.JsonSerializer.SerializeList(new List<string>()
-            {
-                SelectedKeySize.ToString(), Key, SelectedBlockSize.ToString(), IV
-            });
+            var serialzieObjects = new Objects() 
+            { 
+                ToSerialzie = new ToSerialzieObjects()
+                {
+                    IV = this.IV,
+                    SelectedKeySize = this.SelectedKey,
+                    Key = this.Key,
+                    SelectedBlockSize = this.SelectedBlock
+                },
+                Name = PageName           
+            };
+
             WindowDialog.SaveDialog saveDialog = new(new DialogHelper()
             {
-                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.All),
+                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.Json),
                 Multiselect = false,
-                Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
+                //Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
             });
 
             var saveDestination = saveDialog.RunDialog();
             if (saveDestination != null)
             {
-                TextWriter tw = new StreamWriter(saveDestination.First());
-
-                foreach (var s in cryptorOutput)
-                    tw.WriteLine(s);
-
-                tw.Close();
+                _jsonSerializer.Serialize(serialzieObjects, saveDestination.First());
             }
+        }
+
+        private void LoadCryptor()
+        {
+            WindowDialog.OpenDialog openDialog = new(new DialogHelper()
+            {
+                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.Json),
+                Multiselect = false,
+                //Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
+            });
+
+            var saveDestination = openDialog.RunDialog();
+            if (saveDestination.Count != 0)
+            {
+                var objects = _jsonSerializer.Deserialize(saveDestination.First(), typeof(Objects));
+                if (objects is not null)
+                {
+                    var castedObjects = (Objects)objects;
+                    if (castedObjects.Name != PageName)
+                    {
+                        Error = "Incorrect file";
+                        OnPropertyChanged(nameof(Error));
+                    }
+                    else
+                    {
+                        IV = castedObjects.ToSerialzie.IV;
+                        Key = castedObjects.ToSerialzie.Key;
+                        SelectedBlock = castedObjects.ToSerialzie.SelectedBlockSize;
+                        SelectedKey = castedObjects.ToSerialzie.SelectedKeySize;
+                        OnPropertyChanged(nameof(IV));
+                        OnPropertyChanged(nameof(Key));
+                        OnPropertyChanged(nameof(SelectedBlock));
+                        OnPropertyChanged(nameof(SelectedKey));
+                    }
+                }
+            }
+
+
+
         }
 
         private void GenerateRandomKey()

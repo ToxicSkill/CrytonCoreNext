@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -101,6 +100,9 @@ namespace CrytonCoreNext.ViewModels
 
         private void DoAction(Func<ObservableCollection<File>, Guid,(bool result, int newIndex)> function)
         {
+            if (FilesView == null || CurrentFile == null)
+                return;
+
             _fileChangeBlocker = true;
             var (result, newIndex) = CurrentFile != null ? function(FilesView, CurrentFile.Guid) : DefaultResult;
             _fileChangeBlocker = false;

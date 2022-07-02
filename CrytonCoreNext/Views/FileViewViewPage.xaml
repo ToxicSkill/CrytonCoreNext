@@ -47,7 +47,7 @@
                 Height="100"
                 Style="{DynamicResource OnOffToggleImageStyle}"
                 IsChecked="{Binding ShowFilesView}"
-                ToolTip="{DynamicResource FilesView}">
+                ToolTip="{DynamicResource FilesView}" Cursor="Hand">
 
 
                 <ToggleButton.Triggers>
@@ -149,7 +149,7 @@
                     <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
                 <Button Grid.Row="0" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
-                        ToolTip="{DynamicResource SetAsFirst}">
+                        ToolTip="{DynamicResource SetAsFirst}" Cursor="Hand">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -162,12 +162,12 @@
                                        Stretch="Uniform"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" 
-                                       Margin="4,0,0,0" Width="25"/>
-                        <TextBlock Text="Set as first" Style="{StaticResource TextBlockFilesView}"/>
+                                       Margin="10,0,0,0" Width="25"/>
+                        <TextBlock Text="{DynamicResource SetAsFirst}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Row="1" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
-                        ToolTip="{DynamicResource MoveUp}">
+                        ToolTip="{DynamicResource MoveUp}" Cursor="Hand">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -180,12 +180,12 @@
                                        Stretch="Uniform"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" 
-                                       Margin="4,0,0,0" Width="25"/>
-                        <TextBlock Text="Move up"  Style="{StaticResource TextBlockFilesView}"/>
+                                       Margin="10,0,0,0" Width="25"/>
+                        <TextBlock Text="{DynamicResource MoveUp}"  Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Row="2" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
-                        ToolTip="{DynamicResource MoveDown}">
+                        ToolTip="{DynamicResource MoveDown}" Cursor="Hand">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -198,7 +198,7 @@
                                        Stretch="Uniform"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" 
-                                       Margin="4,0,0,0" Width="25" RenderTransformOrigin="0.5,0.5">
+                                       Margin="10,0,0,0" Width="25" RenderTransformOrigin="0.5,0.5">
                             <Image.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
@@ -208,11 +208,11 @@
                                 </TransformGroup>
                             </Image.RenderTransform>
                         </Image>
-                        <TextBlock Text="Move down" Style="{StaticResource TextBlockFilesView}"/>
+                        <TextBlock Text="{DynamicResource MoveDown}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Row="3" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
-                        ToolTip="{DynamicResource SetAsLast}">
+                        ToolTip="{DynamicResource SetAsLast}" Cursor="Hand">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -225,7 +225,7 @@
                                        Stretch="Uniform"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" 
-                                       Margin="4,0,0,0" Width="25" RenderTransformOrigin="0.5,0.5">
+                                       Margin="10,0,0,0" Width="25" RenderTransformOrigin="0.5,0.5">
                             <Image.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
@@ -235,11 +235,11 @@
                                 </TransformGroup>
                             </Image.RenderTransform>
                         </Image>
-                        <TextBlock Text="Set as last" Style="{StaticResource TextBlockFilesView}"/>
+                        <TextBlock Text="{DynamicResource SetAsLast}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Row="4" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
-                        ToolTip="{DynamicResource RemoveSelected}">
+                        ToolTip="{DynamicResource RemoveSelected}" Cursor="Hand">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -252,12 +252,12 @@
                                        Stretch="Uniform"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" 
-                                       Margin="4,0,0,0" Width="25"/>
-                        <TextBlock Text="Remove" Style="{StaticResource TextBlockFilesView}"/>
+                                       Margin="10,0,0,0" Width="25"/>
+                        <TextBlock Text="{DynamicResource RemoveSelected}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Row="5" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
-                        ToolTip="{DynamicResource RemoveAll}">
+                        ToolTip="{DynamicResource RemoveAll}" Cursor="Hand">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -270,8 +270,8 @@
                                        Stretch="Uniform"
                                        RenderOptions.EdgeMode="Aliased"
                                        RenderOptions.BitmapScalingMode="HighQuality" 
-                                       Margin="4,0,0,0" Width="25"/>
-                        <TextBlock Text="Clear" Style="{StaticResource TextBlockFilesView}"/>
+                                       Margin="10,0,0,0" Width="25"/>
+                        <TextBlock Text="{DynamicResource RemoveAll}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
             </Grid>
