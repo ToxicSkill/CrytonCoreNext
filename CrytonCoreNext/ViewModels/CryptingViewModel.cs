@@ -97,9 +97,9 @@ namespace CrytonCoreNext.ViewModels
                     var result = FilesViewViewModel.CurrentFile.Status ?
                         CurrentCrypting?.Decrypt(FilesViewViewModel.CurrentFile.Bytes) :
                         CurrentCrypting?.Encrypt(FilesViewViewModel.CurrentFile.Bytes);
-                    if (result != null)
+                    if (result != null && FilesViewViewModel.FilesView != null)
                     {
-                        ModifyFile(result, !FilesViewViewModel.CurrentFile.Status);
+                        ModifyFile(FilesViewViewModel.FilesView, FilesViewViewModel.CurrentFile.Guid, result, !FilesViewViewModel.CurrentFile.Status, CurrentCrypting?.GetName());
                         OnPropertyChanged(nameof(CryptButtonName));
                     }
                 }

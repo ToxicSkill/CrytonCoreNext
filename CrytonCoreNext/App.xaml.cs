@@ -8,11 +8,14 @@ using System.Collections.Generic;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.Crypting;
 using CrytonCoreNext.Serializers;
+using CrytonCoreNext.Models;
 
 namespace CrytonCoreNext
 {
     public partial class App : Application
     {
+        private static readonly Guid AppKey = new Guid("adae2137-dead-beef-6666-3eb841121af8");
+
         private readonly IServiceProvider _serviceProvider;
 
         private readonly List<ResourceDictionary> LanguagesDictionaries;
@@ -30,7 +33,8 @@ namespace CrytonCoreNext
             _ = services
                 .AddSingleton<IInternetConnection, InternetConnection>()
                 .AddSingleton<ITimeDate, TimeDate>()
-                .AddSingleton<IFilesLoader, FilesLoader>()
+                .AddSingleton<ICryptingRecognition>(CreateCryptingRecognition)
+                .AddSingleton<IFilesLoader>(CreateFilesLoader)
                 .AddSingleton<IFilesSaver, FilesSaver>()
                 .AddSingleton<IJsonSerializer, JsonSerializer>()
                 .AddSingleton<IFilesManager>(CreateFilesManager)
@@ -105,6 +109,18 @@ namespace CrytonCoreNext
         private ICrypting CreateRSA(IServiceProvider provider)
         {
             return new RSA();
+        }
+
+        private ICryptingRecognition CreateCryptingRecognition(IServiceProvider provider)
+        {
+            var recognitionValues = new RecognitionValues(AppKey);
+            return new CryptingRecognition(recognitionValues);
+        }
+
+        private IFilesLoader CreateFilesLoader(IServiceProvider provider)
+        {
+            var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
+            return new FilesLoader(cryptingRecognition);
         }
 
         private void InitializeDictionary()

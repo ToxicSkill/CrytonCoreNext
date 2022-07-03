@@ -26,6 +26,8 @@ namespace CrytonCoreNext.Models
 
         public Guid Guid { get; init; }
 
+        public string Method { get; set; }
+
         public File() { }
 
         public File(string name, string path, string size, string nameWithExtension, DateTime date, string extension, int id, byte[] bytes)
@@ -38,6 +40,7 @@ namespace CrytonCoreNext.Models
             Extension = extension;
             Id = id;
             Bytes = bytes;
+            Method = string.Empty;
             //Text = Parsers.FileContentParser.GetStringFromBytes(bytes);
             Guid = new Guid();
         }

@@ -8,6 +8,13 @@ namespace CrytonCoreNext.Services
 {
     public class FilesLoader : IFilesLoader
     {
+        private readonly ICryptingRecognition _cryptingRecognition;
+
+        public FilesLoader(ICryptingRecognition cryptingRecognition)
+        {
+            _cryptingRecognition = cryptingRecognition;
+        }
+
         private static readonly string[] Sizes = { "B", "KB", "MB", "GB", "TB" };
 
         public List<Models.File>? LoadFiles(EDialogFilters.DialogFilters filter, string title, bool multiselect = false, int currentIndex = 0)

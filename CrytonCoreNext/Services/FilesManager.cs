@@ -171,11 +171,13 @@ namespace CrytonCoreNext.Services
             return new(true, -1);
         }
 
-        public (bool result, int newIndex) ModifyFile(ObservableCollection<Models.File> files, Guid guid, byte[] bytes, bool status)
+        public (bool result, int newIndex) ModifyFile(ObservableCollection<Models.File> files, Guid guid, byte[] bytes, bool status, string? methodName)
         {
-            files.Where(x => x.Guid == guid).First().Bytes = bytes;
-            files.Where(x => x.Guid == guid).First().Status = status;
-            return new(true, files.Where(x => x.Guid == guid).First().Id);
+            var file = files.Where(x => x.Guid == guid).First();
+            file.Bytes = bytes;
+            file.Status = status;
+            file.Method = methodName ?? string.Empty;
+            return new(true, file.Id);
         }
 
         private Models.File? GetFileByGuid(ObservableCollection<Models.File> files, Guid guid)

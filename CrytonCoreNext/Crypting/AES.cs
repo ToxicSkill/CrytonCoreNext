@@ -12,7 +12,8 @@ namespace CrytonCoreNext.Crypting
     public class AES : ICrypting
     {
         private static readonly string[] SettingsKeys = { "Key", "IV", "KeySize", "BlockSize", "Error" };
-        private const string Name = "AES";
+
+        private const string Name = nameof(AES);
 
         private readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
         private readonly AesCng _aes;

@@ -22,6 +22,6 @@ namespace CrytonCoreNext.Interfaces
 
         (bool result, int newIndex) MoveItemDown(ObservableCollection<Models.File> files, Guid guid);
 
-        (bool result, int newIndex) ModifyFile(ObservableCollection<Models.File> files, Guid guid, byte[] bytes, bool status);
+        (bool result, int newIndex) ModifyFile(ObservableCollection<Models.File> files, Guid guid, byte[] bytes, bool status, string? methodName);
     }
 }

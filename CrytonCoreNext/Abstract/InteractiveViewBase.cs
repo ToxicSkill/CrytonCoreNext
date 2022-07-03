@@ -3,6 +3,7 @@ using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.ViewModels;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -76,9 +77,9 @@ namespace CrytonCoreNext.Abstract
             }
         }
 
-        public bool ModifyFile(byte[] bytes, bool status)
+        public bool ModifyFile(ObservableCollection<File> files, Guid guid, byte[] bytes, bool status, string? methodName)
         {
-            var result =_filesManager.ModifyFile(FilesViewViewModel.FilesView, FilesViewViewModel.CurrentFile.Guid, bytes, status);
+            var result =_filesManager.ModifyFile(files, guid, bytes, status, methodName);
             OnPropertyChanged(nameof(FilesViewViewModel.FilesView));
             OnPropertyChanged(nameof(CurrentFile));
             return result.result;
