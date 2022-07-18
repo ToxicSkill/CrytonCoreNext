@@ -33,9 +33,9 @@ namespace CrytonCoreNext
             _ = services
                 .AddSingleton<IInternetConnection, InternetConnection>()
                 .AddSingleton<ITimeDate, TimeDate>()
-                .AddSingleton<ICryptingRecognition>(CreateCryptingRecognition)
-                .AddSingleton<IFilesLoader>(CreateFilesLoader)
-                .AddSingleton<IFilesSaver, FilesSaver>()
+                .AddSingleton(CreateCryptingRecognition)
+                .AddSingleton(CreateFilesLoader)
+                .AddSingleton(CreateFilesSaver)
                 .AddSingleton<IJsonSerializer, JsonSerializer>()
                 .AddSingleton<IFilesManager>(CreateFilesManager)
                 .AddTransient<FilesViewViewModel>()
@@ -121,6 +121,12 @@ namespace CrytonCoreNext
         {
             var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
             return new FilesLoader(cryptingRecognition);
+        }
+        
+        private IFilesSaver CreateFilesSaver(IServiceProvider provider)
+        {
+            var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
+            return new FilesSaver(cryptingRecognition);
         }
 
         private void InitializeDictionary()

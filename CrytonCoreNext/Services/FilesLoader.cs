@@ -3,6 +3,7 @@ using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CrytonCoreNext.Services
 {
@@ -38,7 +39,7 @@ namespace CrytonCoreNext.Services
 
                 if (validPaths.Count == 0)
                 {
-                    return new List<Models.File>();
+                    return new ();
                 }
 
                 var files = new List<Models.File>();
@@ -57,20 +58,22 @@ namespace CrytonCoreNext.Services
             return null;
         }
 
-        private static Models.File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)
+        private Models.File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)
         {
             var fileInfo = new FileInfo(path);
             var fileExtension = fileInfo.Extension.Contains('.') ? fileInfo.Extension.Substring(1) : "N/A";
+            var recognitionResults = _cryptingRecognition.RecognizeBytes(byteArray);
             return new Models.File()
             {
                 Id = currentFilesCount,
                 Name = Path.GetFileNameWithoutExtension(fileInfo.FullName),
                 NameWithExtension = fileInfo.Name,
-                Extension = fileExtension,
+                Extension = recognitionResults.succes ? recognitionResults.Item2.extension : fileExtension,
                 Date = fileInfo.CreationTimeUtc,
                 Size = GetSizeString(fileInfo.Length),
                 Path = path,
-                Bytes = byteArray,
+                Bytes = recognitionResults.succes ? byteArray.Skip(64).ToArray() : byteArray,
+                Status = recognitionResults.succes ? true : false,
                 //Text = Parsers.FileContentParser.GetStringFromBytes(byteArray),
                 Guid = System.Guid.NewGuid()
             };

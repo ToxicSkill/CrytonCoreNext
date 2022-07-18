@@ -2,6 +2,7 @@
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -33,14 +34,42 @@ namespace CrytonCoreNext.Crypting
             };
         }
 
-        private bool SanityCheck()
+        public (bool succes, (string method, string extension)) RecognizeBytes(byte[] bytes)
         {
-            foreach (var item in EXCFheader)
+            var maxSize = 0;
+            foreach(var value in EXCFheader.Values)
             {
-                if (item.Value.value.Length == 0)
-                    return false;
+                maxSize += value.size;
             }
-            return true;
+            
+            if (maxSize > bytes.Length)
+            {
+                return new (false, new (string.Empty, string.Empty));
+            }    
+            
+            var recognizeByteArray = new byte[maxSize];
+            Buffer.BlockCopy(bytes, 0, recognizeByteArray, 0, maxSize);
+            var unique = new byte[EXCFheader[nameof(_recognitionValues.Unique)].size];
+            Array.Copy(recognizeByteArray, 0, unique, 0, unique.Length);
+            var method = new byte[EXCFheader[nameof(_recognitionValues.Method)].size];
+            Array.Copy(recognizeByteArray, unique.Length, method, 0, method.Length);
+            var extension = new byte[EXCFheader[nameof(_recognitionValues.Extension)].size];
+            Array.Copy(recognizeByteArray, unique.Length + method.Length, extension, 0, extension.Length);
+            var checkSum = new byte[EXCFheader[nameof(_recognitionValues.CheckSum)].size];
+            Array.Copy(recognizeByteArray, unique.Length + method.Length + extension.Length, checkSum, 0, checkSum.Length);
+
+            var offset = 0;
+            var checkArray = new byte[method.Length + extension.Length];
+            Buffer.BlockCopy(method, 0, checkArray, 0, method.Length);
+            Buffer.BlockCopy(extension, 0, checkArray, method.Length, extension.Length);
+            var hashedArray = _MD5Hash.ComputeHash(checkArray);
+
+            if (hashedArray.SequenceEqual(checkSum) && unique.SequenceEqual(EXCFheader[nameof(_recognitionValues.Unique)].value))
+            {
+                return new (true, new (Encoding.Default.GetString(method), Encoding.Default.GetString(extension)));
+            }
+
+            return new (false, new (string.Empty, string.Empty));
         }
 
         public byte[] PrepareRerecognizableBytes(string method, string extension)
@@ -49,6 +78,7 @@ namespace CrytonCoreNext.Crypting
             {
                 method = method[..EXCFheader[nameof(_recognitionValues.Method)].size];
             }
+
             if (extension.Length > EXCFheader[nameof(_recognitionValues.Extension)].size)
             {
                 extension = extension[..EXCFheader[nameof(_recognitionValues.Extension)].size];
@@ -61,18 +91,12 @@ namespace CrytonCoreNext.Crypting
             EXCFheader[nameof(_recognitionValues.Method)] = new(EXCFheader[nameof(_recognitionValues.Method)].size, Encoding.ASCII.GetBytes(method));
             EXCFheader[nameof(_recognitionValues.Extension)] = new(EXCFheader[nameof(_recognitionValues.Extension)].size, Encoding.ASCII.GetBytes(extension));
 
-            Random rnd = new();
-            rnd.NextBytes(checkSum);
-
-            EXCFheader[nameof(_recognitionValues.CheckSum)] = new(EXCFheader[nameof(_recognitionValues.CheckSum)].size, checkSum);
-
             if (!SanityCheck())
             {
                 return _defaultBytes;
             }
 
             offset = 0;
-            var y = nameof(_recognitionValues.Method);
             var checkArray = new byte[EXCFheader[nameof(_recognitionValues.Method)].size + EXCFheader[nameof(_recognitionValues.Extension)].size];
             Buffer.BlockCopy(EXCFheader[nameof(_recognitionValues.Method)].value, 0, checkArray, 0, EXCFheader[nameof(_recognitionValues.Method)].value.Length);
             Buffer.BlockCopy(EXCFheader[nameof(_recognitionValues.Extension)].value, 0, checkArray, EXCFheader[nameof(_recognitionValues.Method)].size, EXCFheader[nameof(_recognitionValues.Extension)].value.Length);
@@ -86,6 +110,23 @@ namespace CrytonCoreNext.Crypting
             }
 
             return recognizableArray;
+        }
+
+        private bool SanityCheck()
+        {
+            foreach (var item in EXCFheader.Take(3))
+            {
+                if (item.Value.value.Length == 0)
+                    return false;
+            }
+            return true;
+        }
+
+        static string BytesToString(byte[] bytes)
+        {
+            using MemoryStream stream = new(bytes);
+            using StreamReader streamReader = new(stream);
+            return streamReader.ReadToEnd();
         }
     }
 }
