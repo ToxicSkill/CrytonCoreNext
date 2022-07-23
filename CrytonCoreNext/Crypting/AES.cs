@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Crypting
 {
@@ -32,26 +33,26 @@ namespace CrytonCoreNext.Crypting
         public string GetName() =>  Name;
         
 
-        public byte[]? Encrypt(byte[] data)
+        public async Task<byte[]> Encrypt(byte[] data)
         {
             if (!ParseSettingsObjects(ViewModel.GetObjects(), true))
-                return default;
+                return Array.Empty<byte>();
 
             _aes.Padding = _paddingMode;
 
             using var encryptor = _aes.CreateEncryptor(_aes.Key, _aes.IV);
-            return PerformCryptography(data, encryptor);
+            return await Task.Run(() => PerformCryptography(data, encryptor));
         }
 
-        public byte[]? Decrypt(byte[] data)
+        public async Task<byte[]> Decrypt(byte[] data)
         {
             if (!ParseSettingsObjects(ViewModel.GetObjects(), false))
-                return default;
+                return Array.Empty<byte>();
             
             _aes.Padding = _paddingMode;
 
             using var decryptor = _aes.CreateDecryptor(_aes.Key, _aes.IV);
-            return PerformCryptography(data, decryptor);
+            return await Task.Run(() => PerformCryptography(data, decryptor));
         }
 
         public bool ParseSettingsObjects(Dictionary<string, object> objects, bool encryption)
@@ -93,7 +94,7 @@ namespace CrytonCoreNext.Crypting
             return false;
         }
 
-        private byte[]? PerformCryptography(byte[] data, ICryptoTransform cryptoTransform)
+        private byte[] PerformCryptography(byte[] data, ICryptoTransform cryptoTransform)
         {
             using var ms = new MemoryStream();
             using var cryptoStream = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write);
@@ -105,7 +106,7 @@ namespace CrytonCoreNext.Crypting
             catch (Exception)
             {
                 UpdateViewModel("Decryption error. Invalid keys provided");
-                return null;
+                return Array.Empty<byte>();
             }
 
             UpdateViewModel();

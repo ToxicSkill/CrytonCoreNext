@@ -1,11 +1,16 @@
-﻿using System;
+﻿using CrytonCoreNext.Enums;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace CrytonCoreNext.Interfaces
 {
-    public interface IFilesManager
+    public interface IFileService
     {
+        List<Models.File>? LoadFiles(EDialogFilters.DialogFilters filter, string title, bool multiselect = false, int currentIndex = 0);
+
+        bool SaveFile(EDialogFilters.DialogFilters filter, string title, Models.File file);
+
         (bool result, int newIndex) DeleteItem(ObservableCollection<Models.File> files, Guid guid);
 
         (bool result, int newIndex) ClearAllFiles(ObservableCollection<Models.File> files, Guid guid);

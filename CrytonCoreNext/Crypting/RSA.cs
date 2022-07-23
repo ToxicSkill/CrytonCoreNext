@@ -1,8 +1,10 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.CryptingOptionsViewModels;
 using CrytonCoreNext.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Crypting
 {
@@ -25,14 +27,14 @@ namespace CrytonCoreNext.Crypting
 
         public string GetName() => Name;
 
-        public byte[] Decrypt(byte[] data)
+        public async Task<byte[]> Decrypt(byte[] data)
         {
-            throw new System.NotImplementedException();
+            return await Task.FromResult<byte[]>(Array.Empty<byte>());
         }
 
-        public byte[] Encrypt(byte[] data)
+        public async Task<byte[]> Encrypt(byte[] data)
         {
-            throw new System.NotImplementedException();
+            return await Task.FromResult<byte[]>(Array.Empty<byte>());
         }
 
         public void ParseSettingsObjects(Dictionary<string, object> objects)

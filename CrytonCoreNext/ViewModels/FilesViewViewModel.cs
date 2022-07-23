@@ -19,7 +19,7 @@ namespace CrytonCoreNext.ViewModels
 
         private static readonly (bool result, int newIndex) DefaultResult = new (false, -1);
 
-        private readonly IFilesManager _filesManager;
+        private readonly IFileService _filesService;
 
         private bool _fileChangeBlocker = false;
 
@@ -67,7 +67,7 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
-        public FilesViewViewModel(IFilesManager filesManager)
+        public FilesViewViewModel(IFileService filesService)
         {
             ClearFilesCommand = new Command(ClearAllFiles, true);
             DeleteCurrentFileCommand = new Command(DeleteFile, true);
@@ -75,7 +75,7 @@ namespace CrytonCoreNext.ViewModels
             SetFileAsLastCommand = new Command(SetFileAsLast, true);
             MoveFileUpCommand = new Command(MoveFileUp, true);
             MoveFileDownCommand = new Command(MoveFileDown, true);
-            _filesManager = filesManager;
+            _filesService = filesService;
         }
 
         public void Update(IEnumerable<File>? files = null, bool showFilesView = false)
@@ -85,17 +85,17 @@ namespace CrytonCoreNext.ViewModels
             InitializeFiles();
         }
 
-        public void ClearAllFiles() => DoAction(_filesManager.ClearAllFiles);
+        public void ClearAllFiles() => DoAction(_filesService.ClearAllFiles);
 
-        public void DeleteFile() => DoAction(_filesManager.DeleteItem);  
+        public void DeleteFile() => DoAction(_filesService.DeleteItem);  
 
-        public void SetFileAsFirst() => DoAction(_filesManager.SetItemAsFirst);
+        public void SetFileAsFirst() => DoAction(_filesService.SetItemAsFirst);
 
-        public void SetFileAsLast() => DoAction(_filesManager.SetItemAsLast);
+        public void SetFileAsLast() => DoAction(_filesService.SetItemAsLast);
 
-        public void MoveFileUp() => DoAction(_filesManager.MoveItemUp);
+        public void MoveFileUp() => DoAction(_filesService.MoveItemUp);
 
-        public void MoveFileDown() => DoAction(_filesManager.MoveItemDown);         
+        public void MoveFileDown() => DoAction(_filesService.MoveItemDown);         
         
 
         private void DoAction(Func<ObservableCollection<File>, Guid,(bool result, int newIndex)> function)

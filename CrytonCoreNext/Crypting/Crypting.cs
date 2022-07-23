@@ -1,6 +1,8 @@
 ﻿using CrytonCoreNext.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Crypting
 {
@@ -13,20 +15,20 @@ namespace CrytonCoreNext.Crypting
             Cryptors = new (cryptors);
         }
 
-        public byte[] Encrypt(byte[] data, string name)
+        public async Task<byte[]> Encrypt(byte[] data, string name)
         {
             var aed = Cryptors.Where(x => x.name == name).Select(x => x.method).FirstOrDefault();
             if (aed != null)
-                return aed.Encrypt(data);
-            return default(byte[]);
+                return await aed.Encrypt(data);
+            return Array.Empty<byte>();
         }
 
-        public byte[] Decrypt(byte[] data, string name)
+        public async Task<byte[]> Decrypt(byte[] data, string name)
         {
             var aed = Cryptors.Where(x => x.name == name).Select(x => x.method).FirstOrDefault();
             if (aed != null)
-                return aed.Decrypt(data);
-            return default(byte[]);
+                return await aed.Decrypt(data);
+            return Array.Empty<byte>();
         }
     }
 }

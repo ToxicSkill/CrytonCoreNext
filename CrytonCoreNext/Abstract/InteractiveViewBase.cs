@@ -14,7 +14,7 @@ namespace CrytonCoreNext.Abstract
 {
     public class InteractiveViewBase : ViewModelBase, IDisposable
     {
-        private readonly IFilesManager _filesManager;
+        private readonly IFileService _fileService;
 
         private DispatcherTimer? _timer;
 
@@ -26,11 +26,11 @@ namespace CrytonCoreNext.Abstract
 
         public Visibility FileInformationVisibility { get; private set; } = Visibility.Hidden;
 
-        public InteractiveViewBase(IFilesManager filesManager)
+        public InteractiveViewBase(IFileService fileService)
         {
-            _filesManager = filesManager;
+            _fileService = fileService;
             PopupViewModel = new ();
-            FilesViewViewModel = new (_filesManager);
+            FilesViewViewModel = new (_fileService);
             FilesViewViewModel.FilesChanged += HandleFileChanged;
         }
 
@@ -52,7 +52,7 @@ namespace CrytonCoreNext.Abstract
         public void LoadFiles()
         {
             var filesCount = FilesViewViewModel.FilesView == null ? 0 : FilesViewViewModel.FilesView.Count;
-            var newFiles = _filesManager.LoadFiles(EDialogFilters.DialogFilters.All, "Open files", true, filesCount);
+            var newFiles = _fileService.LoadFiles(EDialogFilters.DialogFilters.All, "Open files", true, filesCount);
             if (newFiles != null)
             {
                 var newFilesCollection = filesCount > 0 ?
@@ -66,7 +66,7 @@ namespace CrytonCoreNext.Abstract
 
         public void SaveFile()
         {
-            var result = _filesManager.SaveFile(EDialogFilters.DialogFilters.All, "Save file", CurrentFile);
+            var result = _fileService.SaveFile(EDialogFilters.DialogFilters.All, "Save file", CurrentFile);
             if (result)
             {
                 PostPopup("File has been saved successfuly", 2, EPopopColor.Information);
@@ -79,7 +79,7 @@ namespace CrytonCoreNext.Abstract
 
         public bool ModifyFile(ObservableCollection<File> files, Guid guid, byte[] bytes, bool status, string? methodName)
         {
-            var result =_filesManager.ModifyFile(files, guid, bytes, status, methodName);
+            var result = _fileService.ModifyFile(files, guid, bytes, status, methodName);
             OnPropertyChanged(nameof(FilesViewViewModel.FilesView));
             OnPropertyChanged(nameof(CurrentFile));
             return result.result;

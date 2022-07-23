@@ -36,8 +36,9 @@ namespace CrytonCoreNext
                 .AddSingleton(CreateCryptingRecognition)
                 .AddSingleton(CreateFilesLoader)
                 .AddSingleton(CreateFilesSaver)
+                .AddSingleton<IFilesManager, FilesManager>()
+                .AddSingleton(CreateFileService)
                 .AddSingleton<IJsonSerializer, JsonSerializer>()
-                .AddSingleton<IFilesManager>(CreateFilesManager)
                 .AddTransient<FilesViewViewModel>()
                 .AddTransient(CreateAES)
                 .AddTransient(CreateRSA)
@@ -80,24 +81,17 @@ namespace CrytonCoreNext
             return new (homeView, cryptingView, pdfManagerView);
         }
 
-        private FilesManager CreateFilesManager(IServiceProvider provider)
-        {
-            var filesLoader = provider.GetRequiredService<IFilesLoader>();
-            var filesSaver = provider.GetRequiredService<IFilesSaver>();
-            return new FilesManager(filesLoader, filesSaver);
-        }
-
         private CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
         {
-            var filesManager = provider.GetRequiredService<IFilesManager>();
+            var fileService = provider.GetRequiredService<IFileService>();
             var cryptors = provider.GetServices<ICrypting>();
-            return new (filesManager, cryptors);
+            return new (fileService, cryptors);
         }
 
         private PdfManagerViewModel CreatePdfManagerViewModel(IServiceProvider provider)
         {
-            var filesManager = provider.GetRequiredService<IFilesManager>();
-            return new(filesManager);
+            var fileService = provider.GetRequiredService<IFileService>();
+            return new(fileService);
         }
 
         private ICrypting CreateAES(IServiceProvider provider)
@@ -127,6 +121,14 @@ namespace CrytonCoreNext
         {
             var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
             return new FilesSaver(cryptingRecognition);
+        }
+
+        private IFileService CreateFileService(IServiceProvider provider)
+        {
+            var fileLoader = provider.GetRequiredService<IFilesLoader>();
+            var fileSaver = provider.GetRequiredService<IFilesSaver>();
+            var fileManager = provider.GetRequiredService<IFilesManager>();
+            return new FileService(fileSaver, fileLoader, fileManager);
         }
 
         private void InitializeDictionary()

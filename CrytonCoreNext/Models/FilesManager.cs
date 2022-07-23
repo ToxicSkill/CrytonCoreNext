@@ -6,32 +6,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace CrytonCoreNext.Services
+namespace CrytonCoreNext.Models
 {
     public class FilesManager : ViewModelBase, IFilesManager
     {
-        private readonly IFilesLoader _filesLoader;
-
-        private readonly IFilesSaver _filesSaver;
-
-        public FilesManager(IFilesLoader filesLoader, IFilesSaver filesSaver)
-        {
-            _filesLoader = filesLoader;
-            _filesSaver = filesSaver;
-        }
-
-        public List<Models.File>? LoadFiles(Enums.EDialogFilters.DialogFilters filter, string title, bool multiselect = false, int currentIndex = 0)
-        {
-            return _filesLoader.LoadFiles(filter, title, multiselect, currentIndex);
-        }
-
-        public bool SaveFile(Enums.EDialogFilters.DialogFilters filter, string title, Models.File? file)
-        {
-            if (file == null)
-                return false;
-            return _filesSaver.SaveFile(filter, title, file);
-        }
-
         public (bool result, int newIndex) DeleteItem(ObservableCollection<Models.File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())

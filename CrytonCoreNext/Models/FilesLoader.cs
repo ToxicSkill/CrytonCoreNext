@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace CrytonCoreNext.Services
+namespace CrytonCoreNext.Models
 {
     public class FilesLoader : IFilesLoader
     {
@@ -33,7 +33,7 @@ namespace CrytonCoreNext.Services
 
                 foreach (var path in chosenPaths)
                 {
-                    if (File.Exists(path))
+                    if (System.IO.File.Exists(path))
                         validPaths.Add(path);
                 }
 
@@ -47,7 +47,7 @@ namespace CrytonCoreNext.Services
                 foreach (var path in validPaths)
                 {
                     currentIndex += 1;
-                    var byteArray = File.ReadAllBytes(path);
+                    var byteArray = System.IO.File.ReadAllBytes(path);
                     Models.File newFile = InitializeNewFile(currentIndex, path, byteArray);
                     files.Add(newFile);
                 }

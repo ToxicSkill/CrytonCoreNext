@@ -1,13 +1,14 @@
 ﻿using CrytonCoreNext.Abstract;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Interfaces
 {
     public interface ICrypting
     {
-        byte[]? Encrypt(byte[] data);
+        Task<byte[]> Encrypt(byte[] data);
 
-        byte[]? Decrypt(byte[] data);
+        Task<byte[]> Decrypt(byte[] data);
 
         ViewModelBase GetViewModel();
 

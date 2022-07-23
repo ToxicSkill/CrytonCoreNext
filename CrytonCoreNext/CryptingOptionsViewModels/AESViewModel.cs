@@ -3,7 +3,7 @@ using CrytonCoreNext.Commands;
 using CrytonCoreNext.Crypting;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Services;
+using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

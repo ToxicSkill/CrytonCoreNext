@@ -43,7 +43,7 @@ namespace CrytonCoreNext.ViewModels
 
         public ViewModelBase CurrentCryptingViewModel { get; private set; }
 
-        public CryptingViewModel(IFilesManager filesManager, IEnumerable<ICrypting> cryptors) : base(filesManager)
+        public CryptingViewModel(IFileService fileService, IEnumerable<ICrypting> cryptors) : base(fileService)
         {
             CryptCommand = new Command(DoCrypt, true);
             LoadFilesCommand = new Command(LoadFiles, true);
@@ -88,15 +88,15 @@ namespace CrytonCoreNext.ViewModels
             OnPropertyChanged(nameof(CurrentCryptingViewModel));
         }
 
-        private void DoCrypt()
+        async void DoCrypt()
         {
             if (FilesViewViewModel.CurrentFile != null)
             {
                 if (FilesViewViewModel.CurrentFile.Bytes != null)
                 {
                     var result = FilesViewViewModel.CurrentFile.Status ?
-                        CurrentCrypting?.Decrypt(FilesViewViewModel.CurrentFile.Bytes) :
-                        CurrentCrypting?.Encrypt(FilesViewViewModel.CurrentFile.Bytes);
+                        await CurrentCrypting?.Decrypt(FilesViewViewModel.CurrentFile.Bytes) :
+                        await CurrentCrypting?.Encrypt(FilesViewViewModel.CurrentFile.Bytes);
                     if (result != null && FilesViewViewModel.FilesView != null)
                     {
                         ModifyFile(FilesViewViewModel.FilesView, FilesViewViewModel.CurrentFile.Guid, result, !FilesViewViewModel.CurrentFile.Status, CurrentCrypting?.GetName());

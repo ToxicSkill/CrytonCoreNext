@@ -6,7 +6,7 @@ using System;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 
-namespace CrytonCoreNext.Services
+namespace CrytonCoreNext.Models
 {
     public class WindowDialog
     {
@@ -52,7 +52,8 @@ namespace CrytonCoreNext.Services
                 {
                     Title = _dialogArgs.Title,
                     DefaultExt = _dialogArgs.DefaultExtension,
-                    Filter = _dialogArgs.Filters
+                    Filter = _dialogArgs.Filters,
+                    FileName = _dialogArgs.FileName
                 };
                 if (saveFileDialog.ShowDialog() == true)
                     return saveFileDialog.FileNames.ToList();

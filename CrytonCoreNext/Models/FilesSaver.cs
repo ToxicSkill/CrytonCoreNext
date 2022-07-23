@@ -3,11 +3,14 @@ using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
-namespace CrytonCoreNext.Services
+namespace CrytonCoreNext.Models
 {
     public class FilesSaver : IFilesSaver
     {
+        private const string DefaultFileName = "file.";
+
         private readonly ICryptingRecognition _cryptingRecognition;
 
         public FilesSaver(ICryptingRecognition cryptingRecognition)
@@ -21,9 +24,10 @@ namespace CrytonCoreNext.Services
             {
                 Filters = EDialogFilters.ExtensionToFilter(filter),
                 Multiselect = false,
-                Title = title
+                Title = title,
+                FileName = DefaultFileName + file.Extension
             });
-            var chosenPath = saveDialog.RunDialog();
+            var chosenPath = saveDialog.RunDialog() ?? new List<string>();
             if (chosenPath.Count == 1)
             {
                 try
@@ -44,7 +48,7 @@ namespace CrytonCoreNext.Services
                     else
                     {
                         ByteArrayToFile(chosenPath.First(), file.Bytes);
-                        return false;
+                        return true;
                     }
                 }
                 catch (Exception e)
@@ -57,6 +61,6 @@ namespace CrytonCoreNext.Services
             return false;
         }
 
-        private void ByteArrayToFile(string fileName, byte[] bytes) => System.IO.File.WriteAllBytes(fileName, bytes);
+        private static void ByteArrayToFile(string fileName, byte[] bytes) => System.IO.File.WriteAllBytes(fileName, bytes);
     }
 }
