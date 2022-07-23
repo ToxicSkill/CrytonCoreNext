@@ -15,19 +15,19 @@ namespace CrytonCoreNext.Crypting
             Cryptors = new (cryptors);
         }
 
-        public async Task<byte[]> Encrypt(byte[] data, string name)
+        public async Task<byte[]> Encrypt(byte[] data, string name, IProgress<string> progress)
         {
             var aed = Cryptors.Where(x => x.name == name).Select(x => x.method).FirstOrDefault();
             if (aed != null)
-                return await aed.Encrypt(data);
+                return await aed.Encrypt(data, progress);
             return Array.Empty<byte>();
         }
 
-        public async Task<byte[]> Decrypt(byte[] data, string name)
+        public async Task<byte[]> Decrypt(byte[] data, string name, IProgress<string> progress)
         {
             var aed = Cryptors.Where(x => x.name == name).Select(x => x.method).FirstOrDefault();
             if (aed != null)
-                return await aed.Decrypt(data);
+                return await aed.Decrypt(data, progress);
             return Array.Empty<byte>();
         }
     }

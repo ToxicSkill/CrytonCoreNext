@@ -65,6 +65,9 @@
     <None Remove="Assets\PartialSun.png" />
     <None Remove="Assets\PasswordKeeper — kopia.png" />
     <None Remove="Assets\PasswordKeeper.png" />
+    <None Remove="Assets\ProgressConnector.png" />
+    <None Remove="Assets\ProgressDot.png" />
+    <None Remove="Assets\ProgressIndicator.png" />
     <None Remove="Assets\Rain.png" />
     <None Remove="Assets\Ratio.png" />
     <None Remove="Assets\RemoveSelected.png" />
@@ -253,6 +256,15 @@
     </Resource>
     <Resource Include="Assets\PasswordKeeper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ProgressConnector.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ProgressDot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ProgressIndicator.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Rain.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

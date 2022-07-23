@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Crypting
@@ -33,7 +34,7 @@ namespace CrytonCoreNext.Crypting
         public string GetName() =>  Name;
         
 
-        public async Task<byte[]> Encrypt(byte[] data)
+        public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {
             if (!ParseSettingsObjects(ViewModel.GetObjects(), true))
                 return Array.Empty<byte>();
@@ -41,10 +42,11 @@ namespace CrytonCoreNext.Crypting
             _aes.Padding = _paddingMode;
 
             using var encryptor = _aes.CreateEncryptor(_aes.Key, _aes.IV);
-            return await Task.Run(() => PerformCryptography(data, encryptor));
+            var cryptographyResult = await Task.Run(() => PerformCryptography(data, encryptor, progress));
+            return cryptographyResult;
         }
 
-        public async Task<byte[]> Decrypt(byte[] data)
+        public async Task<byte[]> Decrypt(byte[] data, IProgress<string> progress)
         {
             if (!ParseSettingsObjects(ViewModel.GetObjects(), false))
                 return Array.Empty<byte>();
@@ -52,7 +54,7 @@ namespace CrytonCoreNext.Crypting
             _aes.Padding = _paddingMode;
 
             using var decryptor = _aes.CreateDecryptor(_aes.Key, _aes.IV);
-            return await Task.Run(() => PerformCryptography(data, decryptor));
+            return await Task.Run(() => PerformCryptography(data, decryptor, progress));
         }
 
         public bool ParseSettingsObjects(Dictionary<string, object> objects, bool encryption)
@@ -94,22 +96,28 @@ namespace CrytonCoreNext.Crypting
             return false;
         }
 
-        private byte[] PerformCryptography(byte[] data, ICryptoTransform cryptoTransform)
+        private byte[] PerformCryptography(byte[] data, ICryptoTransform cryptoTransform, IProgress<string> progress)
         {
+            progress.Report("Preparing");
             using var ms = new MemoryStream();
             using var cryptoStream = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write);
             cryptoStream.Write(data, 0, data.Length);
+            progress.Report("Starting");
             try
             {
                 cryptoStream.FlushFinalBlock();
+                progress.Report("Finished");
             }
             catch (Exception)
             {
-                UpdateViewModel("Decryption error. Invalid keys provided");
+                UpdateViewModel("ERROR: Invalid keys provided");
+                progress.Report("Process failed");
                 return Array.Empty<byte>();
             }
 
+            progress.Report("Updating data");
             UpdateViewModel();
+            progress.Report("Success");
             return ms.ToArray();
         }
 

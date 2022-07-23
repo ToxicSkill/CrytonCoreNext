@@ -27,12 +27,12 @@ namespace CrytonCoreNext.Crypting
 
         public string GetName() => Name;
 
-        public async Task<byte[]> Decrypt(byte[] data)
+        public async Task<byte[]> Decrypt(byte[] data, IProgress<string> progress)
         {
             return await Task.FromResult<byte[]>(Array.Empty<byte>());
         }
 
-        public async Task<byte[]> Encrypt(byte[] data)
+        public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {
             return await Task.FromResult<byte[]>(Array.Empty<byte>());
         }

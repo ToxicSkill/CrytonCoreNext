@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,9 +7,9 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface ICrypting
     {
-        Task<byte[]> Encrypt(byte[] data);
+        Task<byte[]> Encrypt(byte[] data, IProgress<string> progress);
 
-        Task<byte[]> Decrypt(byte[] data);
+        Task<byte[]> Decrypt(byte[] data, IProgress<string> progress);
 
         ViewModelBase GetViewModel();
 

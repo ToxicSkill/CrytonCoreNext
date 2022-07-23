@@ -292,6 +292,24 @@
             </Setter>
         </Style>
 
+        <Style x:Key="animationGrid" TargetType="{x:Type Grid}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=IsVisible}" 
+                         Value="True">
+
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             From="0.0" To="1.0"
+                                             Duration="0:0:1.0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
     </Application.Resources>
     
 </Application>

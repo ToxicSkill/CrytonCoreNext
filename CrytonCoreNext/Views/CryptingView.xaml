@@ -15,7 +15,6 @@
             <GradientStop Color="#FF203E65" Offset="0"/>
         </LinearGradientBrush>
     </UserControl.Background>
-
     <Grid>
         <Label Content="Crypting" FontSize="50" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 5, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
 
@@ -110,5 +109,76 @@
                   ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
                   Visibility="{Binding FileInformationVisibility}"
                   HorizontalAlignment="Left" Margin="275,368,0,0" VerticalAlignment="Top" Width="120"/>
+        <Grid VerticalAlignment="Bottom" Margin="30" Width="800" Height="100" Visibility="{Binding ProgressVisibility}" Style="{DynamicResource animationGrid}">
+            <Label Content="{Binding ProgessMessage}" Style="{StaticResource CryptingSettings}"
+                   VerticalAlignment="Bottom" Width="300" Height="40" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Top"/>
+            <Image Source="/Assets/ProgressIndicator.png"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality"/>
+            <Image Source="/Assets/ProgressDot.png" Visibility="{Binding PreparingVisibility}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       Margin="146,0,0,4"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="15"/>
+            <Image Source="/Assets/ProgressConnector.png" Visibility="{Binding PreparingVisibility}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       Margin="174.8,0,0,4"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="80"/>
+            <Image Source="/Assets/ProgressDot.png" Visibility="{Binding StartingVisibility}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       Margin="268.5,0,0,3.5"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="15"/>
+            <Image Source="/Assets/ProgressConnector.png" Visibility="{Binding StartingVisibility}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       Margin="297.3,0,0,4"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="80"/>
+            <Image Source="/Assets/ProgressDot.png" Visibility="{Binding FinishedVisibility}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       Margin="391,0,0,3.5"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="15"/>
+            <Image Source="/Assets/ProgressConnector.png" Visibility="{Binding FinishedVisibility}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       Margin="419.8,0,0,4"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="80"/>
+            <Image Source="/Assets/ProgressDot.png" Visibility="{Binding UpdatingVisibility}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       Margin="513.5,0,0,3.5"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="15"/>
+            <Image Source="/Assets/ProgressConnector.png" Visibility="{Binding UpdatingVisibility}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       Margin="542.5,0,0,4"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="80"/>
+            <Image Source="/Assets/ProgressDot.png" Visibility="{Binding SuccessVisibility}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       Margin="636,0,0,3"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="15"/>
+        </Grid>
     </Grid>
 </UserControl>
