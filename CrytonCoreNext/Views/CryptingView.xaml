@@ -60,49 +60,57 @@
             <ContentControl Content="{Binding CurrentCryptingViewModel}" Visibility="{Binding FileInformationVisibility}"/>
         </Grid>
 
-        <Grid Height="50" Width="200" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,20" >
+        <Grid Height="50" Width="150" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,30" >
+            <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="-10,0,20,8"
+                CornerRadius="0,15,15,0" BorderBrush="#FF131313" Background="#FF131313">
+            </Border>
             <TabPanel>
-                <Image Source="/Assets/AddFile.png"
+                <!--<Image Source="/Assets/AddFile.png"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="15"/>
+                       Width="15"/>-->
                 <Button Content="{DynamicResource AddFile}" Command="{Binding LoadFilesCommand}" Foreground="#e4e5fe" Margin="8,0,0,0" MinWidth="173"
-                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
+                        Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>
         </Grid>
 
 
-        <Grid Height="50" Width="200" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,90"
+        <Grid Height="50" Width="150" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,90"
                   Visibility="{Binding FileInformationVisibility}">
+            <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="-10,0,20,8"
+                CornerRadius="0,15,15,0" BorderBrush="#FF131313" Background="#FF131313">
+            </Border>
             <TabPanel>
-                <Image Source="/Assets/SaveFile.png"
+                <!--<Image Source="/Assets/SaveFile.png"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="15"/>
+                       Width="15"/>-->
                 <Button Content="{DynamicResource SaveFile}" Command="{Binding SaveFileCommand}" Foreground="#e4e5fe" Margin="8,0,0,0" MinWidth="173"
-                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
+                        Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>
         </Grid>
 
-
-        <Grid Height="50" Width="200" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="22,0,0,175" 
+        <Grid Height="50" Width="150" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,150" 
                   Visibility="{Binding FileInformationVisibility}">
+            <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="-10,0,20,8"
+                CornerRadius="0,15,15,0" BorderBrush="#FF131313" Background="#FF131313">
+            </Border>
             <TabPanel>
-                <Image Source="/Assets/Lock2.png"
+                <!--<Image Source="/Assets/Lock2.png"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="25"/>
-                <Button Content="{Binding CryptButtonName}" Command="{Binding CryptCommand}" Foreground="#e4e5fe" FontSize="32" Margin="8,0,0,0" MinWidth="173"
-                        Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
+                       Width="25"/>-->
+                <Button Content="{Binding CryptButtonName}" Command="{Binding CryptCommand}" Foreground="#FFAFB2FF" Margin="8,0,0,0" MinWidth="173"
+                        Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>
         </Grid>
         <ComboBox ItemsSource="{Binding CryptingComboBox}" SelectedItem="{Binding CurrentCryptingName}"
@@ -110,14 +118,14 @@
                   Visibility="{Binding FileInformationVisibility}"
                   HorizontalAlignment="Left" Margin="275,368,0,0" VerticalAlignment="Top" Width="120"/>
         <Grid VerticalAlignment="Bottom" Margin="30" Width="800" Height="100" Visibility="{Binding ProgressVisibility}" Style="{DynamicResource animationGrid}">
-            <Label Content="{Binding ProgessMessage}" Style="{StaticResource CryptingSettings}"
+            <Label Content="{Binding ProgessMessage}" Style="{StaticResource CryptingSettings}" Margin="-100,0,0,0"
                    VerticalAlignment="Bottom" Width="300" Height="40" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Top"/>
-            <Image Source="/Assets/ProgressIndicator.png"
+            <!--<Image Source="/Assets/ProgressIndicator.png"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality"/>
             <Image Source="/Assets/ProgressDot.png" Visibility="{Binding PreparingVisibility}"
-                       Stretch="Uniform"
+                       Stretch="Uniform" Opacity="0.6"
                        HorizontalAlignment="Left"
                        Margin="146,0,0,4"
                        RenderOptions.EdgeMode="Aliased"
@@ -131,7 +139,7 @@
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="80"/>
             <Image Source="/Assets/ProgressDot.png" Visibility="{Binding StartingVisibility}"
-                       Stretch="Uniform"
+                       Stretch="Uniform" Opacity="0.7"
                        HorizontalAlignment="Left"
                        Margin="268.5,0,0,3.5"
                        RenderOptions.EdgeMode="Aliased"
@@ -145,7 +153,7 @@
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="80"/>
             <Image Source="/Assets/ProgressDot.png" Visibility="{Binding FinishedVisibility}"
-                       Stretch="Uniform"
+                       Stretch="Uniform" Opacity="0.8"
                        HorizontalAlignment="Left"
                        Margin="391,0,0,3.5"
                        RenderOptions.EdgeMode="Aliased"
@@ -159,7 +167,7 @@
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="80"/>
             <Image Source="/Assets/ProgressDot.png" Visibility="{Binding UpdatingVisibility}"
-                       Stretch="Uniform"
+                       Stretch="Uniform" Opacity="0.9"
                        HorizontalAlignment="Left"
                        Margin="513.5,0,0,3.5"
                        RenderOptions.EdgeMode="Aliased"
@@ -178,7 +186,93 @@
                        Margin="636,0,0,3"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="15"/>
+                       Width="15"/>-->
+            <Canvas Background="Transparent">
+                <Ellipse
+                      Canvas.Top="40"
+                      Canvas.Left="20"
+                      Fill="Transparent"
+                      Height="20"
+                      Width="20"
+                      StrokeThickness="1"
+                      Stroke="#FFFFFF"/>
+                <Ellipse Visibility="{Binding PreparingVisibility}"
+                      Canvas.Top="40"
+                      Canvas.Left="20"
+                      Fill="White"
+                      Height="20"
+                      Width="20"
+                      StrokeThickness="1"
+                      Stroke="#FFFFFF"/>
+                <Rectangle Width="140" Height="1" Fill="White" Margin="40,49.5,0,0"/>
+                <Ellipse
+                      Canvas.Top="40"
+                      Canvas.Left="180"
+                      Fill="Transparent"
+                      Height="20"
+                      Width="20"
+                      StrokeThickness="1"
+                      Stroke="#FFFFFF"/>
+                <Ellipse Visibility="{Binding StartingVisibility}"
+                      Canvas.Top="40"
+                      Canvas.Left="180"
+                      Fill="White"
+                      Height="20"
+                      Width="20"
+                      StrokeThickness="1"
+                      Stroke="#FFFFFF"/>
+                <Rectangle Width="140" Height="1" Fill="White" Margin="200,49.5,0,0"/>
+                <Ellipse
+                      Canvas.Top="40"
+                      Canvas.Left="340"
+                      Fill="Transparent"
+                      Height="20"
+                      Width="20"
+                      StrokeThickness="1"
+                      Stroke="#FFFFFF"/>
+                <Ellipse Visibility="{Binding FinishedVisibility}"
+                      Canvas.Top="40"
+                      Canvas.Left="340"
+                      Fill="White"
+                      Height="20"
+                      Width="20"
+                      StrokeThickness="1"
+                      Stroke="#FFFFFF"/>
+                <Rectangle Width="140" Height="1" Fill="White" Margin="360,49.5,0,0"/>
+                <Ellipse
+                      Canvas.Top="40"
+                      Canvas.Left="500"
+                      Fill="Transparent"
+                      Height="20"
+                      Width="20"
+                      StrokeThickness="1"
+                      Stroke="#FFFFFF"/>
+                <Ellipse Visibility="{Binding UpdatingVisibility}"
+                      Canvas.Top="40"
+                      Canvas.Left="500"
+                      Fill="White"
+                      Height="20"
+                      Width="20"
+                      StrokeThickness="1"
+                      Stroke="#FFFFFF"/>
+                <Rectangle Width="140" Height="1" Fill="White" Margin="520,49.5,0,0"/>
+                <Ellipse
+                      Canvas.Top="40"
+                      Canvas.Left="660"
+                      Fill="Transparent"
+                      Height="20"
+                      Width="20"
+                      StrokeThickness="1"
+                      Stroke="#FFFFFF"/>
+                <Ellipse Visibility="{Binding SuccessVisibility}"
+                      Canvas.Top="40"
+                      Canvas.Left="660"
+                      Fill="White"
+                      Height="20"
+                      Width="20"
+                      StrokeThickness="1"
+                      Stroke="#FFFFFF"/>
+            </Canvas>
         </Grid>
     </Grid>
 </UserControl>
