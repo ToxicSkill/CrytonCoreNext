@@ -22,14 +22,14 @@ namespace CrytonCoreNext.Services
             _filesManager = filesManager;
         }
 
-        public List<File>? LoadFiles(EDialogFilters.DialogFilters filter, string title, bool multiselect = false, int currentIndex = 0)
+        public List<File>? LoadFiles(List<string> filesNames, int currentIndex = 0)
         {
-            return _filesLoader.LoadFiles(filter, title, multiselect, currentIndex);
+            return _filesLoader.LoadFiles(filesNames, currentIndex);
         }
 
-        public bool SaveFile(EDialogFilters.DialogFilters filter, string title, File file)
+        public bool SaveFile(string fileName, File file)
         {
-            return _filesSaver.SaveFile(filter, title, file);
+            return _filesSaver.SaveFile(fileName, file);
         }
 
         public (bool result, int newIndex) ModifyFile(ObservableCollection<File> files, Guid guid, byte[] bytes, bool status, string? methodName)

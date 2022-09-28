@@ -18,44 +18,19 @@ namespace CrytonCoreNext.Models
 
         private static readonly string[] Sizes = { "B", "KB", "MB", "GB", "TB" };
 
-        public List<Models.File>? LoadFiles(EDialogFilters.DialogFilters filter, string title, bool multiselect = false, int currentIndex = 0)
+        public List<Models.File>? LoadFiles(List<string> filesNames, int currentIndex = 0)
         {
-            WindowDialog.OpenDialog openDialog = new(new DialogHelper()
+            var files = new List<Models.File>();
+
+            foreach (var path in filesNames)
             {
-                Filters = EDialogFilters.ExtensionToFilter(filter),
-                Multiselect = multiselect,
-                Title = title
-            });
-            var chosenPaths = openDialog.RunDialog();
-            if (chosenPaths.Count > 0)
-            {
-                var validPaths = new List<string>();
-
-                foreach (var path in chosenPaths)
-                {
-                    if (System.IO.File.Exists(path))
-                        validPaths.Add(path);
-                }
-
-                if (validPaths.Count == 0)
-                {
-                    return new ();
-                }
-
-                var files = new List<Models.File>();
-
-                foreach (var path in validPaths)
-                {
-                    currentIndex += 1;
-                    var byteArray = System.IO.File.ReadAllBytes(path);
-                    Models.File newFile = InitializeNewFile(currentIndex, path, byteArray);
-                    files.Add(newFile);
-                }
-
-                return files;
+                currentIndex += 1;
+                var byteArray = System.IO.File.ReadAllBytes(path);
+                var newFile = InitializeNewFile(currentIndex, path, byteArray);
+                files.Add(newFile);
             }
 
-            return null;
+            return files;
         }
 
         private Models.File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)

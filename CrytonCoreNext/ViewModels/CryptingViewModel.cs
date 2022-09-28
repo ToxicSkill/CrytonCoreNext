@@ -64,7 +64,7 @@ namespace CrytonCoreNext.ViewModels
 
         public ViewModelBase CurrentCryptingViewModel { get; private set; }
 
-        public CryptingViewModel(IFileService fileService, IEnumerable<ICrypting> cryptors) : base(fileService)
+        public CryptingViewModel(IFileService fileService, IDialogService dialogService, IEnumerable<ICrypting> cryptors) : base(fileService, dialogService)
         {
             CryptCommand = new Command(DoCrypt, true);
             LoadFilesCommand = new Command(LoadFiles, true);

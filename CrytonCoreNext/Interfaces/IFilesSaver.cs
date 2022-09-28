@@ -4,6 +4,6 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface IFilesSaver
     {
-        bool SaveFile(EDialogFilters.DialogFilters filter, string title, Models.File file);
+        bool SaveFile(string fileName, Models.File file);
     }
 }

@@ -14,7 +14,7 @@ namespace CrytonCoreNext
 {
     public partial class App : Application
     {
-        private static readonly Guid AppKey = new Guid("adae2137-dead-beef-6666-3eb841121af8");
+        private static readonly Guid AppKey = new ("adae2137-dead-beef-6666-3eb841121af8");
 
         private readonly IServiceProvider _serviceProvider;
 
@@ -38,6 +38,7 @@ namespace CrytonCoreNext
                 .AddSingleton(CreateFilesSaver)
                 .AddSingleton<IFilesManager, FilesManager>()
                 .AddSingleton(CreateFileService)
+                .AddSingleton<IDialogService, DialogService>()
                 .AddSingleton<IJsonSerializer, JsonSerializer>()
                 .AddTransient<FilesViewViewModel>()
                 .AddTransient(CreateAES)
@@ -84,14 +85,16 @@ namespace CrytonCoreNext
         private CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
         {
             var fileService = provider.GetRequiredService<IFileService>();
+            var dialogService = provider.GetRequiredService<IDialogService>();
             var cryptors = provider.GetServices<ICrypting>();
-            return new (fileService, cryptors);
+            return new (fileService, dialogService, cryptors);
         }
 
         private PdfManagerViewModel CreatePdfManagerViewModel(IServiceProvider provider)
         {
             var fileService = provider.GetRequiredService<IFileService>();
-            return new(fileService);
+            var dialogService = provider.GetRequiredService<IDialogService>();
+            return new(fileService, dialogService);
         }
 
         private ICrypting CreateAES(IServiceProvider provider)

@@ -1,4 +1,5 @@
 using CrytonCoreNext.Crypting;
+using CrytonCoreNext.Interfaces;
 using System;
 using Xunit;
 
@@ -7,15 +8,13 @@ namespace CrytonCoreNextTests
 {
     public class CrytonFileRecognitionTest
     {
-        Guid guid;
-        CryptingRecognition ct;
         private static readonly byte[] _defaultBytes = Array.Empty<byte>();
         private static readonly int _correctLenght = 64;
+        private readonly ICryptingRecognition _cryptingRecognition;
 
         public CrytonFileRecognitionTest()
         {
-            guid = Guid.NewGuid();
-            ct = new CryptingRecognition(new(guid));
+            _cryptingRecognition = new CryptingRecognition(new(Guid.NewGuid()));
         }
 
         [Fact]
@@ -23,7 +22,7 @@ namespace CrytonCoreNextTests
         {
             var method = "AES";
             var extension = "pdf";
-            var result = ct.PrepareRerecognizableBytes(method, extension);
+            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.NotNull(result);
         }
 
@@ -32,7 +31,7 @@ namespace CrytonCoreNextTests
         {
             var method = "AES";
             var extension = "pdf";
-            var result = ct.PrepareRerecognizableBytes(method, extension);
+            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.Equal(_correctLenght, result.Length);
         }
 
@@ -42,7 +41,7 @@ namespace CrytonCoreNextTests
         {
             var method = string.Empty;
             var extension = string.Empty;
-            var result = ct.PrepareRerecognizableBytes(method, extension);
+            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.Equal(_defaultBytes, result);
         }
 
@@ -51,7 +50,7 @@ namespace CrytonCoreNextTests
         {
             var method = "AES";
             var extension = string.Empty;
-            var result = ct.PrepareRerecognizableBytes(method, extension);
+            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.Equal(_defaultBytes, result);
         }
 
@@ -60,7 +59,7 @@ namespace CrytonCoreNextTests
         {
             var method = "AESAESAEASAESAESAESAES";
             var extension = "txtxtxtxtxtxtxtxtx";
-            var result = ct.PrepareRerecognizableBytes(method, extension);
+            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.Equal(_correctLenght, result.Length);
         }
 
@@ -69,7 +68,7 @@ namespace CrytonCoreNextTests
         {
             var method = "AESA";
             var extension = "txttxtttx";
-            var result = ct.PrepareRerecognizableBytes(method, extension);
+            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.Equal(_correctLenght, result.Length);
         }
     }

@@ -1,6 +1,8 @@
-﻿using CrytonCoreNext.Enums;
+﻿using Castle.Components.DictionaryAdapter.Xml;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.ObjectModel;
@@ -15,6 +17,8 @@ namespace CrytonCoreNext.Abstract
     public class InteractiveViewBase : ViewModelBase, IDisposable
     {
         private readonly IFileService _fileService;
+            
+        private readonly IDialogService _dialogService;
 
         private DispatcherTimer? _timer;
 
@@ -26,9 +30,10 @@ namespace CrytonCoreNext.Abstract
 
         public Visibility FileInformationVisibility { get; private set; } = Visibility.Hidden;
 
-        public InteractiveViewBase(IFileService fileService)
+        public InteractiveViewBase(IFileService fileService, IDialogService dialogService)
         {
             _fileService = fileService;
+            _dialogService = dialogService;
             PopupViewModel = new ();
             FilesViewViewModel = new (_fileService);
             FilesViewViewModel.FilesChanged += HandleFileChanged;
@@ -52,7 +57,8 @@ namespace CrytonCoreNext.Abstract
         public void LoadFiles()
         {
             var filesCount = FilesViewViewModel.FilesView == null ? 0 : FilesViewViewModel.FilesView.Count;
-            var newFiles = _fileService.LoadFiles(EDialogFilters.DialogFilters.All, "Open files", true, filesCount);
+            var filesPaths = _dialogService.GetFilesNamesToOpen(EDialogFilters.DialogFilters.All, "Open files", true);
+            var newFiles = _fileService.LoadFiles(filesPaths, filesCount);
             if (newFiles != null)
             {
                 var newFilesCollection = filesCount > 0 ?
@@ -66,7 +72,8 @@ namespace CrytonCoreNext.Abstract
 
         public void SaveFile()
         {
-            var result = _fileService.SaveFile(EDialogFilters.DialogFilters.All, "Save file", CurrentFile);
+            var filePath = _dialogService.GetFilesNamesToSave(EDialogFilters.DialogFilters.All, "Save file", CurrentFile.Extension);
+            var result = _fileService.SaveFile(filePath.First(), CurrentFile);
             if (result)
             {
                 PostPopup("File has been saved successfuly", 2, EPopopColor.Information);

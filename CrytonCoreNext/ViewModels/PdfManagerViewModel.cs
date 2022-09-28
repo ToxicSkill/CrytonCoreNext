@@ -19,7 +19,7 @@ namespace CrytonCoreNext.ViewModels
 
         //public ICommand MoveFileDownCommand { get; set; }
 
-        public PdfManagerViewModel(IFileService fileService) : base(fileService)
+        public PdfManagerViewModel(IFileService fileService, IDialogService dialogService) : base(fileService, dialogService)
         {
             //PostFilesCommand = new Command(AddFiles, true);
             //ClearFilesCommand = new Command(ClearAllFiles, true);

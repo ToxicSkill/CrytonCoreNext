@@ -7,9 +7,9 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface IFileService
     {
-        List<Models.File>? LoadFiles(EDialogFilters.DialogFilters filter, string title, bool multiselect = false, int currentIndex = 0);
+        List<Models.File>? LoadFiles(List<string> filesNames, int currentIndex = 0);
 
-        bool SaveFile(EDialogFilters.DialogFilters filter, string title, Models.File file);
+        bool SaveFile(string fileName, Models.File file);
 
         (bool result, int newIndex) DeleteItem(ObservableCollection<Models.File> files, Guid guid);
 

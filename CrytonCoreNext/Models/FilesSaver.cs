@@ -9,7 +9,6 @@ namespace CrytonCoreNext.Models
 {
     public class FilesSaver : IFilesSaver
     {
-        private const string DefaultFileName = "file.";
 
         private readonly ICryptingRecognition _cryptingRecognition;
 
@@ -18,47 +17,36 @@ namespace CrytonCoreNext.Models
             _cryptingRecognition = cryptingRecognition;
         }
 
-        public bool SaveFile(EDialogFilters.DialogFilters filter, string title, Models.File file)
+        public bool SaveFile(string fileName, Models.File file)
         {
-            WindowDialog.SaveDialog saveDialog = new(new DialogHelper()
+            try
             {
-                Filters = EDialogFilters.ExtensionToFilter(filter),
-                Multiselect = false,
-                Title = title,
-                FileName = DefaultFileName + file.Extension
-            });
-            var chosenPath = saveDialog.RunDialog() ?? new List<string>();
-            if (chosenPath.Count == 1)
-            {
-                try
+                if (file.Status)
                 {
-                    if (file.Status == true)
+                    var recognitionBytes = _cryptingRecognition.PrepareRerecognizableBytes(file.Method, file.Extension);
+                    var newBytes = recognitionBytes.Concat(file.Bytes);
+                    if (recognitionBytes != null)
                     {
-                        var recognitionBytes = _cryptingRecognition.PrepareRerecognizableBytes(file.Method, file.Extension);
-                        var newBytes = recognitionBytes.Concat(file.Bytes);
-                        if (recognitionBytes != null)
+                        if (recognitionBytes.Length > 0)
                         {
-                            if (recognitionBytes.Length > 0)
-                            {
-                                ByteArrayToFile(chosenPath.First(), newBytes.ToArray());
-                                return true;
-                            }
+                            ByteArrayToFile(fileName, newBytes.ToArray());
+                            return true;
                         }
                     }
-                    else
-                    {
-                        ByteArrayToFile(chosenPath.First(), file.Bytes);
-                        return true;
-                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    Console.WriteLine(e);
-                    return false;
+                    ByteArrayToFile(fileName, file.Bytes);
+                    return true;
                 }
-                return true;
             }
-            return false;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
+            return true;
         }
 
         private static void ByteArrayToFile(string fileName, byte[] bytes) => System.IO.File.WriteAllBytes(fileName, bytes);

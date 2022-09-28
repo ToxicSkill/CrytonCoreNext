@@ -4,6 +4,6 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface IFilesLoader
     {
-        List<Models.File>? LoadFiles(Enums.EDialogFilters.DialogFilters filter, string title, bool multiselect = false, int currentIndex = 0);
+        List<Models.File>? LoadFiles(List<string> filesNames, int currentIndex = 0);
     }
 }
