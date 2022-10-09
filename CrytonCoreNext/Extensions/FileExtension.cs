@@ -24,8 +24,10 @@ namespace CrytonCoreNext.Extensions
                 {
                     return false;
                 }
+
                 return true;
             }
+
             return true;
         }
 

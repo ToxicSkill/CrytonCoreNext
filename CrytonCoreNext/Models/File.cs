@@ -22,7 +22,7 @@ namespace CrytonCoreNext.Models
 
         public bool Status { get; set; }
 
-        public string StatusInfo => Status ? "Encrypted" : "Decrypted";
+        public string StatusInfo => Status ? Enums.ECryptingStatus.EnumToString(Enums.ECryptingStatus.CryptingStatus.Encrypted) : Enums.ECryptingStatus.EnumToString(Enums.ECryptingStatus.CryptingStatus.Decrypted);
 
         public Guid Guid { get; init; }
 
