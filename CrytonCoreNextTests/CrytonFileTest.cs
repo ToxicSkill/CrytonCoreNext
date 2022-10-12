@@ -6,7 +6,7 @@ using Xunit;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
-using CrytonCoreNext.Enums;
+using CrytonCoreNext.Static;
 
 namespace CrytonCoreNextTests
 {
@@ -83,7 +83,7 @@ namespace CrytonCoreNextTests
         public void TestOpenFileShouldStatusInfoDecrypted()
         {
             var file = _files.First();
-            var expected = ECryptingStatus.EnumToString(ECryptingStatus.CryptingStatus.Decrypted);
+            var expected = CryptingStatus.Decrypted;
             var statusInfo = file.StatusInfo;
             Assert.Equal(expected, statusInfo);
         }

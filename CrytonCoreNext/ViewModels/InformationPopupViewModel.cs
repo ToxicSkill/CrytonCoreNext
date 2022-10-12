@@ -1,6 +1,6 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
-using CrytonCoreNext.Enums;
+using CrytonCoreNext.Static;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -13,7 +13,7 @@ namespace CrytonCoreNext.ViewModels
 
         public string InformationString { get; init; }
 
-        private Color _defaultColor = EPopopColor.Information;
+        private Color _defaultColor = ColorStatus.Information;
 
         public Color BackgroundColor { get; set; }
 

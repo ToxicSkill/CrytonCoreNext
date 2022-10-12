@@ -193,7 +193,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
             WindowDialog.SaveDialog saveDialog = new(new DialogHelper()
             {
-                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.Json),
+                Filters = Static.Extensions.FilterToPrompt(Static.Extensions.DialogFilters.Json),
                 Multiselect = false,
                 //Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
             });
@@ -209,7 +209,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             WindowDialog.OpenDialog openDialog = new(new DialogHelper()
             {
-                Filters = Enums.EDialogFilters.ExtensionToFilter(Enums.EDialogFilters.DialogFilters.Json),
+                Filters = Static.Extensions.FilterToPrompt(Static.Extensions.DialogFilters.Json),
                 Multiselect = false,
                 //Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
             });
@@ -239,9 +239,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     }
                 }
             }
-
-
-
         }
 
         private void GenerateRandomKey()

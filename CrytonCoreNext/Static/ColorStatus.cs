@@ -1,11 +1,11 @@
 ﻿using System.Windows.Media;
 
-namespace CrytonCoreNext.Enums;
+namespace CrytonCoreNext.Static;
 
 /// <summary>
 /// Popup colors in order to LogLevel
 /// </summary>
-public static class EPopopColor
+public static class ColorStatus
 {
     public static readonly Color Information = Color.FromArgb(0xFF, 0x3f, 0x98, 0xcc);
 

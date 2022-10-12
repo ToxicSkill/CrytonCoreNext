@@ -1,8 +1,7 @@
-﻿using Castle.Components.DictionaryAdapter.Xml;
-using CrytonCoreNext.Enums;
-using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Services;
+using CrytonCoreNext.Static;
 using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.ObjectModel;
@@ -57,7 +56,7 @@ namespace CrytonCoreNext.Abstract
         public void LoadFiles()
         {
             var filesCount = FilesViewViewModel.FilesView == null ? 0 : FilesViewViewModel.FilesView.Count;
-            var filesPaths = _dialogService.GetFilesNamesToOpen(EDialogFilters.DialogFilters.All, "Open files", true);
+            var filesPaths = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.All, "Open files", true);
             var newFiles = _fileService.LoadFiles(filesPaths, filesCount);
             if (newFiles != null)
             {
@@ -66,21 +65,21 @@ namespace CrytonCoreNext.Abstract
                     newFiles;
 
                 FilesViewViewModel.Update(newFilesCollection);
-                PostPopup("File(s) where loaded successfuly", 2, EPopopColor.Information);
+                PostPopup("File(s) where loaded successfuly", 2, ColorStatus.Information);
             }
         }
 
         public void SaveFile()
         {
-            var filePath = _dialogService.GetFilesNamesToSave(EDialogFilters.DialogFilters.All, "Save file", CurrentFile.Extension);
+            var filePath = _dialogService.GetFilesNamesToSave(Static.Extensions.DialogFilters.All, "Save file", CurrentFile.Extension);
             var result = _fileService.SaveFile(filePath.First(), CurrentFile);
             if (result)
             {
-                PostPopup("File has been saved successfuly", 2, EPopopColor.Information);
+                PostPopup("File has been saved successfuly", 2, ColorStatus.Information);
             }
             if (!result)
             {
-                PostPopup("Error when saving file", 2, EPopopColor.Error);
+                PostPopup("Error when saving file", 2, ColorStatus.Error);
             }
         }
 

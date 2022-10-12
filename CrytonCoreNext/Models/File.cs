@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrytonCoreNext.Static;
+using System;
 
 namespace CrytonCoreNext.Models
 {
@@ -22,7 +23,7 @@ namespace CrytonCoreNext.Models
 
         public bool Status { get; set; }
 
-        public string StatusInfo => Status ? Enums.ECryptingStatus.EnumToString(Enums.ECryptingStatus.CryptingStatus.Encrypted) : Enums.ECryptingStatus.EnumToString(Enums.ECryptingStatus.CryptingStatus.Decrypted);
+        public string StatusInfo => Status ? CryptingStatus.Encrypted : CryptingStatus.Decrypted;
 
         public Guid Guid { get; init; }
 

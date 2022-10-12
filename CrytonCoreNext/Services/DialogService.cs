@@ -11,11 +11,11 @@ namespace CrytonCoreNext.Services
     {
         private const string DefaultFileName = "file.";
 
-        public List<string> GetFilesNamesToOpen(EDialogFilters.DialogFilters filter, string title, bool multiselect = false)
+        public List<string> GetFilesNamesToOpen(Static.Extensions.DialogFilters filter, string title, bool multiselect = false)
         {
             WindowDialog.OpenDialog openDialog = new(new DialogHelper()
             {
-                Filters = EDialogFilters.ExtensionToFilter(filter),
+                Filters = Static.Extensions.FilterToPrompt(filter),
                 Multiselect = multiselect,
                 Title = title
             });
@@ -23,11 +23,11 @@ namespace CrytonCoreNext.Services
             return openDialog.RunDialog();
         }
 
-        public List<string> GetFilesNamesToSave(EDialogFilters.DialogFilters filter, string title, string extension)
+        public List<string> GetFilesNamesToSave(Static.Extensions.DialogFilters filter, string title, string extension)
         {
             WindowDialog.SaveDialog saveDialog = new(new DialogHelper()
             {
-                Filters = EDialogFilters.ExtensionToFilter(filter),
+                Filters = Static.Extensions.FilterToPrompt(filter),
                 Multiselect = false,
                 Title = title,
                 FileName = DefaultFileName + extension
