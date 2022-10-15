@@ -11,9 +11,10 @@ namespace CrytonCoreNext.Crypting
     public class RSA : ICrypting
     {
         private static readonly string[] SettingsKeys = { "Key", "IV", "KeySize", "BlockSize", "Error" };
-        private const string Name = "RSA";
 
         public ViewModelBase ViewModel { get; set; }
+
+        public string Name { get => nameof(RSA); }
 
         private readonly RSACng _rsa;
 

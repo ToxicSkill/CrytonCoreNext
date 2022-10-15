@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Crypting
@@ -15,7 +14,7 @@ namespace CrytonCoreNext.Crypting
     {
         private static readonly string[] SettingsKeys = { "Key", "IV", "KeySize", "BlockSize", "Error" };
 
-        private const string Name = nameof(AES);
+        public string Name { get => nameof(AES); }
 
         private readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
         private readonly AesCng _aes;

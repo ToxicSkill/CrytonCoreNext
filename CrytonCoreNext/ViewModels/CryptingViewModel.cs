@@ -1,13 +1,12 @@
-﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
-using CrytonCoreNext.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Threading.Tasks;
+using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Commands;
+using CrytonCoreNext.Interfaces;
+using System.Collections.ObjectModel;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -15,9 +14,7 @@ namespace CrytonCoreNext.ViewModels
     {
         private const int ReportDelay = 2000;
 
-        private readonly IEnumerable<ICrypting> _cryptors;
-
-        private string _currentCryptingName = "";
+        private readonly ICryptingService _cryptingService;
 
         private int _progressCounter = 0;
 
@@ -27,13 +24,11 @@ namespace CrytonCoreNext.ViewModels
 
         public ICommand CryptCommand { get; init; }
 
-        public ObservableCollection<string> CryptingComboBox { get; private set; }
-
-        public ICrypting? CurrentCrypting { get; private set; }
+        public ObservableCollection<ICrypting> CryptingComboBox { get; private set; }
 
         public string CryptButtonName => GetCryptName();
 
-        public string ProgessMessage { get; set; }
+        public string ProgessMessage { get; set; } = string.Empty;
 
         public Visibility ProgressVisibility { get; set; } = Visibility.Hidden;
 
@@ -47,15 +42,14 @@ namespace CrytonCoreNext.ViewModels
 
         public Visibility SuccessVisibility { get; set; }
 
-
-        public string CurrentCryptingName
+        public ICrypting CurrentCryptingName
         {
-            get => _currentCryptingName;
+            get => _cryptingService.GetCurrentCrypting();
             set
             {
-                if (value != _currentCryptingName)
+                if (value != _cryptingService.GetCurrentCrypting())
                 {
-                    _currentCryptingName = value;
+                    _cryptingService.SetCurrentCrypting(value);
                     UpdateCurrentCrypting();
                     OnPropertyChanged(nameof(CurrentCryptingName));
                 }
@@ -64,17 +58,18 @@ namespace CrytonCoreNext.ViewModels
 
         public ViewModelBase CurrentCryptingViewModel { get; private set; }
 
-        public CryptingViewModel(IFileService fileService, IDialogService dialogService, IEnumerable<ICrypting> cryptors) : base(fileService, dialogService)
+        public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService) : base(fileService, dialogService)
         {
+            _cryptingService = cryptingService;
+            CurrentCryptingViewModel = new();
+            CryptingComboBox = new();
             CryptCommand = new Command(DoCrypt, true);
             LoadFilesCommand = new Command(LoadFiles, true);
             SaveFileCommand = new Command(SaveFile, true);
-            CurrentCryptingViewModel = new ();
-            CryptingComboBox = new ();
-            _cryptors = cryptors;
             InitializeCryptingComboBox();
             FilesViewViewModel.FilesChanged += HandleFileChanged;
             ResetProgressVisibility();
+            UpdateCurrentCrypting();
 
             //var t = new Crypting.Crypting(new() { new(new AES(), ECrypting.EnumToString(ECrypting.Methods.aes)) });
             //t.Encrypt(FilesViewViewModel.FilesView[0].Bytes, ECrypting.EnumToString(ECrypting.Methods.aes));
@@ -85,28 +80,14 @@ namespace CrytonCoreNext.ViewModels
             OnPropertyChanged(nameof(CryptButtonName));
         }
 
-        private bool InitializeCryptingComboBox()
+        private void InitializeCryptingComboBox()
         {
-            foreach (var cryptor in _cryptors)
-            {
-                CryptingComboBox.Add(cryptor.GetName());
-            }
-
-            if (CryptingComboBox.Count > 0)
-            {
-                CurrentCryptingName = _cryptors.ToList().First().GetName();
-                UpdateCurrentCrypting();
-                return true;
-            }
-
-            return false;
+            CryptingComboBox = new (_cryptingService.GetCryptors().ToList());
         }
 
         private void UpdateCurrentCrypting()
         {
-            CurrentCrypting = _cryptors.Where(x => x.GetName() == _currentCryptingName).First();
-            CurrentCryptingViewModel = CurrentCrypting.GetViewModel();
-
+            CurrentCryptingViewModel = _cryptingService.GetCurrentCrypting().GetViewModel();
             OnPropertyChanged(nameof(CurrentCryptingViewModel));
         }
 
@@ -120,11 +101,11 @@ namespace CrytonCoreNext.ViewModels
                 if (FilesViewViewModel.CurrentFile.Bytes != null)
                 {
                     var result = FilesViewViewModel.CurrentFile.Status ?
-                        await CurrentCrypting.Decrypt(FilesViewViewModel.CurrentFile.Bytes, progressReport) :
-                        await CurrentCrypting.Encrypt(FilesViewViewModel.CurrentFile.Bytes, progressReport);
+                        await _cryptingService.GetCurrentCrypting().Decrypt(FilesViewViewModel.CurrentFile.Bytes, progressReport) :
+                        await _cryptingService.GetCurrentCrypting().Encrypt(FilesViewViewModel.CurrentFile.Bytes, progressReport);
                     if (result != null && FilesViewViewModel.FilesView != null)
                     {
-                        ModifyFile(FilesViewViewModel.FilesView, FilesViewViewModel.CurrentFile.Guid, result, !FilesViewViewModel.CurrentFile.Status, CurrentCrypting?.GetName());
+                        ModifyFile(FilesViewViewModel.FilesView, FilesViewViewModel.CurrentFile.Guid, result, !FilesViewViewModel.CurrentFile.Status, _cryptingService.GetCurrentCrypting()?.GetName());
                         OnPropertyChanged(nameof(CryptButtonName));
                     }
                 }
@@ -161,6 +142,7 @@ namespace CrytonCoreNext.ViewModels
                 default:
                     break;
             }
+
             _progressCounter += 1; 
         }
 

@@ -43,6 +43,7 @@ namespace CrytonCoreNext
                 .AddTransient<FilesViewViewModel>()
                 .AddTransient(CreateAES)
                 .AddTransient(CreateRSA)
+                .AddTransient(CreateCryptingService)
                 .AddTransient<InformationPopupViewModel>()
                 .AddSingleton(CreateHomeViewModel)
                 .AddSingleton(CreateCryptingViewModel)
@@ -86,8 +87,8 @@ namespace CrytonCoreNext
         {
             var fileService = provider.GetRequiredService<IFileService>();
             var dialogService = provider.GetRequiredService<IDialogService>();
-            var cryptors = provider.GetServices<ICrypting>();
-            return new (fileService, dialogService, cryptors);
+            var cryptingService = provider.GetRequiredService<ICryptingService>();
+            return new (fileService, dialogService, cryptingService);
         }
 
         private PdfManagerViewModel CreatePdfManagerViewModel(IServiceProvider provider)
@@ -132,6 +133,12 @@ namespace CrytonCoreNext
             var fileSaver = provider.GetRequiredService<IFilesSaver>();
             var fileManager = provider.GetRequiredService<IFilesManager>();
             return new FileService(fileSaver, fileLoader, fileManager);
+        }
+
+        public ICryptingService CreateCryptingService(IServiceProvider provider)
+        {
+            var cryptors = provider.GetServices<ICrypting>();
+            return new CryptingService(cryptors);
         }
 
         private void InitializeDictionary()

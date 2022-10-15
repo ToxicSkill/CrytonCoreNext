@@ -7,6 +7,8 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface ICrypting
     {
+        public string Name { get; }
+
         Task<byte[]> Encrypt(byte[] data, IProgress<string> progress);
 
         Task<byte[]> Decrypt(byte[] data, IProgress<string> progress);

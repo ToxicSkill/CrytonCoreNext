@@ -3,7 +3,6 @@ using CrytonCoreNext.Interfaces;
 using System;
 using Xunit;
 
-
 namespace CrytonCoreNextTests
 {
     public class CrytonFileRecognitionTest
