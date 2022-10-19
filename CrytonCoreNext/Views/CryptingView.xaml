@@ -45,7 +45,7 @@
                     <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentFile.Date}"/>
                 </Label>
                 <Label Style="{StaticResource FileInformations}">
-                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentFile.StatusInfo}"/>
+                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding CurrentFile.Status}"/>
                 </Label>
             </StackPanel>
         </Grid>
@@ -54,7 +54,7 @@
             <ContentControl Content="{Binding PopupViewModel}"/>
         </Grid>
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
-            <ContentControl Content="{Binding FilesViewViewModel}"/>
+            <ContentControl Content="{Binding FilesView}"/>
         </Grid>
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="700,0,300,50">
             <ContentControl Content="{Binding CurrentCryptingViewModel}" Visibility="{Binding FileInformationVisibility}"/>
@@ -196,7 +196,7 @@
                       Width="20"
                       StrokeThickness="1"
                       Stroke="#FFFFFF"/>
-                <Ellipse Visibility="{Binding PreparingVisibility}"
+                <Ellipse Visibility="{Binding ProgressService.PreparingVisibility}"
                       Canvas.Top="40"
                       Canvas.Left="20"
                       Fill="White"
@@ -213,7 +213,7 @@
                       Width="20"
                       StrokeThickness="1"
                       Stroke="#FFFFFF"/>
-                <Ellipse Visibility="{Binding StartingVisibility}"
+                <Ellipse Visibility="{Binding ProgressService.StartingVisibility}"
                       Canvas.Top="40"
                       Canvas.Left="180"
                       Fill="White"
@@ -230,7 +230,7 @@
                       Width="20"
                       StrokeThickness="1"
                       Stroke="#FFFFFF"/>
-                <Ellipse Visibility="{Binding FinishedVisibility}"
+                <Ellipse Visibility="{Binding ProgressService.FinishedVisibility}"
                       Canvas.Top="40"
                       Canvas.Left="340"
                       Fill="White"
@@ -247,7 +247,7 @@
                       Width="20"
                       StrokeThickness="1"
                       Stroke="#FFFFFF"/>
-                <Ellipse Visibility="{Binding UpdatingVisibility}"
+                <Ellipse Visibility="{Binding ProgressService.UpdatingVisibility}"
                       Canvas.Top="40"
                       Canvas.Left="500"
                       Fill="White"
@@ -264,7 +264,7 @@
                       Width="20"
                       StrokeThickness="1"
                       Stroke="#FFFFFF"/>
-                <Ellipse Visibility="{Binding SuccessVisibility}"
+                <Ellipse Visibility="{Binding ProgressService.SuccessVisibility}"
                       Canvas.Top="40"
                       Canvas.Left="660"
                       Fill="White"

@@ -83,8 +83,8 @@ namespace CrytonCoreNextTests
         public void TestOpenFileShouldStatusInfoDecrypted()
         {
             var file = _files.First();
-            var expected = CryptingStatus.Decrypted;
-            var statusInfo = file.StatusInfo;
+            var expected = CryptingStatus.Status.Decrypted;
+            var statusInfo = file.Status;
             Assert.Equal(expected, statusInfo);
         }
 

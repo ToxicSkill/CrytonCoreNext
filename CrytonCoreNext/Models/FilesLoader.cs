@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Enums;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Static;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,9 +19,9 @@ namespace CrytonCoreNext.Models
 
         private static readonly string[] Sizes = { "B", "KB", "MB", "GB", "TB" };
 
-        public List<Models.File>? LoadFiles(List<string> filesNames, int currentIndex = 0)
+        public List<File>? LoadFiles(List<string> filesNames, int currentIndex = 0)
         {
-            var files = new List<Models.File>();
+            var files = new List<File>();
 
             foreach (var path in filesNames)
             {
@@ -33,12 +34,12 @@ namespace CrytonCoreNext.Models
             return files;
         }
 
-        private Models.File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)
+        private File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)
         {
             var fileInfo = new FileInfo(path);
             var fileExtension = fileInfo.Extension.Contains('.') ? fileInfo.Extension.Substring(1) : "N/A";
             var recognitionResults = _cryptingRecognition.RecognizeBytes(byteArray);
-            return new Models.File()
+            return new File()
             {
                 Id = currentFilesCount,
                 Name = Path.GetFileNameWithoutExtension(fileInfo.FullName),
@@ -48,7 +49,7 @@ namespace CrytonCoreNext.Models
                 Size = GetSizeString(fileInfo.Length),
                 Path = path,
                 Bytes = recognitionResults.succes ? byteArray.Skip(64).ToArray() : byteArray,
-                Status = recognitionResults.succes ? true : false,
+                Status = recognitionResults.succes ? CryptingStatus.Status.Encrypted : CryptingStatus.Status.Decrypted,
                 //Text = Parsers.FileContentParser.GetStringFromBytes(byteArray),
                 Guid = System.Guid.NewGuid()
             };

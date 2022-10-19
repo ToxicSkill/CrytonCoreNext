@@ -75,7 +75,7 @@
                 <SelectiveScrollingGrid>
                     <ListView BorderBrush="{StaticResource BackgroundColorBrush}"
                               SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
-                              ItemsSource="{Binding FilesView, IsAsync=True}"
+                              ItemsSource="{Binding FilesCollection, IsAsync=True}"
                               Background="{StaticResource BackgroundColorBrush}" 
                               HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" 
                               VerticalAlignment="Stretch" 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrytonCoreNext.Static;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -18,6 +19,6 @@ namespace CrytonCoreNext.Interfaces
 
         (bool result, int newIndex) MoveItemDown(ObservableCollection<Models.File> files, Guid guid);
 
-        (bool result, int newIndex) ModifyFile(ObservableCollection<Models.File> files, Guid guid, byte[] bytes, bool status, string? methodName);
+        (bool result, int newIndex) ModifyFile(Models.File file, byte[] bytes, CryptingStatus.Status status, string? methodName);
     }
 }

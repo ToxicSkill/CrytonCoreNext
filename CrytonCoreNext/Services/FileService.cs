@@ -1,6 +1,6 @@
-﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.Static;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,6 +22,11 @@ namespace CrytonCoreNext.Services
             _filesManager = filesManager;
         }
 
+        public bool HasBytes(File? file)
+        {
+            return file != null && file.Bytes.Length > 0;
+        }
+
         public List<File>? LoadFiles(List<string> filesNames, int currentIndex = 0)
         {
             return _filesLoader.LoadFiles(filesNames, currentIndex);
@@ -32,9 +37,9 @@ namespace CrytonCoreNext.Services
             return _filesSaver.SaveFile(fileName, file);
         }
 
-        public (bool result, int newIndex) ModifyFile(ObservableCollection<File> files, Guid guid, byte[] bytes, bool status, string? methodName)
+        public (bool result, int newIndex) ModifyFile(File file, byte[] bytes, CryptingStatus.Status status, string? methodName)
         {
-            return _filesManager.ModifyFile(files, guid, bytes, status, methodName);
+            return _filesManager.ModifyFile(file, bytes, status, methodName);
         }
 
         public (bool result, int newIndex) MoveItemDown(ObservableCollection<File> files, Guid guid)

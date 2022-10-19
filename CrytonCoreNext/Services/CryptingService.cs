@@ -1,6 +1,10 @@
 ﻿using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Models;
+using CrytonCoreNext.Static;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Services
 {
@@ -37,6 +41,13 @@ namespace CrytonCoreNext.Services
             {
                 CurrentCrypting = crypting;
             }
+        }
+
+        public async Task<byte[]> RunCrypting(File file, IProgress<string> progress)
+        {
+            return file.Status.Equals(CryptingStatus.Status.Encrypted) ?
+               await CurrentCrypting.Decrypt(file.Bytes, progress) :
+               await CurrentCrypting.Encrypt(file.Bytes, progress);
         }
     }
 }

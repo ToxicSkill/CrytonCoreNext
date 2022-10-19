@@ -1,20 +1,20 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using CrytonCoreNext.ViewModels;
-using System;
-using System.Windows;
-using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Crypting;
 using CrytonCoreNext.InformationsServices;
-using System.Collections.Generic;
-using CrytonCoreNext.Services;
-using CrytonCoreNext.Crypting;
-using CrytonCoreNext.Serializers;
+using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.Serializers;
+using CrytonCoreNext.Services;
+using CrytonCoreNext.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace CrytonCoreNext
 {
     public partial class App : Application
     {
-        private static readonly Guid AppKey = new ("adae2137-dead-beef-6666-3eb841121af8");
+        private static readonly Guid AppKey = new("adae2137-dead-beef-6666-3eb841121af8");
 
         private readonly IServiceProvider _serviceProvider;
 
@@ -38,7 +38,9 @@ namespace CrytonCoreNext
                 .AddSingleton(CreateFilesSaver)
                 .AddSingleton<IFilesManager, FilesManager>()
                 .AddSingleton(CreateFileService)
+                .AddSingleton(CreateFilesView)
                 .AddSingleton<IDialogService, DialogService>()
+                .AddSingleton<IProgressService, ProgressService>()
                 .AddSingleton<IJsonSerializer, JsonSerializer>()
                 .AddTransient<FilesViewViewModel>()
                 .AddTransient(CreateAES)
@@ -70,17 +72,17 @@ namespace CrytonCoreNext
             var timeDate = provider.GetService<ITimeDate>();
             var internetConnection = provider.GetService<IInternetConnection>();
 
-            return new (timeDate, internetConnection);
+            return new(timeDate, internetConnection);
         }
 
 
         private MainViewModel CreateMainWindowViewModel(IServiceProvider provider)
         {
-            var homeView = provider.GetService<HomeViewModel>();
-            var cryptingView = provider.GetService<CryptingViewModel>();
-            var pdfManagerView = provider.GetService<PdfManagerViewModel>();
+            var homeView = provider.GetRequiredService<HomeViewModel>();
+            var cryptingView = provider.GetRequiredService<CryptingViewModel>();
+            var pdfManagerView = provider.GetRequiredService<PdfManagerViewModel>();
 
-            return new (homeView, cryptingView, pdfManagerView);
+            return new(homeView, cryptingView, pdfManagerView);
         }
 
         private CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
@@ -88,14 +90,19 @@ namespace CrytonCoreNext
             var fileService = provider.GetRequiredService<IFileService>();
             var dialogService = provider.GetRequiredService<IDialogService>();
             var cryptingService = provider.GetRequiredService<ICryptingService>();
-            return new (fileService, dialogService, cryptingService);
+            var filesView = provider.GetRequiredService<IFilesView>();
+            var progressService = provider.GetRequiredService<IProgressService>();
+
+            return new(fileService, dialogService, cryptingService, filesView, progressService);
         }
 
         private PdfManagerViewModel CreatePdfManagerViewModel(IServiceProvider provider)
         {
             var fileService = provider.GetRequiredService<IFileService>();
             var dialogService = provider.GetRequiredService<IDialogService>();
-            return new(fileService, dialogService);
+            var filesView = provider.GetRequiredService<IFilesView>();
+
+            return new(fileService, dialogService, filesView);
         }
 
         private ICrypting CreateAES(IServiceProvider provider)
@@ -120,7 +127,7 @@ namespace CrytonCoreNext
             var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
             return new FilesLoader(cryptingRecognition);
         }
-        
+
         private IFilesSaver CreateFilesSaver(IServiceProvider provider)
         {
             var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
@@ -139,6 +146,11 @@ namespace CrytonCoreNext
         {
             var cryptors = provider.GetServices<ICrypting>();
             return new CryptingService(cryptors);
+        }
+        public IFilesView CreateFilesView(IServiceProvider provider)
+        {
+            var fileService = provider.GetRequiredService<IFileService>();
+            return new FilesViewViewModel(fileService);
         }
 
         private void InitializeDictionary()

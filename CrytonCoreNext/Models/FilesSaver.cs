@@ -4,12 +4,12 @@ using CrytonCoreNext.Interfaces;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using CrytonCoreNext.Static;
 
 namespace CrytonCoreNext.Models
 {
     public class FilesSaver : IFilesSaver
     {
-
         private readonly ICryptingRecognition _cryptingRecognition;
 
         public FilesSaver(ICryptingRecognition cryptingRecognition)
@@ -21,7 +21,7 @@ namespace CrytonCoreNext.Models
         {
             try
             {
-                if (file.Status)
+                if (file.Status.Equals(CryptingStatus.Status.Encrypted))
                 {
                     var recognitionBytes = _cryptingRecognition.PrepareRerecognizableBytes(file.Method, file.Extension);
                     var newBytes = recognitionBytes.Concat(file.Bytes);

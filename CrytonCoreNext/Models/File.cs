@@ -21,9 +21,7 @@ namespace CrytonCoreNext.Models
 
         public byte[] Bytes { get; set; }
 
-        public bool Status { get; set; }
-
-        public string StatusInfo => Status ? CryptingStatus.Encrypted : CryptingStatus.Decrypted;
+        public CryptingStatus.Status Status { get; set; }
 
         public Guid Guid { get; init; }
 

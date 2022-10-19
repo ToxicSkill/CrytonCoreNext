@@ -20,7 +20,7 @@ namespace CrytonCoreNext.Extensions
         {
             if (filesView != null)
             {
-                if (filesView.FilesView != null)
+                if (filesView.FilesCollection != null)
                 {
                     return false;
                 }

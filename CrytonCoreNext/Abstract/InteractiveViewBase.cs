@@ -15,27 +15,27 @@ namespace CrytonCoreNext.Abstract
 {
     public class InteractiveViewBase : ViewModelBase, IDisposable
     {
-        private readonly IFileService _fileService;
-            
-        private readonly IDialogService _dialogService;
+        protected readonly IFileService _fileService;
+
+        protected readonly IDialogService _dialogService;
 
         private DispatcherTimer? _timer;
 
         public InformationPopupViewModel PopupViewModel { get; private set; }
 
-        public FilesViewViewModel FilesViewViewModel { get; init; }
+        public IFilesView FilesView { get; init; }
 
         public File? CurrentFile { get; private set; }
 
         public Visibility FileInformationVisibility { get; private set; } = Visibility.Hidden;
 
-        public InteractiveViewBase(IFileService fileService, IDialogService dialogService)
+        public InteractiveViewBase(IFileService fileService, IDialogService dialogService, IFilesView filesView)
         {
             _fileService = fileService;
             _dialogService = dialogService;
+            FilesView = filesView;
             PopupViewModel = new ();
-            FilesViewViewModel = new (_fileService);
-            FilesViewViewModel.FilesChanged += HandleFileChanged;
+            FilesView.FilesChanged += HandleFileChanged;
         }
 
         public void PostPopup(string informationString, int seconds, Color color = default)
@@ -48,23 +48,18 @@ namespace CrytonCoreNext.Abstract
 
         public void HandleFileChanged(object? sender, EventArgs? e)
         {
-            CurrentFile = FilesViewViewModel.CurrentFile;
+            CurrentFile = FilesView.GetCurrentFile();
             UpdateFilesVisibility();
             OnPropertyChanged(nameof(CurrentFile));
         }
 
         public void LoadFiles()
         {
-            var filesCount = FilesViewViewModel.FilesView == null ? 0 : FilesViewViewModel.FilesView.Count;
+            var filesCount = FilesView.GetFilesCount();
             var filesPaths = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.All, "Open files", true);
             var newFiles = _fileService.LoadFiles(filesPaths, filesCount);
-            if (newFiles != null)
+            if (FilesView.AddNewFiles(newFiles))
             {
-                var newFilesCollection = filesCount > 0 ?
-                    FilesViewViewModel.FilesView?.ToList().Concat(newFiles) :
-                    newFiles;
-
-                FilesViewViewModel.Update(newFilesCollection);
                 PostPopup("File(s) where loaded successfuly", 2, ColorStatus.Information);
             }
         }
@@ -83,21 +78,17 @@ namespace CrytonCoreNext.Abstract
             }
         }
 
-        public bool ModifyFile(ObservableCollection<File> files, Guid guid, byte[] bytes, bool status, string? methodName)
+        public bool ModifyFile(File file,byte[] bytes, CryptingStatus.Status status, string? methodName)
         {
-            var result = _fileService.ModifyFile(files, guid, bytes, status, methodName);
-            OnPropertyChanged(nameof(FilesViewViewModel.FilesView));
+            var result = _fileService.ModifyFile(file, bytes, status, methodName);
             OnPropertyChanged(nameof(CurrentFile));
             return result.result;
         }
 
-        public virtual void Dispose() { }
-
-
         private void UpdateFilesVisibility()
         {
             FileInformationVisibility = 
-                FilesViewViewModel.SelectedItemIndex != -1 && FilesViewViewModel != null ? 
+                FilesView.GetSelectedFileIndex() != -1 && FilesView != null ? 
                 Visibility.Visible : 
                 Visibility.Hidden;
             OnPropertyChanged(nameof(FileInformationVisibility));
@@ -105,10 +96,10 @@ namespace CrytonCoreNext.Abstract
 
         private void SelectedItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var tempSelectedItemIndex = FilesViewViewModel.SelectedItemIndex;
-            if (tempSelectedItemIndex != -1 && FilesViewViewModel.FilesView.Count >= tempSelectedItemIndex + 1)
+            var tempSelectedItemIndex = FilesView.GetSelectedFileIndex();
+            if (tempSelectedItemIndex != -1 && FilesView.GetFilesCount() >= tempSelectedItemIndex + 1)
             {
-                CurrentFile = FilesViewViewModel.FilesView.ElementAt(tempSelectedItemIndex);
+                CurrentFile = FilesView.GetFileByIndex(tempSelectedItemIndex);
             }
             OnPropertyChanged(nameof(CurrentFile));
         }
@@ -132,5 +123,7 @@ namespace CrytonCoreNext.Abstract
             ShowInformationBar(false);
             _timer?.Stop();
         }
+
+        public virtual void Dispose() { }
     }
 }
