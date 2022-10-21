@@ -1,21 +1,11 @@
-﻿using System.Windows;
+﻿using System;
 
 namespace CrytonCoreNext.Interfaces
 {
     public interface IProgressService
     {
-        Visibility PreparingVisibility { get; set; }
+        void ClearProgress();
 
-        Visibility StartingVisibility { get; set; }
-
-        Visibility FinishedVisibility { get; set; }
-
-        Visibility UpdatingVisibility { get; set; }
-
-        Visibility SuccessVisibility { get; set; }
-
-        void UpdateProgress(Visibility visibility);
-
-        void HideAllProgress();
+        IProgress<T> SetProgress<T>(int stages);
     }
 }

@@ -1,10 +1,8 @@
 ﻿using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
-using CrytonCoreNext.Services;
 using CrytonCoreNext.Static;
 using CrytonCoreNext.ViewModels;
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -23,24 +21,27 @@ namespace CrytonCoreNext.Abstract
 
         public InformationPopupViewModel PopupViewModel { get; private set; }
 
-        public IFilesView FilesView { get; init; }
+        public IProgressView ProgressViewModel { get; init; }
+
+        public IFilesView FilesViewModel { get; init; }
 
         public File? CurrentFile { get; private set; }
 
         public Visibility FileInformationVisibility { get; private set; } = Visibility.Hidden;
 
-        public InteractiveViewBase(IFileService fileService, IDialogService dialogService, IFilesView filesView)
+        public InteractiveViewBase(IFileService fileService, IDialogService dialogService, IFilesView filesView, IProgressView progressView)
         {
             _fileService = fileService;
             _dialogService = dialogService;
-            FilesView = filesView;
-            PopupViewModel = new ();
-            FilesView.FilesChanged += HandleFileChanged;
+            ProgressViewModel = progressView;
+            FilesViewModel = filesView;
+            PopupViewModel = new();
+            FilesViewModel.FilesChanged += HandleFileChanged;
         }
 
         public void PostPopup(string informationString, int seconds, Color color = default)
         {
-            PopupViewModel = new (informationString, color);
+            PopupViewModel = new(informationString, color);
             ShowInformationBar(true);
             OnPropertyChanged(nameof(PopupViewModel));
             InitializeTimerWithAction(CollapsePopup, seconds);
@@ -48,17 +49,17 @@ namespace CrytonCoreNext.Abstract
 
         public void HandleFileChanged(object? sender, EventArgs? e)
         {
-            CurrentFile = FilesView.GetCurrentFile();
+            CurrentFile = FilesViewModel.GetCurrentFile();
             UpdateFilesVisibility();
             OnPropertyChanged(nameof(CurrentFile));
         }
 
         public void LoadFiles()
         {
-            var filesCount = FilesView.GetFilesCount();
+            var filesCount = FilesViewModel.GetFilesCount();
             var filesPaths = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.All, "Open files", true);
             var newFiles = _fileService.LoadFiles(filesPaths, filesCount);
-            if (FilesView.AddNewFiles(newFiles))
+            if (FilesViewModel.AddNewFiles(newFiles))
             {
                 PostPopup("File(s) where loaded successfuly", 2, ColorStatus.Information);
             }
@@ -78,7 +79,7 @@ namespace CrytonCoreNext.Abstract
             }
         }
 
-        public bool ModifyFile(File file,byte[] bytes, CryptingStatus.Status status, string? methodName)
+        public bool ModifyFile(File file, byte[] bytes, CryptingStatus.Status status, string? methodName)
         {
             var result = _fileService.ModifyFile(file, bytes, status, methodName);
             OnPropertyChanged(nameof(CurrentFile));
@@ -87,19 +88,19 @@ namespace CrytonCoreNext.Abstract
 
         private void UpdateFilesVisibility()
         {
-            FileInformationVisibility = 
-                FilesView.GetSelectedFileIndex() != -1 && FilesView != null ? 
-                Visibility.Visible : 
+            FileInformationVisibility =
+                FilesViewModel.GetSelectedFileIndex() != -1 && FilesViewModel != null ?
+                Visibility.Visible :
                 Visibility.Hidden;
             OnPropertyChanged(nameof(FileInformationVisibility));
         }
 
         private void SelectedItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var tempSelectedItemIndex = FilesView.GetSelectedFileIndex();
-            if (tempSelectedItemIndex != -1 && FilesView.GetFilesCount() >= tempSelectedItemIndex + 1)
+            var tempSelectedItemIndex = FilesViewModel.GetSelectedFileIndex();
+            if (tempSelectedItemIndex != -1 && FilesViewModel.GetFilesCount() >= tempSelectedItemIndex + 1)
             {
-                CurrentFile = FilesView.GetFileByIndex(tempSelectedItemIndex);
+                CurrentFile = FilesViewModel.GetFileByIndex(tempSelectedItemIndex);
             }
             OnPropertyChanged(nameof(CurrentFile));
         }

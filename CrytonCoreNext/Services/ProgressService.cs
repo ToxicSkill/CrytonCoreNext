@@ -1,72 +1,82 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces;
-using System.Collections.Generic;
+using System;
 using System.Windows;
 
 namespace CrytonCoreNext.Services
 {
     public class ProgressService : NotificationBase, IProgressService
     {
-        private readonly Dictionary<int, string> _progressDictionary;
+        private const int ProgressMaxValue = 100;
 
-        private int _progressCounter;
+        private const int DefaultStageCount = 1;
 
-        public Visibility PreparingVisibility { get; set; }
+        private const int DefaultProgressCounter = 0;
 
-        public Visibility StartingVisibility { get; set; }
+        private int _progressCounter = 0;
 
-        public Visibility FinishedVisibility { get; set; }
+        private int _stages = 1;
 
-        public Visibility UpdatingVisibility { get; set; }
+        public Visibility ProgressVisibility { get; private set; }
 
-        public Visibility SuccessVisibility { get; set; }
+        public int ProgressValue { get; set; }
 
+        public string ProgressCounter { get; private set; }
+
+        public string ProgressMessage { get; private set; }
 
         public ProgressService()
         {
-            _progressDictionary = new();
-            FillProgressDictionary();
+            ClearProgress();
         }
 
-        public void UpdateProgress(Visibility visibility)
+        public void ClearProgress()
         {
-            var propertyName = _progressDictionary[_progressCounter];
-            var property = GetType().GetProperty(propertyName);
-            if (property != null)
-            {
-                property.SetValue(this, visibility, null);
-            }
-
-            OnPropertyChanged(propertyName);
-            _progressCounter++;
+            UpdateProgress(Visibility.Hidden);
+            _progressCounter = DefaultProgressCounter;
+            _stages = DefaultStageCount;
+            SetProgresstMessages(string.Empty);
+            SetProgressCounter();
         }
 
-        public void HideAllProgress()
+        public IProgress<T> SetProgress<T>(int stages)
         {
-            RestartVounter();
-            for (var i = 0; i < _progressDictionary.Count; i++)
-            {
-                UpdateProgress(Visibility.Hidden);
-            }
-            RestartVounter();
-        }
-
-        private void RestartVounter()
-        {
+            _stages = stages;
             _progressCounter = 0;
+            UpdateProgress();
+            return new Progress<T>(ReportProgress<T>);
         }
 
-        private void FillProgressDictionary()
+        private void UpdateProgress(Visibility visibility = Visibility.Visible)
         {
-            var properties = GetType().GetProperties();
-            foreach (var (item, index) in properties.WithIndex())
-            {
-                if (item.PropertyType == typeof(Visibility))
-                {
-                    _progressDictionary.Add(index, item.Name);
-                }
-            }
+            ProgressVisibility = visibility;
+            OnPropertyChanged(nameof(ProgressVisibility));
+        }
+
+        private void SetProgresstMessages(string message)
+        {
+            ProgressMessage = message;
+            OnPropertyChanged(nameof(ProgressMessage));
+        }
+
+        private void SetProgressCounter()
+        {
+            _progressCounter++;
+            ProgressCounter = _progressCounter.ToString() + " / " + _stages.ToString();
+            SetProgressValue();
+            OnPropertyChanged(nameof(ProgressCounter));
+        }
+
+        private void SetProgressValue()
+        {
+            ProgressValue = _progressCounter * (ProgressMaxValue / _stages);
+            OnPropertyChanged(nameof(ProgressValue));
+        }
+
+        private void ReportProgress<T>(T progressMessage)
+        {
+            SetProgressCounter();
+            SetProgresstMessages(progressMessage?.ToString() ?? string.Empty);
         }
     }
 }

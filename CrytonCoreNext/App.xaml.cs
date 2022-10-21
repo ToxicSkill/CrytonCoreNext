@@ -42,6 +42,7 @@ namespace CrytonCoreNext
                 .AddSingleton<IDialogService, DialogService>()
                 .AddSingleton<IProgressService, ProgressService>()
                 .AddSingleton<IJsonSerializer, JsonSerializer>()
+                .AddTransient(CreateProgressViewModel)
                 .AddTransient<FilesViewViewModel>()
                 .AddTransient(CreateAES)
                 .AddTransient(CreateRSA)
@@ -91,9 +92,9 @@ namespace CrytonCoreNext
             var dialogService = provider.GetRequiredService<IDialogService>();
             var cryptingService = provider.GetRequiredService<ICryptingService>();
             var filesView = provider.GetRequiredService<IFilesView>();
-            var progressService = provider.GetRequiredService<IProgressService>();
+            var progressView = provider.GetRequiredService<IProgressView>();
 
-            return new(fileService, dialogService, cryptingService, filesView, progressService);
+            return new(fileService, dialogService, cryptingService, filesView, progressView);
         }
 
         private PdfManagerViewModel CreatePdfManagerViewModel(IServiceProvider provider)
@@ -101,8 +102,9 @@ namespace CrytonCoreNext
             var fileService = provider.GetRequiredService<IFileService>();
             var dialogService = provider.GetRequiredService<IDialogService>();
             var filesView = provider.GetRequiredService<IFilesView>();
+            var progressView = provider.GetRequiredService<IProgressView>();
 
-            return new(fileService, dialogService, filesView);
+            return new(fileService, dialogService, filesView, progressView);
         }
 
         private ICrypting CreateAES(IServiceProvider provider)
@@ -147,10 +149,17 @@ namespace CrytonCoreNext
             var cryptors = provider.GetServices<ICrypting>();
             return new CryptingService(cryptors);
         }
+
         public IFilesView CreateFilesView(IServiceProvider provider)
         {
             var fileService = provider.GetRequiredService<IFileService>();
             return new FilesViewViewModel(fileService);
+        }
+
+        public IProgressView CreateProgressViewModel(IServiceProvider provider)
+        {
+            var progressService = provider.GetRequiredService<IProgressService>();
+            return new ProgressViewModel(progressService);
         }
 
         private void InitializeDictionary()

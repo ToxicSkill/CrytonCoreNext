@@ -6,7 +6,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace CrytonCoreNext.ViewModels
@@ -14,7 +13,6 @@ namespace CrytonCoreNext.ViewModels
     public class CryptingViewModel : InteractiveViewBase
     {
         private const int ReportDelay = 2000;
-
 
         private readonly ICryptingService _cryptingService;
 
@@ -28,11 +26,7 @@ namespace CrytonCoreNext.ViewModels
 
         public ViewModelBase CurrentCryptingViewModel { get; private set; }
 
-        public IProgressService ProgressService { get; init; }
-
         public string ProgessMessage { get; set; } = string.Empty;
-
-        public Visibility ProgressVisibility { get; set; } = Visibility.Hidden;
 
         public string CryptButtonName => GetCryptName();
 
@@ -49,11 +43,9 @@ namespace CrytonCoreNext.ViewModels
                 }
             }
         }
-
-        public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, IProgressService progressService) : base(fileService, dialogService, filesView)
+        public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, IProgressView progressView) : base(fileService, dialogService, filesView, progressView)
         {
             _cryptingService = cryptingService;
-            ProgressService = progressService;
 
             CurrentCryptingViewModel = new();
             CryptingComboBox = new();
@@ -65,7 +57,7 @@ namespace CrytonCoreNext.ViewModels
             InitializeCryptingComboBox();
             UpdateCurrentCrypting();
 
-            FilesView.FilesChanged += HandleFileChanged;
+            FilesViewModel.FilesChanged += HandleFileChanged;
 
             //var t = new Crypting.Crypting(new() { new(new AES(), ECrypting.EnumToString(ECrypting.Methods.aes)) });
             //t.Encrypt(FilesViewViewModel.FilesView[0].Bytes, ECrypting.EnumToString(ECrypting.Methods.aes));
@@ -87,16 +79,9 @@ namespace CrytonCoreNext.ViewModels
             OnPropertyChanged(nameof(CurrentCryptingViewModel));
         }
 
-        private void SetProgressVisibility(Visibility visibility)
-        {
-            ProgressVisibility = visibility;
-            OnPropertyChanged(nameof(ProgressVisibility));
-        }
-
         private async void PerformCrypting()
         {
-            SetProgressVisibility(Visibility.Visible);
-            var progressReport = new Progress<string>(ReportCryptingProgress);
+            var progressReport = ProgressViewModel.InitializeProgress<string>(5);
             if (!_fileService.HasBytes(CurrentFile) || CurrentFile == null)
             {
                 return;
@@ -104,32 +89,20 @@ namespace CrytonCoreNext.ViewModels
 
             var result = await _cryptingService.RunCrypting(CurrentFile, progressReport);
 
-            if (result != null && FilesView.AnyFiles())
+            if (result != null && FilesViewModel.AnyFiles())
             {
                 ModifyFile(CurrentFile, result, GetOpositeStatus(CurrentFile.Status), _cryptingService.GetCurrentCrypting()?.GetName());
                 OnPropertyChanged(nameof(CryptButtonName));
             }
 
-            _ = Task.Delay(ReportDelay).ContinueWith(t => ResetProgressVisibility());
+            _ = Task.Delay(ReportDelay).ContinueWith(t => ProgressViewModel.ClearProgress());
         }
 
-        private CryptingStatus.Status GetOpositeStatus(CryptingStatus.Status curremtStatus)
+        private static CryptingStatus.Status GetOpositeStatus(CryptingStatus.Status curremtStatus)
         {
             return curremtStatus.Equals(CryptingStatus.Status.Decrypted) ?
                 CryptingStatus.Status.Encrypted :
                 CryptingStatus.Status.Decrypted;
-        }
-
-        private void ReportCryptingProgress(string progressMessage)
-        {
-            ProgessMessage = progressMessage;
-            OnPropertyChanged(nameof(ProgessMessage));
-            ProgressService.UpdateProgress(Visibility.Visible);
-        }
-
-        private void ResetProgressVisibility()
-        {
-            ProgressService.HideAllProgress();
         }
 
         private string GetCryptName()

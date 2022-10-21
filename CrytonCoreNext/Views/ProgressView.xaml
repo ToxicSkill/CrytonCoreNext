@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="CrytonCoreNext.Views.ProgressView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CrytonCoreNext.Views"
+             xmlns:xrpb="http://XamlRadialProgressBar/DotNet"
+             mc:Ignorable="d"
+             Width="150"
+             Height="150">
+    <Grid Visibility="{Binding ProgressService.ProgressVisibility}">
+        <Label Content="{Binding ProgressService.ProgressCounter}" Style="{StaticResource CryptingSettings}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, -30, 0 ,0"
+                   FontSize="18" Foreground="LightGray" HorizontalContentAlignment="Center" VerticalContentAlignment="Top"/>
+
+        <Label Content="{Binding ProgressService.ProgressMessage}" Style="{StaticResource CryptingSettings}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 30, 0 ,0"
+                   FontSize="22" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Top"/>
+
+        <xrpb:RadialProgressBar Value="{Binding ProgressService.ProgressValue, UpdateSourceTrigger=PropertyChanged}" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center" ArcMode="Shape" 
+                                ShapeModeStep="15" ShapeModeWidth="3" ShapeModeShape="Rectangle"
+                                ShapeRotationAdjustment="45"
+			                    Width="150" Height="150" ArcWidth="10" 
+			                    Foreground="LightSteelBlue" />
+    </Grid>
+</UserControl>
