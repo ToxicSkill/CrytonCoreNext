@@ -327,6 +327,7 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <ResourceDictionary x:Key="indicator" Source="pack://application:,,,/BusyIndicator;component/Theme/Default.xaml"/>
 
     </Application.Resources>
     

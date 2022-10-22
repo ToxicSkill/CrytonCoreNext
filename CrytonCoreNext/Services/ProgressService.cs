@@ -21,6 +21,8 @@ namespace CrytonCoreNext.Services
 
         public int ProgressValue { get; set; }
 
+        public bool IsBusy { get; private set; }
+
         public string ProgressCounter { get; private set; }
 
         public string ProgressMessage { get; private set; }
@@ -37,6 +39,8 @@ namespace CrytonCoreNext.Services
             _stages = DefaultStageCount;
             SetProgresstMessages(string.Empty);
             SetProgressCounter();
+            IsBusy = false;
+            OnPropertyChanged(nameof(IsBusy));
         }
 
         public IProgress<T> SetProgress<T>(int stages)
@@ -44,6 +48,8 @@ namespace CrytonCoreNext.Services
             _stages = stages;
             _progressCounter = 0;
             UpdateProgress();
+            IsBusy = true;
+            OnPropertyChanged(nameof(IsBusy));
             return new Progress<T>(ReportProgress<T>);
         }
 
