@@ -10,15 +10,13 @@ namespace CrytonCoreNext.Crypting
 {
     public class RSA : ICrypting
     {
-        private static readonly string[] SettingsKeys = { "PublicKey", "PrivateKey", "KeySize", "Error" };
+        private static readonly string[] SettingsKeys = { "Keys", "KeySize", "Error" };
 
         private int _keySize = 2048;
 
         private bool _useOAEP = false;
 
-        private RSAParameters _publicKey;
-
-        private RSAParameters _privateKey;
+        private RSAParameters _keys;
 
         public string Name => nameof(RSA);
 
@@ -30,8 +28,7 @@ namespace CrytonCoreNext.Crypting
 
         public RSA(IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer)
         {
-            _rsa = new(_keySize);
-            ViewModel = new RSAViewModel(jsonSerializer, xmlSerializer, GetMaxNumberOfBytes, _rsa.LegalKeySizes[0], _keySize, SettingsKeys, Name);
+            ViewModel = new RSAViewModel(jsonSerializer, xmlSerializer, GetMaxNumberOfBytes, new RSACryptoServiceProvider().LegalKeySizes[0], _keySize, SettingsKeys, Name);
         }
 
         public ViewModelBase GetViewModel() => ViewModel;
@@ -61,10 +58,8 @@ namespace CrytonCoreNext.Crypting
                 return Array.Empty<byte>();
 
             progress.Report("Preparing keys");
-            var csp = new RSACryptoServiceProvider();
-            csp.ImportParameters(_publicKey);
             progress.Report("Encrypting");
-            return await Task.Run(() => csp.Encrypt(data, _useOAEP));
+            return await Task.Run(() => _rsa.Encrypt(data, _useOAEP));
         }
 
         public bool ParseSettingsObjects(Dictionary<string, object> objects, int dataLength, bool encryption)
@@ -77,61 +72,104 @@ namespace CrytonCoreNext.Crypting
                 }
             }
 
-            var keySize = Convert.ToInt32(objects[SettingsKeys[2]]);
-            if (_keySize != keySize &&
-                keySize % 128 == 0 &&
-                keySize <= _rsa.LegalKeySizes[0].MaxSize &&
-                keySize >= _rsa.LegalKeySizes[0].MinSize &&
-                _publicKey.Modulus == null &&
-                _privateKey.Modulus == null)
-            {
-                _keySize = keySize;
-                _rsa = new(_keySize);
-            }
+            var key = (RSAParameters)objects[SettingsKeys[0]];
+            var keySize = Convert.ToInt32(objects[SettingsKeys[1]]);
+
+            //if ((!AreObjectsValid(key, keySize) && IsKeyEmpty(_keys)) || (encryption && IsFileTooBig(keySize, dataLength)))
+            //{
+            //    return false;
+            //}
 
             if (encryption)
             {
-                if (GetMaxNumberOfBytes(_keySize) < dataLength)
+                // Two options:
+                // keys are imported
+                // no keys imported - generate new
+
+                if (!IsKeyEmpty(key)) // keys imported
                 {
-                    UpdateViewModel("File is too big");
-                    return false;
+                    _keys = key;
+                    _rsa.ImportParameters(_keys);
+                }
+                else // no keys - generate new
+                {
+                    if (keySize != _keySize)
+                    {
+                        _keySize = keySize;
+                    }
+
+                    _rsa = new(_keySize);
+                    _keys = _rsa.ExportParameters(true);
                 }
 
-                _privateKey = _rsa.ExportParameters(true);
-                _publicKey = _rsa.ExportParameters(false);
                 UpdateViewModel();
                 return true;
             }
             else
             {
-                if (objects[SettingsKeys[0]] is RSAParameters publicKey &&
-                    objects[SettingsKeys[1]] is RSAParameters privateKey)
+                if (!IsKeyEmpty(key) && IsKeyPrivate(key))
                 {
-                    _publicKey = publicKey;
-                    _privateKey = privateKey;
-                    _rsa.ImportParameters(_privateKey);
-                    UpdateViewModel();
-                    return true;
+                    _rsa = new();
+                    _rsa.ImportParameters(key);
                 }
+                else
+                {
+                    _rsa = new(_keySize);
+                }
+
+                UpdateViewModel();
+                return true;
             }
 
             UpdateViewModel("Unable to create RSA cryptor");
             return false;
         }
+        private bool AreObjectsValid(RSAParameters parameters, int keySize)
+        {
+            return !IsKeyEmpty(parameters) && IsKeyValid(keySize);
+        }
+
+        private bool IsFileTooBig(int keySize, int dataLength)
+        {
+            if (GetMaxNumberOfBytes(keySize) < dataLength)
+            {
+                UpdateViewModel("File is too big");
+                return false;
+            }
+
+            return true;
+        }
+
         private void UpdateViewModel(string error = "")
         {
             ViewModel.SetObjects(new()
             {
-                { SettingsKeys[0], _publicKey },
-                { SettingsKeys[1], _privateKey },
-                { SettingsKeys[2], _rsa.KeySize },
-                { SettingsKeys[3], error }
+                { SettingsKeys[0], _keys },
+                { SettingsKeys[1], _rsa.KeySize },
+                { SettingsKeys[2], error }
             });
         }
 
         private int GetMaxNumberOfBytes(int keySize)
         {
             return _useOAEP ? ((keySize - 384) / 8) + 37 : ((keySize - 384) / 8) + 7;
+        }
+
+        private bool IsKeyEmpty(RSAParameters parameters)
+        {
+            return parameters.Modulus == null;
+        }
+        private bool IsKeyPrivate(RSAParameters parameters)
+        {
+            return parameters.D != null;
+        }
+
+        private bool IsKeyValid(int keySize)
+        {
+            return _keySize != keySize &&
+                keySize % 128 == 0 &&
+                keySize <= _rsa.LegalKeySizes[0].MaxSize &&
+                keySize >= _rsa.LegalKeySizes[0].MinSize;
         }
     }
 }

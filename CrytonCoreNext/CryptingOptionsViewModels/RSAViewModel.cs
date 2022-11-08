@@ -22,9 +22,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         private string _selectedKey;
 
-        private RSAParameters _privateKey;
-
-        private RSAParameters _publicKey;
+        private RSAParameters _keys;
 
         private readonly Func<int, int> _restrictionFunction;
 
@@ -90,10 +88,9 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             return new()
             {
-                { SettingsKeys[0], _publicKey },
-                { SettingsKeys[1], _privateKey },
-                { SettingsKeys[2], SelectedKey },
-                { SettingsKeys[3], string.Empty }
+                { SettingsKeys[0], _keys },
+                { SettingsKeys[1], SelectedKey },
+                { SettingsKeys[2], string.Empty }
             };
         }
 
@@ -107,7 +104,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 }
             }
 
-            if (objects[SettingsKeys[3]] is string error)
+            if (objects[SettingsKeys[2]] is string error)
             {
                 Error = error;
                 OnPropertyChanged(nameof(Error));
@@ -117,16 +114,15 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 }
             }
 
-            if (objects[SettingsKeys[0]] is RSAParameters publicKey && objects[SettingsKeys[1]] is RSAParameters privateKey)
+            if (objects[SettingsKeys[0]] is RSAParameters keys)
             {
-                if (!publicKey.Equals(string.Empty) && !privateKey.Equals(string.Empty))
+                if (!keys.Equals(string.Empty))
                 {
-                    _publicKey = publicKey;
-                    _privateKey = privateKey;
+                    _keys = keys;
                 }
             }
 
-            if (objects[SettingsKeys[2]] is string size)
+            if (objects[SettingsKeys[1]] is string size)
             {
                 if (KeySizesComboBox.Contains(size))
                 {
@@ -138,8 +134,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         private struct ToSerialzieObjects
         {
-            public string PublicKey;
-            public string PrivateKey;
+            public string Keys;
             public string SelectedKeySize;
         }
 
@@ -149,9 +144,20 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             public string Name;
         }
 
+        private RSAParameters GetOnlyPublicMembers(RSAParameters parameters)
+        {
+            var rsaParameters = new RSAParameters()
+            {
+                Modulus = parameters.Modulus,
+                Exponent = parameters.Exponent
+            };
+
+            return rsaParameters;
+        }
+
         private void SaveCryptor()
         {
-            if (_publicKey.Modulus == null)
+            if (_keys.Modulus == null)
             {
                 Error = "No generated or imported keys available";
                 OnPropertyChanged(nameof(Error));
@@ -162,8 +168,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             {
                 ToSerialzie = new ToSerialzieObjects()
                 {
-                    PublicKey = _xmlSerializer.RsaParameterKeyToString(_publicKey),
-                    PrivateKey = EnablePrivateKeys ? _xmlSerializer.RsaParameterKeyToString(_privateKey) : string.Empty,
+                    Keys = _xmlSerializer.RsaParameterKeyToString(EnablePrivateKeys ? _keys : GetOnlyPublicMembers(_keys)),
                     SelectedKeySize = this.SelectedKey
                 },
                 Name = PageName
@@ -206,8 +211,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     }
                     else
                     {
-                        _publicKey = _xmlSerializer.StringKeyToRsaParameter<RSAParameters>(castedObjects.ToSerialzie.PublicKey);
-                        _privateKey = _xmlSerializer.StringKeyToRsaParameter<RSAParameters>(castedObjects.ToSerialzie.PrivateKey);
+                        _keys = _xmlSerializer.StringKeyToRsaParameter<RSAParameters>(castedObjects.ToSerialzie.Keys);
                         SelectedKey = castedObjects.ToSerialzie.SelectedKeySize;
                         OnPropertyChanged(nameof(SelectedKey));
                     }
