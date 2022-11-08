@@ -49,5 +49,10 @@ namespace CrytonCoreNext.Services
                await CurrentCrypting.Decrypt(file.Bytes, progress) :
                await CurrentCrypting.Encrypt(file.Bytes, progress);
         }
+
+        public int GetCurrentCryptingProgressCount()
+        {
+            return CurrentCrypting.ProgressCount;
+        }
     }
 }

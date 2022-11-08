@@ -14,28 +14,32 @@ namespace CrytonCoreNext.Crypting
     {
         private static readonly string[] SettingsKeys = { "Key", "IV", "KeySize", "BlockSize", "Error" };
 
-        public string Name { get => nameof(AES); }
+        public string Name => nameof(AES);
 
-        private readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
-        private readonly AesCng _aes;
+        public int ProgressCount => 5;
 
         public ViewModelBase ViewModel { get; init; }
 
+
+        private readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
+
+        private readonly AesCng _aes;
+
         public AES(IJsonSerializer jsonSerializer)
         {
-            _aes = new ();
+            _aes = new();
             ViewModel = new AESViewModel(jsonSerializer, _aes, SettingsKeys, Name);
         }
 
         public ViewModelBase GetViewModel() => ViewModel;
-        
 
-        public string GetName() =>  Name;
-        
+
+        public string GetName() => Name;
+
 
         public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {
-            if (!ParseSettingsObjects(ViewModel.GetObjects(), true))
+            if (!ParseSettingsObjects(ViewModel.GetObjects(), data.Length, true))
                 return Array.Empty<byte>();
 
             _aes.Padding = _paddingMode;
@@ -47,16 +51,16 @@ namespace CrytonCoreNext.Crypting
 
         public async Task<byte[]> Decrypt(byte[] data, IProgress<string> progress)
         {
-            if (!ParseSettingsObjects(ViewModel.GetObjects(), false))
+            if (!ParseSettingsObjects(ViewModel.GetObjects(), data.Length, false))
                 return Array.Empty<byte>();
-            
+
             _aes.Padding = _paddingMode;
 
             using var decryptor = _aes.CreateDecryptor(_aes.Key, _aes.IV);
             return await Task.Run(() => PerformCryptography(data, decryptor, progress));
         }
 
-        public bool ParseSettingsObjects(Dictionary<string, object> objects, bool encryption)
+        public bool ParseSettingsObjects(Dictionary<string, object> objects, int dataLength, bool encryption)
         {
             foreach (var setting in SettingsKeys)
             {
@@ -71,10 +75,10 @@ namespace CrytonCoreNext.Crypting
             _aes.KeySize = Convert.ToInt32(keySize);
             _aes.BlockSize = Convert.ToInt32(objects[SettingsKeys[3]]);
 
-            if (objects[SettingsKeys[0]] is string key && 
+            if (objects[SettingsKeys[0]] is string key &&
                 objects[SettingsKeys[1]] is string iv)
             {
-                if (Equals(key.Length, keySize / 4) && 
+                if (Equals(key.Length, keySize / 4) &&
                     Equals(iv.Length, blockSize / 4))
                 {
                     _aes.Key = key.Str2Bytes();

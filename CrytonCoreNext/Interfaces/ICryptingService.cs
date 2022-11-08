@@ -14,5 +14,7 @@ namespace CrytonCoreNext.Interfaces
         List<ICrypting> GetCryptors();
 
         ICrypting GetCurrentCrypting();
+
+        int GetCurrentCryptingProgressCount();
     }
 }

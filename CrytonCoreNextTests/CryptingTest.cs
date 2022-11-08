@@ -1,10 +1,9 @@
 ﻿using CrytonCoreNext.Crypting;
 using CrytonCoreNext.Interfaces;
-using System;
-using Xunit;
-using Moq;
 using CrytonCoreNext.Services;
+using Moq;
 using System.Collections.Generic;
+using Xunit;
 
 namespace CrytonCoreNextTests
 {
@@ -14,7 +13,7 @@ namespace CrytonCoreNextTests
 
         private readonly ICrypting _aes = new AES(new Mock<IJsonSerializer>().Object);
 
-        private readonly ICrypting _rsa = new RSA();
+        private readonly ICrypting _rsa = new RSA(new Mock<IJsonSerializer>().Object, new Mock<IXmlSerializer>().Object);
 
         public CryptingTest()
         {

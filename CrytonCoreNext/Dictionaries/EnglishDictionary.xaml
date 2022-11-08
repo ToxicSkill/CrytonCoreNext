@@ -31,8 +31,9 @@
     <system:String x:Key="IV">IV</system:String>
     <system:String x:Key="GenerateRandomKey">Generate random Key</system:String>
     <system:String x:Key="GenerateRandomIV">Generate random IV</system:String>
-    <system:String x:Key="SaveToolTip">Save</system:String>
-    <system:String x:Key="LoadToolTip">Load</system:String>
+    <system:String x:Key="ExportToolTip">Export</system:String>
+    <system:String x:Key="ImportToolTip">Import</system:String>
+    <system:String x:Key="EnablePrivateKeys">Include private keys</system:String>
     
     
     

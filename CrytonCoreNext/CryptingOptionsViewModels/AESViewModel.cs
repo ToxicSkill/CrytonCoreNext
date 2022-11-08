@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Windows;
 using System.Windows.Input;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
@@ -17,8 +16,11 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
     public class AESViewModel : ViewModelBase
     {
         private readonly string[] SettingsKeys;
+
         private string _selectedKey;
+
         private string _selectedBlock;
+
         private readonly IJsonSerializer _jsonSerializer;
 
         public ObservableCollection<string> BlockSizesComboBox { get; init; }
@@ -40,7 +42,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        public string SelectedKey 
+        public string SelectedKey
         {
             get => _selectedKey;
             set
@@ -83,15 +85,15 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
             SettingsKeys = settingKeys;
 
-            BlockSizesComboBox = new ();
-            KeySizesComboBox = new ();
+            BlockSizesComboBox = new();
+            KeySizesComboBox = new();
 
             var legalKeys = aes.LegalKeySizes[0];
             var legalBlocks = aes.LegalBlockSizes[0];
 
             if (legalKeys.SkipSize != 0)
             {
-                for (var i = legalKeys.MinSize; i <= legalKeys.MaxSize; i+= legalKeys.SkipSize)
+                for (var i = legalKeys.MinSize; i <= legalKeys.MaxSize; i += legalKeys.SkipSize)
                 {
                     KeySizesComboBox.Add(i.ToString());
                 }
@@ -120,7 +122,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public override Dictionary<string, object> GetObjects()
         {
-            return new ()
+            return new()
             {
                 { SettingsKeys[0], Key },
                 { SettingsKeys[1], IV },
@@ -179,8 +181,8 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         private void SaveCryptor()
         {
-            var serialzieObjects = new Objects() 
-            { 
+            var serialzieObjects = new Objects()
+            {
                 ToSerialzie = new ToSerialzieObjects()
                 {
                     IV = this.IV,
@@ -188,7 +190,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     Key = this.Key,
                     SelectedBlockSize = this.SelectedBlock
                 },
-                Name = PageName           
+                Name = PageName
             };
 
             WindowDialog.SaveDialog saveDialog = new(new DialogHelper()

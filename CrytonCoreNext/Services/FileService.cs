@@ -44,7 +44,7 @@ namespace CrytonCoreNext.Services
 
         public (bool result, int newIndex) MoveItemDown(ObservableCollection<File> files, Guid guid)
         {
-            return _filesManager.MoveItemDown(files, guid);  
+            return _filesManager.MoveItemDown(files, guid);
         }
 
         public (bool result, int newIndex) MoveItemUp(ObservableCollection<File> files, Guid guid)
@@ -70,6 +70,11 @@ namespace CrytonCoreNext.Services
         public (bool result, int newIndex) DeleteItem(ObservableCollection<File> files, Guid guid)
         {
             return _filesManager.DeleteItem(files, guid);
+        }
+
+        public (bool result, int newIndex) ModifyFile(ObservableCollection<File> files, Guid guid, byte[] bytes, CryptingStatus.Status status, string? methodName)
+        {
+            return _filesManager.ModifyFile(files, guid, bytes, status, methodName);
         }
     }
 }

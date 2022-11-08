@@ -42,6 +42,7 @@ namespace CrytonCoreNext
                 .AddSingleton<IDialogService, DialogService>()
                 .AddSingleton<IProgressService, ProgressService>()
                 .AddSingleton<IJsonSerializer, JsonSerializer>()
+                .AddSingleton<IXmlSerializer, XmlSerializer>()
                 .AddTransient(CreateProgressViewModel)
                 .AddTransient<FilesViewViewModel>()
                 .AddTransient(CreateAES)
@@ -109,13 +110,15 @@ namespace CrytonCoreNext
 
         private ICrypting CreateAES(IServiceProvider provider)
         {
-            var serialzer = provider.GetRequiredService<IJsonSerializer>();
-            return new AES(serialzer);
+            var jsonSerialzer = provider.GetRequiredService<IJsonSerializer>();
+            return new AES(jsonSerialzer);
         }
 
         private ICrypting CreateRSA(IServiceProvider provider)
         {
-            return new RSA();
+            var jsonSerialzer = provider.GetRequiredService<IJsonSerializer>();
+            var xmlSerialzer = provider.GetRequiredService<IXmlSerializer>();
+            return new RSA(jsonSerialzer, xmlSerialzer);
         }
 
         private ICryptingRecognition CreateCryptingRecognition(IServiceProvider provider)

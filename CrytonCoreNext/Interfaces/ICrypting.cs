@@ -9,6 +9,8 @@ namespace CrytonCoreNext.Interfaces
     {
         public string Name { get; }
 
+        public int ProgressCount { get; }
+
         Task<byte[]> Encrypt(byte[] data, IProgress<string> progress);
 
         Task<byte[]> Decrypt(byte[] data, IProgress<string> progress);
@@ -17,6 +19,6 @@ namespace CrytonCoreNext.Interfaces
 
         string GetName();
 
-        bool ParseSettingsObjects(Dictionary<string, object> objects, bool encryption);
+        bool ParseSettingsObjects(Dictionary<string, object> objects, int dataLength, bool encryption);
     }
 }

@@ -41,6 +41,7 @@
     <None Remove="Assets\HeavyStorm.png" />
     <None Remove="Assets\Help.png" />
     <None Remove="Assets\Humidity.png" />
+    <None Remove="Assets\Info.png" />
     <None Remove="Assets\Inform.png" />
     <None Remove="Assets\Information.png" />
     <None Remove="Assets\Informv2.png" />
@@ -191,6 +192,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Humidity.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Info.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Inform.png">

@@ -118,7 +118,7 @@
                   Visibility="{Binding FileInformationVisibility}"
                   HorizontalAlignment="Left" Margin="275,368,0,0" VerticalAlignment="Top" Width="120"/>
 
-        <Grid VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="175,0,0,50" Width="250" Height="150">
+        <Grid VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="175,0,0,50" Width="450" Height="150">
             <ContentControl Content="{Binding ProgressViewModel}"/>
         </Grid>
     </Grid>

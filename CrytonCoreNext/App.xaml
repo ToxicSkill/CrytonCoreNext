@@ -76,6 +76,14 @@
             <Setter Property="FontWeight" Value="Normal"/>
         </Style>
 
+        <Style x:Key="CryptingInfoSettings" TargetType="Label">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+
         <Style x:Key="TextBlockDefault" TargetType="TextBlock">
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>

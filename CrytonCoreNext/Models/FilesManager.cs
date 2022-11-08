@@ -3,7 +3,6 @@ using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Static;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -25,11 +24,11 @@ namespace CrytonCoreNext.Models
                 files.Remove(fileToDelete);
                 foreach (var file in files)
                 {
-                   if (file.Id > fileId)
-                   {
+                    if (file.Id > fileId)
+                    {
                         file.Id--;
                         trigger = true;
-                   }
+                    }
                 }
                 return new(true, trigger ? fileToDelete.Id - 1 : fileToDelete.Id);
             }
@@ -156,6 +155,7 @@ namespace CrytonCoreNext.Models
             file.Bytes = bytes;
             file.Status = status;
             file.Method = methodName ?? string.Empty;
+            Helpers.GCHelper.Collect();
             return new(true, file.Id);
         }
 
@@ -164,6 +164,7 @@ namespace CrytonCoreNext.Models
             file.Bytes = bytes;
             file.Status = status;
             file.Method = methodName ?? string.Empty;
+            Helpers.GCHelper.Collect();
             return new(true, file.Id);
         }
 

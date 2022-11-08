@@ -4,7 +4,6 @@ using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Static;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -70,7 +69,7 @@ namespace CrytonCoreNext.ViewModels
 
         private void InitializeCryptingComboBox()
         {
-            CryptingComboBox = new(_cryptingService.GetCryptors().ToList());
+            CryptingComboBox = new(_cryptingService.GetCryptors());
         }
 
         private void UpdateCurrentCrypting()
@@ -81,7 +80,7 @@ namespace CrytonCoreNext.ViewModels
 
         private async void PerformCrypting()
         {
-            var progressReport = ProgressViewModel.InitializeProgress<string>(5);
+            var progressReport = ProgressViewModel.InitializeProgress<string>(_cryptingService.GetCurrentCryptingProgressCount());
             if (!_fileService.HasBytes(CurrentFile) || CurrentFile == null)
             {
                 return;
@@ -89,7 +88,7 @@ namespace CrytonCoreNext.ViewModels
 
             var result = await _cryptingService.RunCrypting(CurrentFile, progressReport);
 
-            if (result != null && FilesViewModel.AnyFiles())
+            if (result != null && result.Length > 0 && FilesViewModel.AnyFiles())
             {
                 ModifyFile(CurrentFile, result, GetOpositeStatus(CurrentFile.Status), _cryptingService.GetCurrentCrypting()?.GetName());
                 OnPropertyChanged(nameof(CryptButtonName));
