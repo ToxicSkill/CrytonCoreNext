@@ -2,8 +2,9 @@
 
 public enum ELogLevel
 {
-    Information = 0,
-    Warning = 1,
-    Error = 2,
-    Fatal = 3,
+    Skip = 0,
+    Information = 1,
+    Warning = 2,
+    Error = 3,
+    Fatal = 4,
 }

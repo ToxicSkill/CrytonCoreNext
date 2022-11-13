@@ -18,7 +18,7 @@ namespace CrytonCoreNext.ViewModels
             return ProgressService.SetProgress<T>(stages);
         }
 
-        public void ClearProgress()
+        public void ClearProgress(object o, EventArgs e)
         {
             ProgressService.ClearProgress();
         }

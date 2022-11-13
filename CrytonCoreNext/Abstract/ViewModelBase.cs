@@ -4,9 +4,9 @@ namespace CrytonCoreNext.Abstract
 {
     public class ViewModelBase : NotificationBase
     {
-        public string? PageName { get; set; }
+        public string PageName { get; set; }
 
-        public ViewModelBase(string? pageName = null)
+        public ViewModelBase(string pageName = "")
         {
             PageName = pageName;
         }

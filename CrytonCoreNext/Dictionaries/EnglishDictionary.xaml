@@ -23,6 +23,9 @@
     <system:String x:Key="RemoveAll">Remove all</system:String>
     <system:String x:Key="FilesView">Files panel</system:String>
     
+    <!--Crypting-->
+    <system:String x:Key="Decrypting">Decrypting</system:String>
+    <system:String x:Key="Encrypting">Encrypting</system:String>
     
     <!--AES View Model-->
     <system:String x:Key="BlockSize">Block size</system:String>
@@ -33,10 +36,26 @@
     <system:String x:Key="GenerateRandomIV">Generate random IV</system:String>
     <system:String x:Key="ExportToolTip">Export</system:String>
     <system:String x:Key="ImportToolTip">Import</system:String>
-    <system:String x:Key="EnablePrivateKeys">Include private keys</system:String>
+    <system:String x:Key="GenerateKeys">Generate keys</system:String>
+    <system:String x:Key="PrivateKey">Private key</system:String>
+    <system:String x:Key="PublicKey">Public key</system:String>
+    
+    <!--RSA View Model-->
+    <system:String x:Key="CollectingKeys">Collecting keys</system:String>
+    <system:String x:Key="IncorrectFile">Incorrect file</system:String>
+    <system:String x:Key="MaximumFileSize">Maximum file size: </system:String>
+    <system:String x:Key="KeysImported">Keys has been imported</system:String>
+    <system:String x:Key="KeysGenerated">Keys has been generated</system:String>
+    <system:String x:Key="NoPrivateKeyError">Private key is required for decryption</system:String>
+    <system:String x:Key="NoGeneratedKeys">No generated or imported keys available</system:String>
+    <system:String x:Key="TooBigFile">File is too big</system:String>
     
     
-    
-    
+    <!--Files-->
+    <system:String x:Key="FilesLoaded">File(s) where loaded successfuly</system:String>
+    <system:String x:Key="FilesSaved">File has been saved successfuly</system:String>
+    <system:String x:Key="FilesError">Error when saving file</system:String>
+    <system:String x:Key="OpenFiles">Open files</system:String>
+   
     <system:String x:Key="OpenFileDialog">Open file(s)</system:String>
 </ResourceDictionary>

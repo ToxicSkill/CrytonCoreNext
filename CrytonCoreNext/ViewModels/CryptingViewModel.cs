@@ -1,10 +1,10 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
+using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Static;
 using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CrytonCoreNext.ViewModels
@@ -94,7 +94,7 @@ namespace CrytonCoreNext.ViewModels
                 OnPropertyChanged(nameof(CryptButtonName));
             }
 
-            _ = Task.Delay(ReportDelay).ContinueWith(t => ProgressViewModel.ClearProgress());
+            ActionTimer.InitializeTimerWithAction(ProgressViewModel.ClearProgress, 2);
         }
 
         private static CryptingStatus.Status GetOpositeStatus(CryptingStatus.Status curremtStatus)

@@ -6,6 +6,6 @@ namespace CrytonCoreNext.Interfaces
     {
         IProgress<T> InitializeProgress<T>(int stages);
 
-        void ClearProgress();
+        void ClearProgress(object o, EventArgs e);
     }
 }

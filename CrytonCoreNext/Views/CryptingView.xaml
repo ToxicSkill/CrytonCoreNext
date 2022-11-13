@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     MinWidth="900"
-    d:DesignHeight="650"
+    d:DesignHeight="850"
     d:DesignWidth="1400"
     mc:Ignorable="d">
 

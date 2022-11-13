@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Helpers;
+using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
 using CrytonCoreNext.ViewModels;
@@ -7,7 +8,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace CrytonCoreNext.Abstract
 {
@@ -16,8 +16,6 @@ namespace CrytonCoreNext.Abstract
         protected readonly IFileService _fileService;
 
         protected readonly IDialogService _dialogService;
-
-        private DispatcherTimer? _timer;
 
         public InformationPopupViewModel PopupViewModel { get; private set; }
 
@@ -44,7 +42,7 @@ namespace CrytonCoreNext.Abstract
             PopupViewModel = new(informationString, color);
             ShowInformationBar(true);
             OnPropertyChanged(nameof(PopupViewModel));
-            InitializeTimerWithAction(CollapsePopup, seconds);
+            ActionTimer.InitializeTimerWithAction(CollapsePopup, seconds);
         }
 
         public void HandleFileChanged(object? sender, EventArgs? e)
@@ -57,25 +55,25 @@ namespace CrytonCoreNext.Abstract
         public void LoadFiles()
         {
             var filesCount = FilesViewModel.GetFilesCount();
-            var filesPaths = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.All, "Open files", true);
+            var filesPaths = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.All, Application.Current.Resources.MergedDictionaries[0]["OpenFiles"].ToString() ?? string.Empty, true);
             var newFiles = _fileService.LoadFiles(filesPaths, filesCount);
             if (FilesViewModel.AddNewFiles(newFiles))
             {
-                PostPopup("File(s) where loaded successfuly", 2, ColorStatus.Information);
+                PostPopup(Application.Current.Resources.MergedDictionaries[0]["FilesLoaded"].ToString() ?? string.Empty, 2, ColorStatus.Information);
             }
         }
 
         public void SaveFile()
         {
-            var filePath = _dialogService.GetFilesNamesToSave(Static.Extensions.DialogFilters.All, "Save file", CurrentFile.Extension);
+            var filePath = _dialogService.GetFilesNamesToSave(Static.Extensions.DialogFilters.All, Application.Current.Resources.MergedDictionaries[0]["SaveFile"].ToString() ?? string.Empty, CurrentFile.Extension);
             var result = _fileService.SaveFile(filePath.First(), CurrentFile);
             if (result)
             {
-                PostPopup("File has been saved successfuly", 2, ColorStatus.Information);
+                PostPopup(Application.Current.Resources.MergedDictionaries[0]["FilesSaved"].ToString() ?? string.Empty, 2, ColorStatus.Information);
             }
             if (!result)
             {
-                PostPopup("Error when saving file", 2, ColorStatus.Error);
+                PostPopup(Application.Current.Resources.MergedDictionaries[0]["FilesError"].ToString() ?? string.Empty, 2, ColorStatus.Error);
             }
         }
 
@@ -111,18 +109,10 @@ namespace CrytonCoreNext.Abstract
             OnPropertyChanged(nameof(PopupViewModel.ShowPopup));
         }
 
-        private void InitializeTimerWithAction(Action<object, EventArgs> obj, int seconds)
-        {
-            _timer = new();
-            _timer.Tick += new EventHandler(obj);
-            _timer.Interval = new TimeSpan(0, 0, seconds);
-            _timer.Start();
-        }
-
         private void CollapsePopup(object sender, EventArgs e)
         {
             ShowInformationBar(false);
-            _timer?.Stop();
+            ActionTimer.StopTimer();
         }
 
         public virtual void Dispose() { }

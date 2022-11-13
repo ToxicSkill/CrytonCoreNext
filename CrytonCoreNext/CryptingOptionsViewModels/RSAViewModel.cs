@@ -2,31 +2,41 @@
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Logger;
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
 {
     public class RSAViewModel : ViewModelBase
     {
-        private readonly string[] SettingsKeys;
+        private const int LoggerSeconds = 4;
+
+        private readonly string[] _settingsKeys;
 
         private readonly IJsonSerializer _jsonSerializer;
 
         private readonly IXmlSerializer _xmlSerializer;
 
-        private string _selectedKey;
+        private readonly RSAHelper _rsaHelper;
 
         private RSAParameters _keys;
 
-        private readonly Func<int, int> _restrictionFunction;
+        private string _selectedKey;
 
-        public ObservableCollection<string> KeySizesComboBox { get; init; } = new();
+        private Log _logger;
+
+        public ObservableCollection<string> KeySizesComboBox { get; init; }
+
+        public bool IsPublicKeyAvailable { get; set; }
+
+        public bool IsPrivateKeyAvailable { get; set; }
 
         public string SelectedKey
         {
@@ -36,50 +46,49 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 if (_selectedKey != value)
                 {
                     _selectedKey = value;
-                    SelectedKeysSize = Convert.ToInt32(_selectedKey);
-                    MaxBytes = $"Maximum file size: {_restrictionFunction(SelectedKeysSize)} bytes";
-                    OnPropertyChanged(nameof(MaxBytes));
+                    CombineMaxBytesMessage();
                     OnPropertyChanged(nameof(SelectedKey));
-                    OnPropertyChanged(nameof(SelectedKeysSize));
                 }
             }
         }
 
-        public bool EnablePrivateKeys { get; set; } = true;
+        public Log Logger
+        {
+            get => _logger;
+            set
+            {
+                _logger = value;
+                InvokeTimerActionForLogger();
+            }
+        }
 
         public string MaxBytes { get; set; }
 
-        public int SelectedKeysSize { get; set; }
+        public ICommand ExportPublicKeyCommand { get; init; }
 
-        public string Error { get; private set; }
+        public ICommand ExportPrivateKeyCommand { get; init; }
 
-        public ICommand SaveCryptorCommand { get; init; }
+        public ICommand ImportCryptorCommand { get; init; }
 
-        public ICommand LoadCryptorCommand { get; init; }
+        public ICommand GenerateKeysCommand { get; init; }
 
-        public RSAViewModel(IJsonSerializer json, IXmlSerializer xml, Func<int, int> restrictionFunction, KeySizes keySizes, int defaultKeySize, string[] settingKeys, string pageName) : base(pageName)
+        public RSAViewModel(IJsonSerializer json, IXmlSerializer xml, RSAHelper rsaHelper, string pageName, string[] settingKeys) : base(pageName)
         {
+            _settingsKeys = settingKeys;
             _xmlSerializer = xml;
             _jsonSerializer = json;
-            _restrictionFunction = restrictionFunction;
-            SettingsKeys = settingKeys;
+            _rsaHelper = rsaHelper;
+            _logger = new();
 
-            SaveCryptorCommand = new Command(SaveCryptor, true);
-            LoadCryptorCommand = new Command(LoadCryptor, true);
+            ExportPublicKeyCommand = new Command(ExportPublicKey, true);
+            ExportPrivateKeyCommand = new Command(ExportPrivateKey, true);
+            ImportCryptorCommand = new Command(ImportCryptor, true);
+            GenerateKeysCommand = new Command(GenerateKeys, true);
 
-            if (keySizes.SkipSize != 0)
-            {
-                for (var i = keySizes.MinSize; i <= keySizes.MaxSize; i += keySizes.SkipSize * 16)
-                {
-                    KeySizesComboBox.Add(i.ToString());
-                }
-            }
-            else
-            {
-                KeySizesComboBox.Add(keySizes.MinSize.ToString());
-            }
+            KeySizesComboBox = new ObservableCollection<string>(rsaHelper.LegalKeys);
+            SelectedKey = rsaHelper.DefaultKeySize.ToString();
 
-            SelectedKey = defaultKeySize.ToString();
+
             OnPropertyChanged(nameof(KeySizesComboBox));
             OnPropertyChanged(nameof(SelectedKey));
         }
@@ -88,15 +97,15 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             return new()
             {
-                { SettingsKeys[0], _keys },
-                { SettingsKeys[1], SelectedKey },
-                { SettingsKeys[2], string.Empty }
+                { _settingsKeys[0], _keys },
+                { _settingsKeys[1], SelectedKey },
+                { _settingsKeys[2], _logger }
             };
         }
 
         public override void SetObjects(Dictionary<string, object> objects)
         {
-            foreach (var setting in SettingsKeys)
+            foreach (var setting in _settingsKeys)
             {
                 if (!objects.ContainsKey(setting))
                 {
@@ -104,30 +113,29 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 }
             }
 
-            if (objects[SettingsKeys[2]] is string error)
+            if (objects[_settingsKeys[2]] is Log logger)
             {
-                Error = error;
-                OnPropertyChanged(nameof(Error));
-                if (!string.IsNullOrEmpty(error))
+                Logger = logger;
+                if (logger.LogLevel == Enums.ELogLevel.Fatal || logger.LogLevel == Enums.ELogLevel.Error)
                 {
                     return;
                 }
             }
 
-            if (objects[SettingsKeys[0]] is RSAParameters keys)
+            if (objects[_settingsKeys[0]] is RSAParameters keys)
             {
-                if (!keys.Equals(string.Empty))
+                if (!keys.Equals(null))
                 {
                     _keys = keys;
+                    UpdateKeys();
                 }
             }
 
-            if (objects[SettingsKeys[1]] is string size)
+            if (objects[_settingsKeys[1]] is string size)
             {
                 if (KeySizesComboBox.Contains(size))
                 {
                     SelectedKey = size;
-                    OnPropertyChanged(nameof(SelectedKeysSize));
                 }
             }
         }
@@ -144,31 +152,66 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             public string Name;
         }
 
-        private RSAParameters GetOnlyPublicMembers(RSAParameters parameters)
+        private void GenerateKeys()
         {
-            var rsaParameters = new RSAParameters()
-            {
-                Modulus = parameters.Modulus,
-                Exponent = parameters.Exponent
-            };
-
-            return rsaParameters;
+            var rsap = new RSACryptoServiceProvider(Convert.ToInt32(SelectedKey));
+            _keys = rsap.ExportParameters(true);
+            UpdateKeys();
+            _logger.Set(Enums.ELogLevel.Information, Application.Current.Resources.MergedDictionaries[0]["KeysGenerated"].ToString() ?? string.Empty);
+            InvokeTimerActionForLogger();
         }
 
-        private void SaveCryptor()
+        private void ExportPublicKey()
         {
-            if (_keys.Modulus == null)
+            if (IsPublicKeyAvailable)
             {
-                Error = "No generated or imported keys available";
-                OnPropertyChanged(nameof(Error));
-                return;
+                ExportKey(true);
             }
+            else
+            {
+                NoKeyError();
+            }
+        }
 
+        private void ExportPrivateKey()
+        {
+            if (IsPrivateKeyAvailable)
+            {
+                ExportKey(false);
+            }
+            else
+            {
+                NoKeyError();
+            }
+        }
+
+        private void CombineMaxBytesMessage()
+        {
+            var prefix = Application.Current.Resources.MergedDictionaries[0]["MaximumFileSize"].ToString() ?? string.Empty;
+            MaxBytes = $"{prefix}{_rsaHelper.GetMaxNumberOfBytes(Convert.ToInt32(_selectedKey))} B";
+            OnPropertyChanged(nameof(MaxBytes));
+        }
+
+        private void NoKeyError()
+        {
+            _logger.Set(Enums.ELogLevel.Error, Application.Current.Resources.MergedDictionaries[0]["NoGeneratedKeys"].ToString() ?? string.Empty);
+            OnPropertyChanged(nameof(Logger));
+            return;
+        }
+
+        private void InvokeTimerActionForLogger()
+        {
+            ActionTimer.InitializeTimerWithAction(ClearLogger, LoggerSeconds);
+            OnPropertyChanged(nameof(Logger));
+        }
+
+        private void ExportKey(bool publicKey)
+        {
             var serialzieObjects = new Objects()
             {
                 ToSerialzie = new ToSerialzieObjects()
                 {
-                    Keys = _xmlSerializer.RsaParameterKeyToString(EnablePrivateKeys ? _keys : GetOnlyPublicMembers(_keys)),
+                    Keys = _xmlSerializer.RsaParameterKeyToString(publicKey ? _rsaHelper.GetOnlyPublicMembers(_keys) : _keys),
                     SelectedKeySize = this.SelectedKey
                 },
                 Name = PageName
@@ -188,7 +231,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        private void LoadCryptor()
+        private void ImportCryptor()
         {
             WindowDialog.OpenDialog openDialog = new(new DialogHelper()
             {
@@ -206,17 +249,39 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     var castedObjects = (Objects)objects;
                     if (castedObjects.Name != PageName)
                     {
-                        Error = "Incorrect file";
-                        OnPropertyChanged(nameof(Error));
+                        _logger.Set(Enums.ELogLevel.Error, Application.Current.Resources.MergedDictionaries[0]["IncorrectFile"].ToString() ?? string.Empty);
+                        InvokeTimerActionForLogger();
                     }
                     else
                     {
                         _keys = _xmlSerializer.StringKeyToRsaParameter<RSAParameters>(castedObjects.ToSerialzie.Keys);
                         SelectedKey = castedObjects.ToSerialzie.SelectedKeySize;
+                        UpdateKeys();
+                        _logger.Set(Enums.ELogLevel.Information, Application.Current.Resources.MergedDictionaries[0]["KeysImported"].ToString() ?? string.Empty);
+                        InvokeTimerActionForLogger();
                         OnPropertyChanged(nameof(SelectedKey));
                     }
                 }
             }
+        }
+
+        private void UpdateKeys()
+        {
+            if (_rsaHelper.IsKeyEmpty(_keys))
+            {
+                return;
+            }
+
+            IsPublicKeyAvailable = true;
+            IsPrivateKeyAvailable = _rsaHelper.IsKeyPrivate(_keys);
+            OnPropertyChanged(nameof(IsPublicKeyAvailable));
+            OnPropertyChanged(nameof(IsPrivateKeyAvailable));
+        }
+
+        private void ClearLogger(object sender, EventArgs e)
+        {
+            Logger.Reset();
+            OnPropertyChanged(nameof(Logger));
         }
     }
 }
