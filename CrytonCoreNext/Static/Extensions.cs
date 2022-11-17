@@ -1,4 +1,6 @@
-﻿namespace CrytonCoreNext.Static
+﻿using CrytonCoreNext.Dictionaries;
+
+namespace CrytonCoreNext.Static
 {
     public static class Extensions
     {
@@ -52,6 +54,13 @@
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToDescription(this CryptingStatus.Status status)
+        {
+            return status == CryptingStatus.Status.Encrypted ?
+                Language.Post("Encrypt") :
+                Language.Post("Decrypt");
         }
     }
 }

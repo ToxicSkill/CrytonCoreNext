@@ -1,5 +1,6 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
+using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Logger;
@@ -9,7 +10,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Windows;
 using System.Windows.Input;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
@@ -157,7 +157,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             var rsap = new RSACryptoServiceProvider(Convert.ToInt32(SelectedKey));
             _keys = rsap.ExportParameters(true);
             UpdateKeys();
-            _logger.Set(Enums.ELogLevel.Information, Application.Current.Resources.MergedDictionaries[0]["KeysGenerated"].ToString() ?? string.Empty);
+            _logger.Set(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
             InvokeTimerActionForLogger();
         }
 
@@ -187,14 +187,14 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         private void CombineMaxBytesMessage()
         {
-            var prefix = Application.Current.Resources.MergedDictionaries[0]["MaximumFileSize"].ToString() ?? string.Empty;
+            var prefix = Language.Post("MaximumFileSize");
             MaxBytes = $"{prefix}{_rsaHelper.GetMaxNumberOfBytes(Convert.ToInt32(_selectedKey))} B";
             OnPropertyChanged(nameof(MaxBytes));
         }
 
         private void NoKeyError()
         {
-            _logger.Set(Enums.ELogLevel.Error, Application.Current.Resources.MergedDictionaries[0]["NoGeneratedKeys"].ToString() ?? string.Empty);
+            _logger.Set(Enums.ELogLevel.Error, Language.Post("NoGeneratedKeys"));
             OnPropertyChanged(nameof(Logger));
             return;
         }
@@ -249,7 +249,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     var castedObjects = (Objects)objects;
                     if (castedObjects.Name != PageName)
                     {
-                        _logger.Set(Enums.ELogLevel.Error, Application.Current.Resources.MergedDictionaries[0]["IncorrectFile"].ToString() ?? string.Empty);
+                        _logger.Set(Enums.ELogLevel.Error, Language.Post("IncorrectFile"));
                         InvokeTimerActionForLogger();
                     }
                     else
@@ -257,7 +257,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                         _keys = _xmlSerializer.StringKeyToRsaParameter<RSAParameters>(castedObjects.ToSerialzie.Keys);
                         SelectedKey = castedObjects.ToSerialzie.SelectedKeySize;
                         UpdateKeys();
-                        _logger.Set(Enums.ELogLevel.Information, Application.Current.Resources.MergedDictionaries[0]["KeysImported"].ToString() ?? string.Empty);
+                        _logger.Set(Enums.ELogLevel.Information, Language.Post("KeysImported"));
                         InvokeTimerActionForLogger();
                         OnPropertyChanged(nameof(SelectedKey));
                     }

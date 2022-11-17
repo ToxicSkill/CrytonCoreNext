@@ -11,8 +11,6 @@ namespace CrytonCoreNext.ViewModels
 {
     public class CryptingViewModel : InteractiveViewBase
     {
-        private const int ReportDelay = 2000;
-
         private readonly ICryptingService _cryptingService;
 
         public ICommand LoadFilesCommand { get; init; }
@@ -111,7 +109,7 @@ namespace CrytonCoreNext.ViewModels
                 return string.Empty;
             }
 
-            return GetOpositeStatus(CurrentFile.Status).ToString();
+            return GetOpositeStatus(CurrentFile.Status).ToDescription();
         }
     }
 }

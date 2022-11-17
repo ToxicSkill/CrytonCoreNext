@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Helpers;
+﻿using CrytonCoreNext.Dictionaries;
+using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
@@ -55,25 +56,25 @@ namespace CrytonCoreNext.Abstract
         public void LoadFiles()
         {
             var filesCount = FilesViewModel.GetFilesCount();
-            var filesPaths = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.All, Application.Current.Resources.MergedDictionaries[0]["OpenFiles"].ToString() ?? string.Empty, true);
+            var filesPaths = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.All, Language.Post("OpenFiles"), true);
             var newFiles = _fileService.LoadFiles(filesPaths, filesCount);
             if (FilesViewModel.AddNewFiles(newFiles))
             {
-                PostPopup(Application.Current.Resources.MergedDictionaries[0]["FilesLoaded"].ToString() ?? string.Empty, 2, ColorStatus.Information);
+                PostPopup(Language.Post("FilesLoaded"), 2, ColorStatus.Information);
             }
         }
 
         public void SaveFile()
         {
-            var filePath = _dialogService.GetFilesNamesToSave(Static.Extensions.DialogFilters.All, Application.Current.Resources.MergedDictionaries[0]["SaveFile"].ToString() ?? string.Empty, CurrentFile.Extension);
+            var filePath = _dialogService.GetFilesNamesToSave(Static.Extensions.DialogFilters.All, Language.Post("SaveFile"), CurrentFile.Extension);
             var result = _fileService.SaveFile(filePath.First(), CurrentFile);
             if (result)
             {
-                PostPopup(Application.Current.Resources.MergedDictionaries[0]["FilesSaved"].ToString() ?? string.Empty, 2, ColorStatus.Information);
+                PostPopup(Language.Post("FilesSaved"), 2, ColorStatus.Information);
             }
             if (!result)
             {
-                PostPopup(Application.Current.Resources.MergedDictionaries[0]["FilesError"].ToString() ?? string.Empty, 2, ColorStatus.Error);
+                PostPopup(Language.Post("FilesError"), 2, ColorStatus.Error);
             }
         }
 

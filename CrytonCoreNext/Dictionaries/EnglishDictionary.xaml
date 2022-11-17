@@ -26,6 +26,8 @@
     <!--Crypting-->
     <system:String x:Key="Decrypting">Decrypting</system:String>
     <system:String x:Key="Encrypting">Encrypting</system:String>
+    <system:String x:Key="Encrypt">Encrypt</system:String>
+    <system:String x:Key="Decrypt">Decrypt</system:String>
     
     <!--AES View Model-->
     <system:String x:Key="BlockSize">Block size</system:String>

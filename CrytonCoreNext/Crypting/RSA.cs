@@ -1,5 +1,6 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.CryptingOptionsViewModels;
+using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Logger;
@@ -7,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace CrytonCoreNext.Crypting
 {
@@ -47,7 +47,7 @@ namespace CrytonCoreNext.Crypting
 
         public async Task<byte[]> Decrypt(byte[] data, IProgress<string> progress)
         {
-            progress.Report(Application.Current.Resources.MergedDictionaries[0]["CollectingKeys"].ToString() ?? string.Empty);
+            progress.Report(Language.Post("CollectingKeys"));
 
             if (await Task.Run(() => !ParseSettingsObjects(ViewModel.GetObjects(), data.Length, false)))
             {
@@ -55,22 +55,22 @@ namespace CrytonCoreNext.Crypting
             }
             else if (!_rsaHelper.IsKeyPrivate(_keys))
             {
-                UpdateViewModel(message: Application.Current.Resources.MergedDictionaries[0]["NoPrivateKeyError"].ToString() ?? string.Empty);
+                UpdateViewModel(message: Language.Post("NoPrivateKeyError"));
                 return DefaultBytes;
             }
 
-            progress.Report(Application.Current.Resources.MergedDictionaries[0]["Decrypting"].ToString() ?? string.Empty);
+            progress.Report(Language.Post("Decrypting"));
             return await Task.Run(() => _rsa.Decrypt(data, _useOAEP));
         }
 
         public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {
-            progress.Report(Application.Current.Resources.MergedDictionaries[0]["CollectingKeys"].ToString() ?? string.Empty);
+            progress.Report(Language.Post("CollectingKeys"));
 
             if (await Task.Run(() => !ParseSettingsObjects(ViewModel.GetObjects(), data.Length, true)))
                 return DefaultBytes;
 
-            progress.Report(Application.Current.Resources.MergedDictionaries[0]["Encrypting"].ToString() ?? string.Empty);
+            progress.Report(Language.Post("Encrypting"));
             return await Task.Run(() => _rsa.Encrypt(data, _useOAEP));
         }
 
@@ -89,7 +89,7 @@ namespace CrytonCoreNext.Crypting
 
             if (encryption && _rsaHelper.GetMaxNumberOfBytes(keySize) < dataLength)
             {
-                UpdateViewModel(message: Application.Current.Resources.MergedDictionaries[0]["TooBigFile"].ToString() ?? string.Empty);
+                UpdateViewModel(message: Language.Post("TooBigFile"));
                 return false;
             }
 
