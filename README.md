@@ -2,6 +2,6 @@
 
 <div align="center">
     <a href="./">
-        <img src="./CrytonCoreNext/Assets/show1.png" width="50%"/>
+        <img src="./CrytonCoreNext/Assets/show1.png" width="75%"/>
     </a>
 </div>
