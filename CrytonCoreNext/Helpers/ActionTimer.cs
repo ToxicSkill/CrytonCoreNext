@@ -5,7 +5,7 @@ namespace CrytonCoreNext.Helpers
 {
     public static class ActionTimer
     {
-        private static DispatcherTimer _timer = new();
+        private static readonly DispatcherTimer _timer = new();
 
         public static void InitializeTimerWithAction(Action<object, EventArgs> obj, int seconds)
         {

@@ -27,9 +27,14 @@ namespace CrytonCoreNext.Services
 
         public string ProgressMessage { get; private set; }
 
+        public Visibility ShowLabels { get; private set; }
+
         public ProgressService()
         {
             ClearProgress();
+            ProgressCounter = string.Empty;
+            ProgressMessage = string.Empty;
+            ShowLabels = Visibility.Visible;
         }
 
         public void ClearProgress()
@@ -51,6 +56,12 @@ namespace CrytonCoreNext.Services
             IsBusy = true;
             OnPropertyChanged(nameof(IsBusy));
             return new Progress<T>(ReportProgress<T>);
+        }
+
+        public void SetLabelsVisibility(bool visible)
+        {
+            ShowLabels = visible ? Visibility.Visible : Visibility.Hidden;
+            OnPropertyChanged(nameof(ShowLabels));
         }
 
         private void UpdateProgress(Visibility visibility = Visibility.Visible)

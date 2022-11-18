@@ -31,7 +31,7 @@
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10, 200,0,0" Height="50">
             <Label Content="{Binding MaxBytes}" Margin="30, 0, 0 ,0" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Stretch" Style="{StaticResource CryptingInfoSettings}"/>
 
-            <Image Source="/Assets/Info.png" Width="24" Height="24" HorizontalAlignment="Left"
+            <Image Source="/Assets/Info.png" Width="20" Height="20" HorizontalAlignment="Left"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
         </Grid>
@@ -136,7 +136,11 @@
                 </ControlTemplate>
             </Button.Template>
         </Button>
-
+        
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10, 312, 0, 0" Width="190" Height="50">
+            <ContentControl Content="{Binding ProgressView}"/>
+        </Grid>
+        
         <Label     Height="60" Content="{Binding Logger.Message}"
                    FontSize="18" FontFamily="Segoe UI Variable Text Light"   
                     Foreground="CornflowerBlue" HorizontalAlignment="Stretch" VerticalAlignment="Top" 

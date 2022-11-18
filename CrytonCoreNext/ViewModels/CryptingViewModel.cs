@@ -47,9 +47,9 @@ namespace CrytonCoreNext.ViewModels
             CurrentCryptingViewModel = new();
             CryptingComboBox = new();
 
-            CryptCommand = new Command(PerformCrypting, true);
-            LoadFilesCommand = new Command(LoadFiles, true);
-            SaveFileCommand = new Command(SaveFile, true);
+            CryptCommand = new Command(PerformCrypting, CanExecute);
+            LoadFilesCommand = new Command(LoadFiles, CanExecute);
+            SaveFileCommand = new Command(SaveFile, CanExecute);
 
             InitializeCryptingComboBox();
             UpdateCurrentCrypting();
@@ -58,6 +58,11 @@ namespace CrytonCoreNext.ViewModels
 
             //var t = new Crypting.Crypting(new() { new(new AES(), ECrypting.EnumToString(ECrypting.Methods.aes)) });
             //t.Encrypt(FilesViewViewModel.FilesView[0].Bytes, ECrypting.EnumToString(ECrypting.Methods.aes));
+        }
+
+        public override bool CanExecute()
+        {
+            return !IsBusy && !CurrentCryptingViewModel.IsBusy;
         }
 
         private new void HandleFileChanged(object? sender, EventArgs? e)

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
@@ -33,6 +34,8 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         private Log _logger;
 
         public ObservableCollection<string> KeySizesComboBox { get; init; }
+
+        public IProgressView ProgressView { get; init; }
 
         public bool IsPublicKeyAvailable { get; set; }
 
@@ -72,25 +75,32 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public ICommand GenerateKeysCommand { get; init; }
 
-        public RSAViewModel(IJsonSerializer json, IXmlSerializer xml, RSAHelper rsaHelper, string pageName, string[] settingKeys) : base(pageName)
+        public RSAViewModel(IJsonSerializer json, IXmlSerializer xml, IProgressView progressView, RSAHelper rsaHelper, string pageName, string[] settingKeys) : base(pageName)
         {
             _settingsKeys = settingKeys;
             _xmlSerializer = xml;
             _jsonSerializer = json;
             _rsaHelper = rsaHelper;
+            ProgressView = progressView;
+            ProgressView.ShowLabels(false);
             _logger = new();
 
-            ExportPublicKeyCommand = new Command(ExportPublicKey, true);
-            ExportPrivateKeyCommand = new Command(ExportPrivateKey, true);
-            ImportCryptorCommand = new Command(ImportCryptor, true);
-            GenerateKeysCommand = new Command(GenerateKeys, true);
+            ExportPublicKeyCommand = new Command(ExportPublicKey, CanExecute);
+            ExportPrivateKeyCommand = new Command(ExportPrivateKey, CanExecute);
+            ImportCryptorCommand = new Command(ImportCryptor, CanExecute);
+            GenerateKeysCommand = new AsyncCommand(GenerateKeys, CanExecute);
 
             KeySizesComboBox = new ObservableCollection<string>(rsaHelper.LegalKeys);
             SelectedKey = rsaHelper.DefaultKeySize.ToString();
 
-
+            OnPropertyChanged(nameof(ProgressView));
             OnPropertyChanged(nameof(KeySizesComboBox));
             OnPropertyChanged(nameof(SelectedKey));
+        }
+
+        public override bool CanExecute()
+        {
+            return !IsBusy;
         }
 
         public override Dictionary<string, object> GetObjects()
@@ -152,13 +162,23 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             public string Name;
         }
 
-        private void GenerateKeys()
+        private async Task GenerateKeys()
         {
-            var rsap = new RSACryptoServiceProvider(Convert.ToInt32(SelectedKey));
-            _keys = rsap.ExportParameters(true);
-            UpdateKeys();
-            _logger.Set(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
-            InvokeTimerActionForLogger();
+            try
+            {
+                IsBusy = true;
+                ProgressView.InitializeProgress<int>(0);
+                var rsap = new RSACryptoServiceProvider(Convert.ToInt32(SelectedKey));
+                _keys = await Task.Run(() => rsap.ExportParameters(true));
+            }
+            finally
+            {
+                UpdateKeys();
+                _logger.Set(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
+                InvokeTimerActionForLogger();
+                ProgressView.ClearProgress();
+                IsBusy = false;
+            }
         }
 
         private void ExportPublicKey()

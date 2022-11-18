@@ -13,7 +13,7 @@
                             IsBusy="{Binding ProgressService.IsBusy}"
                             BusyContent="" 
                             Background="Transparent">
-        <Grid>
+        <Grid Visibility="{Binding ProgressService.ShowLabels, FallbackValue=Hidden}">
             <Label Content="{Binding ProgressService.ProgressCounter}" Style="{StaticResource CryptingSettings}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, -120, 0 ,0"
                    FontSize="18" Foreground="LightGray" HorizontalContentAlignment="Center" VerticalContentAlignment="Top"/>
             <Label Content="{Binding ProgressService.ProgressMessage}" Style="{StaticResource CryptingSettings}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, -70, 0 ,0"

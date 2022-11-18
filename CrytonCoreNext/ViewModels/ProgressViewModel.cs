@@ -13,14 +13,19 @@ namespace CrytonCoreNext.ViewModels
             ProgressService = progressService;
         }
 
-        public IProgress<T> InitializeProgress<T>(int stages)
+        public IProgress<T> InitializeProgress<T>(int stages = 0)
         {
             return ProgressService.SetProgress<T>(stages);
         }
 
-        public void ClearProgress(object o, EventArgs e)
+        public void ClearProgress(object o = null, EventArgs e = null)
         {
             ProgressService.ClearProgress();
+        }
+
+        public void ShowLabels(bool show)
+        {
+            ProgressService.SetLabelsVisibility(show);
         }
     }
 }

@@ -33,10 +33,10 @@ namespace CrytonCoreNext.Crypting
 
         public ViewModelBase ViewModel { get; init; }
 
-        public RSA(IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer)
+        public RSA(IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer, IProgressView progressView)
         {
             _rsaHelper = new(_useOAEP);
-            ViewModel = new RSAViewModel(jsonSerializer, xmlSerializer, _rsaHelper, Name, SettingsKeys);
+            ViewModel = new RSAViewModel(jsonSerializer, xmlSerializer, progressView, _rsaHelper, Name, SettingsKeys);
             _keysSize = _rsaHelper.DefaultKeySize;
             _rsa = new(_keysSize);
         }

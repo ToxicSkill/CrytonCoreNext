@@ -21,14 +21,14 @@ namespace CrytonCoreNext.ViewModels
 
         public ScrollBarVisibility VerticalScrollBarVisbility { get; set; }
 
-        public bool ShowPopup 
+        public bool ShowPopup
         {
             get => _showPopup;
             set
-            { 
+            {
                 _showPopup = value;
-                OnPropertyChanged(nameof(ShowPopup)); 
-            } 
+                OnPropertyChanged(nameof(ShowPopup));
+            }
         }
 
         public InformationPopupViewModel(string informationString = "", Color color = default)
@@ -41,7 +41,12 @@ namespace CrytonCoreNext.ViewModels
             BackgroundColor = color;
             InformationString = informationString;
             VerticalScrollBarVisbility = ScrollBarVisibility.Hidden;
-            CollapsePopupCommand = new Command(CollapsePopup, true);
+            CollapsePopupCommand = new Command(CollapsePopup, CanExecute);
+        }
+
+        public override bool CanExecute()
+        {
+            return !IsBusy;
         }
 
         private void CollapsePopup()

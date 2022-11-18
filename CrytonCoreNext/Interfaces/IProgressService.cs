@@ -7,5 +7,7 @@ namespace CrytonCoreNext.Interfaces
         void ClearProgress();
 
         IProgress<T> SetProgress<T>(int stages);
+
+        void SetLabelsVisibility(bool visible);
     }
 }

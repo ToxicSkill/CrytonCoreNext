@@ -6,6 +6,8 @@ namespace CrytonCoreNext.Abstract
     {
         public string PageName { get; set; }
 
+        public bool IsBusy;
+
         public ViewModelBase(string pageName = "")
         {
             PageName = pageName;
@@ -19,6 +21,11 @@ namespace CrytonCoreNext.Abstract
         public virtual void SetObjects(Dictionary<string, object> objects)
         {
             return;
+        }
+
+        public virtual bool CanExecute()
+        {
+            return !IsBusy;
         }
     }
 }

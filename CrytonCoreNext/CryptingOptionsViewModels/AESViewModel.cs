@@ -78,10 +78,10 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         public AESViewModel(IJsonSerializer json, AesCng aes, string[] settingKeys, string pageName) : base(pageName)
         {
             _jsonSerializer = json;
-            GenerateRandomKeyCommand = new Command(GenerateRandomKey, true);
-            GenerateRandomIVCommand = new Command(GenerateRandomIV, true);
-            SaveCryptorCommand = new Command(SaveCryptor, true);
-            LoadCryptorCommand = new Command(LoadCryptor, true);
+            GenerateRandomKeyCommand = new Command(GenerateRandomKey, CanExecute);
+            GenerateRandomIVCommand = new Command(GenerateRandomIV, CanExecute);
+            SaveCryptorCommand = new Command(SaveCryptor, CanExecute);
+            LoadCryptorCommand = new Command(LoadCryptor, CanExecute);
 
             SettingsKeys = settingKeys;
 
@@ -118,6 +118,11 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             SelectedKey = KeySizesComboBox.First();
             OnPropertyChanged(nameof(BlockSizesComboBox));
             OnPropertyChanged(nameof(KeySizesComboBox));
+        }
+
+        public override bool CanExecute()
+        {
+            return !IsBusy;
         }
 
         public override Dictionary<string, object> GetObjects()
