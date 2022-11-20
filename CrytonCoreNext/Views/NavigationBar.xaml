@@ -112,7 +112,7 @@
             </Grid>
 
 
-            <Grid Grid.Row="3">
+            <Grid Grid.Row="4">
                 <Grid.Style>
                     <Style>
                         <Style.Triggers>
@@ -140,7 +140,7 @@
 
 
 
-            <Grid Grid.Row="4">
+            <Grid Grid.Row="3">
                 <Grid.Style>
                     <Style>
                         <Style.Triggers>
