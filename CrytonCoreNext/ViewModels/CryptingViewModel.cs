@@ -43,6 +43,7 @@ namespace CrytonCoreNext.ViewModels
         public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, IProgressView progressView) : base(fileService, dialogService, filesView, progressView)
         {
             _cryptingService = cryptingService;
+            ProgressViewModel.ChangeProgressType(BusyIndicator.IndicatorType.ThreeDots);
 
             CurrentCryptingViewModel = new();
             CryptingComboBox = new();

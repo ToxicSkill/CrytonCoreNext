@@ -46,7 +46,7 @@
             </i:Interaction.Triggers>
         </Button>
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 350, 0, 0">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 330, 0, 0">
             <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource PublicKey}"  Style="{StaticResource CryptingInfoSettings}"/>
 
             <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -80,7 +80,7 @@
             </Button>
         </Grid>
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 400, 0, 0">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 390, 0, 0">
             <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource PrivateKey}"  Style="{StaticResource CryptingInfoSettings}"/>
 
             <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -119,7 +119,7 @@
                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                 Width="22" Height="22" BorderThickness="0"
                 HorizontalAlignment="Left" VerticalAlignment="Center" Cursor="Hand"
-                    Margin="10, 300, 0, 0">
+                    Margin="10, 270, 0, 0">
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -137,7 +137,7 @@
             </Button.Template>
         </Button>
         
-        <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10, 312, 0, 0" Width="190" Height="50">
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="180, 250, 0, 0" Width="100" Height="100">
             <ContentControl Content="{Binding ProgressView}"/>
         </Grid>
         

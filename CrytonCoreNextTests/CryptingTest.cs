@@ -13,7 +13,7 @@ namespace CrytonCoreNextTests
 
         private readonly ICrypting _aes = new AES(new Mock<IJsonSerializer>().Object);
 
-        private readonly ICrypting _rsa = new RSA(new Mock<IJsonSerializer>().Object, new Mock<IXmlSerializer>().Object);
+        private readonly ICrypting _rsa = new RSA(new Mock<IJsonSerializer>().Object, new Mock<IXmlSerializer>().Object, new Mock<IProgressView>().Object);
 
         public CryptingTest()
         {

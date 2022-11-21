@@ -23,9 +23,17 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         private readonly IJsonSerializer _jsonSerializer;
 
+        private string _key;
+
+        private string _iv;
+
         public ObservableCollection<string> BlockSizesComboBox { get; init; }
 
         public ObservableCollection<string> KeySizesComboBox { get; init; }
+
+        public bool IsKeyAvailable { get; set; }
+
+        public bool IsIVAvailable { get; set; }
 
         public string SelectedBlock
         {
@@ -57,32 +65,24 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        public string Key { get; set; }
-
-        public string IV { get; set; }
-
         public int SelectedKeySize { get; set; }
 
         public int SelectedIVSize { get; set; }
 
         public string Error { get; private set; }
 
-        public ICommand GenerateRandomKeyCommand { get; init; }
+        public ICommand GenerateKeysCommand { get; init; }
 
-        public ICommand GenerateRandomIVCommand { get; init; }
+        public ICommand ExportKeysCommand { get; init; }
 
-        public ICommand SaveCryptorCommand { get; init; }
-
-        public ICommand LoadCryptorCommand { get; init; }
+        public ICommand ImportKeysCommand { get; init; }
 
         public AESViewModel(IJsonSerializer json, AesCng aes, string[] settingKeys, string pageName) : base(pageName)
         {
             _jsonSerializer = json;
-            GenerateRandomKeyCommand = new Command(GenerateRandomKey, CanExecute);
-            GenerateRandomIVCommand = new Command(GenerateRandomIV, CanExecute);
-            SaveCryptorCommand = new Command(SaveCryptor, CanExecute);
-            LoadCryptorCommand = new Command(LoadCryptor, CanExecute);
-
+            GenerateKeysCommand = new Command(GenerateRandomKeys, CanExecute);
+            ExportKeysCommand = new Command(ExportKeys, CanExecute);
+            ImportKeysCommand = new Command(ImportKeys, CanExecute);
             SettingsKeys = settingKeys;
 
             BlockSizesComboBox = new();
@@ -129,8 +129,8 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             return new()
             {
-                { SettingsKeys[0], Key },
-                { SettingsKeys[1], IV },
+                { SettingsKeys[0], _key },
+                { SettingsKeys[1], _iv },
                 { SettingsKeys[2], SelectedKey },
                 { SettingsKeys[3], SelectedBlock },
                 { SettingsKeys[4], string.Empty }
@@ -162,10 +162,10 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             if (key != null &&
                 iv != null)
             {
-                Key = Convert.ToHexString(key);
-                IV = Convert.ToHexString(iv);
-                OnPropertyChanged(nameof(Key));
-                OnPropertyChanged(nameof(IV));
+                _key = Convert.ToHexString(key);
+                _iv = Convert.ToHexString(iv);
+                OnPropertyChanged(nameof(_key));
+                OnPropertyChanged(nameof(_iv));
             }
         }
 
@@ -184,15 +184,15 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         }
 
 
-        private void SaveCryptor()
+        private void ExportKeys()
         {
             var serialzieObjects = new Objects()
             {
                 ToSerialzie = new ToSerialzieObjects()
                 {
-                    IV = this.IV,
+                    IV = this._iv,
                     SelectedKeySize = this.SelectedKey,
-                    Key = this.Key,
+                    Key = this._key,
                     SelectedBlockSize = this.SelectedBlock
                 },
                 Name = PageName
@@ -212,7 +212,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        private void LoadCryptor()
+        private void ImportKeys()
         {
             WindowDialog.OpenDialog openDialog = new(new DialogHelper()
             {
@@ -235,29 +235,27 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     }
                     else
                     {
-                        IV = castedObjects.ToSerialzie.IV;
-                        Key = castedObjects.ToSerialzie.Key;
+                        _iv = castedObjects.ToSerialzie.IV;
+                        _key = castedObjects.ToSerialzie.Key;
                         SelectedBlock = castedObjects.ToSerialzie.SelectedBlockSize;
                         SelectedKey = castedObjects.ToSerialzie.SelectedKeySize;
-                        OnPropertyChanged(nameof(IV));
-                        OnPropertyChanged(nameof(Key));
                         OnPropertyChanged(nameof(SelectedBlock));
                         OnPropertyChanged(nameof(SelectedKey));
+                        OnPropertyChanged(nameof(IsKeyAvailable));
+                        OnPropertyChanged(nameof(IsIVAvailable));
                     }
                 }
             }
         }
 
-        private void GenerateRandomKey()
+        private void GenerateRandomKeys()
         {
-            Key = RandomCryptoGenerator.GetCryptoRandomBytesString(SelectedKeySize / 2);
-            OnPropertyChanged(nameof(Key));
-        }
-
-        private void GenerateRandomIV()
-        {
-            IV = RandomCryptoGenerator.GetCryptoRandomBytesString(SelectedIVSize / 2);
-            OnPropertyChanged(nameof(IV));
+            _iv = RandomCryptoGenerator.GetCryptoRandomBytesString(SelectedIVSize / 2);
+            _key = RandomCryptoGenerator.GetCryptoRandomBytesString(SelectedKeySize / 2);
+            IsKeyAvailable = true;
+            IsIVAvailable = true;
+            OnPropertyChanged(nameof(IsKeyAvailable));
+            OnPropertyChanged(nameof(IsIVAvailable));
         }
     }
 }

@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:c="clr-namespace:CrytonCoreNext.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="800" 
+             d:DesignHeight="680" d:DesignWidth="800" 
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
     <UserControl.Resources>
@@ -13,108 +14,111 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Green.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
+            <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid>
         <Label Content="{Binding PageName}" FontSize="45" Foreground="White" Height="60" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,10" />
-        <Label Content="{DynamicResource BlockSize}" Foreground="White" HorizontalAlignment="Stretch" Margin="5,100,0,0" Style="{StaticResource CryptingSettings}"/>
-        <Label Content="{DynamicResource KeySize}" Foreground="White" HorizontalAlignment="Stretch" Margin="5,200,0,0" Style="{StaticResource CryptingSettings}"/>
-        <Label Content="{DynamicResource Key}" Foreground="White" HorizontalAlignment="Stretch" Margin="25,300,0,0" Style="{StaticResource CryptingSettings}"/>
-        <Label Content="{DynamicResource IV}" Foreground="White" HorizontalAlignment="Stretch" Margin="25,400,0,0" Style="{StaticResource CryptingSettings}"/>
+        <Label Content="{DynamicResource BlockSize}" VerticalContentAlignment="Center" Foreground="White" HorizontalAlignment="Stretch" Margin="5,100,0,0" Style="{StaticResource CryptingSettings}"/>
+        <Label Content="{DynamicResource KeySize}" VerticalContentAlignment="Center" Foreground="White" HorizontalAlignment="Stretch" Margin="5,195,0,0" Style="{StaticResource CryptingSettings}"/>
 
         <ComboBox ItemsSource="{Binding BlockSizesComboBox}" SelectedItem="{Binding SelectedBlock}" 
                   ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
                   SelectedIndex="0" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,150"/>
+
         <ComboBox ItemsSource="{Binding KeySizesComboBox}" SelectedItem="{Binding SelectedKey}" 
                   ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
-                  SelectedIndex="0" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,250"/>
+                  SelectedIndex="0" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,245"/>
 
-        <TextBox     Height="40" MaxLength="{Binding SelectedKeySize}"
-                     Text="{Binding Key}"
-                     FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                     Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,350,10,0"/>
 
-        <TextBox     Height="40" MaxLength="{Binding SelectedIVSize}"
-                     Text="{Binding IV}"
-                     FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                     Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,450,10,0"/>
-
-        <Button ToolTip="{DynamicResource GenerateRandomKey}" Style="{StaticResource RoundButton}" 
-                Height="16" Width="16" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Background="CornflowerBlue"
-                Margin="5,313,10,0" Cursor="Hand">
+        <Button Margin="10, 325, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="190" Content="{DynamicResource GenerateKeys}">
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding GenerateRandomKeyCommand}"/>
+                    <i:InvokeCommandAction Command="{Binding GenerateKeysCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
 
-        <Button ToolTip="{DynamicResource GenerateRandomIV}" Style="{StaticResource RoundButton}" 
-                Height="16" Width="16" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Background="CornflowerBlue"
-                Margin="5,413,10,0" Cursor="Hand">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 400, 0, 0">
+            <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource Key}"  Style="{StaticResource CryptingInfoSettings}"/>
 
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding GenerateRandomIVCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Button>
-
-        <Button ToolTip="{DynamicResource ExportToolTip}" Background="#00000000" 
-                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                Width="30" Height="30" BorderThickness="0"
-                HorizontalAlignment="Left" VerticalAlignment="Top"
-                Margin="5,512,0,0" Cursor="Hand">
-
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding SaveCryptorCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-
-            <Button.Template>
-                <ControlTemplate>
-                    <Image Source="/Assets/SaveObjects.png" Width="30" Height="30"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality"
+            <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsKeyAvailable, Converter={StaticResource BoolToVisibilityConverter}}"
                        RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
 
-
-        <Button ToolTip="{DynamicResource ImportToolTip}" Background="#00000000" 
-                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                Width="30" Height="30" BorderThickness="0"
-                HorizontalAlignment="Left" VerticalAlignment="Top"
-                Margin="70,512,0,0" Cursor="Hand">
-
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding LoadCryptorCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-
-            <Button.Template>
-                <ControlTemplate>
-                    <Image Source="/Assets/LoadObjects.png" Width="30" Height="30"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality"
+            <Image Source="/Assets/Info.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsKeyAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"
                        RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
 
+        </Grid>
 
-        <Label     Height="40" Content="{Binding Error}"
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 450, 0, 0">
+            <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource IV}"  Style="{StaticResource CryptingInfoSettings}"/>
+
+            <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsIVAvailable, Converter={StaticResource BoolToVisibilityConverter}}"
+                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+
+            <Image Source="/Assets/Info.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsIVAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"
+                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+
+        </Grid>
+
+        <Grid Width="70" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 500, 0, 0">
+       
+            <Button ToolTip="{DynamicResource ImportToolTip}" Background="#00000000" 
+                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                    Width="22" Height="22" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Left">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding ImportKeysCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="/Assets/LoadObjects.png" Width="22" Height="22"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button  ToolTip="{DynamicResource ExportToolTip}" Background="#00000000" 
+                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                    Width="22" Height="22" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Right">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding ExportKeysCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="/Assets/SaveObjects.png" Width="22" Height="22"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10, 362, 0, 0" Width="190" Height="50">
+            <ContentControl Content="{Binding ProgressView}"/>
+        </Grid>
+
+        <Label     Height="60" Content="{Binding Logger.Message}"
                    FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                    Foreground="Red" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Foreground="CornflowerBlue" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                     Margin="5,550,10,0"/>
     </Grid>
 </UserControl>
