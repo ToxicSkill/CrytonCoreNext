@@ -8,20 +8,21 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Windows.Input;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
 {
     public class AESViewModel : ViewModelBase
     {
+        private readonly IJsonSerializer _jsonSerializer;
+
+        private readonly AESHelper _aesHelper;
+
         private readonly string[] SettingsKeys;
 
         private string _selectedKey;
 
         private string _selectedBlock;
-
-        private readonly IJsonSerializer _jsonSerializer;
 
         private string _key;
 
@@ -43,9 +44,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 if (_selectedBlock != value)
                 {
                     _selectedBlock = value;
-                    SelectedIVSize = Convert.ToInt32(_selectedBlock) / 4;
                     OnPropertyChanged(nameof(SelectedBlock));
-                    OnPropertyChanged(nameof(SelectedIVSize));
                 }
             }
         }
@@ -58,16 +57,10 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 if (_selectedKey != value)
                 {
                     _selectedKey = value;
-                    SelectedKeySize = Convert.ToInt32(_selectedKey) / 4;
                     OnPropertyChanged(nameof(SelectedKey));
-                    OnPropertyChanged(nameof(SelectedKeySize));
                 }
             }
         }
-
-        public int SelectedKeySize { get; set; }
-
-        public int SelectedIVSize { get; set; }
 
         public string Error { get; private set; }
 
@@ -77,9 +70,10 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public ICommand ImportKeysCommand { get; init; }
 
-        public AESViewModel(IJsonSerializer json, AesCng aes, string[] settingKeys, string pageName) : base(pageName)
+        public AESViewModel(IJsonSerializer json, AESHelper aesHelper, string[] settingKeys, string pageName) : base(pageName)
         {
             _jsonSerializer = json;
+            _aesHelper = aesHelper;
             GenerateKeysCommand = new Command(GenerateRandomKeys, CanExecute);
             ExportKeysCommand = new Command(ExportKeys, CanExecute);
             ImportKeysCommand = new Command(ImportKeys, CanExecute);
@@ -88,34 +82,12 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             BlockSizesComboBox = new();
             KeySizesComboBox = new();
 
-            var legalKeys = aes.LegalKeySizes[0];
-            var legalBlocks = aes.LegalBlockSizes[0];
-
-            if (legalKeys.SkipSize != 0)
-            {
-                for (var i = legalKeys.MinSize; i <= legalKeys.MaxSize; i += legalKeys.SkipSize)
-                {
-                    KeySizesComboBox.Add(i.ToString());
-                }
-            }
-            else
-            {
-                KeySizesComboBox.Add(legalKeys.MinSize.ToString());
-            }
-            if (legalBlocks.SkipSize != 0)
-            {
-                for (var i = legalBlocks.MinSize; i <= legalBlocks.MaxSize; i += legalBlocks.SkipSize)
-                {
-                    BlockSizesComboBox.Add(i.ToString());
-                }
-            }
-            else
-            {
-                BlockSizesComboBox.Add(legalBlocks.MinSize.ToString());
-            }
-
-            SelectedBlock = BlockSizesComboBox.First();
-            SelectedKey = KeySizesComboBox.First();
+            KeySizesComboBox = new ObservableCollection<string>(_aesHelper.LegalKeys);
+            BlockSizesComboBox = new ObservableCollection<string>(_aesHelper.LegalBlocks);
+            SelectedBlock = _aesHelper.DefaultBlockSize;
+            SelectedKey = _aesHelper.DefaultKeySize;
+            OnPropertyChanged(nameof(SelectedBlock));
+            OnPropertyChanged(nameof(SelectedKey));
             OnPropertyChanged(nameof(BlockSizesComboBox));
             OnPropertyChanged(nameof(KeySizesComboBox));
         }
@@ -237,25 +209,39 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     {
                         _iv = castedObjects.ToSerialzie.IV;
                         _key = castedObjects.ToSerialzie.Key;
+                        if (!ValidateKeys())
+                        {
+                            Error = "Incorrect keys";
+                            OnPropertyChanged(nameof(Error));
+                            return;
+                        }
                         SelectedBlock = castedObjects.ToSerialzie.SelectedBlockSize;
                         SelectedKey = castedObjects.ToSerialzie.SelectedKeySize;
                         OnPropertyChanged(nameof(SelectedBlock));
                         OnPropertyChanged(nameof(SelectedKey));
-                        OnPropertyChanged(nameof(IsKeyAvailable));
-                        OnPropertyChanged(nameof(IsIVAvailable));
                     }
                 }
             }
         }
 
-        private void GenerateRandomKeys()
+        private bool ValidateKeys()
         {
-            _iv = RandomCryptoGenerator.GetCryptoRandomBytesString(SelectedIVSize / 2);
-            _key = RandomCryptoGenerator.GetCryptoRandomBytesString(SelectedKeySize / 2);
-            IsKeyAvailable = true;
-            IsIVAvailable = true;
+            var keysCorrect = _aesHelper.IsKeyValid(_key) && _aesHelper.IsIVValid(_iv);
+
+            IsKeyAvailable = keysCorrect;
+            IsIVAvailable = keysCorrect;
+
             OnPropertyChanged(nameof(IsKeyAvailable));
             OnPropertyChanged(nameof(IsIVAvailable));
+
+            return keysCorrect;
+        }
+
+        private void GenerateRandomKeys()
+        {
+            _iv = RandomCryptoGenerator.GetCryptoRandomBytesString(Convert.ToInt32(SelectedBlock) / 8);
+            _key = RandomCryptoGenerator.GetCryptoRandomBytesString(Convert.ToInt32(SelectedKey) / 8);
+            ValidateKeys();
         }
     }
 }

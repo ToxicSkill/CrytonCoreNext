@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.CryptingOptionsViewModels;
 using CrytonCoreNext.Extensions;
+using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,21 +15,23 @@ namespace CrytonCoreNext.Crypting
     {
         private static readonly string[] SettingsKeys = { "Key", "IV", "KeySize", "BlockSize", "Error" };
 
+        private readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
+
+        private readonly AesCng _aes;
+
+        private readonly AESHelper _aesHelper;
+
         public string Name => nameof(AES);
 
         public int ProgressCount => 5;
 
         public ViewModelBase ViewModel { get; init; }
 
-
-        private readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
-
-        private readonly AesCng _aes;
-
         public AES(IJsonSerializer jsonSerializer)
         {
             _aes = new();
-            ViewModel = new AESViewModel(jsonSerializer, _aes, SettingsKeys, Name);
+            _aesHelper = new AESHelper(_aes, _paddingMode);
+            ViewModel = new AESViewModel(jsonSerializer, _aesHelper, SettingsKeys, Name);
         }
 
         public ViewModelBase GetViewModel() => ViewModel;

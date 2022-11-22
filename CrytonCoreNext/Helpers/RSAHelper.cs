@@ -36,6 +36,7 @@ namespace CrytonCoreNext.Helpers
         {
             return parameters.Modulus == null;
         }
+
         public bool IsKeyPrivate(RSAParameters parameters)
         {
             return parameters.D != null;

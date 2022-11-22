@@ -43,7 +43,7 @@
             </i:Interaction.Triggers>
         </Button>
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 400, 0, 0">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 380, 0, 0">
             <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource Key}"  Style="{StaticResource CryptingInfoSettings}"/>
 
             <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -56,7 +56,7 @@
 
         </Grid>
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 450, 0, 0">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 440, 0, 0">
             <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource IV}"  Style="{StaticResource CryptingInfoSettings}"/>
 
             <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -69,7 +69,7 @@
 
         </Grid>
 
-        <Grid Width="70" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 500, 0, 0">
+        <Grid Width="70" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 495, 0, 0">
        
             <Button ToolTip="{DynamicResource ImportToolTip}" Background="#00000000" 
                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
