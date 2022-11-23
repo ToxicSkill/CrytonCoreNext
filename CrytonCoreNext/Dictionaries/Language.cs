@@ -6,7 +6,13 @@ namespace CrytonCoreNext.Dictionaries
     {
         public static string Post(string key)
         {
-            return Application.Current.Resources.MergedDictionaries[0][key].ToString() ?? string.Empty;
+            if (Application.Current == null)
+            {
+                return string.Empty;
+            }
+            return Application.Current.Resources.MergedDictionaries.Count > 0 ?
+                Application.Current.Resources.MergedDictionaries[0][key].ToString() ?? string.Empty :
+                string.Empty;
         }
     }
 }

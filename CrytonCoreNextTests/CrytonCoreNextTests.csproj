@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestingFiles\2.pdf" />
+    <None Remove="TestingFiles\3.pdf" />
     <None Remove="TestingFiles\test.pdf" />
     <None Remove="TestingFiles\testPDF.pdf" />
   </ItemGroup>
@@ -30,6 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="TestingFiles\2.pdf" />
+    <Resource Include="TestingFiles\3.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="TestingFiles\test.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
