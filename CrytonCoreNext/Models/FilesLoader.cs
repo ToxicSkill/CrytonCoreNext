@@ -1,10 +1,9 @@
-﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.Helpers;
-using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Static;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace CrytonCoreNext.Models
 {
@@ -22,13 +21,31 @@ namespace CrytonCoreNext.Models
         public List<File>? LoadFiles(List<string> filesNames, int currentIndex = 0)
         {
             var files = new List<File>();
+            var count = filesNames.Count;
+            ManualResetEvent[] resetEvents = new ManualResetEvent[count];
 
-            foreach (var path in filesNames)
+            for (int i = 0; i < count; i++)
             {
                 currentIndex += 1;
-                var byteArray = System.IO.File.ReadAllBytes(path);
-                var newFile = InitializeNewFile(currentIndex, path, byteArray);
-                files.Add(newFile);
+                var newIndex = currentIndex;
+                var fileName = filesNames[i];
+                resetEvents[i] = new ManualResetEvent(false);
+                ThreadPool.QueueUserWorkItem(new WaitCallback((object index) =>
+                {
+                    var byteArray = System.IO.File.ReadAllBytes(fileName);
+                    var newFile = InitializeNewFile(newIndex, fileName, byteArray);
+                    lock (files)
+                    {
+                        files.Add(newFile);
+                    }
+
+                    resetEvents[(int)index].Set();
+                }), i);
+            }
+
+            foreach (var reset in resetEvents)
+            {
+                reset.WaitOne();
             }
 
             return files;
@@ -42,7 +59,7 @@ namespace CrytonCoreNext.Models
             return new File()
             {
                 Id = currentFilesCount,
-                Name = Path.GetFileNameWithoutExtension(fileInfo.FullName),
+                Name = System.IO.Path.GetFileNameWithoutExtension(fileInfo.FullName),
                 NameWithExtension = fileInfo.Name,
                 Extension = recognitionResults.succes ? recognitionResults.Item2.extension : fileExtension,
                 Date = fileInfo.CreationTimeUtc,

@@ -55,8 +55,13 @@ namespace CrytonCoreNext.Abstract
 
         public void LoadFiles()
         {
+            LoadFiles(Static.Extensions.DialogFilters.All);
+        }
+
+        public void LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
+        {
             var filesCount = FilesViewModel.GetFilesCount();
-            var filesPaths = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.All, Language.Post("OpenFiles"), true);
+            var filesPaths = _dialogService.GetFilesNamesToOpen(filters, Language.Post("OpenFiles"), true);
             var newFiles = _fileService.LoadFiles(filesPaths, filesCount);
             if (FilesViewModel.AddNewFiles(newFiles))
             {

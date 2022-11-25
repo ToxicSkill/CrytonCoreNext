@@ -50,7 +50,10 @@ namespace CrytonCoreNext.ViewModels
                 {
                     _selectedItemIndex = value;
                     UpdateCurrentFile();
-                    NotifyFilesView();
+                    if (FilesCollection.Any() && _selectedItemIndex != -1)
+                    {
+                        NotifyFilesView();
+                    }
                     OnPropertyChanged(nameof(SelectedItemIndex));
                 }
                 ChangeShowFilesView();
@@ -128,11 +131,18 @@ namespace CrytonCoreNext.ViewModels
                 SelectedItemIndex = 0;
             }
 
+            _filesService.ReorderFiles(FilesCollection);
             return true;
         }
+
         public bool AnyFiles()
         {
             return FilesCollection.Any();
+        }
+
+        public List<File> GetAllFiles()
+        {
+            return FilesCollection.ToList();
         }
 
         public void Update(IEnumerable<File>? files = null, bool showFilesView = false)

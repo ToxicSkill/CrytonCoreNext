@@ -1,6 +1,5 @@
 ﻿using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
-using Xunit;
 
 namespace CrytonCoreNextTests
 {
@@ -12,22 +11,6 @@ namespace CrytonCoreNextTests
         public PDFReaderTest()
         {
 
-        }
-
-        [Fact]
-        public void CanReadShouldNotNull()
-        {
-            var path = "";
-            var result = _pdfReader.ReadPdf(path);
-            Assert.NotNull(result);
-        }
-
-        [Fact]
-        public void CanReadShouldNull()
-        {
-            var path = "";
-            var result = _pdfReader.ReadPdf(path);
-            Assert.Null(result);
         }
     }
 }

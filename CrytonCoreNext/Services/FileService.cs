@@ -76,5 +76,10 @@ namespace CrytonCoreNext.Services
         {
             return _filesManager.ModifyFile(files, guid, bytes, status, methodName);
         }
+
+        public void ReorderFiles(ObservableCollection<File> files)
+        {
+            _filesManager.ReorderFiles(files);
+        }
     }
 }

@@ -1,13 +1,16 @@
-﻿using Docnet.Core;
+﻿using CrytonCoreNext.Interfaces;
+using Docnet.Core;
 using Docnet.Core.Models;
+using Docnet.Core.Readers;
 using ImageMagick;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.Models
 {
-    public class PDFManager
+    public class PDFManager : IPDFManager
     {
         public WriteableBitmap GetImageFromPdf(PDFBase pdf, int num = 0)
         {
@@ -19,26 +22,18 @@ namespace CrytonCoreNext.Models
 
             try
             {
-                using (IDocLib pdfLibrary = DocLib.Instance)
-                {
-                    var bytes = pdf.Bytes;
-                    var dimensions = pdf.Dimensions;
-                    var reader = string.Equals(string.Empty, default) ?
-                        pdfLibrary.GetDocReader(bytes, new PageDimensions(dimensions)) :
-                        pdfLibrary.GetDocReader(bytes, pdf.Password, new PageDimensions(dimensions));
-                    using var docReader = reader;
-                    using var pageReader = docReader.GetPageReader(pdfPageNum);
-                    var rawBytes = pageReader.GetImage(); // Returns image bytes as B-G-R-A ordered list.
-                    //rawBytes = RearrangeBytesToRGBA(rawBytes);
-                    var width = pageReader.GetPageWidth();
-                    var height = pageReader.GetPageHeight();
+                using var pageReader = pdf.Reader.GetPageReader(pdfPageNum);
+                var rawBytes = pageReader.GetImage(); // Returns image bytes as B-G-R-A ordered list.
+                rawBytes = RearrangeBytesToRGBA(rawBytes);
+                var width = pageReader.GetPageWidth();
+                var height = pageReader.GetPageHeight();
 
-                    // specify that we are reading a byte array of colors in R-G-B-A order.
-                    PixelReadSettings pixelReadSettings = new(width, height, StorageType.Char, PixelMapping.RGBA);
-                    using MagickImage imgPdfOverlay = new(rawBytes, pixelReadSettings);
-                    imgBackdrop = new MagickImage(backdropColor, width, height);
-                    imgBackdrop.Composite(imgPdfOverlay, CompositeOperator.Over);
-                }
+                // specify that we are reading a byte array of colors in R-G-B-A order.
+                PixelReadSettings pixelReadSettings = new(width, height, StorageType.Char, PixelMapping.RGBA);
+                using MagickImage imgPdfOverlay = new(rawBytes, pixelReadSettings);
+                imgBackdrop = new MagickImage(backdropColor, width, height);
+                imgBackdrop.Composite(imgPdfOverlay, CompositeOperator.Over);
+
 
                 imgBackdrop.Write(memoryStream, MagickFormat.Bmp);
                 imgBackdrop.Dispose();
@@ -55,6 +50,35 @@ namespace CrytonCoreNext.Models
             }
 
             return new(bitmap);
+        }
+
+        private BitmapImage GetImage(IPageReader pageReader)
+        {
+            MemoryStream memoryStream = new();
+            MagickImage imgBackdrop;
+            MagickColor backdropColor = MagickColors.White;
+            var bitmap = new BitmapImage();
+            var rawBytes = pageReader.GetImage(); // Returns image bytes as B-G-R-A ordered list.
+            rawBytes = RearrangeBytesToRGBA(rawBytes);
+            var width = pageReader.GetPageWidth();
+            var height = pageReader.GetPageHeight();
+
+            // specify that we are reading a byte array of colors in R-G-B-A order.
+            PixelReadSettings pixelReadSettings = new(width, height, StorageType.Char, PixelMapping.RGBA);
+            using MagickImage imgPdfOverlay = new(rawBytes, pixelReadSettings);
+            imgBackdrop = new MagickImage(backdropColor, width, height);
+            imgBackdrop.Composite(imgPdfOverlay, CompositeOperator.Over);
+
+
+            imgBackdrop.Write(memoryStream, MagickFormat.Bmp);
+            imgBackdrop.Dispose();
+
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            bitmap.StreamSource = memoryStream;
+            bitmap.EndInit();
+            return bitmap;
         }
 
         private static byte[] RearrangeBytesToRGBA(byte[] BGRABytes)
@@ -83,6 +107,44 @@ namespace CrytonCoreNext.Models
                 idx += 4;
             }
             return RGBABytes;
+        }
+
+        public WriteableBitmap GetImage(PDFBase pdf)
+        {
+            using (IDocLib pdfLibrary = DocLib.Instance)
+            {
+                var dimensions = pdf.Dimensions;
+                var reader = pdf.Password.Equals(string.Empty) ?
+                    pdfLibrary.GetDocReader(pdf.Bytes, new PageDimensions(dimensions)) :
+                    pdfLibrary.GetDocReader(pdf.Bytes, pdf.Password, new PageDimensions(dimensions));
+
+                using var docReader = reader;
+                using var pageReader = docReader.GetPageReader(pdf.LastPage);
+                return new(GetImage(pageReader));
+            }
+        }
+
+        public List<BitmapImage> GetAllPdfImages(PDFBase pdf)
+        {
+            var images = new List<BitmapImage>();
+
+            using (IDocLib pdfLibrary = DocLib.Instance)
+            {
+                var dimensions = pdf.Dimensions;
+                var reader = pdf.Password.Equals(string.Empty) ?
+                    pdfLibrary.GetDocReader(pdf.Bytes, new PageDimensions(dimensions)) :
+                    pdfLibrary.GetDocReader(pdf.Bytes, pdf.Password, new PageDimensions(dimensions));
+
+                using var docReader = reader;
+
+                for (int i = 0; i < pdf.NumberOfPages; i++)
+                {
+                    using var pageReader = docReader.GetPageReader(i);
+                    images.Add(GetImage(pageReader));
+                }
+            }
+
+            return images;
         }
     }
 }

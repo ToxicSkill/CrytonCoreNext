@@ -61,11 +61,13 @@
     <None Remove="Assets\Minimize_Mo.png" />
     <None Remove="Assets\Moon.png" />
     <None Remove="Assets\MoonCloud.png" />
+    <None Remove="Assets\Next.png" />
     <None Remove="Assets\PadlockClose.png" />
     <None Remove="Assets\PadlockOpen.png" />
     <None Remove="Assets\PartialSun.png" />
     <None Remove="Assets\PasswordKeeper — kopia.png" />
     <None Remove="Assets\PasswordKeeper.png" />
+    <None Remove="Assets\Previous.png" />
     <None Remove="Assets\ProgressConnector.png" />
     <None Remove="Assets\ProgressDot.png" />
     <None Remove="Assets\ProgressIndicator.png" />
@@ -253,6 +255,9 @@
     <Resource Include="Assets\MoonCloud.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Next.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\PadlockClose.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -266,6 +271,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\PasswordKeeper.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Previous.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\ProgressConnector.png">

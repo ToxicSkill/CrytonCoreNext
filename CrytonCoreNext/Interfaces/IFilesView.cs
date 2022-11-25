@@ -8,6 +8,8 @@ namespace CrytonCoreNext.Interfaces
     {
         event EventHandler FilesChanged;
 
+        List<File> GetAllFiles();
+
         File? GetCurrentFile();
 
         File? GetFileByIndex(int index);

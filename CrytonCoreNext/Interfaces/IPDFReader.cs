@@ -4,6 +4,6 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface IPDFReader
     {
-        PDFBase? ReadPdf(string path);
+        PDFBase? ReadPdf(File file, string password = "");
     }
 }

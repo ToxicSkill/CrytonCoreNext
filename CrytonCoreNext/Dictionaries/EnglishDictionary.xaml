@@ -4,6 +4,8 @@
                     xml:space="preserve" >
 
     <system:String x:Key="CurrentFileName">Name</system:String>
+    <system:String x:Key="CurrentFileTitle">Title</system:String>
+    <system:String x:Key="CurrentFilePages">Pages</system:String>
     <system:String x:Key="CurrentFileExtension">Extension</system:String>
     <system:String x:Key="CurrentFileSize">Size</system:String>
     <system:String x:Key="CurrentFileDate">Creation time</system:String>

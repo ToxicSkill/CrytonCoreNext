@@ -167,18 +167,17 @@ namespace CrytonCoreNext.Models
             Helpers.GCHelper.Collect();
             return new(true, file.Id);
         }
-
-        private Models.File? GetFileByGuid(ObservableCollection<Models.File> files, Guid guid)
-        {
-            return files.Where(x => x.Guid == guid).Select(x => x).FirstOrDefault();
-        }
-
-        private void ReorderFiles(ObservableCollection<Models.File> files)
+        public void ReorderFiles(ObservableCollection<Models.File> files)
         {
             foreach (var item in files.Select((file, i) => new { i, file }))
             {
                 item.file.Id = item.i + 1;
             }
+        }
+
+        private Models.File? GetFileByGuid(ObservableCollection<Models.File> files, Guid guid)
+        {
+            return files.Where(x => x.Guid == guid).Select(x => x).FirstOrDefault();
         }
     }
 }

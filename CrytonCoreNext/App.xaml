@@ -67,6 +67,16 @@
             <Setter Property="FontWeight" Value="Normal"/>
         </Style>
 
+        <Style x:Key="FileInformationsBold" TargetType="Label">
+            <Setter Property="Margin" Value="10, 0, 0, 0"/>
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="FontFamily" Value="Leelawadee UI Semilight"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
         <Style x:Key="CryptingSettings" TargetType="Label">
             <Setter Property="FontSize" Value="22"/>
             <Setter Property="Foreground" Value="White"/>

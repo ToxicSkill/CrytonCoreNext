@@ -43,6 +43,9 @@
             <DataTemplate DataType="{x:Type ViewModels:FilesViewViewModel}">
                 <views:FileViewViewPage />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModels:ImageViewerViewModel}">
+                <views:ImageViewerView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type CryptingViewModels:AESViewModel}">
                 <cryptingViews:AESView />
             </DataTemplate>

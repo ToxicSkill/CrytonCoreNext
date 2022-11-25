@@ -37,8 +37,11 @@ namespace CrytonCoreNext
                 .AddSingleton(CreateFilesLoader)
                 .AddSingleton(CreateFilesSaver)
                 .AddSingleton<IFilesManager, FilesManager>()
+                .AddSingleton<IPDFManager, PDFManager>()
+                .AddSingleton<IPDFReader, PDFReader>()
                 .AddSingleton(CreateFileService)
-                .AddSingleton(CreateFilesView)
+                .AddSingleton(CreatePDFService)
+                .AddTransient(CreateFilesView)
                 .AddSingleton<IDialogService, DialogService>()
                 .AddTransient<IProgressService, ProgressService>()
                 .AddSingleton<IJsonSerializer, JsonSerializer>()
@@ -104,8 +107,17 @@ namespace CrytonCoreNext
             var dialogService = provider.GetRequiredService<IDialogService>();
             var filesView = provider.GetRequiredService<IFilesView>();
             var progressView = provider.GetRequiredService<IProgressView>();
+            var pdfService = provider.GetRequiredService<IPDFService>();
 
-            return new(fileService, dialogService, filesView, progressView);
+            return new(fileService, dialogService, filesView, progressView, pdfService);
+        }
+
+        private IPDFService CreatePDFService(IServiceProvider provider)
+        {
+            var pdfManager = provider.GetRequiredService<IPDFManager>();
+            var pdfReader = provider.GetRequiredService<IPDFReader>();
+
+            return new PDFService(pdfManager, pdfReader);
         }
 
         private ICrypting CreateAES(IServiceProvider provider)

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     MinWidth="900"
     d:DesignHeight="450"
     d:DesignWidth="1400"
@@ -17,25 +18,23 @@
     </UserControl.Background>
 
     <Grid>
-        <Label Content="PDF" FontSize="48" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 0, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
+        <Label Content="PDF" FontSize="50" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 5, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
 
-        <Grid Margin="0, 110, 0, 0" Visibility="{Binding FileInformationVisibility}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Label Content="{DynamicResource CurrentFileName}" Style="{StaticResource FileInformations}"/>
-                <Label Content="{DynamicResource CurrentFileExtension}" Style="{StaticResource FileInformations}"/>
-                <Label Content="{DynamicResource CurrentFileSize}" Style="{StaticResource FileInformations}"/>
-                <Label Content="{DynamicResource CurrentFileDate}" Style="{StaticResource FileInformations}"/>
-            </StackPanel>
-            <StackPanel Grid.Column="1">
-                <Label Content="{Binding CurrentFile.Name}" Style="{StaticResource FileInformations}"/>
-                <Label Content="{Binding CurrentFile.Extension}" Style="{StaticResource FileInformations}"/>
-                <Label Content="{Binding CurrentFile.Size}" Style="{StaticResource FileInformations}"/>
-                <Label Content="{Binding CurrentFile.Date}" Style="{StaticResource FileInformations}"/>
-            </StackPanel>
+        <Grid Width="300" Margin="0, 20, 0, 0" Visibility="{Binding FileInformationVisibility}" HorizontalAlignment="Right" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="{DynamicResource CurrentFileTitle}" Style="{StaticResource FileInformationsBold}"/>
+            <Label Grid.Row="1" Content="{Binding CurrentPDFFile.Name}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="2" Content="{DynamicResource CurrentFilePages}" Style="{StaticResource FileInformationsBold}"/>
+            <Label Grid.Row="3" Content="{Binding CurrentPDFFile.NumberOfPages}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="4" Content="{DynamicResource CurrentFileDate}" Style="{StaticResource FileInformationsBold}"/>
+            <Label Grid.Row="5" Content="{Binding CurrentPDFFile.Date}" Style="{StaticResource FileInformations}"/>
         </Grid>
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
               Height="110" Margin="20, 0, 70, 20">
@@ -49,8 +48,56 @@
         <Button Width="150" Height="40" Content="Next Page" Command="{Binding ClearFilesCommand}" Margin="39,320,1211,90"/>
 
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200, 0,0,0">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200, 20,300,20" Visibility="{Binding FileInformationVisibility}" >
             <Image Source="{Binding Bitmap}" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" RenderOptions.CachingHint="Unspecified" RenderOptions.EdgeMode="Unspecified" />
+          
+            <Button Background="#00000000" 
+                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                Width="50"  BorderThickness="0"
+                HorizontalAlignment="Left" VerticalAlignment="Stretch" Cursor="Hand">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding PreviousCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="/Assets/Previous.png"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform">
+                        </Image>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+
+            <Button Background="#00000000" 
+                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                Width="50"  BorderThickness="0"
+                HorizontalAlignment="Right" VerticalAlignment="Stretch" Cursor="Hand">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding NextCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="/Assets/Next.png" 
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform">
+
+                        </Image>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
+            <ContentControl Content="{Binding FilesViewModel}"/>
         </Grid>
     </Grid>
 </UserControl>

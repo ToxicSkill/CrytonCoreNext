@@ -1,20 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using Docnet.Core.Models;
+using Docnet.Core.Readers;
+using System.Collections.Generic;
 
 namespace CrytonCoreNext.Models
 {
-    public class PDFBase
+    public class PDFBase : File
     {
-        public string Path { get; set; }
+        public PdfVersion Version { get; set; }
+
+        public IDocReader Reader { get; set; }
 
         public string Password { get; set; }
 
         public double Dimensions { get; set; }
 
-        public string Title { get; set; }
-
         public string Owner { get; set; }
 
         public int NumberOfPages { get; set; }
+
+        public int LastPage { get; set; } = 0;
 
         public bool IsProtectedByPassword { get; set; }
 
@@ -22,6 +26,14 @@ namespace CrytonCoreNext.Models
 
         public List<PDFPage> Pages { get; set; }
 
-        public byte[] Bytes { get; set; }
+        public PDFBase()
+        {
+
+        }
+
+        public PDFBase(File file) : base(file)
+        {
+
+        }
     }
 }

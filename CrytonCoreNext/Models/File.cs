@@ -40,8 +40,21 @@ namespace CrytonCoreNext.Models
             Id = id;
             Bytes = bytes;
             Method = string.Empty;
-            //Text = Parsers.FileContentParser.GetStringFromBytes(bytes);
             Guid = new Guid();
+        }
+
+        public File(File file)
+        {
+            Name = file.Name;
+            NameWithExtension = file.NameWithExtension;
+            Path = file.Path;
+            Size = file.Size;
+            Date = file.Date;
+            Extension = file.Extension;
+            Id = file.Id;
+            Bytes = file.Bytes;
+            Method = string.Empty;
+            Guid = file.Guid;
         }
     }
 }
