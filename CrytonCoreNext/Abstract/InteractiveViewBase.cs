@@ -12,7 +12,7 @@ using System.Windows.Media;
 
 namespace CrytonCoreNext.Abstract
 {
-    public class InteractiveViewBase : ViewModelBase, IDisposable
+    public class InteractiveViewBase<T> : ViewModelBase, IDisposable where T : File
     {
         protected readonly IFileService _fileService;
 
@@ -24,7 +24,7 @@ namespace CrytonCoreNext.Abstract
 
         public IFilesView FilesViewModel { get; init; }
 
-        public File? CurrentFile { get; private set; }
+        public T? CurrentFile { get; private set; }
 
         public Visibility FileInformationVisibility { get; private set; } = Visibility.Hidden;
 
@@ -48,7 +48,7 @@ namespace CrytonCoreNext.Abstract
 
         public void HandleFileChanged(object? sender, EventArgs? e)
         {
-            CurrentFile = FilesViewModel.GetCurrentFile();
+            CurrentFile = (T?)(new File(FilesViewModel.GetCurrentFile()));
             UpdateFilesVisibility();
             OnPropertyChanged(nameof(CurrentFile));
         }
@@ -104,7 +104,7 @@ namespace CrytonCoreNext.Abstract
             var tempSelectedItemIndex = FilesViewModel.GetSelectedFileIndex();
             if (tempSelectedItemIndex != -1 && FilesViewModel.GetFilesCount() >= tempSelectedItemIndex + 1)
             {
-                CurrentFile = FilesViewModel.GetFileByIndex(tempSelectedItemIndex);
+                CurrentFile = (T)(new File(FilesViewModel.GetFileByIndex(tempSelectedItemIndex)));
             }
             OnPropertyChanged(nameof(CurrentFile));
         }

@@ -66,7 +66,7 @@ namespace CrytonCoreNext.Models
                 Size = GetSizeString(fileInfo.Length),
                 Path = path,
                 Bytes = recognitionResults.succes ? byteArray.Skip(64).ToArray() : byteArray,
-                Status = recognitionResults.succes ? CryptingStatus.Status.Encrypted : CryptingStatus.Status.Decrypted,
+                //Status = recognitionResults.succes ? CryptingStatus.Status.Encrypted : CryptingStatus.Status.Decrypted,
                 //Text = Parsers.FileContentParser.GetStringFromBytes(byteArray),
                 Guid = System.Guid.NewGuid()
             };

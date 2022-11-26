@@ -13,12 +13,12 @@ using System.Windows.Threading;
 
 namespace CrytonCoreNext.ViewModels
 {
-    public class PdfManagerViewModel : InteractiveViewBase
+    public class PdfManagerViewModel : InteractiveViewBase<PDFFile>
     {
-        private List<PDFBase> _pdfFiles;
+        private List<PDFFile> _pdfFiles;
 
-        private PDFBase _currentPDFFile;
-        public PDFBase CurrentPDFFile
+        private PDFFile _currentPDFFile;
+        public PDFFile CurrentPDFFile
         {
             get => _currentPDFFile;
             set

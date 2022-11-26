@@ -10,12 +10,15 @@ namespace CrytonCoreNext.Services
 {
     public class CryptingService : ICryptingService
     {
+        private readonly ICryptingRecognition _cryptingRecognition;
+
         private readonly List<ICrypting> _cryptors;
 
         public ICrypting CurrentCrypting { get; private set; }
 
-        public CryptingService(IEnumerable<ICrypting> cryptors)
+        public CryptingService(ICryptingRecognition cryptingRecognition, IEnumerable<ICrypting> cryptors)
         {
+            _cryptingRecognition = cryptingRecognition;
             _cryptors = cryptors.ToList();
             SetCurrentCrypting(_cryptors.First());
         }
@@ -43,7 +46,25 @@ namespace CrytonCoreNext.Services
             }
         }
 
-        public async Task<byte[]> RunCrypting(File file, IProgress<string> progress)
+        public byte[] AddRecognitionBytes(CryptFile file)
+        {
+
+            if (file.Status.Equals(CryptingStatus.Status.Encrypted))
+            {
+                var recognitionBytes = _cryptingRecognition.PrepareRerecognizableBytes(file.Method, file.Extension);
+                var newBytes = recognitionBytes.Concat(file.Bytes);
+                if (recognitionBytes != null)
+                {
+                    if (recognitionBytes.Length > 0)
+                    {
+                        return newBytes.ToArray();
+                    }
+                }
+            }
+            return new byte[0];
+        }
+
+        public async Task<byte[]> RunCrypting(CryptFile file, IProgress<string> progress)
         {
             return file.Status.Equals(CryptingStatus.Status.Encrypted) ?
                await CurrentCrypting.Decrypt(file.Bytes, progress) :

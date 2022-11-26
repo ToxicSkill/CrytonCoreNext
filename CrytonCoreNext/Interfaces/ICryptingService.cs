@@ -7,9 +7,11 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface ICryptingService
     {
-        Task<byte[]> RunCrypting(File file, IProgress<string> progress);
+        Task<byte[]> RunCrypting(CryptFile file, IProgress<string> progress);
 
         void SetCurrentCrypting(ICrypting crypting);
+
+        byte[] AddRecognitionBytes(CryptFile file);
 
         List<ICrypting> GetCryptors();
 

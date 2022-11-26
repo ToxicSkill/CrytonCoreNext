@@ -6,10 +6,10 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface IPDFManager
     {
-        WriteableBitmap GetImage(PDFBase pdf);
+        WriteableBitmap GetImage(PDFFile pdf);
 
-        List<BitmapImage> GetAllPdfImages(PDFBase pdf);
+        List<BitmapImage> GetAllPdfImages(PDFFile pdf);
 
-        WriteableBitmap GetImageFromPdf(PDFBase pdf, int pageNumber);
+        WriteableBitmap GetImageFromPdf(PDFFile pdf, int pageNumber);
     }
 }

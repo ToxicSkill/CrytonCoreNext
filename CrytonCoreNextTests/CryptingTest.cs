@@ -13,6 +13,8 @@ namespace CrytonCoreNextTests
     {
         private readonly ICryptingService _cryptingService;
 
+        private readonly ICryptingRecognition _cryptingRecognition = new Mock<ICryptingRecognition>().Object;
+
         private readonly ICrypting _aes = new AES(new Mock<IJsonSerializer>().Object);
 
         private readonly ICrypting _rsa = new RSA(new Mock<IJsonSerializer>().Object, new Mock<IXmlSerializer>().Object, new Mock<IProgressView>().Object);
@@ -21,7 +23,7 @@ namespace CrytonCoreNextTests
 
         public CryptingTest()
         {
-            _cryptingService = new CryptingService(new List<ICrypting>() { _aes, _rsa });
+            _cryptingService = new CryptingService(_cryptingRecognition, new List<ICrypting>() { _aes, _rsa });
         }
 
         [Fact]

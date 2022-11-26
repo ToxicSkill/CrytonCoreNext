@@ -35,7 +35,7 @@ namespace CrytonCoreNext
                 .AddSingleton<ITimeDate, TimeDate>()
                 .AddSingleton(CreateCryptingRecognition)
                 .AddSingleton(CreateFilesLoader)
-                .AddSingleton(CreateFilesSaver)
+                .AddSingleton<IFilesSaver, FilesSaver>()
                 .AddSingleton<IFilesManager, FilesManager>()
                 .AddSingleton<IPDFManager, PDFManager>()
                 .AddSingleton<IPDFReader, PDFReader>()
@@ -146,12 +146,6 @@ namespace CrytonCoreNext
             return new FilesLoader(cryptingRecognition);
         }
 
-        private IFilesSaver CreateFilesSaver(IServiceProvider provider)
-        {
-            var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
-            return new FilesSaver(cryptingRecognition);
-        }
-
         private IFileService CreateFileService(IServiceProvider provider)
         {
             var fileLoader = provider.GetRequiredService<IFilesLoader>();
@@ -162,8 +156,9 @@ namespace CrytonCoreNext
 
         public ICryptingService CreateCryptingService(IServiceProvider provider)
         {
+            var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
             var cryptors = provider.GetServices<ICrypting>();
-            return new CryptingService(cryptors);
+            return new CryptingService(cryptingRecognition, cryptors);
         }
 
         public IFilesView CreateFilesView(IServiceProvider provider)

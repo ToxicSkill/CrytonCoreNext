@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Static;
+
 using System;
 
 namespace CrytonCoreNext.Models
@@ -21,11 +22,7 @@ namespace CrytonCoreNext.Models
 
         public byte[] Bytes { get; set; }
 
-        public CryptingStatus.Status Status { get; set; }
-
         public Guid Guid { get; init; }
-
-        public string Method { get; set; }
 
         public File() { }
 
@@ -39,7 +36,7 @@ namespace CrytonCoreNext.Models
             Extension = extension;
             Id = id;
             Bytes = bytes;
-            Method = string.Empty;
+            //Method = string.Empty;
             Guid = new Guid();
         }
 
@@ -53,7 +50,7 @@ namespace CrytonCoreNext.Models
             Extension = file.Extension;
             Id = file.Id;
             Bytes = file.Bytes;
-            Method = string.Empty;
+            //Method = string.Empty;
             Guid = file.Guid;
         }
     }

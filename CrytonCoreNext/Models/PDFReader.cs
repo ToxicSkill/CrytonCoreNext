@@ -8,7 +8,7 @@ namespace CrytonCoreNext.Models
     {
         private readonly double _dimensions = 2.0d;
 
-        public PDFBase? ReadPdf(File file, string password = "")
+        public PDFFile? ReadPdf(File file, string password = "")
         {
             if (file.Path.Equals(string.Empty))
             {
@@ -22,7 +22,7 @@ namespace CrytonCoreNext.Models
                     pdfLibrary.GetDocReader(file.Bytes, new PageDimensions(dimensions)) :
                     pdfLibrary.GetDocReader(file.Bytes, password, new PageDimensions(dimensions));
 
-                return new PDFBase(file)
+                return new PDFFile(file)
                 {
                     Reader = reader,
                     Password = string.Empty,

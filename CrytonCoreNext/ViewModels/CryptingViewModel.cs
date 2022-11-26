@@ -2,6 +2,7 @@
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
 using System;
 using System.Collections.ObjectModel;
@@ -9,7 +10,7 @@ using System.Windows.Input;
 
 namespace CrytonCoreNext.ViewModels
 {
-    public class CryptingViewModel : InteractiveViewBase
+    public class CryptingViewModel : InteractiveViewBase<CryptFile>
     {
         private readonly ICryptingService _cryptingService;
 
@@ -90,11 +91,11 @@ namespace CrytonCoreNext.ViewModels
                 return;
             }
 
-            var result = await _cryptingService.RunCrypting(CurrentFile, progressReport);
+            var result = await _cryptingService.RunCrypting((CryptFile)CurrentFile, progressReport);
 
             if (result != null && result.Length > 0 && FilesViewModel.AnyFiles())
             {
-                ModifyFile(CurrentFile, result, GetOpositeStatus(CurrentFile.Status), _cryptingService.GetCurrentCrypting()?.GetName());
+                ModifyFile(CurrentFile, result, GetOpositeStatus(((CryptFile)CurrentFile).Status), _cryptingService.GetCurrentCrypting()?.GetName());
                 OnPropertyChanged(nameof(CryptButtonName));
             }
 
@@ -115,7 +116,7 @@ namespace CrytonCoreNext.ViewModels
                 return string.Empty;
             }
 
-            return GetOpositeStatus(CurrentFile.Status).ToDescription();
+            return GetOpositeStatus(((CryptFile)CurrentFile).Status).ToDescription();
         }
     }
 }

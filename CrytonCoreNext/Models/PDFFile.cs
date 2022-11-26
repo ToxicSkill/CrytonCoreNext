@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CrytonCoreNext.Models
 {
-    public class PDFBase : File
+    public class PDFFile : File
     {
         public PdfVersion Version { get; set; }
 
@@ -26,12 +26,12 @@ namespace CrytonCoreNext.Models
 
         public List<PDFPage> Pages { get; set; }
 
-        public PDFBase()
+        public PDFFile()
         {
 
         }
 
-        public PDFBase(File file) : base(file)
+        public PDFFile(File file) : base(file)
         {
 
         }
