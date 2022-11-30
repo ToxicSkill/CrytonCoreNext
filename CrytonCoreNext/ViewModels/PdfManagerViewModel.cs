@@ -1,7 +1,8 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.PDF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

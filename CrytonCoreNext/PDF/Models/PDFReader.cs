@@ -1,8 +1,9 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Interfaces;
 using Docnet.Core;
 using Docnet.Core.Models;
 
-namespace CrytonCoreNext.Models
+namespace CrytonCoreNext.PDF.Models
 {
     public class PDFReader : IPDFReader
     {

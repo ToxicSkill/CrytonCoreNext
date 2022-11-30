@@ -1,12 +1,14 @@
 ﻿using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static CrytonCoreNext.Helpers.GCHelper;
 using static CrytonCoreNext.Static.CryptingStatus;
 
-namespace CrytonCoreNext.Crypting.Models
+namespace CrytonCoreNext.Crypting.Services
 {
     public class CryptingService : ICryptingService
     {
@@ -70,7 +72,7 @@ namespace CrytonCoreNext.Crypting.Models
             file.Bytes = bytes;
             file.Status = status;
             file.Method = methodName ?? string.Empty;
-            Helpers.GCHelper.Collect();
+            Collect();
         }
 
         public async Task<byte[]> RunCrypting(CryptFile file, IProgress<string> progress)

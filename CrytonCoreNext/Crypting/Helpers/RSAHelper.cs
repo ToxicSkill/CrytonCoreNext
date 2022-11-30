@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
 
-namespace CrytonCoreNext.Helpers
+namespace CrytonCoreNext.Crypting.Helpers
 {
     public class RSAHelper
     {
@@ -29,7 +29,7 @@ namespace CrytonCoreNext.Helpers
 
         public int GetMaxNumberOfBytes(int keySize)
         {
-            return _useOAEP ? ((keySize - 384) / 8) + 37 : ((keySize - 384) / 8) + 7;
+            return _useOAEP ? (keySize - 384) / 8 + 37 : (keySize - 384) / 8 + 7;
         }
 
         public bool IsKeyEmpty(RSAParameters parameters)

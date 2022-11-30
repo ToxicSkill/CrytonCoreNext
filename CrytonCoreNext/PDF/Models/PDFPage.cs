@@ -1,4 +1,4 @@
-﻿namespace CrytonCoreNext.Models
+﻿namespace CrytonCoreNext.PDF.Models
 {
     public class PDFPage
     {

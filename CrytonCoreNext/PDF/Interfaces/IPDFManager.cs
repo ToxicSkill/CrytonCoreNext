@@ -1,8 +1,8 @@
-﻿using CrytonCoreNext.Models;
+﻿using CrytonCoreNext.PDF.Models;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
-namespace CrytonCoreNext.Interfaces
+namespace CrytonCoreNext.PDF.Interfaces
 {
     public interface IPDFManager
     {

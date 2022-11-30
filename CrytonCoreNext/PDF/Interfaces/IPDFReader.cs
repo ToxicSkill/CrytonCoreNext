@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Models;
 
-namespace CrytonCoreNext.Interfaces
+namespace CrytonCoreNext.PDF.Interfaces
 {
     public interface IPDFReader
     {

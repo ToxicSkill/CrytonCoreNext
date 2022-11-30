@@ -1,8 +1,8 @@
 ﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.CryptingOptionsViewModels;
 using CrytonCoreNext.Extensions;
-using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using System;
 using System.Collections.Generic;

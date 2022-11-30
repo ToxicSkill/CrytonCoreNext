@@ -1,7 +1,8 @@
-﻿using Docnet.Core.Models;
+﻿using CrytonCoreNext.Models;
+using Docnet.Core.Models;
 using Docnet.Core.Readers;
 
-namespace CrytonCoreNext.Models
+namespace CrytonCoreNext.PDF.Models
 {
     public class PDFFile : File
     {

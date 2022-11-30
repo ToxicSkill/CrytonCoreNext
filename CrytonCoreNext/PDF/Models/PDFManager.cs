@@ -1,4 +1,4 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.PDF.Interfaces;
 using Docnet.Core;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Media.Imaging;
 
-namespace CrytonCoreNext.Models
+namespace CrytonCoreNext.PDF.Models
 {
     public class PDFManager : IPDFManager
     {

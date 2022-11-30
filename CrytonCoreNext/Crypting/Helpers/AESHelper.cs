@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace CrytonCoreNext.Helpers
+namespace CrytonCoreNext.Crypting.Helpers
 {
     public class AESHelper
     {

@@ -1,9 +1,10 @@
-﻿using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Models;
+﻿using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.PDF.Models;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
-namespace CrytonCoreNext.Services
+namespace CrytonCoreNext.PDF.Services
 {
     public class PDFService : IPDFService
     {
