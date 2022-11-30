@@ -7,6 +7,8 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using CrytonCoreNext.Static;
+using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 
 namespace CrytonCoreNextTests
 {

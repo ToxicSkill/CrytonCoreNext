@@ -37,11 +37,6 @@ namespace CrytonCoreNext.Services
             return _filesSaver.SaveFile(fileName, file);
         }
 
-        public (bool result, int newIndex) ModifyFile(File file, byte[] bytes, CryptingStatus.Status status, string? methodName)
-        {
-            return _filesManager.ModifyFile(file, bytes, status, methodName);
-        }
-
         public (bool result, int newIndex) MoveItemDown(ObservableCollection<File> files, Guid guid)
         {
             return _filesManager.MoveItemDown(files, guid);

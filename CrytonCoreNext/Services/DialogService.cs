@@ -1,9 +1,7 @@
-﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.Helpers;
+﻿using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using System.Collections.Generic;
-using System.Windows.Controls.Primitives;
 
 namespace CrytonCoreNext.Services
 {

@@ -1,10 +1,10 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Crypting.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CrytonCoreNext.Crypting
+namespace CrytonCoreNext.Crypting.Models
 {
     public class Crypting
     {
@@ -12,7 +12,7 @@ namespace CrytonCoreNext.Crypting
 
         public Crypting(List<(ICrypting method, string name)> cryptors)
         {
-            Cryptors = new (cryptors);
+            Cryptors = new(cryptors);
         }
 
         public async Task<byte[]> Encrypt(byte[] data, string name, IProgress<string> progress)

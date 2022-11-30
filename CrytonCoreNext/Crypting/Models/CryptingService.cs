@@ -1,23 +1,26 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Models;
-using CrytonCoreNext.Static;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static CrytonCoreNext.Static.CryptingStatus;
 
-namespace CrytonCoreNext.Services
+namespace CrytonCoreNext.Crypting.Models
 {
     public class CryptingService : ICryptingService
     {
         private readonly ICryptingRecognition _cryptingRecognition;
 
+        private readonly ICryptingReader _cryptingReader;
+
         private readonly List<ICrypting> _cryptors;
 
         public ICrypting CurrentCrypting { get; private set; }
 
-        public CryptingService(ICryptingRecognition cryptingRecognition, IEnumerable<ICrypting> cryptors)
+        public CryptingService(ICryptingRecognition cryptingRecognition, ICryptingReader cryptingReader, IEnumerable<ICrypting> cryptors)
         {
+            _cryptingReader = cryptingReader;
             _cryptingRecognition = cryptingRecognition;
             _cryptors = cryptors.ToList();
             SetCurrentCrypting(_cryptors.First());
@@ -46,10 +49,9 @@ namespace CrytonCoreNext.Services
             }
         }
 
-        public byte[] AddRecognitionBytes(CryptFile file)
+        public void AddRecognitionBytes(CryptFile file)
         {
-
-            if (file.Status.Equals(CryptingStatus.Status.Encrypted))
+            if (file.Status.Equals(Status.Encrypted))
             {
                 var recognitionBytes = _cryptingRecognition.PrepareRerecognizableBytes(file.Method, file.Extension);
                 var newBytes = recognitionBytes.Concat(file.Bytes);
@@ -57,18 +59,30 @@ namespace CrytonCoreNext.Services
                 {
                     if (recognitionBytes.Length > 0)
                     {
-                        return newBytes.ToArray();
+                        file.Bytes = newBytes.ToArray();
                     }
                 }
             }
-            return new byte[0];
+        }
+
+        public void ModifyFile(CryptFile file, byte[] bytes, Status status, string methodName)
+        {
+            file.Bytes = bytes;
+            file.Status = status;
+            file.Method = methodName ?? string.Empty;
+            Helpers.GCHelper.Collect();
         }
 
         public async Task<byte[]> RunCrypting(CryptFile file, IProgress<string> progress)
         {
-            return file.Status.Equals(CryptingStatus.Status.Encrypted) ?
+            return file.Status.Equals(Status.Encrypted) ?
                await CurrentCrypting.Decrypt(file.Bytes, progress) :
                await CurrentCrypting.Encrypt(file.Bytes, progress);
+        }
+
+        public CryptFile ReadCryptFile(File file)
+        {
+            return _cryptingReader.ReadCryptFile(file, _cryptingRecognition.RecognizeBytes(file.Bytes));
         }
 
         public int GetCurrentCryptingProgressCount()

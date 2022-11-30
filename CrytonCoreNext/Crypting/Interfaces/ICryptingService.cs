@@ -1,9 +1,11 @@
-﻿using CrytonCoreNext.Models;
+﻿using CrytonCoreNext.Crypting.Models;
+using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static CrytonCoreNext.Static.CryptingStatus;
 
-namespace CrytonCoreNext.Interfaces
+namespace CrytonCoreNext.Crypting.Interfaces
 {
     public interface ICryptingService
     {
@@ -11,12 +13,16 @@ namespace CrytonCoreNext.Interfaces
 
         void SetCurrentCrypting(ICrypting crypting);
 
-        byte[] AddRecognitionBytes(CryptFile file);
+        void ModifyFile(CryptFile file, byte[] bytes, Status status, string methodName);
 
         List<ICrypting> GetCryptors();
+
+        void AddRecognitionBytes(CryptFile file);
 
         ICrypting GetCurrentCrypting();
 
         int GetCurrentCryptingProgressCount();
+
+        CryptFile ReadCryptFile(File file);
     }
 }

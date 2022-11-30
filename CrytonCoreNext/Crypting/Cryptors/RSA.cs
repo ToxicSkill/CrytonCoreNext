@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.CryptingOptionsViewModels;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace CrytonCoreNext.Crypting
+namespace CrytonCoreNext.Crypting.Cryptors
 {
     public class RSA : ICrypting
     {

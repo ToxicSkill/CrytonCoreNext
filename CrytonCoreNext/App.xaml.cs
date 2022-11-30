@@ -1,4 +1,6 @@
-﻿using CrytonCoreNext.Crypting;
+﻿using CrytonCoreNext.Crypting.Cryptors;
+using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.InformationsServices;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
@@ -39,6 +41,7 @@ namespace CrytonCoreNext
                 .AddSingleton<IFilesManager, FilesManager>()
                 .AddSingleton<IPDFManager, PDFManager>()
                 .AddSingleton<IPDFReader, PDFReader>()
+                .AddSingleton<ICryptingReader, CryptingReader>()
                 .AddSingleton(CreateFileService)
                 .AddSingleton(CreatePDFService)
                 .AddTransient(CreateFilesView)
@@ -157,8 +160,9 @@ namespace CrytonCoreNext
         public ICryptingService CreateCryptingService(IServiceProvider provider)
         {
             var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
+            var cryptingReader = provider.GetRequiredService<ICryptingReader>();
             var cryptors = provider.GetServices<ICrypting>();
-            return new CryptingService(cryptingRecognition, cryptors);
+            return new CryptingService(cryptingRecognition, cryptingReader, cryptors);
         }
 
         public IFilesView CreateFilesView(IServiceProvider provider)

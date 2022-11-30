@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Cryptography;
 
-namespace CrytonCoreNext.Crypting
+namespace CrytonCoreNext.Crypting.Models
 {
     public static class RandomCryptoGenerator
     {

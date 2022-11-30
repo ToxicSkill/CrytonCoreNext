@@ -1,4 +1,4 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CrytonCoreNext.Crypting
+namespace CrytonCoreNext.Crypting.Models
 {
     public class CryptingRecognition : ICryptingRecognition
     {
@@ -37,16 +37,16 @@ namespace CrytonCoreNext.Crypting
         public (bool succes, (string method, string extension)) RecognizeBytes(byte[] bytes)
         {
             var maxSize = 0;
-            foreach(var value in EXCFheader.Values)
+            foreach (var value in EXCFheader.Values)
             {
                 maxSize += value.size;
             }
-            
+
             if (maxSize > bytes.Length)
             {
-                return new (false, new (string.Empty, string.Empty));
-            }    
-            
+                return new(false, new(string.Empty, string.Empty));
+            }
+
             var recognizeByteArray = new byte[maxSize];
             Buffer.BlockCopy(bytes, 0, recognizeByteArray, 0, maxSize);
             var unique = new byte[EXCFheader[nameof(_recognitionValues.Unique)].size];
@@ -66,10 +66,10 @@ namespace CrytonCoreNext.Crypting
 
             if (hashedArray.SequenceEqual(checkSum) && unique.SequenceEqual(EXCFheader[nameof(_recognitionValues.Unique)].value))
             {
-                return new (true, new (Encoding.Default.GetString(method), Encoding.Default.GetString(extension)));
+                return new(true, new(Encoding.Default.GetString(method), Encoding.Default.GetString(extension)));
             }
 
-            return new (false, new (string.Empty, string.Empty));
+            return new(false, new(string.Empty, string.Empty));
         }
 
         public byte[] PrepareRerecognizableBytes(string method, string extension)

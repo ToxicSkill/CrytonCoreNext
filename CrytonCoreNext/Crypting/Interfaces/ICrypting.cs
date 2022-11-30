@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CrytonCoreNext.Interfaces
+namespace CrytonCoreNext.Crypting.Interfaces
 {
     public interface ICrypting
     {

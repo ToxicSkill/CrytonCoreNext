@@ -1,6 +1,5 @@
 ﻿using Docnet.Core.Models;
 using Docnet.Core.Readers;
-using System.Collections.Generic;
 
 namespace CrytonCoreNext.Models
 {
@@ -24,16 +23,17 @@ namespace CrytonCoreNext.Models
 
         public string Format { get; set; }
 
-        public List<PDFPage> Pages { get; set; }
-
-        public PDFFile()
+        public PDFFile(File file, PdfVersion version, IDocReader reader, string password, double dimensions, string owner, int numberOfPages, int lastPage, bool isProtectedByPassword, string format) : base(file)
         {
-
-        }
-
-        public PDFFile(File file) : base(file)
-        {
-
+            Version = version;
+            Reader = reader;
+            Password = password;
+            Dimensions = dimensions;
+            Owner = owner;
+            NumberOfPages = numberOfPages;
+            LastPage = lastPage;
+            IsProtectedByPassword = isProtectedByPassword;
+            Format = format;
         }
     }
 }

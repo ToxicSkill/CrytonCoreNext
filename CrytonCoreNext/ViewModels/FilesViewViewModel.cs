@@ -1,6 +1,5 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
-using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using System;
@@ -19,7 +18,7 @@ namespace CrytonCoreNext.ViewModels
 
         private static readonly (bool result, int newIndex) DefaultResult = new(false, -1);
 
-        private readonly IFileService _filesService;
+        private readonly IFilesManager _filesManager;
 
         private bool _fileChangeBlocker = false;
 
@@ -59,6 +58,7 @@ namespace CrytonCoreNext.ViewModels
                 ChangeShowFilesView();
             }
         }
+
         public bool ShowFilesView
         {
             get => _showFilesView;
@@ -69,7 +69,7 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
-        public FilesViewViewModel(IFileService filesService)
+        public FilesViewViewModel(IFilesManager filesManager)
         {
             FilesCollection = new ObservableCollection<File>();
             ClearFilesCommand = new Command(ClearAllFiles, CanExecute);
@@ -78,7 +78,7 @@ namespace CrytonCoreNext.ViewModels
             SetFileAsLastCommand = new Command(SetFileAsLast, CanExecute);
             MoveFileUpCommand = new Command(MoveFileUp, CanExecute);
             MoveFileDownCommand = new Command(MoveFileDown, CanExecute);
-            _filesService = filesService;
+            _filesManager = filesManager;
         }
 
         public override bool CanExecute()
@@ -86,44 +86,24 @@ namespace CrytonCoreNext.ViewModels
             return !IsBusy;
         }
 
+        public int GetFilesCount()
+        {
+            return FilesCollection.Count;
+        }
+
         public File? GetCurrentFile()
         {
             return CurrentFile;
         }
 
-        public File? GetFileByIndex(int index)
+        public void UpdateFiles(List<File> newFiles)
         {
-            if (GetFilesCount() < index)
+            if (newFiles == null)
             {
-                return null;
+                return;
             }
 
-            return FilesCollection[index];
-        }
-
-        public int GetFilesCount()
-        {
-            if (FilesCollection == null)
-            {
-                return 0;
-            }
-
-            return FilesCollection.Any() ? FilesCollection.Count() : 0;
-        }
-
-        public int GetSelectedFileIndex()
-        {
-            return SelectedItemIndex;
-        }
-
-        public bool AddNewFiles(List<File> files)
-        {
-            if (files == null)
-            {
-                return false;
-            }
-
-            FilesCollection = new(FilesCollection.ToList().Concat(files));
+            FilesCollection = new(FilesCollection.ToList().Concat(newFiles));
             OnPropertyChanged(nameof(FilesCollection));
 
             if (FilesCollection != null && FilesCollection.Count > 0)
@@ -131,52 +111,30 @@ namespace CrytonCoreNext.ViewModels
                 SelectedItemIndex = 0;
             }
 
-            _filesService.ReorderFiles(FilesCollection);
-            return true;
+            _filesManager.ReorderFiles(FilesCollection);
         }
 
-        public bool AnyFiles()
-        {
-            return FilesCollection.Any();
-        }
+        public void ClearAllFiles() => DoAction(_filesManager.ClearAllFiles);
 
-        public List<File> GetAllFiles()
+        public void DeleteFile() => DoAction(_filesManager.DeleteItem);
+
+        public void SetFileAsFirst() => DoAction(_filesManager.SetItemAsFirst);
+
+        public void SetFileAsLast() => DoAction(_filesManager.SetItemAsLast);
+
+        public void MoveFileUp() => DoAction(_filesManager.MoveItemUp);
+
+        public void MoveFileDown() => DoAction(_filesManager.MoveItemDown);
+
+
+        public List<File> GetFiles()
         {
             return FilesCollection.ToList();
         }
 
-        public void Update(IEnumerable<File>? files = null, bool showFilesView = false)
+        public int GetSelectedFileIndex()
         {
-            ShowFilesView = showFilesView;
-            FilesCollection = new ObservableCollection<File>(files)?.Copy();
-            InitializeFiles();
-        }
-
-        public void ClearAllFiles() => DoAction(_filesService.ClearAllFiles);
-
-        public void DeleteFile() => DoAction(_filesService.DeleteItem);
-
-        public void SetFileAsFirst() => DoAction(_filesService.SetItemAsFirst);
-
-        public void SetFileAsLast() => DoAction(_filesService.SetItemAsLast);
-
-        public void MoveFileUp() => DoAction(_filesService.MoveItemUp);
-
-        public void MoveFileDown() => DoAction(_filesService.MoveItemDown);
-
-        private void DoAction(Func<ObservableCollection<File>, Guid, (bool result, int newIndex)> function)
-        {
-            if (FilesCollection == null)
-                return;
-
-            _fileChangeBlocker = true;
-            var (result, newIndex) = CurrentFile != null ? function(FilesCollection, CurrentFile.Guid) : DefaultResult;
-            _fileChangeBlocker = false;
-            if (result)
-            {
-                SelectedItemIndex = newIndex;
-                OnPropertyChanged(nameof(FilesCollection));
-            }
+            return SelectedItemIndex;
         }
 
         private void NotifyFilesView(object o = null, EventArgs s = null)
@@ -214,6 +172,21 @@ namespace CrytonCoreNext.ViewModels
             }
 
             OnPropertyChanged(nameof(ShowFilesView));
+        }
+
+        private void DoAction(Func<ObservableCollection<File>, Guid, (bool result, int newIndex)> function)
+        {
+            if (FilesCollection == null)
+                return;
+
+            _fileChangeBlocker = true;
+            var (result, newIndex) = CurrentFile != null ? function(FilesCollection, CurrentFile.Guid) : DefaultResult;
+            _fileChangeBlocker = false;
+            if (result)
+            {
+                SelectedItemIndex = newIndex;
+                OnPropertyChanged(nameof(FilesCollection));
+            }
         }
     }
 }

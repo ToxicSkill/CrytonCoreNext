@@ -8,18 +8,14 @@ namespace CrytonCoreNext.Interfaces
     {
         event EventHandler FilesChanged;
 
-        List<File> GetAllFiles();
+        void UpdateFiles(List<File> newFiles);
 
         File? GetCurrentFile();
 
-        File? GetFileByIndex(int index);
-
-        int GetFilesCount();
+        List<File> GetFiles();
 
         int GetSelectedFileIndex();
 
-        bool AddNewFiles(List<File> files);
-
-        bool AnyFiles();
+        int GetFilesCount();
     }
 }

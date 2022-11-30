@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.CryptingOptionsViewModels;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Helpers;
@@ -9,7 +10,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace CrytonCoreNext.Crypting
+namespace CrytonCoreNext.Crypting.Cryptors
 {
     public class AES : ICrypting
     {

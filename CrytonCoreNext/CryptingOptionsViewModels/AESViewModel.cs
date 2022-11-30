@@ -1,6 +1,6 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
-using CrytonCoreNext.Crypting;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;

@@ -22,14 +22,17 @@ namespace CrytonCoreNext.Models
                     pdfLibrary.GetDocReader(file.Bytes, new PageDimensions(dimensions)) :
                     pdfLibrary.GetDocReader(file.Bytes, password, new PageDimensions(dimensions));
 
-                return new PDFFile(file)
-                {
-                    Reader = reader,
-                    Password = string.Empty,
-                    Dimensions = _dimensions,
-                    Version = reader.GetPdfVersion(),
-                    NumberOfPages = reader.GetPageCount()
-                };
+                return new PDFFile(
+                    file: file,
+                    version: reader.GetPdfVersion(),
+                    reader: reader,
+                    password: string.Empty,
+                    dimensions: _dimensions,
+                    owner: string.Empty,
+                    numberOfPages: reader.GetPageCount(),
+                    lastPage: 0,
+                    isProtectedByPassword: false,
+                    format: "A4");
             }
         }
     }

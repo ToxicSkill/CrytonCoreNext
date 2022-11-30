@@ -1,5 +1,5 @@
-using CrytonCoreNext.Crypting;
-using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 using System;
 using Xunit;
 
