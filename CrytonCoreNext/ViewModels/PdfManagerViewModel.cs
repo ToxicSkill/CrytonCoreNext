@@ -19,7 +19,8 @@ namespace CrytonCoreNext.ViewModels
         private List<PDFFile> _files;
 
         private PDFFile _currentFile;
-        public PDFFile CurrentPDFFile
+
+        public PDFFile CurrentFile
         {
             get => _currentFile;
             set
@@ -27,7 +28,7 @@ namespace CrytonCoreNext.ViewModels
                 if (_currentFile == value) return;
                 _currentFile = value;
                 Task.Run(() => UpdateImage());
-                OnPropertyChanged(nameof(CurrentPDFFile));
+                OnPropertyChanged(nameof(CurrentFile));
             }
         }
 
@@ -53,26 +54,26 @@ namespace CrytonCoreNext.ViewModels
             _pdfService = pdfService;
             _files = new();
             FilesViewModel.FilesChanged += HandleFileChanged;
+            CurrentFileChanged += HandleCurrentFileChanged;
         }
 
         private async Task MovePreviousPage()
         {
-            var pageNumber = CurrentPDFFile.LastPage;
-            CurrentPDFFile.LastPage = pageNumber > 0 ? --pageNumber : 0;
+            var pageNumber = CurrentFile.LastPage;
+            CurrentFile.LastPage = pageNumber > 0 ? --pageNumber : 0;
             await UpdateImage();
         }
 
         private async Task MoveNextPage()
         {
-            var pageNumber = CurrentPDFFile.LastPage;
-            CurrentPDFFile.LastPage = pageNumber < CurrentPDFFile.NumberOfPages - 1 ? ++pageNumber : CurrentPDFFile.NumberOfPages - 1;
+            var pageNumber = CurrentFile.LastPage;
+            CurrentFile.LastPage = pageNumber < CurrentFile.NumberOfPages - 1 ? ++pageNumber : CurrentFile.NumberOfPages - 1;
             await UpdateImage();
         }
 
-
         private async Task LoadFiles()
         {
-            var files = LoadFiles(Static.Extensions.DialogFilters.Pdf);
+            var files = base.LoadFiles(Static.Extensions.DialogFilters.Pdf);
             foreach (var file in files)
             {
                 if (_files.Select(x => x.Guid == file.Guid).FirstOrDefault() == null)
@@ -87,26 +88,28 @@ namespace CrytonCoreNext.ViewModels
             }
 
             FilesViewModel.UpdateFiles(files);
-            UpdateCurrentFile();
-            await UpdateImage();
         }
 
         private new void HandleFileChanged(object? sender, EventArgs? e)
         {
-            UpdateCurrentFile();
-            //var images = _pdfService.GetAllPdfImages(pdf);
+            OnPropertyChanged(nameof(CurrentFile));
         }
 
-
-        private void UpdateCurrentFile()
+        private void HandleCurrentFileChanged(object? sender, EventArgs? e)
         {
-            if (!_files.Any() || _currentFile == null)
+            var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetCurrentFile()?.Guid);
+            if (file == null)
             {
                 return;
             }
 
-            CurrentPDFFile = _files.FirstOrDefault(x => x.Guid == _currentFile.Guid);
+            if (!file.Guid.Equals(CurrentFile?.Guid))
+            {
+                CurrentFile = file;
+                OnPropertyChanged(nameof(CurrentFile));
+            }
         }
+
 
         private async Task UpdateImage()
         {
@@ -116,7 +119,7 @@ namespace CrytonCoreNext.ViewModels
 
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
-                Bitmap = _pdfService.GetImage(CurrentPDFFile);
+                Bitmap = _pdfService.GetImage(CurrentFile);
                 //Bitmap = new(_currentPDFImages[CurrentPDFFile.LastPage]);
                 OnPropertyChanged(nameof(Bitmap));
             }));

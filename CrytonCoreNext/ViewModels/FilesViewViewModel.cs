@@ -142,16 +142,6 @@ namespace CrytonCoreNext.ViewModels
             FilesChanged?.Invoke(o, s);
         }
 
-        private void InitializeFiles()
-        {
-            if (FilesCollection != null && FilesCollection.Count > 0)
-            {
-                SelectedItemIndex = 0;
-            }
-
-            OnPropertyChanged(nameof(FilesCollection));
-        }
-
         private void UpdateCurrentFile()
         {
             if (SelectedItemIndex != -1 && FilesCollection.Count >= SelectedItemIndex + 1)

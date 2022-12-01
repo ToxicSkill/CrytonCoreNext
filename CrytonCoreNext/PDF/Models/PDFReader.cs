@@ -33,7 +33,8 @@ namespace CrytonCoreNext.PDF.Models
                     numberOfPages: reader.GetPageCount(),
                     lastPage: 0,
                     isProtectedByPassword: false,
-                    format: "A4");
+                    format: "A4",
+                    file.Guid);
             }
         }
     }

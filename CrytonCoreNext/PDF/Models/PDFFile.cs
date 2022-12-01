@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Models;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
+using System;
 
 namespace CrytonCoreNext.PDF.Models
 {
@@ -24,7 +25,7 @@ namespace CrytonCoreNext.PDF.Models
 
         public string Format { get; set; }
 
-        public PDFFile(File file, PdfVersion version, IDocReader reader, string password, double dimensions, string owner, int numberOfPages, int lastPage, bool isProtectedByPassword, string format) : base(file)
+        public PDFFile(File file, PdfVersion version, IDocReader reader, string password, double dimensions, string owner, int numberOfPages, int lastPage, bool isProtectedByPassword, string format, Guid guid) : base(file)
         {
             Version = version;
             Reader = reader;
@@ -35,6 +36,7 @@ namespace CrytonCoreNext.PDF.Models
             LastPage = lastPage;
             IsProtectedByPassword = isProtectedByPassword;
             Format = format;
+            Guid = guid;
         }
     }
 }
