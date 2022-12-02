@@ -6,7 +6,6 @@ using CrytonCoreNext.Static;
 using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -18,10 +17,6 @@ namespace CrytonCoreNext.Abstract
         protected readonly IDialogService _dialogService;
 
         protected readonly IFileService _fileService;
-
-        protected event EventHandler CurrentFileChanged;
-
-        private File _currentFile;
 
         public InformationPopupViewModel PopupViewModel { get; private set; }
 
@@ -37,7 +32,7 @@ namespace CrytonCoreNext.Abstract
             _dialogService = dialogService;
             ProgressViewModel = progressView;
             FilesViewModel = filesView;
-            FilesViewModel.FilesChanged += HandleFileChanged;
+            FilesViewModel.CurrentFileChanged += HandleFileChanged;
             PopupViewModel = new();
         }
 
@@ -51,9 +46,7 @@ namespace CrytonCoreNext.Abstract
 
         public void HandleFileChanged(object? sender, EventArgs? e)
         {
-            UpdateCurrentFile();
             UpdateFilesVisibility();
-            CurrentFileChanged?.Invoke(this, e);
         }
 
         public List<File> LoadFiles()
@@ -111,26 +104,6 @@ namespace CrytonCoreNext.Abstract
                 Visibility.Visible :
                 Visibility.Hidden;
             OnPropertyChanged(nameof(FileInformationVisibility));
-        }
-
-        private void SelectedItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            var tempSelectedItemIndex = FilesViewModel.GetSelectedFileIndex();
-            if (tempSelectedItemIndex != -1 && FilesViewModel.GetFilesCount() >= tempSelectedItemIndex + 1)
-            {
-                UpdateCurrentFile();
-            }
-        }
-
-        private void UpdateCurrentFile()
-        {
-            var file = FilesViewModel.GetCurrentFile();
-            if (file == null)
-            {
-                return;
-            }
-
-            _currentFile = file;
         }
 
         private void ShowInformationBar(bool show)

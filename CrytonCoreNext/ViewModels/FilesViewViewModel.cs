@@ -22,9 +22,15 @@ namespace CrytonCoreNext.ViewModels
 
         private bool _fileChangeBlocker = false;
 
+        private Guid _deletedFileGuid = Guid.Empty;
+
         public ObservableCollection<File> FilesCollection { get; private set; }
 
-        public event EventHandler FilesChanged;
+        public event EventHandler CurrentFileChanged;
+
+        public event EventHandler FileDeleted;
+
+        public event EventHandler AllFilesDeleted;
 
         public File? CurrentFile { get; set; }
 
@@ -114,19 +120,10 @@ namespace CrytonCoreNext.ViewModels
             _filesManager.ReorderFiles(FilesCollection);
         }
 
-        public void ClearAllFiles() => DoAction(_filesManager.ClearAllFiles);
-
-        public void DeleteFile() => DoAction(_filesManager.DeleteItem);
-
-        public void SetFileAsFirst() => DoAction(_filesManager.SetItemAsFirst);
-
-        public void SetFileAsLast() => DoAction(_filesManager.SetItemAsLast);
-
-        public void MoveFileUp() => DoAction(_filesManager.MoveItemUp);
-
-        public void MoveFileDown() => DoAction(_filesManager.MoveItemDown);
-
-
+        public Guid GetDeletedFileGuid()
+        {
+            return _deletedFileGuid;
+        }
         public List<File> GetFiles()
         {
             return FilesCollection.ToList();
@@ -137,9 +134,30 @@ namespace CrytonCoreNext.ViewModels
             return SelectedItemIndex;
         }
 
+        public void ClearAllFiles()
+        {
+            DoAction(_filesManager.ClearAllFiles);
+            AllFilesDeleted.Invoke(null, null);
+        }
+
+        public void DeleteFile()
+        {
+            _deletedFileGuid = CurrentFile.Guid;
+            DoAction(_filesManager.DeleteItem);
+            FileDeleted.Invoke(null, null);
+        }
+
+        public void SetFileAsFirst() => DoAction(_filesManager.SetItemAsFirst);
+
+        public void SetFileAsLast() => DoAction(_filesManager.SetItemAsLast);
+
+        public void MoveFileUp() => DoAction(_filesManager.MoveItemUp);
+
+        public void MoveFileDown() => DoAction(_filesManager.MoveItemDown);
+
         private void NotifyFilesView(object o = null, EventArgs s = null)
         {
-            FilesChanged?.Invoke(o, s);
+            CurrentFileChanged?.Invoke(o, s);
         }
 
         private void UpdateCurrentFile()

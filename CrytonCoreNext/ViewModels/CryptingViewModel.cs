@@ -4,6 +4,7 @@ using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
 using System;
 using System.Collections.Generic;
@@ -64,15 +65,47 @@ namespace CrytonCoreNext.ViewModels
             InitializeCryptingComboBox();
             UpdateCurrentCrypting();
 
-            FilesViewModel.FilesChanged += HandleFileChanged;
-            CurrentFileChanged += HandleCurrentFileChanged;
+            FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
+            FilesViewModel.FileDeleted += HandleFileDeleted;
+            FilesViewModel.AllFilesDeleted += HandleAllFilesDeleted;
+        }
 
-            //var t = new Crypting.Crypting(new() { new(new AES(), ECrypting.EnumToString(ECrypting.Methods.aes)) });
-            //t.Encrypt(FilesViewViewModel.FilesView[0].Bytes, ECrypting.EnumToString(ECrypting.Methods.aes));
+        private void HandleAllFilesDeleted(object? sender, EventArgs e)
+        {
+            _files.Clear();
+            CurrentFile = null;
+            OnPropertyChanged(nameof(CurrentFile));
+        }
+
+        private void HandleFileDeleted(object? sender, EventArgs e)
+        {
+            var deletedFileGuid = FilesViewModel.GetDeletedFileGuid();
+            _files.Remove(_files.Select(x => x).Where(x => x.Guid == deletedFileGuid).First());
+            OnPropertyChanged(nameof(CurrentFile));
+        }
+
+        private void HandleCurrentFileChanged(object? sender, EventArgs? e)
+        {
+            var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetCurrentFile()?.Guid);
+            var files = FilesViewModel.GetFiles();
+            //UpdateFiles(files);
+
+            if (file == null)
+            {
+                return;
+            }
+
+            if (!file.Guid.Equals(CurrentFile?.Guid))
+            {
+                CurrentFile = file;
+                OnPropertyChanged(nameof(CurrentFile));
+                OnPropertyChanged(nameof(CryptButtonName));
+            }
         }
 
         private void LoadCryptFiles()
         {
+            IsBusy = true;
             var files = base.LoadFiles();
             foreach (var file in files)
             {
@@ -80,6 +113,7 @@ namespace CrytonCoreNext.ViewModels
             }
 
             FilesViewModel.UpdateFiles(files);
+            IsBusy = false;
         }
 
         private void SaveCryptFile()
@@ -93,24 +127,20 @@ namespace CrytonCoreNext.ViewModels
             return !IsBusy && !CurrentCryptingViewModel.IsBusy;
         }
 
-        private void HandleCurrentFileChanged(object? sender, EventArgs? e)
+        private void UpdateFiles(IEnumerable<File> files)
         {
-            var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetCurrentFile()?.Guid);
-            if (file == null)
+            if (IsBusy)
             {
                 return;
             }
 
-            if (!file.Guid.Equals(CurrentFile?.Guid))
+            foreach (var file in _files)
             {
-                CurrentFile = file;
-                OnPropertyChanged(nameof(CurrentFile));
+                if (!files.Contains(file))
+                {
+                    _files.Remove(file);
+                }
             }
-        }
-
-        private new void HandleFileChanged(object? sender, EventArgs? e)
-        {
-            OnPropertyChanged(nameof(CryptButtonName));
         }
 
         private void InitializeCryptingComboBox()

@@ -53,8 +53,7 @@ namespace CrytonCoreNext.ViewModels
             NextCommand = new AsyncCommand(MoveNextPage, CanExecute);
             _pdfService = pdfService;
             _files = new();
-            FilesViewModel.FilesChanged += HandleFileChanged;
-            CurrentFileChanged += HandleCurrentFileChanged;
+            FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
         }
 
         private async Task MovePreviousPage()
