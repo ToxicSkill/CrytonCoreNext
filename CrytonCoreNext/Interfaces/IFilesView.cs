@@ -6,20 +6,22 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface IFilesView
     {
-        event EventHandler FilesChanged;
+        event EventHandler CurrentFileChanged;
 
-        List<File> GetAllFiles();
+        event EventHandler FileDeleted;
 
-        File? GetCurrentFile();
+        event EventHandler AllFilesDeleted;
 
-        File? GetFileByIndex(int index);
+        void UpdateFiles(List<File> newFiles);
 
-        int GetFilesCount();
+        Guid GetCurrentFileGuid();
+
+        Guid GetDeletedFileGuid();
+
+        List<Guid> GetFilesGuids();
 
         int GetSelectedFileIndex();
 
-        bool AddNewFiles(List<File> files);
-
-        bool AnyFiles();
+        int GetFilesCount();
     }
 }

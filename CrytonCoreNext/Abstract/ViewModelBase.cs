@@ -27,5 +27,15 @@ namespace CrytonCoreNext.Abstract
         {
             return !IsBusy;
         }
+
+        public virtual void Lock()
+        {
+            IsBusy = true;
+        }
+
+        public virtual void Unlock()
+        {
+            IsBusy = false;
+        }
     }
 }

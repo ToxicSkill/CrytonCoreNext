@@ -7,26 +7,34 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using CrytonCoreNext.Static;
+using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 
 namespace CrytonCoreNextTests
 {
     public class CrytonFileTest
     {
         private readonly ICryptingRecognition _cryptingRecognition;
+
         private readonly IFilesSaver _filesSaver;
+
         private readonly IFilesLoader _filesLoader;
+
         private readonly IFilesManager _filesManager;
+
         private readonly List<string> _filesToOpen = new () { "./TestingFiles/test.txt" };
-        private readonly List<CrytonCoreNext.Models.File >_files;
+
+        private readonly List<CryptFile>_files;
+
         public Mock<IFilesSaver> FilesSaver = new();
 
         public CrytonFileTest()
         {
             _cryptingRecognition = new CryptingRecognition(new(Guid.NewGuid()));
-            _filesSaver = new FilesSaver(_cryptingRecognition);
+            _filesSaver = new FilesSaver();
             _filesLoader = new FilesLoader(_cryptingRecognition);
             _filesManager = new FilesManager();
-            _files = _filesLoader.LoadFiles(_filesToOpen);
+            //_files = _filesLoader.LoadFiles(_filesToOpen);
         }
 
         [Fact]

@@ -1,5 +1,4 @@
-﻿using CrytonCoreNext.Static;
-using System;
+﻿using System;
 
 namespace CrytonCoreNext.Models
 {
@@ -15,21 +14,15 @@ namespace CrytonCoreNext.Models
 
         public DateTime Date { get; init; }
 
-        public string Extension { get; init; }
+        public string Extension { get; set; }
 
         public int Id { get; set; }
 
         public byte[] Bytes { get; set; }
 
-        public CryptingStatus.Status Status { get; set; }
+        public Guid Guid { get; init; } = Guid.NewGuid();
 
-        public Guid Guid { get; init; }
-
-        public string Method { get; set; }
-
-        public File() { }
-
-        public File(string name, string path, string size, string nameWithExtension, DateTime date, string extension, int id, byte[] bytes)
+        public File(string name, string nameWithExtension, string path, string size, DateTime date, string extension, int id, byte[] bytes)
         {
             Name = name;
             NameWithExtension = nameWithExtension;
@@ -39,8 +32,6 @@ namespace CrytonCoreNext.Models
             Extension = extension;
             Id = id;
             Bytes = bytes;
-            Method = string.Empty;
-            Guid = new Guid();
         }
 
         public File(File file)
@@ -53,8 +44,6 @@ namespace CrytonCoreNext.Models
             Extension = file.Extension;
             Id = file.Id;
             Bytes = file.Bytes;
-            Method = string.Empty;
-            Guid = file.Guid;
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using CrytonCoreNext.Crypting;
+﻿using CrytonCoreNext.Crypting.Cryptors;
+using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Services;
 using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Services;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,10 @@ namespace CrytonCoreNextTests
     {
         private readonly ICryptingService _cryptingService;
 
+        private readonly ICryptingRecognition _cryptingRecognition = new Mock<ICryptingRecognition>().Object;
+
+        private readonly ICryptingReader _cryptingReader = new Mock<ICryptingReader>().Object;
+
         private readonly ICrypting _aes = new AES(new Mock<IJsonSerializer>().Object);
 
         private readonly ICrypting _rsa = new RSA(new Mock<IJsonSerializer>().Object, new Mock<IXmlSerializer>().Object, new Mock<IProgressView>().Object);
@@ -21,7 +26,7 @@ namespace CrytonCoreNextTests
 
         public CryptingTest()
         {
-            _cryptingService = new CryptingService(new List<ICrypting>() { _aes, _rsa });
+            _cryptingService = new CryptingService(_cryptingRecognition, _cryptingReader, new List<ICrypting>() { _aes, _rsa });
         }
 
         [Fact]

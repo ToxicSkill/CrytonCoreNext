@@ -5,26 +5,24 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
 using CrytonCoreNext.ViewModels;
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
 namespace CrytonCoreNext.Abstract
 {
-    public class InteractiveViewBase : ViewModelBase, IDisposable
+    public abstract class InteractiveViewBase : ViewModelBase, IDisposable
     {
-        protected readonly IFileService _fileService;
-
         protected readonly IDialogService _dialogService;
+
+        protected readonly IFileService _fileService;
 
         public InformationPopupViewModel PopupViewModel { get; private set; }
 
         public IProgressView ProgressViewModel { get; init; }
 
         public IFilesView FilesViewModel { get; init; }
-
-        public File? CurrentFile { get; private set; }
 
         public Visibility FileInformationVisibility { get; private set; } = Visibility.Hidden;
 
@@ -35,10 +33,10 @@ namespace CrytonCoreNext.Abstract
             ProgressViewModel = progressView;
             FilesViewModel = filesView;
             PopupViewModel = new();
-            FilesViewModel.FilesChanged += HandleFileChanged;
+            FilesViewModel.CurrentFileChanged += UpdateFilesVisibility;
         }
 
-        public void PostPopup(string informationString, int seconds, Color color = default)
+        protected void PostPopup(string informationString, int seconds, Color color = default)
         {
             PopupViewModel = new(informationString, color);
             ShowInformationBar(true);
@@ -46,33 +44,44 @@ namespace CrytonCoreNext.Abstract
             ActionTimer.InitializeTimerWithAction(CollapsePopup, seconds);
         }
 
-        public void HandleFileChanged(object? sender, EventArgs? e)
+        protected void PostPopup(string message, Color status, int seconds = 2)
         {
-            CurrentFile = FilesViewModel.GetCurrentFile();
-            UpdateFilesVisibility();
-            OnPropertyChanged(nameof(CurrentFile));
+            PostPopup(Language.Post(message), seconds, status);
         }
 
-        public void LoadFiles()
+            protected List<File> LoadFiles()
         {
-            LoadFiles(Static.Extensions.DialogFilters.All);
+            return LoadFiles(Static.Extensions.DialogFilters.All);
         }
 
-        public void LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
+        protected List<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
             var filesCount = FilesViewModel.GetFilesCount();
             var filesPaths = _dialogService.GetFilesNamesToOpen(filters, Language.Post("OpenFiles"), true);
-            var newFiles = _fileService.LoadFiles(filesPaths, filesCount);
-            if (FilesViewModel.AddNewFiles(newFiles))
-            {
-                PostPopup(Language.Post("FilesLoaded"), 2, ColorStatus.Information);
-            }
+            return _fileService.LoadFiles(filesPaths, filesCount);
         }
 
-        public void SaveFile()
+        protected List<Guid> GetFilesOrder()
         {
-            var filePath = _dialogService.GetFilesNamesToSave(Static.Extensions.DialogFilters.All, Language.Post("SaveFile"), CurrentFile.Extension);
-            var result = _fileService.SaveFile(filePath.First(), CurrentFile);
+            var guids = new List<Guid>();
+
+            foreach (var fileGuid in FilesViewModel.GetFilesGuids())
+            {
+                guids.Add(fileGuid);
+            }
+
+            return guids;
+        }
+
+        protected void SaveFile(File? file)
+        {
+            if (file == null)
+            {
+                return;
+            }
+
+            var filePath = _dialogService.GetFilesNamesToSave(Static.Extensions.DialogFilters.All, Language.Post("SaveFile"), file.Extension);
+            var result = _fileService.SaveFile(filePath.First(), file);
             if (result)
             {
                 PostPopup(Language.Post("FilesSaved"), 2, ColorStatus.Information);
@@ -83,30 +92,13 @@ namespace CrytonCoreNext.Abstract
             }
         }
 
-        public bool ModifyFile(File file, byte[] bytes, CryptingStatus.Status status, string? methodName)
-        {
-            var result = _fileService.ModifyFile(file, bytes, status, methodName);
-            OnPropertyChanged(nameof(CurrentFile));
-            return result.result;
-        }
-
-        private void UpdateFilesVisibility()
+        private void UpdateFilesVisibility(object? obj = null, EventArgs? a = null)
         {
             FileInformationVisibility =
                 FilesViewModel.GetSelectedFileIndex() != -1 && FilesViewModel != null ?
                 Visibility.Visible :
                 Visibility.Hidden;
             OnPropertyChanged(nameof(FileInformationVisibility));
-        }
-
-        private void SelectedItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            var tempSelectedItemIndex = FilesViewModel.GetSelectedFileIndex();
-            if (tempSelectedItemIndex != -1 && FilesViewModel.GetFilesCount() >= tempSelectedItemIndex + 1)
-            {
-                CurrentFile = FilesViewModel.GetFileByIndex(tempSelectedItemIndex);
-            }
-            OnPropertyChanged(nameof(CurrentFile));
         }
 
         private void ShowInformationBar(bool show)

@@ -1,4 +1,4 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.PDF.Interfaces;
 using Docnet.Core;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
@@ -8,11 +8,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Media.Imaging;
 
-namespace CrytonCoreNext.Models
+namespace CrytonCoreNext.PDF.Models
 {
     public class PDFManager : IPDFManager
     {
-        public WriteableBitmap GetImageFromPdf(PDFBase pdf, int num = 0)
+        public WriteableBitmap GetImageFromPdf(PDFFile pdf, int num = 0)
         {
             MemoryStream memoryStream = new();
             MagickImage imgBackdrop;
@@ -109,7 +109,7 @@ namespace CrytonCoreNext.Models
             return RGBABytes;
         }
 
-        public WriteableBitmap GetImage(PDFBase pdf)
+        public WriteableBitmap GetImage(PDFFile pdf)
         {
             using (IDocLib pdfLibrary = DocLib.Instance)
             {
@@ -124,7 +124,7 @@ namespace CrytonCoreNext.Models
             }
         }
 
-        public List<BitmapImage> GetAllPdfImages(PDFBase pdf)
+        public List<BitmapImage> GetAllPdfImages(PDFFile pdf)
         {
             var images = new List<BitmapImage>();
 

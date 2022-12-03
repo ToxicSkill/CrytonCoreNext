@@ -30,11 +30,11 @@
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Content="{DynamicResource CurrentFileTitle}" Style="{StaticResource FileInformationsBold}"/>
-            <Label Grid.Row="1" Content="{Binding CurrentPDFFile.Name}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="1" Content="{Binding CurrentFile.Name}" Style="{StaticResource FileInformations}"/>
             <Label Grid.Row="2" Content="{DynamicResource CurrentFilePages}" Style="{StaticResource FileInformationsBold}"/>
-            <Label Grid.Row="3" Content="{Binding CurrentPDFFile.NumberOfPages}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="3" Content="{Binding CurrentFile.NumberOfPages}" Style="{StaticResource FileInformations}"/>
             <Label Grid.Row="4" Content="{DynamicResource CurrentFileDate}" Style="{StaticResource FileInformationsBold}"/>
-            <Label Grid.Row="5" Content="{Binding CurrentPDFFile.Date}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="5" Content="{Binding CurrentFile.Date}" Style="{StaticResource FileInformations}"/>
         </Grid>
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
               Height="110" Margin="20, 0, 70, 20">

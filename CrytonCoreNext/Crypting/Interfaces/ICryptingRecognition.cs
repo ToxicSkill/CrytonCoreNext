@@ -1,4 +1,4 @@
-﻿namespace CrytonCoreNext.Interfaces
+﻿namespace CrytonCoreNext.Crypting.Interfaces
 {
     public interface ICryptingRecognition
     {

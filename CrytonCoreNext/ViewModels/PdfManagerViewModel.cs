@@ -1,7 +1,8 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.PDF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,18 +16,19 @@ namespace CrytonCoreNext.ViewModels
 {
     public class PdfManagerViewModel : InteractiveViewBase
     {
-        private List<PDFBase> _pdfFiles;
+        private List<PDFFile> _files;
 
-        private PDFBase _currentPDFFile;
-        public PDFBase CurrentPDFFile
+        private PDFFile _currentFile;
+
+        public PDFFile CurrentFile
         {
-            get => _currentPDFFile;
+            get => _currentFile;
             set
             {
-                if (_currentPDFFile == value) return;
-                _currentPDFFile = value;
+                if (_currentFile == value) return;
+                _currentFile = value;
                 Task.Run(() => UpdateImage());
-                OnPropertyChanged(nameof(CurrentPDFFile));
+                OnPropertyChanged(nameof(CurrentFile));
             }
         }
 
@@ -50,61 +52,63 @@ namespace CrytonCoreNext.ViewModels
             PreviousCommand = new AsyncCommand(MovePreviousPage, CanExecute);
             NextCommand = new AsyncCommand(MoveNextPage, CanExecute);
             _pdfService = pdfService;
-            _pdfFiles = new();
-            FilesViewModel.FilesChanged += HandleFileChanged;
+            _files = new();
+            FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
         }
 
         private async Task MovePreviousPage()
         {
-            var pageNumber = CurrentPDFFile.LastPage;
-            CurrentPDFFile.LastPage = pageNumber > 0 ? --pageNumber : 0;
+            var pageNumber = CurrentFile.LastPage;
+            CurrentFile.LastPage = pageNumber > 0 ? --pageNumber : 0;
             await UpdateImage();
         }
 
         private async Task MoveNextPage()
         {
-            var pageNumber = CurrentPDFFile.LastPage;
-            CurrentPDFFile.LastPage = pageNumber < CurrentPDFFile.NumberOfPages - 1 ? ++pageNumber : CurrentPDFFile.NumberOfPages - 1;
+            var pageNumber = CurrentFile.LastPage;
+            CurrentFile.LastPage = pageNumber < CurrentFile.NumberOfPages - 1 ? ++pageNumber : CurrentFile.NumberOfPages - 1;
             await UpdateImage();
         }
 
-
         private async Task LoadFiles()
         {
-            LoadFiles(Static.Extensions.DialogFilters.Pdf);
-            foreach (var file in FilesViewModel.GetAllFiles())
+            var files = base.LoadFiles(Static.Extensions.DialogFilters.Pdf);
+            foreach (var file in files)
             {
-                if (_pdfFiles.Select(x => x.Guid == file.Guid).FirstOrDefault() == null)
+                if (_files.Select(x => x.Guid == file.Guid).FirstOrDefault() == null)
                 {
                     continue;
                 }
                 var pdfFile = _pdfService.ReadPdf(file) ?? null;
                 if (pdfFile != null)
                 {
-                    _pdfFiles.Add(pdfFile);
+                    _files.Add(pdfFile);
                 }
             }
 
-            UpdateCurrentFile();
-            await UpdateImage();
+            FilesViewModel.UpdateFiles(files);
         }
 
         private new void HandleFileChanged(object? sender, EventArgs? e)
         {
-            UpdateCurrentFile();
-            //var images = _pdfService.GetAllPdfImages(pdf);
+            OnPropertyChanged(nameof(CurrentFile));
         }
 
-
-        private void UpdateCurrentFile()
+        private void HandleCurrentFileChanged(object? sender, EventArgs? e)
         {
-            if (!_pdfFiles.Any() || CurrentFile == null)
+            var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetCurrentFileGuid());
+            if (file == null)
             {
                 return;
             }
 
-            CurrentPDFFile = _pdfFiles.FirstOrDefault(x => x.Guid == CurrentFile?.Guid);
+            if (!file.Guid.Equals(CurrentFile?.Guid))
+            {
+                CurrentFile = file;
+                OnPropertyChanged(nameof(CurrentFile));
+            }
         }
+
 
         private async Task UpdateImage()
         {
@@ -114,7 +118,7 @@ namespace CrytonCoreNext.ViewModels
 
             await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
-                Bitmap = _pdfService.GetImage(CurrentPDFFile);
+                Bitmap = _pdfService.GetImage(CurrentFile);
                 //Bitmap = new(_currentPDFImages[CurrentPDFFile.LastPage]);
                 OnPropertyChanged(nameof(Bitmap));
             }));

@@ -153,20 +153,12 @@ namespace CrytonCoreNext.Models
         {
             var file = files.Where(x => x.Guid == guid).First();
             file.Bytes = bytes;
-            file.Status = status;
-            file.Method = methodName ?? string.Empty;
+            //file.Status = status;
+            //file.Method = methodName ?? string.Empty;
             Helpers.GCHelper.Collect();
             return new(true, file.Id);
         }
 
-        public (bool result, int newIndex) ModifyFile(Models.File file, byte[] bytes, CryptingStatus.Status status, string? methodName)
-        {
-            file.Bytes = bytes;
-            file.Status = status;
-            file.Method = methodName ?? string.Empty;
-            Helpers.GCHelper.Collect();
-            return new(true, file.Id);
-        }
         public void ReorderFiles(ObservableCollection<Models.File> files)
         {
             foreach (var item in files.Select((file, i) => new { i, file }))

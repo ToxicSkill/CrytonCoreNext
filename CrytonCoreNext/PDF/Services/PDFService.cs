@@ -1,9 +1,10 @@
-﻿using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Models;
+﻿using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.PDF.Models;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
-namespace CrytonCoreNext.Services
+namespace CrytonCoreNext.PDF.Services
 {
     public class PDFService : IPDFService
     {
@@ -17,22 +18,22 @@ namespace CrytonCoreNext.Services
             _pdfReader = pdfReader;
         }
 
-        public List<BitmapImage> GetAllPdfImages(PDFBase pdf)
+        public List<BitmapImage> GetAllPdfImages(PDFFile pdf)
         {
             return _pdfManager.GetAllPdfImages(pdf);
         }
 
-        public WriteableBitmap GetImage(PDFBase pdf)
+        public WriteableBitmap GetImage(PDFFile pdf)
         {
             return _pdfManager.GetImage(pdf);
         }
 
-        public WriteableBitmap GetImageFromPdf(PDFBase pdf, int pageNumber)
+        public WriteableBitmap GetImageFromPdf(PDFFile pdf, int pageNumber)
         {
             return _pdfManager.GetImageFromPdf(pdf, pageNumber);
         }
 
-        public PDFBase? ReadPdf(File file, string password = "")
+        public PDFFile? ReadPdf(File file, string password = "")
         {
             return _pdfReader.ReadPdf(file, password);
         }

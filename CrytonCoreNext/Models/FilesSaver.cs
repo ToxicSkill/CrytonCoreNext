@@ -10,35 +10,14 @@ namespace CrytonCoreNext.Models
 {
     public class FilesSaver : IFilesSaver
     {
-        private readonly ICryptingRecognition _cryptingRecognition;
-
-        public FilesSaver(ICryptingRecognition cryptingRecognition)
-        {
-            _cryptingRecognition = cryptingRecognition;
-        }
 
         public bool SaveFile(string fileName, Models.File file)
         {
             try
             {
-                if (file.Status.Equals(CryptingStatus.Status.Encrypted))
-                {
-                    var recognitionBytes = _cryptingRecognition.PrepareRerecognizableBytes(file.Method, file.Extension);
-                    var newBytes = recognitionBytes.Concat(file.Bytes);
-                    if (recognitionBytes != null)
-                    {
-                        if (recognitionBytes.Length > 0)
-                        {
-                            ByteArrayToFile(fileName, newBytes.ToArray());
-                            return true;
-                        }
-                    }
-                }
-                else
-                {
-                    ByteArrayToFile(fileName, file.Bytes);
-                    return true;
-                }
+                ByteArrayToFile(fileName, file.Bytes);
+                return true;
+                
             }
             catch (Exception e)
             {

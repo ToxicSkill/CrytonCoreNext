@@ -1,5 +1,5 @@
-﻿using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Models;
+﻿using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.PDF.Models;
 
 namespace CrytonCoreNextTests
 {

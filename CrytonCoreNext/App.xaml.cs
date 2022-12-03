@@ -1,7 +1,13 @@
-﻿using CrytonCoreNext.Crypting;
+﻿using CrytonCoreNext.Crypting.Cryptors;
+using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
+using CrytonCoreNext.Crypting.Services;
 using CrytonCoreNext.InformationsServices;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.PDF.Models;
+using CrytonCoreNext.PDF.Services;
 using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
@@ -35,10 +41,11 @@ namespace CrytonCoreNext
                 .AddSingleton<ITimeDate, TimeDate>()
                 .AddSingleton(CreateCryptingRecognition)
                 .AddSingleton(CreateFilesLoader)
-                .AddSingleton(CreateFilesSaver)
+                .AddSingleton<IFilesSaver, FilesSaver>()
                 .AddSingleton<IFilesManager, FilesManager>()
                 .AddSingleton<IPDFManager, PDFManager>()
                 .AddSingleton<IPDFReader, PDFReader>()
+                .AddSingleton<ICryptingReader, CryptingReader>()
                 .AddSingleton(CreateFileService)
                 .AddSingleton(CreatePDFService)
                 .AddTransient(CreateFilesView)
@@ -146,12 +153,6 @@ namespace CrytonCoreNext
             return new FilesLoader(cryptingRecognition);
         }
 
-        private IFilesSaver CreateFilesSaver(IServiceProvider provider)
-        {
-            var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
-            return new FilesSaver(cryptingRecognition);
-        }
-
         private IFileService CreateFileService(IServiceProvider provider)
         {
             var fileLoader = provider.GetRequiredService<IFilesLoader>();
@@ -162,8 +163,10 @@ namespace CrytonCoreNext
 
         public ICryptingService CreateCryptingService(IServiceProvider provider)
         {
+            var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
+            var cryptingReader = provider.GetRequiredService<ICryptingReader>();
             var cryptors = provider.GetServices<ICrypting>();
-            return new CryptingService(cryptors);
+            return new CryptingService(cryptingRecognition, cryptingReader, cryptors);
         }
 
         public IFilesView CreateFilesView(IServiceProvider provider)
