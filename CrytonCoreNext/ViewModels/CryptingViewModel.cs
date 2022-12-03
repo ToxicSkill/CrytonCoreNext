@@ -92,7 +92,7 @@ namespace CrytonCoreNext.ViewModels
 
         private void LoadCryptFiles()
         {
-            IsBusy = true;
+            Lock();
             var files = base.LoadFiles();
             foreach (var file in files)
             {
@@ -100,7 +100,7 @@ namespace CrytonCoreNext.ViewModels
             }
 
             FilesViewModel.UpdateFiles(files);
-            IsBusy = false;
+            Unlock();
         }
 
         private void SaveCryptFile()

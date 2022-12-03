@@ -168,7 +168,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             try
             {
-                IsBusy = true;
+                Lock();
                 ProgressView.InitializeProgress<int>(0);
                 var rsap = new RSACryptoServiceProvider(Convert.ToInt32(SelectedKey));
                 _keys = await Task.Run(() => rsap.ExportParameters(true));
@@ -179,7 +179,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 _logger.Set(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
                 InvokeTimerActionForLogger();
                 ProgressView.ClearProgress();
-                IsBusy = false;
+                Unlock();
             }
         }
 
