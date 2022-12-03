@@ -32,11 +32,11 @@ namespace CrytonCoreNext.Abstract
             _dialogService = dialogService;
             ProgressViewModel = progressView;
             FilesViewModel = filesView;
-            FilesViewModel.CurrentFileChanged += HandleFileChanged;
             PopupViewModel = new();
+            FilesViewModel.CurrentFileChanged += UpdateFilesVisibility;
         }
 
-        public void PostPopup(string informationString, int seconds, Color color = default)
+        protected void PostPopup(string informationString, int seconds, Color color = default)
         {
             PopupViewModel = new(informationString, color);
             ShowInformationBar(true);
@@ -44,41 +44,36 @@ namespace CrytonCoreNext.Abstract
             ActionTimer.InitializeTimerWithAction(CollapsePopup, seconds);
         }
 
-        public void HandleFileChanged(object? sender, EventArgs? e)
+        protected void PostPopup(string message, Color status, int seconds = 2)
         {
-            UpdateFilesVisibility();
+            PostPopup(Language.Post(message), seconds, status);
         }
 
-        public List<File> LoadFiles()
+            protected List<File> LoadFiles()
         {
             return LoadFiles(Static.Extensions.DialogFilters.All);
         }
 
-        public List<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
+        protected List<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
             var filesCount = FilesViewModel.GetFilesCount();
             var filesPaths = _dialogService.GetFilesNamesToOpen(filters, Language.Post("OpenFiles"), true);
             return _fileService.LoadFiles(filesPaths, filesCount);
         }
 
-        public List<Guid> GetFilesOrder()
+        protected List<Guid> GetFilesOrder()
         {
             var guids = new List<Guid>();
 
-            foreach (var file in FilesViewModel.GetFiles())
+            foreach (var fileGuid in FilesViewModel.GetFilesGuids())
             {
-                guids.Add(file.Guid);
+                guids.Add(fileGuid);
             }
 
             return guids;
         }
 
-        public void PostPopup(string message, Color status, int seconds = 2)
-        {
-            PostPopup(Language.Post(message), seconds, status);
-        }
-
-        public void SaveFile(File? file)
+        protected void SaveFile(File? file)
         {
             if (file == null)
             {
@@ -97,7 +92,7 @@ namespace CrytonCoreNext.Abstract
             }
         }
 
-        private void UpdateFilesVisibility()
+        private void UpdateFilesVisibility(object? obj = null, EventArgs? a = null)
         {
             FileInformationVisibility =
                 FilesViewModel.GetSelectedFileIndex() != -1 && FilesViewModel != null ?

@@ -49,6 +49,7 @@ namespace CrytonCoreNext.ViewModels
                 }
             }
         }
+
         public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, IProgressView progressView) : base(fileService, dialogService, filesView, progressView)
         {
             _files = new();
@@ -73,34 +74,20 @@ namespace CrytonCoreNext.ViewModels
         private void HandleAllFilesDeleted(object? sender, EventArgs e)
         {
             _files.Clear();
-            CurrentFile = null;
-            OnPropertyChanged(nameof(CurrentFile));
         }
 
         private void HandleFileDeleted(object? sender, EventArgs e)
         {
             var deletedFileGuid = FilesViewModel.GetDeletedFileGuid();
             _files.Remove(_files.Select(x => x).Where(x => x.Guid == deletedFileGuid).First());
-            OnPropertyChanged(nameof(CurrentFile));
         }
 
         private void HandleCurrentFileChanged(object? sender, EventArgs? e)
         {
-            var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetCurrentFile()?.Guid);
-            var files = FilesViewModel.GetFiles();
-            //UpdateFiles(files);
-
-            if (file == null)
-            {
-                return;
-            }
-
-            if (!file.Guid.Equals(CurrentFile?.Guid))
-            {
-                CurrentFile = file;
-                OnPropertyChanged(nameof(CurrentFile));
-                OnPropertyChanged(nameof(CryptButtonName));
-            }
+            var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetCurrentFileGuid());
+            CurrentFile = file;
+            OnPropertyChanged(nameof(CurrentFile));
+            OnPropertyChanged(nameof(CryptButtonName));
         }
 
         private void LoadCryptFiles()

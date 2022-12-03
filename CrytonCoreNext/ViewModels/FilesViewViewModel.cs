@@ -14,13 +14,11 @@ namespace CrytonCoreNext.ViewModels
     {
         private bool _showFilesView = false;
 
-        private int _selectedItemIndex = 0;
+        private int _selectedItemIndex = -1;
 
         private static readonly (bool result, int newIndex) DefaultResult = new(false, -1);
 
         private readonly IFilesManager _filesManager;
-
-        private bool _fileChangeBlocker = false;
 
         private Guid _deletedFileGuid = Guid.Empty;
 
@@ -32,7 +30,7 @@ namespace CrytonCoreNext.ViewModels
 
         public event EventHandler AllFilesDeleted;
 
-        public File? CurrentFile { get; set; }
+        public Guid CurrentFileGuid { get; set; }
 
         public ICommand ClearFilesCommand { get; set; }
 
@@ -51,17 +49,13 @@ namespace CrytonCoreNext.ViewModels
             get => _selectedItemIndex;
             set
             {
-                if ((_selectedItemIndex != value || value == 0) && !_fileChangeBlocker)
+                if (_selectedItemIndex != value && !IsBusy)
                 {
                     _selectedItemIndex = value;
                     UpdateCurrentFile();
-                    if (FilesCollection.Any() && _selectedItemIndex != -1)
-                    {
-                        NotifyFilesView();
-                    }
+                    ChangeShowFilesView();
                     OnPropertyChanged(nameof(SelectedItemIndex));
                 }
-                ChangeShowFilesView();
             }
         }
 
@@ -97,9 +91,9 @@ namespace CrytonCoreNext.ViewModels
             return FilesCollection.Count;
         }
 
-        public File? GetCurrentFile()
+        public Guid GetCurrentFileGuid()
         {
-            return CurrentFile;
+            return CurrentFileGuid;
         }
 
         public void UpdateFiles(List<File> newFiles)
@@ -124,9 +118,10 @@ namespace CrytonCoreNext.ViewModels
         {
             return _deletedFileGuid;
         }
-        public List<File> GetFiles()
+
+        public List<Guid> GetFilesGuids()
         {
-            return FilesCollection.ToList();
+            return FilesCollection.Select(x => x.Guid).ToList();
         }
 
         public int GetSelectedFileIndex()
@@ -136,26 +131,67 @@ namespace CrytonCoreNext.ViewModels
 
         public void ClearAllFiles()
         {
+            _deletedFileGuid = Guid.Empty;
             DoAction(_filesManager.ClearAllFiles);
             AllFilesDeleted.Invoke(null, null);
         }
 
         public void DeleteFile()
         {
-            _deletedFileGuid = CurrentFile.Guid;
+            if (FilesCollection.Count == 1)
+            {
+                ClearAllFiles();
+                return;
+            }
+
+            _deletedFileGuid = CurrentFileGuid;
             DoAction(_filesManager.DeleteItem);
             FileDeleted.Invoke(null, null);
         }
 
-        public void SetFileAsFirst() => DoAction(_filesManager.SetItemAsFirst);
+        public void SetFileAsFirst()
+        {
+            if (!IsItemFirst())
+            {
+                DoAction(_filesManager.SetItemAsFirst);
+            }
+        }
 
-        public void SetFileAsLast() => DoAction(_filesManager.SetItemAsLast);
+        public void MoveFileUp()
+        {
+            if (!IsItemFirst())
+            {
+                DoAction(_filesManager.MoveItemUp);
+            }
+        }
 
-        public void MoveFileUp() => DoAction(_filesManager.MoveItemUp);
+        public void SetFileAsLast()
+        {
+            if (!IsItemLast())
+            {
+                DoAction(_filesManager.SetItemAsLast);
+            }
+        }
 
-        public void MoveFileDown() => DoAction(_filesManager.MoveItemDown);
+        public void MoveFileDown()
+        {
+            if (!IsItemLast())
+            {
+                DoAction(_filesManager.MoveItemDown);
+            }
+        }
 
-        private void NotifyFilesView(object o = null, EventArgs s = null)
+        private bool IsItemLast()
+        {
+            return SelectedItemIndex == FilesCollection.Count -1;
+        }
+
+        private bool IsItemFirst()
+        {
+            return SelectedItemIndex == 0;
+        }
+
+        private void NotifyCurrentFileChanged(object? o = null, EventArgs? s = null)
         {
             CurrentFileChanged?.Invoke(o, s);
         }
@@ -164,12 +200,14 @@ namespace CrytonCoreNext.ViewModels
         {
             if (SelectedItemIndex != -1 && FilesCollection.Count >= SelectedItemIndex + 1)
             {
-                CurrentFile = FilesCollection.ElementAt(SelectedItemIndex);
+                CurrentFileGuid = FilesCollection.ElementAt(SelectedItemIndex).Guid;
             }
             else
             {
-                CurrentFile = null;
+                CurrentFileGuid = Guid.Empty;
             }
+
+            NotifyCurrentFileChanged();
         }
 
         private void ChangeShowFilesView()
@@ -187,14 +225,18 @@ namespace CrytonCoreNext.ViewModels
             if (FilesCollection == null)
                 return;
 
-            _fileChangeBlocker = true;
-            var (result, newIndex) = CurrentFile != null ? function(FilesCollection, CurrentFile.Guid) : DefaultResult;
-            _fileChangeBlocker = false;
+            Lock();
+            var (result, newIndex) = !CurrentFileGuid.Equals(Guid.Empty) ? function(FilesCollection, CurrentFileGuid) : DefaultResult;
+            Unlock();
             if (result)
             {
                 SelectedItemIndex = newIndex;
+                Lock();
                 OnPropertyChanged(nameof(FilesCollection));
+                Unlock();
             }
+
+            UpdateCurrentFile();
         }
     }
 }

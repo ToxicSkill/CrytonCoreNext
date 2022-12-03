@@ -14,11 +14,11 @@ namespace CrytonCoreNext.Interfaces
 
         void UpdateFiles(List<File> newFiles);
 
-        File? GetCurrentFile();
+        Guid GetCurrentFileGuid();
 
         Guid GetDeletedFileGuid();
 
-        List<File> GetFiles();
+        List<Guid> GetFilesGuids();
 
         int GetSelectedFileIndex();
 
