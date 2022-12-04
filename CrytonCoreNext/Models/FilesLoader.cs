@@ -3,6 +3,7 @@ using CrytonCoreNext.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Models
 {
@@ -21,6 +22,7 @@ namespace CrytonCoreNext.Models
         {
             var files = new List<File>();
             var count = filesNames.Count;
+            var tasks = new List<Task<File>>();
             ManualResetEvent[] resetEvents = new ManualResetEvent[count];
 
             for (int i = 0; i < count; i++)
@@ -28,23 +30,17 @@ namespace CrytonCoreNext.Models
                 currentIndex += 1;
                 var newIndex = currentIndex;
                 var fileName = filesNames[i];
-                resetEvents[i] = new ManualResetEvent(false);
-                ThreadPool.QueueUserWorkItem(new WaitCallback((object index) =>
+                tasks.Add(Task.Run(() =>
                 {
                     var byteArray = System.IO.File.ReadAllBytes(fileName);
-                    var newFile = InitializeNewFile(newIndex, fileName, byteArray);
-                    lock (files)
-                    {
-                        files.Add(newFile);
-                    }
-
-                    resetEvents[(int)index].Set();
-                }), i);
+                    return InitializeNewFile(newIndex, fileName, byteArray);
+                }));
             }
 
-            foreach (var reset in resetEvents)
+            Task.WaitAll(tasks.ToArray());
+            foreach (var task in tasks)
             {
-                reset.WaitOne();
+                files.Add(task.Result);
             }
 
             return files;
