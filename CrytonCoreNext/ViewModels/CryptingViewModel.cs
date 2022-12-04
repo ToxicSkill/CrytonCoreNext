@@ -143,12 +143,14 @@ namespace CrytonCoreNext.ViewModels
 
         private async void PerformCrypting()
         {
-            var progressReport = ProgressViewModel.InitializeProgress<string>(_cryptingService.GetCurrentCryptingProgressCount());
-            if (!_fileService.HasBytes(CurrentFile))
+            if (!_fileService.HasBytes(CurrentFile) || 
+                (CurrentFile.Status == CryptingStatus.Status.Encrypted &&
+                CurrentCryptingViewModel.PageName != CurrentFile.Method))
             {
                 return;
             }
 
+            var progressReport = ProgressViewModel.InitializeProgress<string>(_cryptingService.GetCurrentCryptingProgressCount());
             var result = await _cryptingService.RunCrypting(CurrentFile, progressReport);
 
             if (result != null && result.Length > 0 && _files.Any())
@@ -158,7 +160,7 @@ namespace CrytonCoreNext.ViewModels
                 OnPropertyChanged(nameof(CryptButtonName));
             }
 
-            ActionTimer.InitializeTimerWithAction(ProgressViewModel.ClearProgress, 2);
+            ActionTimer.InitializeTimerWithAction(ProgressViewModel.ClearProgress);
         }
 
         private static CryptingStatus.Status GetOpositeStatus(CryptingStatus.Status currentStatus)

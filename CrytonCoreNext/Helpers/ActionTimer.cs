@@ -5,18 +5,21 @@ namespace CrytonCoreNext.Helpers
 {
     public static class ActionTimer
     {
+        private const int DefaultDurationSeconds = 2;
+
         private static readonly DispatcherTimer _timer = new();
 
-        public static void InitializeTimerWithAction(Action<object, EventArgs> obj, int seconds)
+        public static void InitializeTimerWithAction(Action<object, EventArgs> obj, int durationSeconds = DefaultDurationSeconds)
         {
-            _timer.Tick += new EventHandler(obj);
-            _timer.Interval = new TimeSpan(0, 0, seconds);
+            _timer.Tick += new EventHandler((o, e) => StopTimer(obj));
+            _timer.Interval = new TimeSpan(0, 0, durationSeconds > 0 ? durationSeconds : DefaultDurationSeconds);
             _timer.Start();
         }
 
-        public static void StopTimer()
+        private static void StopTimer(Action<object, EventArgs> obj)
         {
             _timer.Stop();
+            obj.Invoke(null, null);
         }
     }
 }

@@ -110,7 +110,6 @@ namespace CrytonCoreNext.Abstract
         private void CollapsePopup(object sender, EventArgs e)
         {
             ShowInformationBar(false);
-            ActionTimer.StopTimer();
         }
 
         public virtual void Dispose() { }

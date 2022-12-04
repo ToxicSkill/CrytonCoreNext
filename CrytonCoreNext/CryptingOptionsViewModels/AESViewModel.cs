@@ -137,6 +137,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             {
                 _key = Convert.ToHexString(key);
                 _iv = Convert.ToHexString(iv);
+                ValidateKeys();
                 OnPropertyChanged(nameof(_key));
                 OnPropertyChanged(nameof(_iv));
             }

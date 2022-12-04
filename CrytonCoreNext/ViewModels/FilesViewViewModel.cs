@@ -22,13 +22,13 @@ namespace CrytonCoreNext.ViewModels
 
         private Guid _deletedFileGuid = Guid.Empty;
 
-        public ObservableCollection<File> FilesCollection { get; private set; }
-
         public event EventHandler CurrentFileChanged;
 
         public event EventHandler FileDeleted;
 
         public event EventHandler AllFilesDeleted;
+
+        public ObservableCollection<File> FilesCollection { get; private set; }
 
         public Guid CurrentFileGuid { get; set; }
 
