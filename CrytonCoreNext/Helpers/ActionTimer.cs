@@ -18,8 +18,8 @@ namespace CrytonCoreNext.Helpers
 
         private static void StopTimer(Action<object, EventArgs> obj)
         {
-            _timer.Stop();
             obj.Invoke(null, null);
+            _timer.Stop();
         }
     }
 }

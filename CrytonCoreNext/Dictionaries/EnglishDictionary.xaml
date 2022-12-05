@@ -30,6 +30,11 @@
     <system:String x:Key="Encrypting">Encrypting</system:String>
     <system:String x:Key="Encrypt">Encrypt</system:String>
     <system:String x:Key="Decrypt">Decrypt</system:String>
+    <system:String x:Key="WrongMethod">Inconsistent crypting method</system:String>
+    <system:String x:Key="Imported">Keys has been imported</system:String>
+    <system:String x:Key="Exported">Keys has been exported</system:String>
+    <system:String x:Key="IncorrectKeys">Incorrect keys</system:String>
+    <system:String x:Key="IncorrectFile">Incorrect file</system:String>
     
     <!--AES View Model-->
     <system:String x:Key="BlockSize">Block size</system:String>
@@ -46,9 +51,7 @@
     
     <!--RSA View Model-->
     <system:String x:Key="CollectingKeys">Collecting keys</system:String>
-    <system:String x:Key="IncorrectFile">Incorrect file</system:String>
     <system:String x:Key="MaximumFileSize">Maximum file size: </system:String>
-    <system:String x:Key="KeysImported">Keys has been imported</system:String>
     <system:String x:Key="KeysGenerated">Keys has been generated</system:String>
     <system:String x:Key="NoPrivateKeyError">Private key is required for decryption</system:String>
     <system:String x:Key="NoGeneratedKeys">No generated or imported keys available</system:String>

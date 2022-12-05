@@ -2,6 +2,7 @@
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Models;
+using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
@@ -63,8 +64,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        public string Error { get; private set; }
-
         public ICommand GenerateKeysCommand { get; init; }
 
         public ICommand ExportKeysCommand { get; init; }
@@ -87,6 +86,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             BlockSizesComboBox = new ObservableCollection<string>(_aesHelper.LegalBlocks);
             SelectedBlock = _aesHelper.DefaultBlockSize;
             SelectedKey = _aesHelper.DefaultKeySize;
+
             OnPropertyChanged(nameof(SelectedBlock));
             OnPropertyChanged(nameof(SelectedKey));
             OnPropertyChanged(nameof(BlockSizesComboBox));
@@ -105,26 +105,14 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 { SettingsKeys[0], _key },
                 { SettingsKeys[1], _iv },
                 { SettingsKeys[2], SelectedKey },
-                { SettingsKeys[3], SelectedBlock },
-                { SettingsKeys[4], string.Empty }
+                { SettingsKeys[3], SelectedBlock }
             };
         }
-
         public override void SetObjects(Dictionary<string, object> objects)
         {
             foreach (var setting in SettingsKeys)
             {
                 if (!objects.ContainsKey(setting))
-                {
-                    return;
-                }
-            }
-
-            if (objects[SettingsKeys[4]] is string error)
-            {
-                Error = error;
-                OnPropertyChanged(nameof(Error));
-                if (!string.IsNullOrEmpty(error))
                 {
                     return;
                 }
@@ -157,7 +145,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             public string Name;
         }
 
-
         private void ExportKeys()
         {
             var serialzieObjects = new Objects()
@@ -183,6 +170,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             if (saveDestination != null)
             {
                 _jsonSerializer.Serialize(serialzieObjects, saveDestination.First());
+                Log(Enums.ELogLevel.Information, Language.Post("Exported"));
             }
         }
 
@@ -204,8 +192,8 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     var castedObjects = (Objects)objects;
                     if (castedObjects.Name != PageName)
                     {
-                        Error = "Incorrect file";
-                        OnPropertyChanged(nameof(Error));
+                        Log(Enums.ELogLevel.Error, Language.Post("IncorrectFile"));
+                        return;
                     }
                     else
                     {
@@ -213,14 +201,14 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                         _key = castedObjects.ToSerialzie.Key;
                         if (!ValidateKeys())
                         {
-                            Error = "Incorrect keys";
-                            OnPropertyChanged(nameof(Error));
+                            Log(Enums.ELogLevel.Error, Language.Post("IncorrectKeys"));
                             return;
                         }
                         SelectedBlock = castedObjects.ToSerialzie.SelectedBlockSize;
                         SelectedKey = castedObjects.ToSerialzie.SelectedKeySize;
                         OnPropertyChanged(nameof(SelectedBlock));
                         OnPropertyChanged(nameof(SelectedKey));
+                        Log(Enums.ELogLevel.Information, Language.Post("Imported"));
                     }
                 }
             }

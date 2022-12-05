@@ -2,6 +2,7 @@
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.CryptingOptionsViewModels;
+using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces;
 using System;
@@ -14,7 +15,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 {
     public class AES : ICrypting
     {
-        private static readonly string[] SettingsKeys = { "Key", "IV", "KeySize", "BlockSize", "Error" };
+        private static readonly string[] SettingsKeys = { "Key", "IV", "KeySize", "BlockSize" };
 
         private readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
 
@@ -37,9 +38,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public ViewModelBase GetViewModel() => ViewModel;
 
-
         public string GetName() => Name;
-
 
         public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {
@@ -99,7 +98,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
                 return true;
             }
 
-            UpdateViewModel("Provide correct Key and IV");
+            ViewModel.Log(Enums.ELogLevel.Error, Language.Post("IncorrectKeys"));
             return false;
         }
 
@@ -117,7 +116,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
             }
             catch (Exception)
             {
-                UpdateViewModel("ERROR: Invalid keys provided");
+                ViewModel.Log(Enums.ELogLevel.Error, Language.Post("IncorrectKeys"));
                 progress.Report("Process failed");
                 return Array.Empty<byte>();
             }
@@ -128,15 +127,14 @@ namespace CrytonCoreNext.Crypting.Cryptors
             return ms.ToArray();
         }
 
-        private void UpdateViewModel(string error = "")
+        private void UpdateViewModel()
         {
             ViewModel.SetObjects(new()
             {
                 { SettingsKeys[0], _aes.Key },
                 { SettingsKeys[1], _aes.IV },
                 { SettingsKeys[2], _aes.KeySize },
-                { SettingsKeys[3], _aes.BlockSize },
-                { SettingsKeys[4], error }
+                { SettingsKeys[3], _aes.BlockSize }
             });
         }
     }

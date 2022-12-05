@@ -143,7 +143,7 @@
         
         <Label     Height="60" Content="{Binding Logger.Message}"
                    FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                    Foreground="CornflowerBlue" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Foreground="{Binding Logger.Brush}" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                     Margin="5,550,10,0"/>
     </Grid>
 </UserControl>

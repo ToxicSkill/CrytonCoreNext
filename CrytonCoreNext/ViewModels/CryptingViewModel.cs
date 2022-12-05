@@ -2,6 +2,8 @@
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
+using CrytonCoreNext.Dictionaries;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Static;
@@ -125,8 +127,10 @@ namespace CrytonCoreNext.ViewModels
 
         private async void PerformCrypting()
         {
+            Lock();
             if (!_fileService.HasBytes(CurrentFile) || IsCorrectMethod())
             {
+                CurrentCryptingViewModel.Log(ELogLevel.Error, Language.Post("WrongMethod"));
                 return;
             }
 
@@ -141,6 +145,7 @@ namespace CrytonCoreNext.ViewModels
             }
 
             ActionTimer.InitializeTimerWithAction(ProgressViewModel.ClearProgress);
+            Unlock();
         }
 
         private bool IsCorrectMethod()

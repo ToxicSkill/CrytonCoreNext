@@ -4,7 +4,6 @@ using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Logger;
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
@@ -18,8 +17,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 {
     public class RSAViewModel : ViewModelBase
     {
-        private const int LoggerSeconds = 4;
-
         private readonly string[] _settingsKeys;
 
         private readonly IJsonSerializer _jsonSerializer;
@@ -31,8 +28,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         private RSAParameters _keys;
 
         private string _selectedKey;
-
-        private Log _logger;
 
         public ObservableCollection<string> KeySizesComboBox { get; init; }
 
@@ -56,16 +51,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        public Log Logger
-        {
-            get => _logger;
-            set
-            {
-                _logger = value;
-                InvokeTimerActionForLogger();
-            }
-        }
-
         public string MaxBytes { get; set; }
 
         public ICommand ExportPublicKeyCommand { get; init; }
@@ -85,7 +70,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             ProgressView = progressView;
             ProgressView.ChangeProgressType(BusyIndicator.IndicatorType.Cupertino);
             ProgressView.ShowLabels(false);
-            _logger = new();
 
             ExportPublicKeyCommand = new Command(ExportPublicKey, CanExecute);
             ExportPrivateKeyCommand = new Command(ExportPrivateKey, CanExecute);
@@ -110,8 +94,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             return new()
             {
                 { _settingsKeys[0], _keys },
-                { _settingsKeys[1], SelectedKey },
-                { _settingsKeys[2], _logger }
+                { _settingsKeys[1], SelectedKey }
             };
         }
 
@@ -120,15 +103,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             foreach (var setting in _settingsKeys)
             {
                 if (!objects.ContainsKey(setting))
-                {
-                    return;
-                }
-            }
-
-            if (objects[_settingsKeys[2]] is Log logger)
-            {
-                Logger = logger;
-                if (logger.LogLevel == Enums.ELogLevel.Fatal || logger.LogLevel == Enums.ELogLevel.Error)
                 {
                     return;
                 }
@@ -176,8 +150,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             finally
             {
                 UpdateKeys();
-                _logger.Set(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
-                InvokeTimerActionForLogger();
+                Log(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
                 ProgressView.ClearProgress();
                 Unlock();
             }
@@ -216,15 +189,9 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         private void NoKeyError()
         {
-            _logger.Set(Enums.ELogLevel.Error, Language.Post("NoGeneratedKeys"));
+            Log(Enums.ELogLevel.Error, Language.Post("NoGeneratedKeys"));
             OnPropertyChanged(nameof(Logger));
             return;
-        }
-
-        private void InvokeTimerActionForLogger()
-        {
-            ActionTimer.InitializeTimerWithAction(ClearLogger, LoggerSeconds);
-            OnPropertyChanged(nameof(Logger));
         }
 
         private void ExportKey(bool publicKey)
@@ -250,6 +217,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             if (saveDestination != null)
             {
                 _jsonSerializer.Serialize(serialzieObjects, saveDestination.First());
+                Log(Enums.ELogLevel.Information, Language.Post("Exported"));
             }
         }
 
@@ -271,16 +239,14 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     var castedObjects = (Objects)objects;
                     if (castedObjects.Name != PageName)
                     {
-                        _logger.Set(Enums.ELogLevel.Error, Language.Post("IncorrectFile"));
-                        InvokeTimerActionForLogger();
+                        Log(Enums.ELogLevel.Error, Language.Post("IncorrectFile"));
                     }
                     else
                     {
                         _keys = _xmlSerializer.StringKeyToRsaParameter<RSAParameters>(castedObjects.ToSerialzie.Keys);
                         SelectedKey = castedObjects.ToSerialzie.SelectedKeySize;
                         UpdateKeys();
-                        _logger.Set(Enums.ELogLevel.Information, Language.Post("KeysImported"));
-                        InvokeTimerActionForLogger();
+                        Log(Enums.ELogLevel.Information, Language.Post("Imported"));
                         OnPropertyChanged(nameof(SelectedKey));
                     }
                 }
@@ -298,12 +264,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             IsPrivateKeyAvailable = _rsaHelper.IsKeyPrivate(_keys);
             OnPropertyChanged(nameof(IsPublicKeyAvailable));
             OnPropertyChanged(nameof(IsPrivateKeyAvailable));
-        }
-
-        private void ClearLogger(object sender, EventArgs e)
-        {
-            Logger.Reset();
-            OnPropertyChanged(nameof(Logger));
         }
     }
 }

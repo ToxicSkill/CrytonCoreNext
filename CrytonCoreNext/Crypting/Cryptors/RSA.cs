@@ -3,8 +3,8 @@ using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.CryptingOptionsViewModels;
 using CrytonCoreNext.Dictionaries;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Logger;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -14,7 +14,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 {
     public class RSA : ICrypting
     {
-        private static readonly string[] SettingsKeys = { "Keys", "KeySize", "Logger" };
+        private static readonly string[] SettingsKeys = { "Keys", "KeySize" };
 
         private static readonly byte[] DefaultBytes = Array.Empty<byte>();
 
@@ -56,7 +56,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
             }
             else if (!_rsaHelper.IsKeyPrivate(_keys))
             {
-                UpdateViewModel(message: Language.Post("NoPrivateKeyError"));
+                ViewModel.Log(ELogLevel.Error, Language.Post("NoPrivateKeyError"));
                 return DefaultBytes;
             }
 
@@ -67,7 +67,6 @@ namespace CrytonCoreNext.Crypting.Cryptors
         public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {
             progress.Report(Language.Post("CollectingKeys"));
-
             if (await Task.Run(() => !ParseSettingsObjects(ViewModel.GetObjects(), data.Length, true)))
                 return DefaultBytes;
 
@@ -90,7 +89,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
             if (encryption && _rsaHelper.GetMaxNumberOfBytes(keySize) < dataLength)
             {
-                UpdateViewModel(message: Language.Post("TooBigFile"));
+                // ViewModel.Log(Enums.ELogLevel.Error, Language.Post("TooBigFile")); // -> the child process calls the static method and overwrites it
                 return false;
             }
 
@@ -114,13 +113,12 @@ namespace CrytonCoreNext.Crypting.Cryptors
             return true;
         }
 
-        private void UpdateViewModel(string message = "")
+        private void UpdateViewModel()
         {
             ViewModel.SetObjects(new()
             {
                 { SettingsKeys[0], _keys },
-                { SettingsKeys[1], _rsa.KeySize },
-                { SettingsKeys[2], message == string.Empty ? new Log() : new Log(Enums.ELogLevel.Error, message) }
+                { SettingsKeys[1], _rsa.KeySize }
             });
         }
     }
