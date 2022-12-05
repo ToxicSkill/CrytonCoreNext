@@ -1,31 +1,20 @@
-﻿using CrytonCoreNext.Crypting.Interfaces;
-using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Models
 {
     public class FilesLoader : IFilesLoader
     {
-        private readonly ICryptingRecognition _cryptingRecognition;
-
-        public FilesLoader(ICryptingRecognition cryptingRecognition)
-        {
-            _cryptingRecognition = cryptingRecognition;
-        }
-
         private static readonly string[] Sizes = { "B", "KB", "MB", "GB", "TB" };
 
         public List<File>? LoadFiles(List<string> filesNames, int currentIndex = 0)
         {
-            var files = new List<File>();
-            var count = filesNames.Count;
             var tasks = new List<Task<File>>();
-            ManualResetEvent[] resetEvents = new ManualResetEvent[count];
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < filesNames.Count; i++)
             {
                 currentIndex += 1;
                 var newIndex = currentIndex;
@@ -38,12 +27,7 @@ namespace CrytonCoreNext.Models
             }
 
             Task.WaitAll(tasks.ToArray());
-            foreach (var task in tasks)
-            {
-                files.Add(task.Result);
-            }
-
-            return files;
+            return tasks.Select(x => x.Result).ToList();
         }
 
         private File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)

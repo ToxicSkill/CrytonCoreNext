@@ -40,7 +40,7 @@ namespace CrytonCoreNext
                 .AddSingleton<IInternetConnection, InternetConnection>()
                 .AddSingleton<ITimeDate, TimeDate>()
                 .AddSingleton(CreateCryptingRecognition)
-                .AddSingleton(CreateFilesLoader)
+                .AddSingleton<IFilesLoader, FilesLoader>()
                 .AddSingleton<IFilesSaver, FilesSaver>()
                 .AddSingleton<IFilesManager, FilesManager>()
                 .AddSingleton<IPDFManager, PDFManager>()
@@ -86,7 +86,6 @@ namespace CrytonCoreNext
 
             return new(timeDate, internetConnection);
         }
-
 
         private MainViewModel CreateMainWindowViewModel(IServiceProvider provider)
         {
@@ -145,12 +144,6 @@ namespace CrytonCoreNext
         {
             var recognitionValues = new RecognitionValues(AppKey);
             return new CryptingRecognition(recognitionValues);
-        }
-
-        private IFilesLoader CreateFilesLoader(IServiceProvider provider)
-        {
-            var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
-            return new FilesLoader(cryptingRecognition);
         }
 
         private IFileService CreateFileService(IServiceProvider provider)

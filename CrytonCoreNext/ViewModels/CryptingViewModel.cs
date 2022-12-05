@@ -4,7 +4,6 @@ using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
 using System;
 using System.Collections.Generic;
@@ -49,7 +48,6 @@ namespace CrytonCoreNext.ViewModels
                 }
             }
         }
-
         public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, IProgressView progressView) : base(fileService, dialogService, filesView, progressView)
         {
             _files = new();
@@ -69,6 +67,11 @@ namespace CrytonCoreNext.ViewModels
             FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
             FilesViewModel.FileDeleted += HandleFileDeleted;
             FilesViewModel.AllFilesDeleted += HandleAllFilesDeleted;
+        }
+
+        public override bool CanExecute()
+        {
+            return !IsBusy && !CurrentCryptingViewModel.IsBusy;
         }
 
         private void HandleAllFilesDeleted(object? sender, EventArgs e)
@@ -109,27 +112,6 @@ namespace CrytonCoreNext.ViewModels
             base.SaveFile(CurrentFile);
         }
 
-        public override bool CanExecute()
-        {
-            return !IsBusy && !CurrentCryptingViewModel.IsBusy;
-        }
-
-        private void UpdateFiles(IEnumerable<File> files)
-        {
-            if (IsBusy)
-            {
-                return;
-            }
-
-            foreach (var file in _files)
-            {
-                if (!files.Contains(file))
-                {
-                    _files.Remove(file);
-                }
-            }
-        }
-
         private void InitializeCryptingComboBox()
         {
             CryptingComboBox = new(_cryptingService.GetCryptors());
@@ -143,9 +125,7 @@ namespace CrytonCoreNext.ViewModels
 
         private async void PerformCrypting()
         {
-            if (!_fileService.HasBytes(CurrentFile) || 
-                (CurrentFile.Status == CryptingStatus.Status.Encrypted &&
-                CurrentCryptingViewModel.PageName != CurrentFile.Method))
+            if (!_fileService.HasBytes(CurrentFile) || IsCorrectMethod())
             {
                 return;
             }
@@ -161,6 +141,12 @@ namespace CrytonCoreNext.ViewModels
             }
 
             ActionTimer.InitializeTimerWithAction(ProgressViewModel.ClearProgress);
+        }
+
+        private bool IsCorrectMethod()
+        {
+            return CurrentFile.Status == CryptingStatus.Status.Encrypted &&
+                CurrentCryptingViewModel.PageName != CurrentFile.Method;
         }
 
         private static CryptingStatus.Status GetOpositeStatus(CryptingStatus.Status currentStatus)

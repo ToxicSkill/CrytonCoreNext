@@ -58,7 +58,6 @@ namespace CrytonCoreNext.Crypting.Models
             var checkSum = new byte[EXCFheader[nameof(_recognitionValues.CheckSum)].size];
             Array.Copy(recognizeByteArray, unique.Length + method.Length + extension.Length, checkSum, 0, checkSum.Length);
 
-            var offset = 0;
             var checkArray = new byte[method.Length + extension.Length];
             Buffer.BlockCopy(method, 0, checkArray, 0, method.Length);
             Buffer.BlockCopy(extension, 0, checkArray, method.Length, extension.Length);
@@ -66,7 +65,7 @@ namespace CrytonCoreNext.Crypting.Models
 
             if (hashedArray.SequenceEqual(checkSum) && unique.SequenceEqual(EXCFheader[nameof(_recognitionValues.Unique)].value))
             {
-                return new(true, new(Encoding.Default.GetString(method), Encoding.Default.GetString(extension)));
+                return new(true, new(GetStringFromByteArray(method), GetStringFromByteArray(extension)));
             }
 
             return new(false, new(string.Empty, string.Empty));
@@ -110,6 +109,13 @@ namespace CrytonCoreNext.Crypting.Models
             }
 
             return recognizableArray;
+        }
+
+        private string GetStringFromByteArray(byte[] array)
+        {
+            var str = Encoding.Default.GetString(array);
+            var indexToCut = str.IndexOf('\0');
+            return str[..indexToCut];
         }
 
         private bool SanityCheck()
