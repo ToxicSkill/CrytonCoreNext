@@ -1,18 +1,18 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Enums;
-using CrytonCoreNext.Helpers;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace CrytonCoreNext.Logger
 {
     public class Log : NotificationBase
     {
-        private static readonly int Seconds = 4;
+        private static readonly int Seconds = 2;
 
         public event EventHandler OnLoggerChanged;
 
-        public Brush Brush { get; set; }
+        public Brush Brush { get; set; } = Brushes.White;
 
         public ELogLevel LogLevel { get; private set; }
 
@@ -21,7 +21,6 @@ namespace CrytonCoreNext.Logger
         public Log()
         {
             Message = "";
-            Reset();
         }
 
         public Log(ELogLevel logLevel, string message)
@@ -30,7 +29,7 @@ namespace CrytonCoreNext.Logger
             Message = message;
         }
 
-        public void Post(ELogLevel logLevel, string message)
+        public async Task Post(ELogLevel logLevel, string message)
         {
             LogLevel = logLevel;
             Message = message;
@@ -41,7 +40,7 @@ namespace CrytonCoreNext.Logger
                     Brush = Brushes.Transparent;
                     break;
                 case ELogLevel.Information:
-                    Brush = Brushes.LightSteelBlue;
+                    Brush = Brushes.SkyBlue;
                     break;
                 case ELogLevel.Warning:
                     Brush = Brushes.Yellow;
@@ -57,20 +56,16 @@ namespace CrytonCoreNext.Logger
                     break;
             }
 
-            ActionTimer.InitializeTimerWithAction(ClearLogger, Seconds);
+            NotifyLoggerChanged();
+            await Task.Delay(Seconds * 1000);
+            ClearLogger();
             NotifyLoggerChanged();
         }
 
-        private void Reset(object o = null, EventArgs e = null)
+        private void ClearLogger()
         {
             LogLevel = ELogLevel.Skip;
             Message = string.Empty;
-        }
-
-        private void ClearLogger(object sender, EventArgs e)
-        {
-            Reset();
-            NotifyLoggerChanged();
         }
 
         private void NotifyLoggerChanged()

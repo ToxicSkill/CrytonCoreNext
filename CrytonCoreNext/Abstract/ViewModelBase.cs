@@ -2,6 +2,7 @@
 using CrytonCoreNext.Logger;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Abstract
 {
@@ -22,7 +23,7 @@ namespace CrytonCoreNext.Abstract
 
         public virtual Dictionary<string, object> GetObjects()
         {
-            return default;
+            return new Dictionary<string, object>();
         }
 
         public virtual void SetObjects(Dictionary<string, object> objects)
@@ -37,7 +38,7 @@ namespace CrytonCoreNext.Abstract
 
         public void Log(ELogLevel level, string message)
         {
-            Logger.Post(level, message);
+            Logger.Post(level, message).ContinueWith(OnAsyncFailed, TaskContinuationOptions.OnlyOnFaulted);
         }
 
         public virtual void Lock()
@@ -54,5 +55,15 @@ namespace CrytonCoreNext.Abstract
         {
             OnPropertyChanged(nameof(Logger));
         }
+
+        private static void OnAsyncFailed(Task task)
+        {
+            if (task != null)
+            {
+                var ex = task.Exception;
+                Console.Write(ex?.Message);
+            }
+        }
+
     }
 }

@@ -232,6 +232,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             _iv = RandomCryptoGenerator.GetCryptoRandomBytesString(Convert.ToInt32(SelectedBlock) / 8);
             _key = RandomCryptoGenerator.GetCryptoRandomBytesString(Convert.ToInt32(SelectedKey) / 8);
             ValidateKeys();
+            Log(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
         }
     }
 }

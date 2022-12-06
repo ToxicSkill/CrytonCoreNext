@@ -89,7 +89,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
             if (encryption && _rsaHelper.GetMaxNumberOfBytes(keySize) < dataLength)
             {
-                // ViewModel.Log(Enums.ELogLevel.Error, Language.Post("TooBigFile")); // -> the child process calls the static method and overwrites it
+                ViewModel.Log(Enums.ELogLevel.Error, Language.Post("TooBigFile")); // -> the child process calls the static method and overwrites it
                 return false;
             }
 
