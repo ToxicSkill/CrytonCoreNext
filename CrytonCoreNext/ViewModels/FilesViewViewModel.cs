@@ -96,21 +96,15 @@ namespace CrytonCoreNext.ViewModels
             return CurrentFileGuid;
         }
 
-        public void UpdateFiles(List<File> newFiles)
+        public void AddFile(File newFile)
         {
-            if (newFiles == null)
-            {
-                return;
-            }
-
-            FilesCollection = new(FilesCollection.ToList().Concat(newFiles));
+            FilesCollection.Add(newFile);
             OnPropertyChanged(nameof(FilesCollection));
+        }
 
-            if (FilesCollection != null && FilesCollection.Count > 0)
-            {
-                SelectedItemIndex = 0;
-            }
-
+        public void UpdateFiles()
+        {
+            RefreshSelectedIndex();
             _filesManager.ReorderFiles(FilesCollection);
         }
 
@@ -183,12 +177,19 @@ namespace CrytonCoreNext.ViewModels
 
         private bool IsItemLast()
         {
-            return SelectedItemIndex == FilesCollection.Count -1;
+            return SelectedItemIndex == FilesCollection.Count - 1;
         }
 
         private bool IsItemFirst()
         {
             return SelectedItemIndex == 0;
+        }
+        private void RefreshSelectedIndex()
+        {
+            if (FilesCollection != null && FilesCollection.Count > 0)
+            {
+                SelectedItemIndex = FilesCollection.Count - 1;
+            }
         }
 
         private void NotifyCurrentFileChanged(object? o = null, EventArgs? s = null)

@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CrytonCoreNext.ViewModels
@@ -60,7 +61,7 @@ namespace CrytonCoreNext.ViewModels
             CryptingComboBox = new();
 
             CryptCommand = new Command(PerformCrypting, CanExecute);
-            LoadFilesCommand = new Command(LoadCryptFiles, CanExecute);
+            LoadFilesCommand = new AsyncCommand(LoadCryptFiles, CanExecute);
             SaveFileCommand = new Command(SaveCryptFile, CanExecute);
 
             InitializeCryptingComboBox();
@@ -95,16 +96,16 @@ namespace CrytonCoreNext.ViewModels
             OnPropertyChanged(nameof(CryptButtonName));
         }
 
-        private void LoadCryptFiles()
+        private async Task LoadCryptFiles()
         {
             Lock();
-            var files = base.LoadFiles();
-            foreach (var file in files)
+            await foreach (var file in base.LoadFiles())
             {
+                FilesViewModel.AddFile(file);
                 _files.Add(_cryptingService.ReadCryptFile(file));
             }
 
-            FilesViewModel.UpdateFiles(files);
+            FilesViewModel.UpdateFiles();
             Unlock();
         }
 

@@ -27,9 +27,12 @@ namespace CrytonCoreNext.Services
             return file != null && file.Bytes.Length > 0;
         }
 
-        public List<File>? LoadFiles(List<string> filesNames, int currentIndex = 0)
+        public async IAsyncEnumerable<File> LoadFiles(List<string> filesNames, int currentIndex = 0)
         {
-            return _filesLoader.LoadFiles(filesNames, currentIndex);
+            await foreach (var file in _filesLoader.LoadFiles(filesNames, currentIndex))
+            {
+                yield return file;
+            }
         }
 
         public bool SaveFile(string fileName, File file)

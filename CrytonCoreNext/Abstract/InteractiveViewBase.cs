@@ -49,16 +49,22 @@ namespace CrytonCoreNext.Abstract
             PostPopup(Language.Post(message), seconds, status);
         }
 
-            protected List<File> LoadFiles()
+        protected async IAsyncEnumerable<File> LoadFiles()
         {
-            return LoadFiles(Static.Extensions.DialogFilters.All);
+            await foreach (var file in LoadFiles(Static.Extensions.DialogFilters.All))
+            {
+                yield return file;
+            }
         }
 
-        protected List<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
+        protected async IAsyncEnumerable<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
             var filesCount = FilesViewModel.GetFilesCount();
             var filesPaths = _dialogService.GetFilesNamesToOpen(filters, Language.Post("OpenFiles"), true);
-            return _fileService.LoadFiles(filesPaths, filesCount);
+            await foreach (var file in _fileService.LoadFiles(filesPaths, filesCount))
+            {
+                yield return file;
+            }
         }
 
         protected List<Guid> GetFilesOrder()

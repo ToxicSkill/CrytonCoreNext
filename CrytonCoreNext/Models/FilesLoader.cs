@@ -1,7 +1,6 @@
 ﻿using CrytonCoreNext.Interfaces;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Models
@@ -10,24 +9,19 @@ namespace CrytonCoreNext.Models
     {
         private static readonly string[] Sizes = { "B", "KB", "MB", "GB", "TB" };
 
-        public List<File>? LoadFiles(List<string> filesNames, int currentIndex = 0)
+        public async IAsyncEnumerable<File> LoadFiles(List<string> filesNames, int currentIndex = 0)
         {
-            var tasks = new List<Task<File>>();
-
             for (int i = 0; i < filesNames.Count; i++)
             {
                 currentIndex += 1;
                 var newIndex = currentIndex;
                 var fileName = filesNames[i];
-                tasks.Add(Task.Run(() =>
+                yield return await Task.Run(() =>
                 {
                     var byteArray = System.IO.File.ReadAllBytes(fileName);
                     return InitializeNewFile(newIndex, fileName, byteArray);
-                }));
+                });
             }
-
-            Task.WaitAll(tasks.ToArray());
-            return tasks.Select(x => x.Result).ToList();
         }
 
         private File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)

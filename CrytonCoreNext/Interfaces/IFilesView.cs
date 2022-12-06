@@ -12,7 +12,9 @@ namespace CrytonCoreNext.Interfaces
 
         event EventHandler AllFilesDeleted;
 
-        void UpdateFiles(List<File> newFiles);
+        void UpdateFiles();
+
+        void AddFile(File newFile);
 
         Guid GetCurrentFileGuid();
 

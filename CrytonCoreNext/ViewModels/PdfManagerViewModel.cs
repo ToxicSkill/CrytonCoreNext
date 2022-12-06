@@ -72,8 +72,7 @@ namespace CrytonCoreNext.ViewModels
 
         private async Task LoadFiles()
         {
-            var files = base.LoadFiles(Static.Extensions.DialogFilters.Pdf);
-            foreach (var file in files)
+            await foreach (var file in LoadFiles(Static.Extensions.DialogFilters.Pdf))
             {
                 if (_files.Select(x => x.Guid == file.Guid).FirstOrDefault() == null)
                 {
@@ -82,11 +81,11 @@ namespace CrytonCoreNext.ViewModels
                 var pdfFile = _pdfService.ReadPdf(file) ?? null;
                 if (pdfFile != null)
                 {
+
+                    FilesViewModel.AddFile(file);
                     _files.Add(pdfFile);
                 }
             }
-
-            FilesViewModel.UpdateFiles(files);
         }
 
         private new void HandleFileChanged(object? sender, EventArgs? e)
