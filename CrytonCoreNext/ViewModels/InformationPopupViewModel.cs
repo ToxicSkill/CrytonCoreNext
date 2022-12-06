@@ -13,7 +13,7 @@ namespace CrytonCoreNext.ViewModels
 
         public string InformationString { get; init; }
 
-        private Color _defaultColor = ColorStatus.Information;
+        private Color _defaultColor = ColorStatus.Blue;
 
         public Color BackgroundColor { get; set; }
 
@@ -42,11 +42,6 @@ namespace CrytonCoreNext.ViewModels
             InformationString = informationString;
             VerticalScrollBarVisbility = ScrollBarVisibility.Hidden;
             CollapsePopupCommand = new Command(CollapsePopup, CanExecute);
-        }
-
-        public override bool CanExecute()
-        {
-            return !IsBusy;
         }
 
         private void CollapsePopup()

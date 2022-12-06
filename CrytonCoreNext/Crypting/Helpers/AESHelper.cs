@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -50,6 +51,19 @@ namespace CrytonCoreNext.Crypting.Helpers
         public bool IsKeyValid(string key)
         {
             return !key.Equals(string.Empty);
+        }
+
+        public bool IsSizeValid(string selectedSize)
+        {
+            try
+            {
+                var size = Convert.ToInt32(selectedSize);
+                return size > 0 && size % 64 == 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

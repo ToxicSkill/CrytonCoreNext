@@ -1,5 +1,6 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Enums;
+using CrytonCoreNext.Static;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -37,22 +38,22 @@ namespace CrytonCoreNext.Logger
             switch (LogLevel)
             {
                 case ELogLevel.Skip:
-                    Brush = Brushes.Transparent;
+                    Brush = new SolidColorBrush(ColorStatus.Transparent);
                     break;
                 case ELogLevel.Information:
-                    Brush = Brushes.SkyBlue;
+                    Brush = new SolidColorBrush(ColorStatus.Blue);
                     break;
                 case ELogLevel.Warning:
-                    Brush = Brushes.Yellow;
+                    Brush = new SolidColorBrush(ColorStatus.Yellow);
                     break;
                 case ELogLevel.Error:
-                    Brush = Brushes.OrangeRed;
+                    Brush = new SolidColorBrush(ColorStatus.Red);
                     break;
                 case ELogLevel.Fatal:
-                    Brush = Brushes.Red;
+                    Brush = new SolidColorBrush(ColorStatus.Red);
                     break;
                 default:
-                    Brush = Brushes.CadetBlue;
+                    Brush = new SolidColorBrush(ColorStatus.Blue);
                     break;
             }
 

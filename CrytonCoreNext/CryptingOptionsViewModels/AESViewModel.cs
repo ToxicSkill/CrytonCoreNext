@@ -93,11 +93,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             OnPropertyChanged(nameof(KeySizesComboBox));
         }
 
-        public override bool CanExecute()
-        {
-            return !IsBusy;
-        }
-
         public override Dictionary<string, object> GetObjects()
         {
             return new()
@@ -120,15 +115,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
             var key = objects[SettingsKeys[0]] as byte[];
             var iv = objects[SettingsKeys[1]] as byte[];
-            if (key != null &&
-                iv != null)
-            {
-                _key = Convert.ToHexString(key);
-                _iv = Convert.ToHexString(iv);
-                ValidateKeys();
-                OnPropertyChanged(nameof(_key));
-                OnPropertyChanged(nameof(_iv));
-            }
+            ValidateKeys(iv, key);
         }
 
         private struct ToSerialzieObjects
@@ -197,29 +184,62 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     }
                     else
                     {
-                        _iv = castedObjects.ToSerialzie.IV;
-                        _key = castedObjects.ToSerialzie.Key;
-                        if (!ValidateKeys())
+                        var iv = castedObjects.ToSerialzie.IV;
+                        var key = castedObjects.ToSerialzie.Key;
+                        var selectedBlock = castedObjects.ToSerialzie.SelectedBlockSize;
+                        var selectedKey = castedObjects.ToSerialzie.SelectedKeySize;
+                        var keysCorrect = ValidateKeys(iv, key);
+                        var sizesCorrect = ValidateSizes(selectedBlock, selectedKey);
+                        if (!keysCorrect || !sizesCorrect)
                         {
-                            Log(Enums.ELogLevel.Error, Language.Post("IncorrectKeys"));
+                            if (keysCorrect && !sizesCorrect)
+                            {
+                                Log(Enums.ELogLevel.Warning, Language.Post("IncorrectSizes"));
+                            }
+                            else
+                            {
+                                Log(Enums.ELogLevel.Error, Language.Post("IncorrectKeys"));
+                            }
+
                             return;
                         }
-                        SelectedBlock = castedObjects.ToSerialzie.SelectedBlockSize;
-                        SelectedKey = castedObjects.ToSerialzie.SelectedKeySize;
-                        OnPropertyChanged(nameof(SelectedBlock));
-                        OnPropertyChanged(nameof(SelectedKey));
+
                         Log(Enums.ELogLevel.Information, Language.Post("Imported"));
                     }
                 }
             }
         }
 
-        private bool ValidateKeys()
+        private bool ValidateKeys(byte[]? ivArray, byte[]? keyArray)
         {
-            var keysCorrect = _aesHelper.IsKeyValid(_key) && _aesHelper.IsIVValid(_iv);
+            if (ivArray == null || keyArray == null)
+            {
+                return false;
+            }
+            try
+            {
+                var iv = Convert.ToHexString(ivArray);
+                var key = Convert.ToHexString(keyArray);
+                return ValidateKeys(iv, key);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool ValidateKeys(string iv, string key)
+        {
+            var keysCorrect = _aesHelper.IsKeyValid(iv) && _aesHelper.IsIVValid(key);
 
             IsKeyAvailable = keysCorrect;
             IsIVAvailable = keysCorrect;
+
+            if (keysCorrect)
+            {
+                _iv = iv;
+                _key = key;
+            }
 
             OnPropertyChanged(nameof(IsKeyAvailable));
             OnPropertyChanged(nameof(IsIVAvailable));
@@ -227,12 +247,34 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             return keysCorrect;
         }
 
+        private bool ValidateSizes(string selectedBlock, string selectedKey)
+        {
+            var sizesCorrect = _aesHelper.IsSizeValid(selectedKey) && _aesHelper.IsSizeValid(selectedBlock);
+
+            if (sizesCorrect)
+            {
+                SelectedBlock = selectedBlock;
+                SelectedKey = selectedKey;
+            }
+
+            OnPropertyChanged(nameof(SelectedBlock));
+            OnPropertyChanged(nameof(SelectedKey));
+
+            return sizesCorrect;
+        }
+
         private void GenerateRandomKeys()
         {
-            _iv = RandomCryptoGenerator.GetCryptoRandomBytesString(Convert.ToInt32(SelectedBlock) / 8);
-            _key = RandomCryptoGenerator.GetCryptoRandomBytesString(Convert.ToInt32(SelectedKey) / 8);
-            ValidateKeys();
-            Log(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
+            var iv = RandomCryptoGenerator.GetCryptoRandomBytesString(Convert.ToInt32(SelectedBlock) / 8);
+            var key = RandomCryptoGenerator.GetCryptoRandomBytesString(Convert.ToInt32(SelectedKey) / 8);
+            if (ValidateKeys(iv, key))
+            {
+                Log(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
+            }
+            else
+            {
+                Log(Enums.ELogLevel.Error, Language.Post("KeysGenerationFail"));
+            }
         }
     }
 }

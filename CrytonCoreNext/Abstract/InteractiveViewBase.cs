@@ -90,11 +90,11 @@ namespace CrytonCoreNext.Abstract
             var result = _fileService.SaveFile(filePath.First(), file);
             if (result)
             {
-                PostPopup(Language.Post("FilesSaved"), 2, ColorStatus.Information);
+                PostPopup(Language.Post("FilesSaved"), 2, ColorStatus.Blue);
             }
             if (!result)
             {
-                PostPopup(Language.Post("FilesError"), 2, ColorStatus.Error);
+                PostPopup(Language.Post("FilesError"), 2, ColorStatus.Red);
             }
         }
 

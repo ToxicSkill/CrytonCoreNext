@@ -91,9 +91,12 @@ namespace CrytonCoreNext.ViewModels
         private void HandleCurrentFileChanged(object? sender, EventArgs? e)
         {
             var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetCurrentFileGuid());
-            CurrentFile = file;
-            OnPropertyChanged(nameof(CurrentFile));
-            OnPropertyChanged(nameof(CryptButtonName));
+            if (file != null)
+            {
+                CurrentFile = file;
+                OnPropertyChanged(nameof(CurrentFile));
+                OnPropertyChanged(nameof(CryptButtonName));
+            }
         }
 
         private async Task LoadCryptFiles()

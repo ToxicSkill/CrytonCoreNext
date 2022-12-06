@@ -70,25 +70,24 @@ namespace CrytonCoreNext.ViewModels
             await UpdateImage();
         }
 
-        private async Task LoadFiles()
+        private new async Task LoadFiles()
         {
-            await foreach (var file in LoadFiles(Static.Extensions.DialogFilters.Pdf))
+            await foreach (var file in base.LoadFiles(Static.Extensions.DialogFilters.Pdf))
             {
-                if (_files.Select(x => x.Guid == file.Guid).FirstOrDefault() == null)
+                if (!_files.Select(x => x.Guid == file.Guid).FirstOrDefault())
                 {
                     continue;
                 }
                 var pdfFile = _pdfService.ReadPdf(file) ?? null;
                 if (pdfFile != null)
                 {
-
                     FilesViewModel.AddFile(file);
                     _files.Add(pdfFile);
                 }
             }
         }
 
-        private new void HandleFileChanged(object? sender, EventArgs? e)
+        private void HandleFileChanged(object? sender, EventArgs? e)
         {
             OnPropertyChanged(nameof(CurrentFile));
         }
@@ -121,12 +120,6 @@ namespace CrytonCoreNext.ViewModels
                 //Bitmap = new(_currentPDFImages[CurrentPDFFile.LastPage]);
                 OnPropertyChanged(nameof(Bitmap));
             }));
-        }
-
-
-        private bool CanExecute()
-        {
-            return true;
         }
     }
 }
