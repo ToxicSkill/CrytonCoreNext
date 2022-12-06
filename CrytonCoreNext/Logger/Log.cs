@@ -8,7 +8,7 @@ namespace CrytonCoreNext.Logger
 {
     public class Log : NotificationBase
     {
-        private static readonly int Seconds = 2;
+        private const int Seconds = 2;
 
         public event EventHandler OnLoggerChanged;
 
@@ -29,7 +29,7 @@ namespace CrytonCoreNext.Logger
             Message = message;
         }
 
-        public async Task Post(ELogLevel logLevel, string message)
+        public async Task Post(ELogLevel logLevel, string message, int seconds = Seconds)
         {
             LogLevel = logLevel;
             Message = message;
@@ -57,7 +57,7 @@ namespace CrytonCoreNext.Logger
             }
 
             NotifyLoggerChanged();
-            await Task.Delay(Seconds * 1000);
+            await Task.Delay(seconds * 1000);
             ClearLogger();
             NotifyLoggerChanged();
         }
