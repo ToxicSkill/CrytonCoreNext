@@ -98,7 +98,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             };
         }
 
-        public override void SetObjects(Dictionary<string, object> objects)
+        public void ParseObjects(Dictionary<string, object> objects)
         {
             foreach (var setting in _settingsKeys)
             {

@@ -141,7 +141,7 @@ namespace CrytonCoreNext.ViewModels
             var progressReport = ProgressViewModel.InitializeProgress<string>(_cryptingService.GetCurrentCryptingProgressCount());
             var result = await _cryptingService.RunCrypting(CurrentFile, progressReport);
 
-            if (result != null && result.Length > 0 && _files.Any())
+            if (!result.Equals(Array.Empty<byte>()) && _files.Any())
             {
                 _cryptingService.ModifyFile(CurrentFile, result, GetOpositeStatus(CurrentFile.Status), _cryptingService.GetCurrentCrypting().GetName());
                 OnPropertyChanged(nameof(CurrentFile));

@@ -115,11 +115,16 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         private void UpdateViewModel()
         {
-            ViewModel.SetObjects(new()
-            {
-                { SettingsKeys[0], _keys },
-                { SettingsKeys[1], _rsa.KeySize }
-            });
+            //ViewModel.ParseObjects(new()
+            //{
+            //    { SettingsKeys[0], _keys },
+            //    { SettingsKeys[1], _rsa.KeySize }
+            //});
+        }
+
+        public bool UpdateKeys(bool encryption)
+        {
+            throw new NotImplementedException();
         }
     }
 }

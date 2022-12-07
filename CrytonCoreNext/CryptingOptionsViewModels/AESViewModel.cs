@@ -1,13 +1,10 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
 using CrytonCoreNext.Crypting.Helpers;
-using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -20,30 +17,24 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         private readonly AESHelper _aesHelper;
 
-        private readonly string[] SettingsKeys;
+        private int _selectedKey;
 
-        private string _selectedKey;
+        private int _selectedBlock;
 
-        private string _selectedBlock;
+        public ObservableCollection<int> BlockSizesComboBox { get; init; }
 
-        private string _key;
-
-        private string _iv;
-
-        public ObservableCollection<string> BlockSizesComboBox { get; init; }
-
-        public ObservableCollection<string> KeySizesComboBox { get; init; }
+        public ObservableCollection<int> KeySizesComboBox { get; init; }
 
         public bool IsKeyAvailable { get; set; }
 
         public bool IsIVAvailable { get; set; }
 
-        public string SelectedBlock
+        public int SelectedBlock
         {
             get => _selectedBlock;
             set
             {
-                if (_selectedBlock != value)
+                if (_selectedBlock != value && _aesHelper.SetBlockSize(value))
                 {
                     _selectedBlock = value;
                     OnPropertyChanged(nameof(SelectedBlock));
@@ -51,12 +42,12 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        public string SelectedKey
+        public int SelectedKey
         {
             get => _selectedKey;
             set
             {
-                if (_selectedKey != value)
+                if (_selectedKey != value && _aesHelper.SetKeySize(value))
                 {
                     _selectedKey = value;
                     OnPropertyChanged(nameof(SelectedKey));
@@ -70,66 +61,26 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public ICommand ImportKeysCommand { get; init; }
 
-        public AESViewModel(IJsonSerializer json, AESHelper aesHelper, string[] settingKeys, string pageName) : base(pageName)
+        public AESViewModel(IJsonSerializer json, AESHelper aesHelper, string pageName) : base(pageName)
         {
             _jsonSerializer = json;
             _aesHelper = aesHelper;
             GenerateKeysCommand = new Command(GenerateRandomKeys, CanExecute);
             ExportKeysCommand = new Command(ExportKeys, CanExecute);
             ImportKeysCommand = new Command(ImportKeys, CanExecute);
-            SettingsKeys = settingKeys;
 
             BlockSizesComboBox = new();
             KeySizesComboBox = new();
 
-            KeySizesComboBox = new ObservableCollection<string>(_aesHelper.LegalKeys);
-            BlockSizesComboBox = new ObservableCollection<string>(_aesHelper.LegalBlocks);
-            SelectedBlock = _aesHelper.DefaultBlockSize;
-            SelectedKey = _aesHelper.DefaultKeySize;
+            KeySizesComboBox = new ObservableCollection<int>(_aesHelper.LegalKeys);
+            BlockSizesComboBox = new ObservableCollection<int>(_aesHelper.LegalBlocks);
+            SelectedBlock = _aesHelper.GetCurrentBlockSize();
+            SelectedKey = _aesHelper.GetCurrentKeySize();
 
             OnPropertyChanged(nameof(SelectedBlock));
             OnPropertyChanged(nameof(SelectedKey));
             OnPropertyChanged(nameof(BlockSizesComboBox));
             OnPropertyChanged(nameof(KeySizesComboBox));
-        }
-
-        public override Dictionary<string, object> GetObjects()
-        {
-            return new()
-            {
-                { SettingsKeys[0], _key },
-                { SettingsKeys[1], _iv },
-                { SettingsKeys[2], SelectedKey },
-                { SettingsKeys[3], SelectedBlock }
-            };
-        }
-        public override void SetObjects(Dictionary<string, object> objects)
-        {
-            foreach (var setting in SettingsKeys)
-            {
-                if (!objects.ContainsKey(setting))
-                {
-                    return;
-                }
-            }
-
-            var key = objects[SettingsKeys[0]] as byte[];
-            var iv = objects[SettingsKeys[1]] as byte[];
-            ValidateKeys(iv, key);
-        }
-
-        private struct ToSerialzieObjects
-        {
-            public string Key;
-            public string IV;
-            public string SelectedKeySize;
-            public string SelectedBlockSize;
-        }
-
-        private struct Objects
-        {
-            public ToSerialzieObjects ToSerialzie;
-            public string Name;
         }
 
         private void ExportKeys()
@@ -138,10 +89,10 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             {
                 ToSerialzie = new ToSerialzieObjects()
                 {
-                    IV = this._iv,
-                    SelectedKeySize = this.SelectedKey,
-                    Key = this._key,
-                    SelectedBlockSize = this.SelectedBlock
+                    IV = _aesHelper.GetIVString(),
+                    SelectedKeySize = SelectedKey.ToString(),
+                    Key = _aesHelper.GetKeyString(),
+                    SelectedBlockSize = SelectedBlock.ToString()
                 },
                 Name = PageName
             };
@@ -188,11 +139,10 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                         var key = castedObjects.ToSerialzie.Key;
                         var selectedBlock = castedObjects.ToSerialzie.SelectedBlockSize;
                         var selectedKey = castedObjects.ToSerialzie.SelectedKeySize;
-                        var keysCorrect = ValidateKeys(iv, key);
-                        var sizesCorrect = ValidateSizes(selectedBlock, selectedKey);
-                        if (!keysCorrect || !sizesCorrect)
+                        var keysCorrect = ValidateKeys(iv, key, selectedBlock, selectedKey);
+                        if (!keysCorrect)
                         {
-                            if (keysCorrect && !sizesCorrect)
+                            if (keysCorrect)
                             {
                                 Log(Enums.ELogLevel.Warning, Language.Post("IncorrectSizes"));
                             }
@@ -210,71 +160,53 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        private bool ValidateKeys(byte[]? ivArray, byte[]? keyArray)
+        private struct ToSerialzieObjects
         {
-            if (ivArray == null || keyArray == null)
-            {
-                return false;
-            }
-            try
-            {
-                var iv = Convert.ToHexString(ivArray);
-                var key = Convert.ToHexString(keyArray);
-                return ValidateKeys(iv, key);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            public string Key;
+            public string IV;
+            public string SelectedKeySize;
+            public string SelectedBlockSize;
         }
 
-        private bool ValidateKeys(string iv, string key)
+        private struct Objects
         {
-            var keysCorrect = _aesHelper.IsKeyValid(iv) && _aesHelper.IsIVValid(key);
+            public ToSerialzieObjects ToSerialzie;
+            public string Name;
+        }
 
-            IsKeyAvailable = keysCorrect;
-            IsIVAvailable = keysCorrect;
+        private bool ValidateKeys(string iv, string key, string selectedBlock, string selectedKey)
+        {
+            var keysCorrect = _aesHelper.KeysCorrect(iv, key, selectedBlock, selectedKey);
 
-            if (keysCorrect)
-            {
-                _iv = iv;
-                _key = key;
-            }
-
-            OnPropertyChanged(nameof(IsKeyAvailable));
-            OnPropertyChanged(nameof(IsIVAvailable));
+            UpdateKeyAvailability(keysCorrect);
+            UpdateSelectedKeys();
 
             return keysCorrect;
         }
 
-        private bool ValidateSizes(string selectedBlock, string selectedKey)
+        private void UpdateSelectedKeys()
         {
-            var sizesCorrect = _aesHelper.IsSizeValid(selectedKey) && _aesHelper.IsSizeValid(selectedBlock);
-
-            if (sizesCorrect)
-            {
-                SelectedBlock = selectedBlock;
-                SelectedKey = selectedKey;
-            }
-
+            SelectedBlock = _aesHelper.GetCurrentBlockSize();
+            SelectedKey = _aesHelper.GetCurrentKeySize();
             OnPropertyChanged(nameof(SelectedBlock));
             OnPropertyChanged(nameof(SelectedKey));
+        }
 
-            return sizesCorrect;
+        private void UpdateKeyAvailability(bool available)
+        {
+            IsKeyAvailable = available;
+            IsIVAvailable = available;
+
+            OnPropertyChanged(nameof(IsKeyAvailable));
+            OnPropertyChanged(nameof(IsIVAvailable));
         }
 
         private void GenerateRandomKeys()
         {
-            var iv = RandomCryptoGenerator.GetCryptoRandomBytesString(Convert.ToInt32(SelectedBlock) / 8);
-            var key = RandomCryptoGenerator.GetCryptoRandomBytesString(Convert.ToInt32(SelectedKey) / 8);
-            if (ValidateKeys(iv, key))
-            {
-                Log(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
-            }
-            else
-            {
-                Log(Enums.ELogLevel.Error, Language.Post("KeysGenerationFail"));
-            }
+            _aesHelper.GenerateKey();
+            _aesHelper.GenerateIV();
+            UpdateKeyAvailability(true);
+            Log(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
         }
     }
 }

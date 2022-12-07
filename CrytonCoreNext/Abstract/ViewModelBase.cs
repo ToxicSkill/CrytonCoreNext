@@ -26,11 +26,6 @@ namespace CrytonCoreNext.Abstract
             return new Dictionary<string, object>();
         }
 
-        public virtual void SetObjects(Dictionary<string, object> objects)
-        {
-            return;
-        }
-
         public virtual bool CanExecute()
         {
             return !IsBusy;

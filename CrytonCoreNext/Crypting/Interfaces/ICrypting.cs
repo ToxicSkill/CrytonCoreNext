@@ -1,6 +1,5 @@
 ﻿using CrytonCoreNext.Abstract;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Crypting.Interfaces
@@ -18,7 +17,5 @@ namespace CrytonCoreNext.Crypting.Interfaces
         ViewModelBase GetViewModel();
 
         string GetName();
-
-        bool ParseSettingsObjects(Dictionary<string, object> objects, int dataLength, bool encryption);
     }
 }
