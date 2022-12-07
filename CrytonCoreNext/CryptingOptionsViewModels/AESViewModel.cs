@@ -37,6 +37,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 if (_selectedBlock != value && _aesHelper.SetBlockSize(value))
                 {
                     _selectedBlock = value;
+                    Log(Enums.ELogLevel.Information, Language.Post("RegenerateIV"));
                     OnPropertyChanged(nameof(SelectedBlock));
                 }
             }
@@ -50,6 +51,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 if (_selectedKey != value && _aesHelper.SetKeySize(value))
                 {
                     _selectedKey = value;
+                    Log(Enums.ELogLevel.Information, Language.Post("RegenerateKey"));
                     OnPropertyChanged(nameof(SelectedKey));
                 }
             }
@@ -81,6 +83,8 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             OnPropertyChanged(nameof(SelectedKey));
             OnPropertyChanged(nameof(BlockSizesComboBox));
             OnPropertyChanged(nameof(KeySizesComboBox));
+
+            UpdateKeyAvailability(true);
         }
 
         private void ExportKeys()
@@ -90,9 +94,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 ToSerialzie = new ToSerialzieObjects()
                 {
                     IV = _aesHelper.GetIVString(),
-                    SelectedKeySize = SelectedKey.ToString(),
-                    Key = _aesHelper.GetKeyString(),
-                    SelectedBlockSize = SelectedBlock.ToString()
+                    Key = _aesHelper.GetKeyString()
                 },
                 Name = PageName
             };
@@ -130,27 +132,19 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     var castedObjects = (Objects)objects;
                     if (castedObjects.Name != PageName)
                     {
-                        Log(Enums.ELogLevel.Error, Language.Post("IncorrectFile"));
+                        Log(Enums.ELogLevel.Warning, Language.Post("IncorrectFile"));
+                        _aesHelper.GenerateNewKeys();
                         return;
                     }
                     else
                     {
                         var iv = castedObjects.ToSerialzie.IV;
                         var key = castedObjects.ToSerialzie.Key;
-                        var selectedBlock = castedObjects.ToSerialzie.SelectedBlockSize;
-                        var selectedKey = castedObjects.ToSerialzie.SelectedKeySize;
-                        var keysCorrect = ValidateKeys(iv, key, selectedBlock, selectedKey);
+                        var keysCorrect = ValidateKeys(iv, key);
                         if (!keysCorrect)
                         {
-                            if (keysCorrect)
-                            {
-                                Log(Enums.ELogLevel.Warning, Language.Post("IncorrectSizes"));
-                            }
-                            else
-                            {
-                                Log(Enums.ELogLevel.Error, Language.Post("IncorrectKeys"));
-                            }
-
+                            Log(Enums.ELogLevel.Warning, Language.Post("IncorrectKeys"));
+                            _aesHelper.GenerateNewKeys();
                             return;
                         }
 
@@ -164,8 +158,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             public string Key;
             public string IV;
-            public string SelectedKeySize;
-            public string SelectedBlockSize;
         }
 
         private struct Objects
@@ -174,9 +166,9 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             public string Name;
         }
 
-        private bool ValidateKeys(string iv, string key, string selectedBlock, string selectedKey)
+        private bool ValidateKeys(string iv, string key)
         {
-            var keysCorrect = _aesHelper.KeysCorrect(iv, key, selectedBlock, selectedKey);
+            var keysCorrect = _aesHelper.ValidateKeys(iv, key);
 
             UpdateKeyAvailability(keysCorrect);
             UpdateSelectedKeys();

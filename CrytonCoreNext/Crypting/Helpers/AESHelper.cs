@@ -38,6 +38,12 @@ namespace CrytonCoreNext.Crypting.Helpers
             }
         }
 
+        public void GenerateNewKeys()
+        {
+            GenerateIV();
+            GenerateKey();
+        }
+
         public void GenerateKey()
         {
             _aes.GenerateKey();
@@ -98,37 +104,15 @@ namespace CrytonCoreNext.Crypting.Helpers
             return false;
         }
 
-        public bool KeysCorrect(string iv, string key, string selectedBlock, string selectedKey)
+        public bool ValidateKeys(string iv, string key)
         {
-            var blockSize = 0;
-            var keySize = 0;
-            try
-            {
-                blockSize = Convert.ToInt32(selectedBlock);
-                keySize = Convert.ToInt32(selectedKey);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            if (!IsBlockSizeValid(blockSize) || !_aes.ValidKeySize(keySize))
-            {
-                return false;
-            }
-            else
-            {
-                _aes.KeySize = keySize;
-                _aes.BlockSize = blockSize;
-            }
-
             if (iv.Equals(string.Empty) || key.Equals(string.Empty))
             {
                 return false;
             }
 
-            var byteIV = Array.Empty<byte>();
-            var byteKey = Array.Empty<byte>();
+            byte[]? byteKey;
+            byte[]? byteIV;
             try
             {
                 byteIV = iv.Str2Bytes();
@@ -139,7 +123,15 @@ namespace CrytonCoreNext.Crypting.Helpers
                 return false;
             }
 
-            if (byteIV.Length != _aes.BlockSize / 8 || byteKey.Length != _aes.KeySize / 8)
+            var keySize = byteKey.Length * 8;
+            var ivSize = byteIV.Length * 8;
+
+            if (IsBlockSizeValid(ivSize) && _aes.ValidKeySize(keySize))
+            {
+                _aes.KeySize = keySize;
+                _aes.BlockSize = ivSize;
+            }
+            else
             {
                 return false;
             }

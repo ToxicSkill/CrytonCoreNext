@@ -1,5 +1,6 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
+using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using System;
@@ -128,6 +129,7 @@ namespace CrytonCoreNext.ViewModels
             _deletedFileGuid = Guid.Empty;
             DoAction(_filesManager.ClearAllFiles);
             AllFilesDeleted.Invoke(null, null);
+            GCHelper.Collect();
         }
 
         public void DeleteFile()
@@ -141,6 +143,7 @@ namespace CrytonCoreNext.ViewModels
             _deletedFileGuid = CurrentFileGuid;
             DoAction(_filesManager.DeleteItem);
             FileDeleted.Invoke(null, null);
+            GCHelper.Collect();
         }
 
         public void SetFileAsFirst()

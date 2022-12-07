@@ -33,9 +33,9 @@
     <system:String x:Key="WrongMethod">Inconsistent crypting method</system:String>
     <system:String x:Key="Imported">Keys has been imported</system:String>
     <system:String x:Key="Exported">Keys has been exported</system:String>
-    <system:String x:Key="IncorrectKeys">Incorrect keys</system:String>
+    <system:String x:Key="IncorrectKeys">Incorrect keys. New keys generated.</system:String>
     <system:String x:Key="IncorrectSizes">Incorrect size, loaded deafult</system:String>
-    <system:String x:Key="IncorrectFile">Incorrect file</system:String>
+    <system:String x:Key="IncorrectFile">Incorrect file. New keys generated</system:String>
     
     <!--AES View Model-->
     <system:String x:Key="BlockSize">Block size</system:String>
@@ -50,6 +50,8 @@
     <system:String x:Key="KeysGenerationFail">Error while generating keys</system:String>
     <system:String x:Key="PrivateKey">Private key</system:String>
     <system:String x:Key="PublicKey">Public key</system:String>
+    <system:String x:Key="RegenerateKey">New key generated</system:String>
+    <system:String x:Key="RegenerateIV">New IV generated</system:String>
     
     <!--RSA View Model-->
     <system:String x:Key="CollectingKeys">Collecting keys</system:String>
