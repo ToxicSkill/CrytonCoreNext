@@ -35,7 +35,6 @@
 
 
         <Button Margin="10, 325, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="190" Content="{DynamicResource GenerateKeys}">
-
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
                     <i:InvokeCommandAction Command="{Binding GenerateKeysCommand}"/>
@@ -69,11 +68,17 @@
 
         </Grid>
 
-        <Grid Width="70" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 495, 0, 0">
-       
+        <Grid Width="250" Height="70" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 495, 0, 0">
+
+            <Button Style="{DynamicResource TransparentButtonMedium }" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                    VerticalAlignment="Top" Margin="35, 2, 0 ,0"
+                    Command="{Binding ImportKeysCommand}"
+                    Content="Import keys" FontSize="18"/>
             <Button ToolTip="{DynamicResource ImportToolTip}" Background="#00000000" 
                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                    Width="22" Height="22" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Left">
+                    Width="22" Height="22" BorderThickness="0" Cursor="Hand"  Content="Sialalj"
+                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Margin="5, 6, 0, 0">
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -91,9 +96,15 @@
                 </Button.Template>
             </Button>
 
+            <Button Style="{DynamicResource TransparentButtonMedium }" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                    VerticalAlignment="Bottom" Margin="35, 0, 0 ,2"
+                    Command="{Binding ExportKeysCommand}"
+                    Content="Export keys" FontSize="18"/>
             <Button  ToolTip="{DynamicResource ExportToolTip}" Background="#00000000" 
                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                    Width="22" Height="22" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Right">
+                    Width="22" Height="22" BorderThickness="0" Cursor="Hand" 
+                    HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                    Margin="5, 0, 0, 3">
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -118,7 +129,7 @@
 
         <Label     Height="60" Content="{Binding Logger.Message}"
                    FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                    Foreground="{Binding Logger.Brush}" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
-                    Margin="5,550,10,0"/>
+                    Foreground="{Binding Logger.Brush}" VerticalAlignment="Top" 
+                    Margin="5,575,10,0"/>
     </Grid>
 </UserControl>
