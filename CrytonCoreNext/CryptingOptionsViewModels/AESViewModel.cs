@@ -25,20 +25,22 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public ObservableCollection<int> KeySizesComboBox { get; init; }
 
-        public bool IsKeyAvailable { get; set; }
-
-        public bool IsIVAvailable { get; set; }
+        public bool KeysAvailable { get; set; }
 
         public int SelectedBlock
         {
             get => _selectedBlock;
             set
             {
-                if (_selectedBlock != value && _aesHelper.SetBlockSize(value))
+                if (_selectedBlock != value)
                 {
                     _selectedBlock = value;
-                    Log(Enums.ELogLevel.Information, Language.Post("RegenerateIV"));
                     OnPropertyChanged(nameof(SelectedBlock));
+                    if (!IsBusy)
+                    {
+                        _aesHelper.SetBlockSize(value);
+                        Log(Enums.ELogLevel.Information, Language.Post("RegenerateIV"));
+                    }
                 }
             }
         }
@@ -48,11 +50,15 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             get => _selectedKey;
             set
             {
-                if (_selectedKey != value && _aesHelper.SetKeySize(value))
+                if (_selectedKey != value)
                 {
                     _selectedKey = value;
-                    Log(Enums.ELogLevel.Information, Language.Post("RegenerateKey"));
                     OnPropertyChanged(nameof(SelectedKey));
+                    if (!IsBusy)
+                    {
+                        _aesHelper.SetKeySize(value);
+                        Log(Enums.ELogLevel.Information, Language.Post("RegenerateKey"));
+                    }
                 }
             }
         }
@@ -103,7 +109,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             {
                 Filters = Static.Extensions.FilterToPrompt(Static.Extensions.DialogFilters.Json),
                 Multiselect = false,
-                //Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
+                Title = Language.Post("OpenFileDialog")
             });
 
             var saveDestination = saveDialog.RunDialog();
@@ -120,7 +126,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             {
                 Filters = Static.Extensions.FilterToPrompt(Static.Extensions.DialogFilters.Json),
                 Multiselect = false,
-                //Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
+                Title = Language.Post("OpenFileDialog")
             });
 
             var saveDestination = openDialog.RunDialog();
@@ -138,10 +144,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     }
                     else
                     {
-                        var iv = castedObjects.ToSerialzie.IV;
-                        var key = castedObjects.ToSerialzie.Key;
-                        var keysCorrect = ValidateKeys(iv, key);
-                        if (!keysCorrect)
+                        if (!ValidateKeys(castedObjects.ToSerialzie.IV, castedObjects.ToSerialzie.Key))
                         {
                             Log(Enums.ELogLevel.Warning, Language.Post("IncorrectKeys"));
                             _aesHelper.GenerateNewKeys();
@@ -168,10 +171,12 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         private bool ValidateKeys(string iv, string key)
         {
+            Lock();
             var keysCorrect = _aesHelper.ValidateKeys(iv, key);
 
             UpdateKeyAvailability(keysCorrect);
             UpdateSelectedKeys();
+            Unlock();
 
             return keysCorrect;
         }
@@ -186,11 +191,9 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         private void UpdateKeyAvailability(bool available)
         {
-            IsKeyAvailable = available;
-            IsIVAvailable = available;
+            KeysAvailable = available;
 
-            OnPropertyChanged(nameof(IsKeyAvailable));
-            OnPropertyChanged(nameof(IsIVAvailable));
+            OnPropertyChanged(nameof(KeysAvailable));
         }
 
         private void GenerateRandomKeys()

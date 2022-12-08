@@ -7,7 +7,11 @@ namespace CrytonCoreNext.Services
 {
     public class DialogService : IDialogService
     {
-        private const string DefaultFileName = "file.";
+        private const string Dot = ".";
+
+        private const string Empty = "";
+
+        private const string DefaultFileName = "file";
 
         public List<string> GetFilesNamesToOpen(Static.Extensions.DialogFilters filter, string title, bool multiselect = false)
         {
@@ -21,14 +25,14 @@ namespace CrytonCoreNext.Services
             return openDialog.RunDialog();
         }
 
-        public List<string> GetFilesNamesToSave(Static.Extensions.DialogFilters filter, string title, string extension)
+        public List<string> GetFilesNamesToSave(Static.Extensions.DialogFilters filter, string title, string extension = Empty)
         {
             WindowDialog.SaveDialog saveDialog = new(new DialogHelper()
             {
                 Filters = Static.Extensions.FilterToPrompt(filter),
                 Multiselect = false,
                 Title = title,
-                FileName = DefaultFileName + extension
+                FileName = DefaultFileName + (!extension.Equals(Empty) ? Dot + extension : Empty) 
             });
 
             return saveDialog.RunDialog();

@@ -84,24 +84,20 @@ namespace CrytonCoreNext.Crypting.Helpers
             return _aes.KeySize;
         }
 
-        public bool SetBlockSize(int blockSize)
+        public void SetBlockSize(int blockSize)
         {
             if (LegalBlocks.Contains(blockSize))
             {
                 _aes.BlockSize = blockSize;
-                return true;
             }
-            return false;
         }
 
-        public bool SetKeySize(int keySize)
+        public void SetKeySize(int keySize)
         {
             if (LegalKeys.Contains(keySize))
             {
                 _aes.KeySize = keySize;
-                return true;
             }
-            return false;
         }
 
         public bool ValidateKeys(string iv, string key)

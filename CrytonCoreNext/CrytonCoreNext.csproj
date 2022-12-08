@@ -88,6 +88,7 @@
     <None Remove="Assets\Sun.png" />
     <None Remove="Assets\Sunrise.png" />
     <None Remove="Assets\Sunset.png" />
+    <None Remove="Assets\Swap.png" />
     <None Remove="Assets\Switch — kopia.png" />
     <None Remove="Assets\Switch.png" />
     <None Remove="Assets\Temperature.png" />
@@ -334,6 +335,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Sunset.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Swap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Switch — kopia.png">

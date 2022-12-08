@@ -1,17 +1,12 @@
-﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.Helpers;
-using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces;
 using System;
-using System.Linq;
-using System.Collections.Generic;
-using CrytonCoreNext.Static;
 
 namespace CrytonCoreNext.Models
 {
     public class FilesSaver : IFilesSaver
     {
 
-        public bool SaveFile(string fileName, Models.File file)
+        public bool SaveFile(string fileName, File file)
         {
             try
             {

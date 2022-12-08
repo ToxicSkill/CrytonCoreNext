@@ -99,16 +99,8 @@
         <Grid Height="50" Width="150" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,150" 
                   Visibility="{Binding FileInformationVisibility}">
             <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="-10,0,20,8"
-                CornerRadius="0,15,15,0" BorderBrush="#FF131313" Background="#FF131313">
-            </Border>
+                CornerRadius="0,15,15,0" BorderBrush="#FF131313" Background="#FF131313"/>
             <TabPanel>
-                <!--<Image Source="/Assets/Lock2.png"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"
-                       Stretch="Uniform"
-                       RenderOptions.EdgeMode="Aliased"
-                       RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="25"/>-->
                 <Button Content="{Binding CryptButtonName}" Command="{Binding CryptCommand}" Foreground="#FFAFB2FF" Margin="8,0,0,0" MinWidth="173"
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>

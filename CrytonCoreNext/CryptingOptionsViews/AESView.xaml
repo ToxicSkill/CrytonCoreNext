@@ -34,51 +34,62 @@
                   SelectedIndex="0" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,245"/>
 
 
-        <Button Margin="10, 325, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="190" Content="{DynamicResource GenerateKeys}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding GenerateKeysCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Button>
+        <Grid Height="40" Width="200"  Margin="5, 305, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button Content="{DynamicResource GenerateKeys}" VerticalAlignment="Center"
+                        Style="{StaticResource TransparentButtonSmall}" 
+                        Template="{DynamicResource TransparnetButtonControlTemplate}" 
+                        Command="{Binding GenerateKeysCommand}"
+                        Margin="35, 0, 0, 0" Cursor="Hand"/>
+            <Button ToolTip="{DynamicResource GenerateKeys}" Background="#00000000" 
+                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                    Width="20" Height="20" BorderThickness="0" Cursor="Hand"
+                    HorizontalAlignment="Left" VerticalAlignment="Center">
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 380, 0, 0">
-            <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource Key}"  Style="{StaticResource CryptingInfoSettings}"/>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding ImportKeysCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="/Assets/Swap.png" Width="22" Height="22"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="5, 350, 0, 0">
+            <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center"
+                   Content="{DynamicResource KeyAvailable}"  Style="{StaticResource CryptingInfoSettings}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            
+            <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center"
+                   Content="{DynamicResource NoKeyAvailable}"  Style="{StaticResource CryptingInfoSettings}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
 
             <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsKeyAvailable, Converter={StaticResource BoolToVisibilityConverter}}"
+                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"
                        RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
 
             <Image Source="/Assets/Info.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsKeyAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"
+                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"
                        RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
 
         </Grid>
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 440, 0, 0">
-            <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource IV}"  Style="{StaticResource CryptingInfoSettings}"/>
+        <Grid Width="250" Height="75" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,410,0,0">
 
-            <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsIVAvailable, Converter={StaticResource BoolToVisibilityConverter}}"
-                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-
-            <Image Source="/Assets/Info.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsIVAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"
-                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-
-        </Grid>
-
-        <Grid Width="250" Height="70" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10, 495, 0, 0">
-
-            <Button Style="{DynamicResource TransparentButtonMedium }" Template="{DynamicResource TransparnetButtonControlTemplate}"
+            <Button Style="{DynamicResource TransparentButtonSmall }" Template="{DynamicResource TransparnetButtonControlTemplate}"
                     VerticalAlignment="Top" Margin="35, 2, 0 ,0"
                     Command="{Binding ImportKeysCommand}"
-                    Content="Import keys" FontSize="18"/>
+                    Content="Import keys" Cursor="Hand"/>
             <Button ToolTip="{DynamicResource ImportToolTip}" Background="#00000000" 
                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                     Width="22" Height="22" BorderThickness="0" Cursor="Hand"  Content="Sialalj"
                     HorizontalAlignment="Left" VerticalAlignment="Top"
-                    Margin="5, 6, 0, 0">
+                    Margin="0, 6, 0, 0">
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -96,15 +107,15 @@
                 </Button.Template>
             </Button>
 
-            <Button Style="{DynamicResource TransparentButtonMedium }" Template="{DynamicResource TransparnetButtonControlTemplate}"
+            <Button Style="{DynamicResource TransparentButtonSmall }" Template="{DynamicResource TransparnetButtonControlTemplate}"
                     VerticalAlignment="Bottom" Margin="35, 0, 0 ,2"
                     Command="{Binding ExportKeysCommand}"
-                    Content="Export keys" FontSize="18"/>
+                    Content="Export keys" Cursor="Hand"/>
             <Button  ToolTip="{DynamicResource ExportToolTip}" Background="#00000000" 
                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                     Width="22" Height="22" BorderThickness="0" Cursor="Hand" 
                     HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                    Margin="5, 0, 0, 3">
+                    Margin="0, 0, 0, 3">
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -121,10 +132,6 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>
-        </Grid>
-
-        <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10, 362, 0, 0" Width="190" Height="50">
-            <ContentControl Content="{Binding ProgressView}"/>
         </Grid>
 
         <Label     Height="60" Content="{Binding Logger.Message}"

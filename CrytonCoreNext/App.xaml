@@ -151,6 +151,24 @@
             </Setter>
         </Style>
 
+        <Style x:Key="TransparentButtonSmall" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="Transparent" >
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <ControlTemplate x:Key="TransparnetButtonControlTemplate" TargetType="{x:Type Button}">
             <Border x:Name="border" BorderThickness="0">
                 <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" 
