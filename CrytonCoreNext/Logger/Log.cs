@@ -11,6 +11,8 @@ namespace CrytonCoreNext.Logger
     {
         private const int Seconds = 2;
 
+        private int _invokeCounter = 0;
+
         public event EventHandler OnLoggerChanged;
 
         public Brush Brush { get; set; } = Brushes.White;
@@ -32,6 +34,7 @@ namespace CrytonCoreNext.Logger
 
         public async Task Post(ELogLevel logLevel, string message, int seconds = Seconds)
         {
+            _invokeCounter++;
             LogLevel = logLevel;
             Message = message;
 
@@ -65,8 +68,12 @@ namespace CrytonCoreNext.Logger
 
         private void ClearLogger()
         {
-            LogLevel = ELogLevel.Skip;
-            Message = string.Empty;
+            _invokeCounter--;
+            if (_invokeCounter == 0)
+            {
+                LogLevel = ELogLevel.Skip;
+                Message = string.Empty;
+            }
         }
 
         private void NotifyLoggerChanged()
