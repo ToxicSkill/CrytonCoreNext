@@ -36,6 +36,11 @@
     <system:String x:Key="IncorrectKeys">Incorrect keys. New keys generated.</system:String>
     <system:String x:Key="IncorrectSizes">Incorrect size, loaded deafult</system:String>
     <system:String x:Key="IncorrectFile">Incorrect file. New keys generated</system:String>
+    <system:String x:Key="Busy">Wait for task complete</system:String>
+    <system:String x:Key="Error">Process failed (wrong keys)</system:String>
+    <system:String x:Key="Success">Process successed</system:String>
+    <system:String x:Key="ExportKeys">Export keys</system:String>
+    <system:String x:Key="ImportKeys">Import keys</system:String>
     
     <!--AES View Model-->
     <system:String x:Key="BlockSize">Block size</system:String>
@@ -62,6 +67,8 @@
     <system:String x:Key="NoPrivateKeyError">Private key is required for decryption</system:String>
     <system:String x:Key="NoGeneratedKeys">No generated or imported keys available</system:String>
     <system:String x:Key="TooBigFile">File is too big</system:String>
+    <system:String x:Key="ExportPublicKey">Export public key</system:String>
+    <system:String x:Key="ExportPrivateKey">Export private key</system:String>
     
     
     <!--Files-->

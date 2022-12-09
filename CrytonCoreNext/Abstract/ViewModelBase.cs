@@ -59,6 +59,5 @@ namespace CrytonCoreNext.Abstract
                 Console.Write(ex?.Message);
             }
         }
-
     }
 }

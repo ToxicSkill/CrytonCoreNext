@@ -84,10 +84,10 @@
             <Button Style="{DynamicResource TransparentButtonSmall }" Template="{DynamicResource TransparnetButtonControlTemplate}"
                     VerticalAlignment="Top" Margin="35, 2, 0 ,0"
                     Command="{Binding ImportKeysCommand}"
-                    Content="Import keys" Cursor="Hand"/>
+                    Content="{DynamicResource ImportKeys}" Cursor="Hand"/>
             <Button ToolTip="{DynamicResource ImportToolTip}" Background="#00000000" 
                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                    Width="22" Height="22" BorderThickness="0" Cursor="Hand"  Content="Sialalj"
+                    Width="22" Height="22" BorderThickness="0" Cursor="Hand"
                     HorizontalAlignment="Left" VerticalAlignment="Top"
                     Margin="0, 6, 0, 0">
 
@@ -110,7 +110,7 @@
             <Button Style="{DynamicResource TransparentButtonSmall }" Template="{DynamicResource TransparnetButtonControlTemplate}"
                     VerticalAlignment="Bottom" Margin="35, 0, 0 ,2"
                     Command="{Binding ExportKeysCommand}"
-                    Content="Export keys" Cursor="Hand"/>
+                    Content="{DynamicResource ExportKeys}" Cursor="Hand"/>
             <Button  ToolTip="{DynamicResource ExportToolTip}" Background="#00000000" 
                     HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                     Width="22" Height="22" BorderThickness="0" Cursor="Hand" 

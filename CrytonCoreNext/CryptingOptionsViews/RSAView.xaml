@@ -28,7 +28,7 @@
                   ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
                   SelectedIndex="0" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,150"/>
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10, 200,0,0" Height="50">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5, 200,0,0" Height="50">
             <Label Content="{Binding MaxBytes}" Margin="30, 0, 0 ,0" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Stretch" Style="{StaticResource CryptingInfoSettings}"/>
 
             <Image Source="/Assets/Info.png" Width="20" Height="20" HorizontalAlignment="Left"
@@ -37,50 +37,48 @@
         </Grid>
 
 
-        <Button Margin="10, 275, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="190" Content="{DynamicResource GenerateKeys}">
-
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding GenerateKeysCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Button>
-
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 330, 0, 0">
-            <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource PublicKey}"  Style="{StaticResource CryptingInfoSettings}"/>
-
-            <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsPublicKeyAvailable, Converter={StaticResource BoolToVisibilityConverter}}"
-                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-            
-            <Image Source="/Assets/Info.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsPublicKeyAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"
-                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-
-            <Button ToolTip="{DynamicResource ExportToolTip}" Background="#00000000" 
-                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                Width="22" Height="22" BorderThickness="0"
-                HorizontalAlignment="Left" VerticalAlignment="Center" Cursor="Hand"
-                    Margin="200, 0, 0, 0">
+        <Grid Height="40" Width="200"  Margin="5, 260, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button Content="{DynamicResource GenerateKeys}" VerticalAlignment="Center"
+                        Style="{StaticResource TransparentButtonSmall}" 
+                        Template="{DynamicResource TransparnetButtonControlTemplate}" 
+                        Command="{Binding GenerateKeysCommand}"
+                        Margin="35, 0, 0, 0" Cursor="Hand"/>
+            <Button ToolTip="{DynamicResource GenerateKeys}" Background="#00000000" 
+                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                    Width="20" Height="20" BorderThickness="0" Cursor="Hand"
+                    HorizontalAlignment="Left" VerticalAlignment="Center">
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                        <i:InvokeCommandAction Command="{Binding ExportPublicKeyCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding ImportKeysCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 
                 <Button.Template>
                     <ControlTemplate>
-                        <Image Source="/Assets/SaveObjects.png" Width="22" Height="22"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality"
-                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+                        <Image Source="/Assets/Swap.png" Width="22" Height="22"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
                     </ControlTemplate>
                 </Button.Template>
             </Button>
         </Grid>
 
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="10, 390, 0, 0">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="5, 310, 0, 0">
+            <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource PublicKey}"  Style="{StaticResource CryptingInfoSettings}"/>
+
+            <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsPublicKeyAvailable, Converter={StaticResource BoolToVisibilityConverter}}"
+                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+
+            <Image Source="/Assets/Info.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsPublicKeyAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"
+                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+
+        </Grid>
+
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="5, 365, 0, 0">
             <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="{DynamicResource PrivateKey}"  Style="{StaticResource CryptingInfoSettings}"/>
 
             <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -91,59 +89,96 @@
                        RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding IsPrivateKeyAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"
                        RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
 
+        </Grid>
+
+        <Grid Width="250" Height="120" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,430,0,0">
+
+            <Button Style="{DynamicResource TransparentButtonSmall }" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                    VerticalAlignment="Top" Margin="35, 2, 0 ,0"
+                    Command="{Binding ExportPrivateKeyCommand}"
+                    Content="{DynamicResource ExportPrivateKey}" Cursor="Hand"/>
             <Button ToolTip="{DynamicResource ExportToolTip}" Background="#00000000" 
-                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                Width="22" Height="22" BorderThickness="0"
-                HorizontalAlignment="Left" VerticalAlignment="Center" Cursor="Hand"
-                    Margin="200, 0, 0, 0">
+                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                    Width="22" Height="22" BorderThickness="0" Cursor="Hand"
+                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Margin="0, 6, 0, 0">
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                        <i:InvokeCommandAction Command="{Binding ExportPrivateKeyCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding ImportKeysCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 
                 <Button.Template>
                     <ControlTemplate>
                         <Image Source="/Assets/SaveObjects.png" Width="22" Height="22"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality"
-                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button Style="{DynamicResource TransparentButtonSmall }" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                    VerticalAlignment="Center" Margin="35, 2, 0 ,0"
+                    Command="{Binding ExportPublicKeyCommand}"
+                    Content="{DynamicResource ExportPublicKey}" Cursor="Hand"/>
+            <Button ToolTip="{DynamicResource ExportToolTip}" Background="#00000000" 
+                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                    Width="22" Height="22" BorderThickness="0" Cursor="Hand"
+                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Margin="0, 6, 0, 0">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding ImportKeysCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="/Assets/SaveObjects.png" Width="22" Height="22"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button Style="{DynamicResource TransparentButtonSmall }" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                    VerticalAlignment="Bottom" Margin="35, 0, 0 ,2"
+                    Command="{Binding ImportCryptorCommand}"
+                    Content="{DynamicResource ImportKeys}" Cursor="Hand"/>
+            <Button  ToolTip="{DynamicResource ImportToolTip}" Background="#00000000" 
+                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                    Width="22" Height="22" BorderThickness="0" Cursor="Hand" 
+                    HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                    Margin="0, 0, 0, 3">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding ExportKeysCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="/Assets/LoadObjects.png" Width="22" Height="22"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
                     </ControlTemplate>
                 </Button.Template>
             </Button>
         </Grid>
 
-
-        <Button ToolTip="{DynamicResource ImportToolTip}" Background="#00000000" 
-                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                Width="22" Height="22" BorderThickness="0"
-                HorizontalAlignment="Left" VerticalAlignment="Center" Cursor="Hand"
-                    Margin="10, 270, 0, 0">
-
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding ImportCryptorCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-
-            <Button.Template>
-                <ControlTemplate>
-                    <Image Source="/Assets/LoadObjects.png" Width="22" Height="22"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality"
-                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
-        
         <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="180, 250, 0, 0" Width="100" Height="100">
             <ContentControl Content="{Binding ProgressView}"/>
         </Grid>
-        
+
         <Label     Height="60" Content="{Binding Logger.Message}"
                    FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                    Foreground="{Binding Logger.Brush}" HorizontalAlignment="Stretch" VerticalAlignment="Top" 
-                    Margin="5,550,10,0"/>
+                    Foreground="{Binding Logger.Brush}" VerticalAlignment="Top" 
+                    Margin="5,587,10,0"/>
     </Grid>
 </UserControl>

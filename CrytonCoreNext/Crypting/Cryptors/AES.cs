@@ -2,6 +2,7 @@
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.CryptingOptionsViewModels;
+using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
 using System;
 using System.IO;
@@ -20,7 +21,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public string Name => nameof(AES);
 
-        public int ProgressCount => 4;
+        public int ProgressCount => 2;
 
         public ViewModelBase ViewModel { get; init; }
 
@@ -49,23 +50,21 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         private byte[] PerformCryptography(byte[] data, ICryptoTransform cryptoTransform, IProgress<string> progress)
         {
-            progress.Report("Preparing");
+            progress.Report(Language.Post("CollectingKeys"));
             using var ms = new MemoryStream();
             using var cryptoStream = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write);
             cryptoStream.Write(data, 0, data.Length);
-            progress.Report("Starting");
             try
             {
                 cryptoStream.FlushFinalBlock();
-                progress.Report("Finished");
             }
             catch (Exception)
             {
-                progress.Report("Incorrect keys");
+                progress.Report(Language.Post("Error"));
                 return Array.Empty<byte>();
             }
 
-            progress.Report("Success");
+            progress.Report(Language.Post("Success"));
             return ms.ToArray();
         }
     }
