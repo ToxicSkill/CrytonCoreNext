@@ -48,7 +48,7 @@ namespace CrytonCoreNext.ViewModels
 
         public PdfManagerViewModel(IFileService fileService, IDialogService dialogService, IFilesView filesView, IProgressView progressView, IPDFService pdfService) : base(fileService, dialogService, filesView, progressView)
         {
-            PostFilesCommand = new AsyncCommand(this.LoadFiles, CanExecute);
+            PostFilesCommand = new AsyncCommand(this.LoadPDFFiles, CanExecute);
             PreviousCommand = new AsyncCommand(MovePreviousPage, CanExecute);
             NextCommand = new AsyncCommand(MoveNextPage, CanExecute);
             _pdfService = pdfService;
@@ -70,21 +70,15 @@ namespace CrytonCoreNext.ViewModels
             await UpdateImage();
         }
 
-        private new async Task LoadFiles()
+        private async Task LoadPDFFiles()
         {
+            Lock();
             await foreach (var file in base.LoadFiles(Static.Extensions.DialogFilters.Pdf))
             {
-                if (!_files.Select(x => x.Guid == file.Guid).FirstOrDefault())
-                {
-                    continue;
-                }
-                var pdfFile = _pdfService.ReadPdf(file) ?? null;
-                if (pdfFile != null)
-                {
-                    FilesViewModel.AddFile(file);
-                    _files.Add(pdfFile);
-                }
+                FilesViewModel.AddFile(file);
+                _files.Add(_pdfService.ReadPdf(file) ?? null);
             }
+            Unlock();
         }
 
         private void HandleFileChanged(object? sender, EventArgs? e)

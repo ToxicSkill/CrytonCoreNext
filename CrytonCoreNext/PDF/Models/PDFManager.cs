@@ -5,6 +5,8 @@ using Docnet.Core.Readers;
 using ImageMagick;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Media.Imaging;
 
@@ -123,11 +125,50 @@ namespace CrytonCoreNext.PDF.Models
                 return new(GetImage(pageReader));
             }
         }
+        public WriteableBitmap ConvertBitmapToBitmapImage(Bitmap bitmap)
+        {
+            // Create a BitmapImage and set its source to the Bitmap
+            var bitmapImage = new BitmapImage();
+            using (var memoryStream = new MemoryStream())
+            {
+                bitmap.Save(memoryStream, ImageFormat.Png);
+                memoryStream.Position = 0;
+
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.StreamSource = memoryStream;
+                bitmapImage.EndInit();
+            }
+
+            // Create a WritableBitmap and set its source to the BitmapImage
+            var writableBitmap = new WriteableBitmap(bitmapImage);
+
+            return writableBitmap;
+        }
+
+        public WriteableBitmap ExtractImages(PDFFile pdf)
+        {
+            using (IDocLib pdfLibrary = DocLib.Instance)
+            {
+                var dimensions = pdf.Dimensions;
+                var reader = pdf.Password.Equals(string.Empty) ?
+                    pdfLibrary.GetDocReader(pdf.Bytes, new PageDimensions(dimensions)) :
+                    pdfLibrary.GetDocReader(pdf.Bytes, pdf.Password, new PageDimensions(dimensions));
+
+                using var docReader = reader;
+                using var pageReader = docReader.GetPageReader(pdf.LastPage);
+
+                using (var ms = new MemoryStream(pageReader.GetImage()))
+                {
+                    var bmp = (Bitmap)Image.FromStream(ms);
+                    return ConvertBitmapToBitmapImage(bmp);
+                }
+            }
+        }
 
         public List<BitmapImage> GetAllPdfImages(PDFFile pdf)
         {
             var images = new List<BitmapImage>();
-
             using (IDocLib pdfLibrary = DocLib.Instance)
             {
                 var dimensions = pdf.Dimensions;
