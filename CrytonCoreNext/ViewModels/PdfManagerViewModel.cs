@@ -78,6 +78,8 @@ namespace CrytonCoreNext.ViewModels
                 FilesViewModel.AddFile(file);
                 _files.Add(_pdfService.ReadPdf(file) ?? null);
             }
+
+            FilesViewModel.UpdateFiles();
             Unlock();
         }
 

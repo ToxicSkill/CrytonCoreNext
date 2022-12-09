@@ -110,7 +110,6 @@ namespace CrytonCoreNext.PDF.Models
             }
             return RGBABytes;
         }
-
         public WriteableBitmap GetImage(PDFFile pdf)
         {
             using (IDocLib pdfLibrary = DocLib.Instance)
@@ -125,6 +124,7 @@ namespace CrytonCoreNext.PDF.Models
                 return new(GetImage(pageReader));
             }
         }
+
         public WriteableBitmap ConvertBitmapToBitmapImage(Bitmap bitmap)
         {
             // Create a BitmapImage and set its source to the Bitmap
@@ -144,26 +144,6 @@ namespace CrytonCoreNext.PDF.Models
             var writableBitmap = new WriteableBitmap(bitmapImage);
 
             return writableBitmap;
-        }
-
-        public WriteableBitmap ExtractImages(PDFFile pdf)
-        {
-            using (IDocLib pdfLibrary = DocLib.Instance)
-            {
-                var dimensions = pdf.Dimensions;
-                var reader = pdf.Password.Equals(string.Empty) ?
-                    pdfLibrary.GetDocReader(pdf.Bytes, new PageDimensions(dimensions)) :
-                    pdfLibrary.GetDocReader(pdf.Bytes, pdf.Password, new PageDimensions(dimensions));
-
-                using var docReader = reader;
-                using var pageReader = docReader.GetPageReader(pdf.LastPage);
-
-                using (var ms = new MemoryStream(pageReader.GetImage()))
-                {
-                    var bmp = (Bitmap)Image.FromStream(ms);
-                    return ConvertBitmapToBitmapImage(bmp);
-                }
-            }
         }
 
         public List<BitmapImage> GetAllPdfImages(PDFFile pdf)

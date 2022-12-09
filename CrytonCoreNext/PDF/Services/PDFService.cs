@@ -18,11 +18,6 @@ namespace CrytonCoreNext.PDF.Services
             _pdfReader = pdfReader;
         }
 
-        public WriteableBitmap ExtractImages(PDFFile pdf)
-        {
-            return _pdfManager.ExtractImages(pdf);
-        }
-
         public List<BitmapImage> GetAllPdfImages(PDFFile pdf)
         {
             return _pdfManager.GetAllPdfImages(pdf);

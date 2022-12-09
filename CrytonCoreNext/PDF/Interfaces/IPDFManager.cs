@@ -6,8 +6,6 @@ namespace CrytonCoreNext.PDF.Interfaces
 {
     public interface IPDFManager
     {
-        WriteableBitmap ExtractImages(PDFFile pdf);
-
         WriteableBitmap GetImage(PDFFile pdf);
 
         List<BitmapImage> GetAllPdfImages(PDFFile pdf);
