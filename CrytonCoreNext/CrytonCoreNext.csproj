@@ -83,8 +83,10 @@
     <None Remove="Assets\Secure.png" />
     <None Remove="Assets\Securev2.png" />
     <None Remove="Assets\Snow.png" />
+    <None Remove="Assets\Split.png" />
     <None Remove="Assets\Statistical.png" />
     <None Remove="Assets\Storm.png" />
+    <None Remove="Assets\Subtract.png" />
     <None Remove="Assets\Sun.png" />
     <None Remove="Assets\Sunrise.png" />
     <None Remove="Assets\Sunset.png" />
@@ -323,10 +325,16 @@
     <Resource Include="Assets\Snow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Split.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Statistical.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Storm.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Subtract.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Sun.png">
