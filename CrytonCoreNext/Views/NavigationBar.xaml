@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    MinWidth="250"
     MaxWidth="300"
     d:DesignHeight="700"
     d:DesignWidth="1700"
@@ -31,8 +30,8 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Grid>
-        <Grid Margin="20 10" VerticalAlignment="Top">
+    <Grid HorizontalAlignment="Left">
+        <Grid Margin="23 10" VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="75"/>
                 <RowDefinition Height="75"/>
@@ -74,7 +73,12 @@
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="34"/>
+                       Width="34">
+
+                    <Image.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding NavigateHomeCommand}"/>
+                    </Image.InputBindings>
+                </Image>
                 <Button FontFamily="Segoe UI Variable Text Light"
                     Grid.Row="1"
                     VerticalAlignment="Center"
@@ -101,6 +105,9 @@
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="45">
+                    <Image.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding NavigateCrytpingCommand}"/>
+                    </Image.InputBindings>
                 </Image>
                 <Button FontFamily="Segoe UI Variable Text Light"
                     Grid.Row="2"
@@ -128,7 +135,9 @@
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="45">
-
+                    <Image.InputBindings>
+                        <MouseBinding Gesture="LeftClick"/>
+                    </Image.InputBindings>
                 </Image>
                 <Button FontFamily="Segoe UI Variable Text Light"
                     Grid.Row="3"
@@ -157,6 +166,9 @@
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
                        Width="45">
+                    <Image.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfManagerCommand}"/>
+                    </Image.InputBindings>
                 </Image>
                 <Button FontFamily="Segoe UI Variable Text Light"
                     Grid.Row="4"

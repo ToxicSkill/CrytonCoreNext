@@ -16,8 +16,29 @@
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen">
 
+    <Window.Resources>
+        <Storyboard x:Key="UnFoldNavigationBar">
+            <DoubleAnimation   
+                Storyboard.Target = "{Binding ElementName=NavigationBar}"
+                Storyboard.TargetProperty="Width"
+                From="90"
+                To="300"
+                BeginTime="0:0:0"
+                Duration="0:0:1"/>
+        </Storyboard>
 
-    <Window.Background>
+        <Storyboard x:Key="FoldNavigationBar">
+            <DoubleAnimation   
+                Storyboard.Target = "{Binding ElementName=NavigationBar}"
+                Storyboard.TargetProperty="Width"
+                From="300"
+                To="90"
+                BeginTime="0:0:0"
+                Duration="0:0:0.8"/>
+        </Storyboard>
+    </Window.Resources>
+    
+     <Window.Background>
         <!--<SolidColorBrush Opacity="0.88" Color="#202048"/>-->
         <!--<SolidColorBrush Opacity="0.88" Color="{DynamicResource backgroundColor}"/>-->
         <SolidColorBrush Opacity="0.88" Color="#FA202048"/>
@@ -52,18 +73,29 @@
             <DataTemplate DataType="{x:Type CryptingViewModels:RSAViewModel}">
                 <cryptingViews:RSAView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModels:NavigationPDFViewViewModel}">
+                <views:NavigationPDFView />
+            </DataTemplate>
         </Grid.Resources>
+        
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <ContentControl HorizontalAlignment="Stretch" Margin="90, 0, 0, 0" Content="{Binding ViewModel}"/>
 
-        <views:NavigationBar Grid.Column ="0" DataContext="{Binding NavigationView}" />
+        <views:NavigationBar x:Name="NavigationBar" HorizontalAlignment="Left" Width="300" DataContext="{Binding NavigationView}" />
 
-        <ContentControl
-            Grid.Column="1"
-            Content="{Binding ViewModel}" />
+        <ToggleButton Visibility="Hidden"
+                      IsChecked="{Binding NavigationBarFolded}">
+
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard Storyboard="{StaticResource UnFoldNavigationBar}"/>
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                    <BeginStoryboard Storyboard="{StaticResource FoldNavigationBar}"/>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
 
     </Grid>
 </Window>

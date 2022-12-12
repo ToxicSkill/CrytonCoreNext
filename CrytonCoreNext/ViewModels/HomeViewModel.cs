@@ -1,10 +1,10 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Interfaces;
 using System;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Windows.Media;
 using System.Collections.Generic;
-using CrytonCoreNext.Abstract;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -23,6 +23,7 @@ namespace CrytonCoreNext.ViewModels
         public HomeViewModel(ITimeDate timeDate,
             IInternetConnection internetConnection)
         {
+            PageName = "Home";
             //_timeDate = timeDate;
             //_internetConnection = internetConnection;
 
@@ -33,17 +34,17 @@ namespace CrytonCoreNext.ViewModels
 
         private void InitializeTimers()
         {
-            _ = RunTimer(TimeSpan.FromSeconds(SecondsInterval), 
-                new List<Action>() 
-                { 
+            _ = RunTimer(TimeSpan.FromSeconds(SecondsInterval),
+                new List<Action>()
+                {
                     () => RefreshTime(),
                     () => RefreshInternetConnection(),
                 });
 
-            _ = RunTimer(TimeSpan.FromMinutes(MinuteInterval), 
-                new List<Action>() 
-                { 
-                    () => RefreshDay() 
+            _ = RunTimer(TimeSpan.FromMinutes(MinuteInterval),
+                new List<Action>()
+                {
+                    () => RefreshDay()
                 });
         }
 

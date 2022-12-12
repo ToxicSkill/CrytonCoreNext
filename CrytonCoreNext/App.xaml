@@ -46,6 +46,26 @@
             </Style.Triggers>
 
         </Style>
+        
+        <Style TargetType="Button" x:Key="FlatButtonStyle">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="1" CornerRadius="20">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,0.9" StartPoint="0.5,0">
+                                    <GradientStop Color="CornflowerBlue" Offset="0.9"/>
+                                    <GradientStop Color="Blue"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <Style TargetType="Button" x:Key="RoundButton">
             <Style.Resources>
