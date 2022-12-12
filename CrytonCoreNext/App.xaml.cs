@@ -47,14 +47,14 @@ namespace CrytonCoreNext
                 .AddSingleton<IPDFReader, PDFReader>()
                 .AddSingleton<ICryptingReader, CryptingReader>()
                 .AddSingleton(CreateFileService)
-                .AddSingleton(CreatePDFService)
+                .AddTransient(CreatePDFService)
                 .AddTransient(CreateFilesView)
+                .AddTransient(CreateImagesView)
                 .AddSingleton<IDialogService, DialogService>()
                 .AddTransient<IProgressService, ProgressService>()
                 .AddSingleton<IJsonSerializer, JsonSerializer>()
                 .AddSingleton<IXmlSerializer, XmlSerializer>()
                 .AddTransient(CreateProgressViewModel)
-                .AddTransient<FilesViewViewModel>()
                 .AddTransient(CreateAES)
                 .AddTransient(CreateRSA)
                 .AddTransient(CreateCryptingService)
@@ -112,10 +112,11 @@ namespace CrytonCoreNext
             var fileService = provider.GetRequiredService<IFileService>();
             var dialogService = provider.GetRequiredService<IDialogService>();
             var filesView = provider.GetRequiredService<IFilesView>();
+            var imagesView = provider.GetRequiredService<IImageView>();
             var progressView = provider.GetRequiredService<IProgressView>();
             var pdfService = provider.GetRequiredService<IPDFService>();
 
-            return new(fileService, dialogService, filesView, progressView, pdfService);
+            return new(fileService, dialogService, filesView, imagesView, progressView, pdfService);
         }
 
         private IPDFService CreatePDFService(IServiceProvider provider)
@@ -166,6 +167,11 @@ namespace CrytonCoreNext
         {
             var fileService = provider.GetRequiredService<IFileService>();
             return new FilesViewViewModel(fileService);
+        }
+
+        public IImageView CreateImagesView(IServiceProvider provider)
+        {
+            return new ImageViewerViewModel();
         }
 
         public IProgressView CreateProgressViewModel(IServiceProvider provider)

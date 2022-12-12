@@ -4,19 +4,46 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="1000" d:DesignWidth="200">
-    <Grid>
-        <ItemsControl ItemsSource="{Binding Images}" >
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Image Source="{Binding _ImagePath}"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate >
-                    <StackPanel Orientation="Vertical" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+             d:DesignHeight="1000" d:DesignWidth="400">
+    
+    <Grid MaxWidth="400" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" SnapsToDevicePixels="True">
+        <SelectiveScrollingGrid ScrollViewer.PanningMode="None">
+            <ListView BorderBrush="Transparent" Background="Transparent"
+                      SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                        ScrollViewer.PanningMode="None" Focusable="False"
+                        ScrollViewer.CanContentScroll="False"
+                        ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                        ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                        ItemsSource="{Binding Images, IsAsync=True}"
+                        HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Stretch" Visibility="Visible" 
+                        IsSynchronizedWithCurrentItem="True" Foreground="White"
+                        FontSize="20">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="400" Height="400"
+                              HorizontalAlignment="Stretch">
+                            <Image Margin="2" Width="380" Height="380" Source="{Binding Source, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" RenderOptions.CachingHint="Unspecified" RenderOptions.EdgeMode="Unspecified"/>
+                            <TextBlock Width="20" Height="20" Text="{Binding PageNumber, Mode=OneWay}" Style="{StaticResource TextBlockSmall}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <Border x:Name="brdr" BorderBrush="Transparent" BorderThickness="0" Background="Transparent" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </SelectiveScrollingGrid>
     </Grid>
 </UserControl>

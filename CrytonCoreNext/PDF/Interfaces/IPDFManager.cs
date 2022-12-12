@@ -6,6 +6,10 @@ namespace CrytonCoreNext.PDF.Interfaces
 {
     public interface IPDFManager
     {
+        void ExtractPages(PDFFile file);
+
+        IAsyncEnumerable<(BitmapImage image, int index)> LoadAllPDFImages(PDFFile pdfFile);
+
         WriteableBitmap GetImage(PDFFile pdf);
 
         List<BitmapImage> GetAllPdfImages(PDFFile pdf);

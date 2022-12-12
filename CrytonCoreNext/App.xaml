@@ -100,6 +100,13 @@
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
+        
+        <Style x:Key="TextBlockSmall" TargetType="TextBlock">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
 
         <Style x:Key="TextBoxDefault" TargetType="TextBox">
             <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>

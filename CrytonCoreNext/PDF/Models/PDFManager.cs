@@ -3,11 +3,14 @@ using Docnet.Core;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
 using ImageMagick;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.PDF.Models
@@ -80,6 +83,7 @@ namespace CrytonCoreNext.PDF.Models
             memoryStream.Seek(0, SeekOrigin.Begin);
             bitmap.StreamSource = memoryStream;
             bitmap.EndInit();
+            bitmap.Freeze();
             return bitmap;
         }
 
@@ -110,6 +114,26 @@ namespace CrytonCoreNext.PDF.Models
             }
             return RGBABytes;
         }
+
+        public async IAsyncEnumerable<(BitmapImage image, int index)> LoadAllPDFImages(PDFFile pdfFile)
+        {
+            for (int i = 0; i < pdfFile.NumberOfPages; i++)
+            {
+                yield return await Task.Run(() =>
+                {
+                    using IDocLib pdfLibrary = DocLib.Instance;
+                    var dimensions = pdfFile.Dimensions;
+                    var reader = pdfFile.Password.Equals(string.Empty) ?
+                        pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
+                        pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
+
+                    using var docReader = reader;
+                    using var pageReader = docReader.GetPageReader(i);
+                    return (GetImage(pageReader), i);
+                });
+            }
+        }
+
         public WriteableBitmap GetImage(PDFFile pdf)
         {
             using (IDocLib pdfLibrary = DocLib.Instance)
@@ -166,6 +190,42 @@ namespace CrytonCoreNext.PDF.Models
             }
 
             return images;
+        }
+
+        public void ExtractPages(PDFFile pdfFile)
+        {
+            PdfReader reader = null;
+            Document document = null;
+            PdfCopy pdfCopyProvider = null;
+            PdfImportedPage importedPage = null;
+            try
+            {
+                // Intialize a new PdfReader instance with the contents of the source Pdf file:
+                reader = new PdfReader("E:\\Code\\C#\\CrytonCoreNext\\CrytonCoreNext\\Sdevorg22121209161.pdf");
+
+                // Capture the correct size and orientation for the page:
+                document = new Document(reader.GetPageSizeWithRotation(1));
+
+                // Initialize an instance of the PdfCopyClass with the source
+                // document and an output file stream:
+                pdfCopyProvider = new PdfCopy(document,
+                    new System.IO.FileStream("E:\\Code\\C#\\CrytonCoreNext\\CrytonCoreNext\\merge.pdf", System.IO.FileMode.Create));
+
+                document.Open();
+
+                // Extract the desired page number:
+                for (int i = 1; i < 4; i++)
+                {
+                    importedPage = pdfCopyProvider.GetImportedPage(reader, i);
+                    pdfCopyProvider.AddPage(importedPage);
+                }
+                document.Close();
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

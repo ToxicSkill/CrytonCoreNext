@@ -7,10 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
+using System.Windows.Media;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -27,14 +25,14 @@ namespace CrytonCoreNext.ViewModels
             {
                 if (_currentFile == value) return;
                 _currentFile = value;
-                Task.Run(() => UpdateImage());
+                LoadCurrentImage();
                 OnPropertyChanged(nameof(CurrentFile));
             }
         }
 
         private readonly IPDFService _pdfService;
 
-        public WriteableBitmap Bitmap { get; set; }
+        public ImageSource Bitmap { get; set; }
 
         public ICommand PostFilesCommand { get; set; }
 
@@ -44,30 +42,32 @@ namespace CrytonCoreNext.ViewModels
 
         public ICommand NextCommand { get; set; }
 
-        public ViewModelBase ImageViewerViewModel { get; set; }
+        public IImageView ImageViewerViewModel { get; init; }
 
-        public PdfManagerViewModel(IFileService fileService, IDialogService dialogService, IFilesView filesView, IProgressView progressView, IPDFService pdfService) : base(fileService, dialogService, filesView, progressView)
+        public PdfManagerViewModel(IFileService fileService, IDialogService dialogService, IFilesView filesView, IImageView imageView, IProgressView progressView, IPDFService pdfService) : base(fileService, dialogService, filesView, progressView)
         {
             PostFilesCommand = new AsyncCommand(this.LoadPDFFiles, CanExecute);
-            PreviousCommand = new AsyncCommand(MovePreviousPage, CanExecute);
-            NextCommand = new AsyncCommand(MoveNextPage, CanExecute);
+            PreviousCommand = new Command(MovePreviousPage, CanExecute);
+            NextCommand = new Command(MoveNextPage, CanExecute);
             _pdfService = pdfService;
+            ImageViewerViewModel = imageView;
             _files = new();
             FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
+            OnPropertyChanged(nameof(ImageViewerViewModel));
         }
 
-        private async Task MovePreviousPage()
+        private void MovePreviousPage()
         {
             var pageNumber = CurrentFile.LastPage;
             CurrentFile.LastPage = pageNumber > 0 ? --pageNumber : 0;
-            await UpdateImage();
+            LoadCurrentImage();
         }
 
-        private async Task MoveNextPage()
+        private void MoveNextPage()
         {
             var pageNumber = CurrentFile.LastPage;
             CurrentFile.LastPage = pageNumber < CurrentFile.NumberOfPages - 1 ? ++pageNumber : CurrentFile.NumberOfPages - 1;
-            await UpdateImage();
+            LoadCurrentImage();
         }
 
         private async Task LoadPDFFiles()
@@ -80,7 +80,28 @@ namespace CrytonCoreNext.ViewModels
             }
 
             FilesViewModel.UpdateFiles();
+            await LoadAllImages();
             Unlock();
+            LoadCurrentImage();
+        }
+
+        private void LoadCurrentImage()
+        {
+            var image = ImageViewerViewModel.GetPDFImage(CurrentFile.LastPage);
+            if (image != null)
+            {
+                Bitmap = image.Source;
+                OnPropertyChanged(nameof(Bitmap));
+            }
+        }
+
+        private async Task LoadAllImages()
+        {
+            if (CurrentFile == null) return;
+            await foreach (var (image, index) in _pdfService.LoadAllPDFImages(CurrentFile))
+            {
+                ImageViewerViewModel.Add(new(image, index));
+            }
         }
 
         private void HandleFileChanged(object? sender, EventArgs? e)
@@ -104,18 +125,18 @@ namespace CrytonCoreNext.ViewModels
         }
 
 
-        private async Task UpdateImage()
-        {
-            //var pdf = _pdfService.ReadPdf("E:\\Code\\C#\\CrytonCoreNext\\CrytonCoreNextTests\\TestingFiles\\1.pdf");
-            //var images = _pdfService.GetAllPdfImages(pdf);
-            //ImageViewerViewModel = new ImageViewerViewModel(images);
+        //private async Task UpdateImage()
+        //{
+        //    //var pdf = _pdfService.ReadPdf("E:\\Code\\C#\\CrytonCoreNext\\CrytonCoreNextTests\\TestingFiles\\1.pdf");
+        //    //var images = _pdfService.GetAllPdfImages(pdf);
+        //    //ImageViewerViewModel = new ImageViewerViewModel(images);
 
-            await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
-            {
-                Bitmap = _pdfService.GetImage(CurrentFile);
-                //Bitmap = new(_currentPDFImages[CurrentPDFFile.LastPage]);
-                OnPropertyChanged(nameof(Bitmap));
-            }));
-        }
+        //    //await Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+        //    //{
+        //    //    Bitmap = _pdfService.GetImage(CurrentFile);
+        //    //    //Bitmap = new(_currentPDFImages[CurrentPDFFile.LastPage]);
+        //    //    OnPropertyChanged(nameof(Bitmap));
+        //    //}));
+        //}
     }
 }

@@ -33,6 +33,19 @@ namespace CrytonCoreNext.PDF.Services
             return _pdfManager.GetImageFromPdf(pdf, pageNumber);
         }
 
+        public async IAsyncEnumerable<(BitmapImage image, int index)> LoadAllPDFImages(PDFFile pdfFile)
+        {
+            await foreach (var image in _pdfManager.LoadAllPDFImages(pdfFile))
+            {
+                yield return image;
+            }
+        }
+
+        public void ExtractPages(PDFFile file)
+        {
+            _pdfManager.ExtractPages(file);
+        }
+
         public PDFFile? ReadPdf(File file, string password = "")
         {
             return _pdfReader.ReadPdf(file, password);
