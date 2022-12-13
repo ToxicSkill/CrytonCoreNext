@@ -37,12 +37,12 @@
             </Grid.RowDefinitions>
 
 
-            <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Style="{StaticResource FlatButtonBlueGradient}">
-                <Button.Margin>
-                    <Thickness Top="{StaticResource Margin}" Left="{StaticResource Margin}" Right="{StaticResource Margin}" Bottom ="{StaticResource Margin}" />
-                </Button.Margin>
-            </Button>
             <Grid Grid.Row="0" Grid.Column="0">
+                <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource FlatButtonBlueGradient}">
+                    <Button.Margin>
+                        <Thickness Top="{StaticResource Margin}" Left="{StaticResource Margin}" Right="{StaticResource Margin}" Bottom ="{StaticResource Margin}" />
+                    </Button.Margin>
+                </Button>
                 <Image Cursor="Hand"
                     Source="/Assets/Merge.png"
                     Width="50"
@@ -55,7 +55,7 @@
                         <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfMergeCommand}"/>
                     </Image.InputBindings>
                 </Image>
-                <Button Content="Merge" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
+                <Button Content="{DynamicResource Merge}" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" 
                         Command="{Binding NavigatePdfMergeCommand}"/>
                 <TextBlock Text="Merge documents with a variety of custom options. Set your own order."
@@ -67,13 +67,12 @@
 
 
 
-
-            <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Style="{StaticResource FlatButtonRedGradient}">
-                <Button.Margin>
-                    <Thickness Top="{StaticResource Margin}" Left="{StaticResource Margin}" Right="{StaticResource Margin}" Bottom ="{StaticResource Margin}" />
-                </Button.Margin>
-            </Button>
             <Grid Grid.Row="0" Grid.Column="1">
+                <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Style="{StaticResource FlatButtonRedGradient}">
+                    <Button.Margin>
+                        <Thickness Top="{StaticResource Margin}" Left="{StaticResource Margin}" Right="{StaticResource Margin}" Bottom ="{StaticResource Margin}" />
+                    </Button.Margin>
+                </Button>
                 <Image Cursor="Hand"
                     Source="/Assets/Split.png"
                     Width="50"
@@ -86,7 +85,7 @@
                         <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfMergeCommand}"/>
                     </Image.InputBindings>
                 </Image>
-                <Button Content="Split" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
+                <Button Content="{DynamicResource Split}" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" 
                         Command="{Binding NavigatePdfMergeCommand}"/>
                 <TextBlock Text="Split single document into two or more separate documents."
@@ -98,15 +97,15 @@
 
 
 
+            <Grid Grid.Row="0" Grid.Column="2">
 
-            <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Grid.Row="0" Style="{StaticResource FlatButtonYellowGradient}">
+                <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Grid.Row="0" Style="{StaticResource FlatButtonGreenGradient}">
                     <Button.Margin>
                         <Thickness Top="{StaticResource Margin}" Left="{StaticResource Margin}" Right="{StaticResource Margin}" Bottom ="{StaticResource Margin}" />
                     </Button.Margin>
                 </Button>
-                <Grid Grid.Row="0" Grid.Column="2">
-                    <Image Cursor="Hand"
-                    Source="/Assets/Subtract.png"
+                <Image Cursor="Hand"
+                    Source="/Assets/Convert.png"
                     Width="45"
                     HorizontalAlignment="Left" VerticalAlignment="Top"
                     Margin="65, 65"
@@ -117,25 +116,24 @@
                             <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfMergeCommand}"/>
                         </Image.InputBindings>
                     </Image>
-                    <Button Content="Subtract" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
+                    <Button Content="{DynamicResource Convert}" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" 
                         Command="{Binding NavigatePdfMergeCommand}"/>
-                    <TextBlock Text="Subtract specific pages from document."
+                    <TextBlock Text="Convert PDF to image or image to PDF."
                        HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60, 160,0 ,0" Width="280" Height="80" TextWrapping="Wrap"
                        Style="{StaticResource TextBlockDefault}">
                     </TextBlock>
                 </Grid>
 
 
-        
-        <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Style="{StaticResource FlatButtonYellowGradient}">
-            <Button.Margin>
-                <Thickness Top="{StaticResource Margin}" Left="{StaticResource Margin}" Right="{StaticResource Margin}" Bottom ="{StaticResource Margin}" />
-            </Button.Margin>
-        </Button>
             <Grid Grid.Row="1" Grid.Column="0">
+                <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Style="{StaticResource FlatButtonPurpleGradient}">
+                    <Button.Margin>
+                        <Thickness Top="{StaticResource Margin}" Left="{StaticResource Margin}" Right="{StaticResource Margin}" Bottom ="{StaticResource Margin}" />
+                    </Button.Margin>
+                </Button>
                 <Image Cursor="Hand"
-                    Source="/Assets/Subtract.png"
+                    Source="/Assets/Unlock.png"
                     Width="45"
                     HorizontalAlignment="Left" VerticalAlignment="Top"
                     Margin="60, 60"
@@ -146,10 +144,67 @@
                         <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfMergeCommand}"/>
                     </Image.InputBindings>
                 </Image>
-                <Button Content="Subtract" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
+                <Button Content="{DynamicResource Unlock}" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" 
                         Command="{Binding NavigatePdfMergeCommand}"/>
-                <TextBlock Text="Subtract specific pages from document."
+                <TextBlock Text="Unlock PDF protected by password by removing password."
+                       HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60, 160,0 ,0" Width="280" Height="80" TextWrapping="Wrap"
+                       Style="{StaticResource TextBlockDefault}">
+                </TextBlock>
+            </Grid>
+
+
+
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Style="{StaticResource FlatButtonLightBlueGradient}">
+                    <Button.Margin>
+                        <Thickness Top="{StaticResource Margin}" Left="{StaticResource Margin}" Right="{StaticResource Margin}" Bottom ="{StaticResource Margin}" />
+                    </Button.Margin>
+                </Button>
+                <Image Cursor="Hand"
+                    Source="/Assets/Protect.png"
+                    Width="45"
+                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Margin="60, 60"
+                    Stretch="Uniform"
+                    RenderOptions.EdgeMode="Aliased"
+                    RenderOptions.BitmapScalingMode="HighQuality" >
+                    <Image.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfMergeCommand}"/>
+                    </Image.InputBindings>
+                </Image>
+                <Button Content="{DynamicResource Protect}" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
+                        Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" 
+                        Command="{Binding NavigatePdfMergeCommand}"/>
+                <TextBlock Text="Protect PDF with password."
+                       HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60, 160,0 ,0" Width="280" Height="80" TextWrapping="Wrap"
+                       Style="{StaticResource TextBlockDefault}">
+                </TextBlock>
+            </Grid>
+
+
+            <Grid Grid.Row="1" Grid.Column="2">
+                <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="1" Style="{StaticResource FlatButtonYellowGradient}">
+                    <Button.Margin>
+                        <Thickness Top="{StaticResource Margin}" Left="{StaticResource Margin}" Right="{StaticResource Margin}" Bottom ="{StaticResource Margin}" />
+                    </Button.Margin>
+                </Button>
+                <Image Cursor="Hand"
+                    Source="/Assets/Extract.png"
+                    Width="45"
+                    HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Margin="60, 60"
+                    Stretch="Uniform"
+                    RenderOptions.EdgeMode="Aliased"
+                    RenderOptions.BitmapScalingMode="HighQuality" >
+                    <Image.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfMergeCommand}"/>
+                    </Image.InputBindings>
+                </Image>
+                <Button Content="{DynamicResource Extract}" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
+                        Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" 
+                        Command="{Binding NavigatePdfMergeCommand}"/>
+                <TextBlock Text="Extract elements from PDF document and save them as separate files."
                        HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60, 160,0 ,0" Width="280" Height="80" TextWrapping="Wrap"
                        Style="{StaticResource TextBlockDefault}">
                 </TextBlock>

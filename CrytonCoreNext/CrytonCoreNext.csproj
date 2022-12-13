@@ -23,6 +23,7 @@
     <None Remove="Assets\Cogs.png" />
     <None Remove="Assets\Cogsv2.png" />
     <None Remove="Assets\Continue.png" />
+    <None Remove="Assets\Convert.png" />
     <None Remove="Assets\cryton.png" />
     <None Remove="Assets\DeleteAll.png" />
     <None Remove="Assets\Down.png" />
@@ -30,6 +31,7 @@
     <None Remove="Assets\Error.png" />
     <None Remove="Assets\Exit.png" />
     <None Remove="Assets\Exit_Mo.png" />
+    <None Remove="Assets\Extract.png" />
     <None Remove="Assets\FatalError.png" />
     <None Remove="Assets\FileOpen.png" />
     <None Remove="Assets\FileOpenError.png" />
@@ -71,6 +73,7 @@
     <None Remove="Assets\ProgressConnector.png" />
     <None Remove="Assets\ProgressDot.png" />
     <None Remove="Assets\ProgressIndicator.png" />
+    <None Remove="Assets\Protect.png" />
     <None Remove="Assets\Rain.png" />
     <None Remove="Assets\Ratio.png" />
     <None Remove="Assets\RemoveSelected.png" />
@@ -94,6 +97,7 @@
     <None Remove="Assets\Switch — kopia.png" />
     <None Remove="Assets\Switch.png" />
     <None Remove="Assets\Temperature.png" />
+    <None Remove="Assets\Unlock.png" />
     <None Remove="Assets\unnamed.png" />
     <None Remove="Assets\Up.png" />
     <None Remove="Assets\UpSharp.png" />
@@ -148,6 +152,9 @@
     <Resource Include="Assets\Continue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Convert.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\cryton.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -167,6 +174,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Exit_Mo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Extract.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\FatalError.png">
@@ -289,6 +299,9 @@
     <Resource Include="Assets\ProgressIndicator.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Protect.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Rain.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -356,6 +369,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Temperature.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Unlock.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\unnamed.png">

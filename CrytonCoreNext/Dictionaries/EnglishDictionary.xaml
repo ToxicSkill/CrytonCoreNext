@@ -76,6 +76,16 @@
     <system:String x:Key="FilesSaved">File has been saved successfuly</system:String>
     <system:String x:Key="FilesError">Error when saving file</system:String>
     <system:String x:Key="OpenFiles">Open files</system:String>
+    
+    
+    <!--PDF-->
+    <system:String x:Key="Merge">Merge</system:String>
+    <system:String x:Key="Split">Split</system:String>
+    <system:String x:Key="Convert">Convert</system:String>
+    <system:String x:Key="Extract">Extract</system:String>
+    <system:String x:Key="Unlock">Unlock</system:String>
+    <system:String x:Key="Protect">Protect</system:String>
+    
    
     <system:String x:Key="OpenFileDialog">Open file(s)</system:String>
 </ResourceDictionary>

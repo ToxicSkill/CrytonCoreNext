@@ -53,7 +53,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border BorderThickness="1" CornerRadius="10" Background="#161616">
+                        <Border BorderThickness="0.5" CornerRadius="10" Background="#161616">
                             <Border.BorderBrush>
                                 <LinearGradientBrush EndPoint="0.5,0.9" StartPoint="0.5,0">
                                     <GradientStop Color="CornflowerBlue" Offset="0.9"/>
@@ -73,7 +73,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border BorderThickness="1" CornerRadius="10" Background="#161616">
+                        <Border BorderThickness="0.5" CornerRadius="10" Background="#161616">
                             <Border.BorderBrush>
                                 <LinearGradientBrush EndPoint="0.5,0.9" StartPoint="0.5,0">
                                     <GradientStop Color="#f59018" Offset="0.9"/>
@@ -93,7 +93,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border BorderThickness="1" CornerRadius="10" Background="#161616">
+                        <Border BorderThickness="0.5" CornerRadius="10" Background="#161616">
                             <Border.BorderBrush>
                                 <LinearGradientBrush EndPoint="0.5,0.9" StartPoint="0.5,0">
                                     <GradientStop Color="#fff200" Offset="0.9"/>
@@ -107,6 +107,67 @@
             </Setter>
         </Style>
 
+        <Style TargetType="Button" x:Key="FlatButtonPurpleGradient">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="0.5" CornerRadius="10" Background="#161616">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,0.9" StartPoint="0.5,0">
+                                    <GradientStop Color="#d13ae5" Offset="0.9"/>
+                                    <GradientStop Color="#a820ba"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="FlatButtonLightBlueGradient">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="0.5" CornerRadius="10" Background="#161616">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,0.9" StartPoint="0.5,0">
+                                    <GradientStop Color="#29eaff" Offset="0.9"/>
+                                    <GradientStop Color="#18dcf2"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="FlatButtonGreenGradient">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="0.5" CornerRadius="10" Background="#161616">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,0.9" StartPoint="0.5,0">
+                                    <GradientStop Color="#18ee2a" Offset="0.9"/>
+                                    <GradientStop Color="#2cd23a"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        
         <Style TargetType="Button" x:Key="RoundButton">
             <Style.Resources>
                 <Style TargetType="Border">
