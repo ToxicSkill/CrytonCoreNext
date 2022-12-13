@@ -65,13 +65,6 @@
                 CornerRadius="0,15,15,0" BorderBrush="#FF131313" Background="#FF131313">
             </Border>
             <TabPanel>
-                <!--<Image Source="/Assets/AddFile.png"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"
-                       Stretch="Uniform"
-                       RenderOptions.EdgeMode="Aliased"
-                       RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="15"/>-->
                 <Button Content="{DynamicResource AddFile}" Command="{Binding LoadFilesCommand}" Foreground="#e4e5fe" Margin="8,0,0,0" MinWidth="173"
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>
@@ -84,13 +77,6 @@
                 CornerRadius="0,15,15,0" BorderBrush="#FF131313" Background="#FF131313">
             </Border>
             <TabPanel>
-                <!--<Image Source="/Assets/SaveFile.png"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"
-                       Stretch="Uniform"
-                       RenderOptions.EdgeMode="Aliased"
-                       RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="15"/>-->
                 <Button Content="{DynamicResource SaveFile}" Command="{Binding SaveFileCommand}" Foreground="#e4e5fe" Margin="8,0,0,0" MinWidth="173"
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>

@@ -8,6 +8,7 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using CrytonCoreNext.PDF.Services;
+using CrytonCoreNext.PDF.ViewModels;
 using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
@@ -61,6 +62,7 @@ namespace CrytonCoreNext
                 .AddTransient<InformationPopupViewModel>()
                 .AddSingleton(CreateHomeViewModel)
                 .AddSingleton(CreateCryptingViewModel)
+                .AddSingleton(CreatePdfMergeViewModel)
                 .AddSingleton(CreatePdfManagerViewModel)
                 .AddSingleton(CreateMainWindowViewModel)
                 .AddSingleton(s => new MainWindow()
@@ -87,13 +89,22 @@ namespace CrytonCoreNext
             return new(timeDate, internetConnection);
         }
 
+        private PdfMergeViewModel CreatePdfMergeViewModel(IServiceProvider provider)
+        {
+            var pdfManager = provider.GetRequiredService<PdfManagerViewModel>();
+            var imagesView = provider.GetRequiredService<IImageView>();
+
+            return new PdfMergeViewModel(pdfManager, imagesView);
+        }
+
         private MainViewModel CreateMainWindowViewModel(IServiceProvider provider)
         {
             var homeView = provider.GetRequiredService<HomeViewModel>();
             var cryptingView = provider.GetRequiredService<CryptingViewModel>();
             var pdfManagerView = provider.GetRequiredService<PdfManagerViewModel>();
+            var pdfMergeView = provider.GetRequiredService<PdfMergeViewModel>();
 
-            return new(homeView, cryptingView, pdfManagerView);
+            return new(homeView, cryptingView, pdfManagerView, pdfMergeView);
         }
 
         private CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
@@ -112,11 +123,10 @@ namespace CrytonCoreNext
             var fileService = provider.GetRequiredService<IFileService>();
             var dialogService = provider.GetRequiredService<IDialogService>();
             var filesView = provider.GetRequiredService<IFilesView>();
-            var imagesView = provider.GetRequiredService<IImageView>();
             var progressView = provider.GetRequiredService<IProgressView>();
             var pdfService = provider.GetRequiredService<IPDFService>();
 
-            return new(fileService, dialogService, filesView, imagesView, progressView, pdfService);
+            return new(fileService, dialogService, filesView, progressView, pdfService);
         }
 
         private IPDFService CreatePDFService(IServiceProvider provider)

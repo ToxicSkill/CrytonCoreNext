@@ -1,17 +1,19 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace CrytonCoreNext.PDF.Models
 {
     public class PDFImage
     {
-        public ImageSource Source { get; set; }
+        public Guid Guid { get; set; }
 
-        public int PageNumber { get; set; }
+        public List<ImageSource> Images { get; set; }
 
-        public PDFImage(ImageSource source, int pageNumber)
+        public PDFImage(List<ImageSource> images, Guid owner)
         {
-            Source = source;
-            PageNumber = pageNumber;
+            Guid = owner;
+            Images = images;
         }
     }
 }

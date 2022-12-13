@@ -31,6 +31,11 @@ namespace CrytonCoreNext.Abstract
             return !IsBusy;
         }
 
+        public virtual void SendObject(object obj)
+        {
+
+        }
+
         public void Log(ELogLevel level, string message)
         {
             Logger.Post(level, message).ContinueWith(OnAsyncFailed, TaskContinuationOptions.OnlyOnFaulted);

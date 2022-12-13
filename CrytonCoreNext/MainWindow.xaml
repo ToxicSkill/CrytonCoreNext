@@ -6,8 +6,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:CrytonCoreNext.Views"
     xmlns:cryptingViews="clr-namespace:CrytonCoreNext.CryptingOptionsViews"
-    xmlns:ViewModels="clr-namespace:CrytonCoreNext.ViewModels"
-    xmlns:CryptingViewModels="clr-namespace:CrytonCoreNext.CryptingOptionsViewModels"
+    xmlns:pdfViews="clr-namespace:CrytonCoreNext.PDF.Views"
+    xmlns:viewModels="clr-namespace:CrytonCoreNext.ViewModels"
+    xmlns:cryptingViewModels="clr-namespace:CrytonCoreNext.CryptingOptionsViewModels"
+    xmlns:pdfViewModels="clr-namespace:CrytonCoreNext.PDF.ViewModels"
     Title="CrytonNXT"
     MinWidth="1600"
     MinHeight="670"
@@ -46,34 +48,37 @@
 
     <Grid>
         <Grid.Resources>
-            <DataTemplate DataType="{x:Type ViewModels:HomeViewModel}">
+            <DataTemplate DataType="{x:Type viewModels:HomeViewModel}">
                 <views:HomeView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type ViewModels:CryptingViewModel}">
+            <DataTemplate DataType="{x:Type viewModels:CryptingViewModel}">
                 <views:CryptingView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type ViewModels:PdfManagerViewModel}">
-                <views:PdfManagerView />
+            <DataTemplate DataType="{x:Type pdfViewModels:PdfManagerViewModel}">
+                <pdfViews:PdfManagerView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type ViewModels:InformationPopupViewModel}">
+            <DataTemplate DataType="{x:Type pdfViewModels:PdfMergeViewModel}">
+                <pdfViews:PdfMergeView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:InformationPopupViewModel}">
                 <views:InformationPage />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type ViewModels:ProgressViewModel}">
+            <DataTemplate DataType="{x:Type viewModels:ProgressViewModel}">
                 <views:ProgressView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type ViewModels:FilesViewViewModel}">
+            <DataTemplate DataType="{x:Type viewModels:FilesViewViewModel}">
                 <views:FileViewViewPage />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type ViewModels:ImageViewerViewModel}">
+            <DataTemplate DataType="{x:Type viewModels:ImageViewerViewModel}">
                 <views:ImageViewerView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type CryptingViewModels:AESViewModel}">
+            <DataTemplate DataType="{x:Type cryptingViewModels:AESViewModel}">
                 <cryptingViews:AESView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type CryptingViewModels:RSAViewModel}">
+            <DataTemplate DataType="{x:Type cryptingViewModels:RSAViewModel}">
                 <cryptingViews:RSAView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type ViewModels:NavigationPDFViewViewModel}">
+            <DataTemplate DataType="{x:Type viewModels:NavigationPDFViewViewModel}">
                 <views:NavigationPDFView />
             </DataTemplate>
         </Grid.Resources>

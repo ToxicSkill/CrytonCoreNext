@@ -1,6 +1,4 @@
-﻿using CrytonCoreNext.Enums;
-
-namespace CrytonCoreNext.Interfaces
+﻿namespace CrytonCoreNext.Interfaces
 {
     public interface IFilesSaver
     {

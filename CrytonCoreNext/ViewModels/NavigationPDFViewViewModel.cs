@@ -9,13 +9,24 @@ namespace CrytonCoreNext.ViewModels
     {
         private readonly INavigate _navigator;
 
+        private readonly InteractiveViewBase _pdfManagerViewModel;
+
+        private readonly ViewModelBase _pdfMergeViewModel;
+
         public ICommand NavigatePdfMergeCommand { get; }
 
-        public NavigationPDFViewViewModel(INavigate navigator, ViewModelBase PdfMergeViewModel)
+        public NavigationPDFViewViewModel(INavigate navigator, InteractiveViewBase pdfManagerViewModel, ViewModelBase pdfMergeViewModel)
         {
             _navigator = navigator;
+            _pdfMergeViewModel = pdfMergeViewModel;
+            _pdfManagerViewModel = pdfManagerViewModel;
+            NavigatePdfMergeCommand = new NavigateService(_navigator, NavigatePDFMergePage());
+        }
 
-            NavigatePdfMergeCommand = new NavigateService(_navigator, PdfMergeViewModel);
+        private ViewModelBase NavigatePDFMergePage()
+        {
+            _pdfManagerViewModel.SendObject(_pdfMergeViewModel);
+            return _pdfManagerViewModel;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace CrytonCoreNext.Views
+namespace CrytonCoreNext.PDF.Views
 {
     /// <summary>
     /// Interaction logic for AccountView.xaml

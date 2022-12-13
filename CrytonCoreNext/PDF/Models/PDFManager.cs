@@ -115,7 +115,7 @@ namespace CrytonCoreNext.PDF.Models
             return RGBABytes;
         }
 
-        public async IAsyncEnumerable<(BitmapImage image, int index)> LoadAllPDFImages(PDFFile pdfFile)
+        public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
         {
             for (int i = 0; i < pdfFile.NumberOfPages; i++)
             {
@@ -129,7 +129,7 @@ namespace CrytonCoreNext.PDF.Models
 
                     using var docReader = reader;
                     using var pageReader = docReader.GetPageReader(i);
-                    return (GetImage(pageReader), i);
+                    return GetImage(pageReader);
                 });
             }
         }

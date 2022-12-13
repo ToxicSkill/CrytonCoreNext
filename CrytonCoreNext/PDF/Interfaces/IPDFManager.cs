@@ -8,7 +8,7 @@ namespace CrytonCoreNext.PDF.Interfaces
     {
         void ExtractPages(PDFFile file);
 
-        IAsyncEnumerable<(BitmapImage image, int index)> LoadAllPDFImages(PDFFile pdfFile);
+        IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile);
 
         WriteableBitmap GetImage(PDFFile pdf);
 

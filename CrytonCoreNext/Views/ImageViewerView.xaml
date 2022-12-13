@@ -24,8 +24,7 @@
                     <DataTemplate>
                         <Grid Width="400" Height="400"
                               HorizontalAlignment="Stretch">
-                            <Image Margin="2" Width="380" Height="380" Source="{Binding Source, Mode=OneWay}"  HorizontalAlignment="Center" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" RenderOptions.CachingHint="Unspecified" RenderOptions.EdgeMode="Unspecified"/>
-                            <TextBlock Width="20" Height="20" Text="{Binding PageNumber, Mode=OneWay}" Style="{StaticResource TextBlockSmall}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+                            <Image Margin="2" Width="380" Height="380" Source="{Binding}"  HorizontalAlignment="Center" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" RenderOptions.CachingHint="Unspecified" RenderOptions.EdgeMode="Unspecified"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
