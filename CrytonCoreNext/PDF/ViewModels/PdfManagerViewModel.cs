@@ -43,12 +43,17 @@ namespace CrytonCoreNext.PDF.ViewModels
 
         public PdfManagerViewModel(IFileService fileService, IDialogService dialogService, IFilesView filesView, IProgressView progressView, IPDFService pdfService) : base(fileService, dialogService, filesView, progressView)
         {
-            _images = new();
             _pdfService = pdfService;
+
+            _images = new();
             _files = new();
+
             LoadFilesCommand = new AsyncCommand(this.LoadPDFFiles, CanExecute);
             SaveFileCommand = new Command(this.SavePDFFile, CanExecute);
+
             FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
+            FilesViewModel.FileDeleted += HandleFileDeleted;
+            FilesViewModel.AllFilesDeleted += HandleAllFilesDeleted;
         }
 
         private void SavePDFFile()
@@ -116,6 +121,18 @@ namespace CrytonCoreNext.PDF.ViewModels
         private void HandleFileChanged(object? sender, EventArgs? e)
         {
             OnPropertyChanged(nameof(CurrentFile));
+        }
+
+        private void HandleAllFilesDeleted(object? sender, EventArgs e)
+        {
+            _files.Clear();
+            ExtensionViewModel.SendObject(null);
+        }
+
+        private void HandleFileDeleted(object? sender, EventArgs e)
+        {
+            var deletedFileGuid = FilesViewModel.GetDeletedFileGuid();
+            _files.Remove(_files.Select(x => x).Where(x => x.Guid == deletedFileGuid).First());
         }
 
         private void HandleCurrentFileChanged(object? sender, EventArgs? e)

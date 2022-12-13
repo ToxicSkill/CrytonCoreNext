@@ -23,7 +23,7 @@
     <Grid>
 
         <Label Content="PDF" FontSize="50" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 5, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
-        <Grid Margin="10, 150, 100, 10">
+        <Grid Margin="10, 120, 100, 10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400"/>
                 <ColumnDefinition Width="400"/>
