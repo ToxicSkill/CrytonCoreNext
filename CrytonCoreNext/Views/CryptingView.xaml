@@ -91,6 +91,7 @@
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>
         </Grid>
+        
         <ComboBox ItemsSource="{Binding CryptingComboBox}" SelectedItem="{Binding CurrentCryptingName}" DisplayMemberPath="Name"
                   ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
                   Visibility="{Binding FileInformationVisibility}"

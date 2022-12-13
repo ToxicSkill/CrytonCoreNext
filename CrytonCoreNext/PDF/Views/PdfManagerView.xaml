@@ -18,7 +18,7 @@
     </UserControl.Background>
 
     <Grid>
-        <Label Content="PDF" FontSize="50" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 5, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
+        <Label Content="{Binding PageName}" FontSize="50" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 5, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
 
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ContentControl Content="{Binding ExtensionViewModel}"/>
@@ -27,6 +27,16 @@
             <ContentControl Content="{Binding FilesViewModel}"/>
         </Grid>
 
+        <Grid Height="50" Width="150" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,90" 
+                  Visibility="{Binding FileInformationVisibility}">
+            <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="-10,0,20,8"
+                CornerRadius="0,15,15,0" BorderBrush="#FF131313" Background="#FF131313"/>
+            <TabPanel>
+                <Button Content="{DynamicResource SaveFile}" Command="{Binding SaveFileCommand}" Foreground="#e4e5fe" Margin="8,0,0,0" MinWidth="173"
+                        Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
+            </TabPanel>
+        </Grid>
+        
         <Grid Height="50" Width="150" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,30" >
             <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="-10,0,20,8"
                 CornerRadius="0,15,15,0" BorderBrush="#FF131313" Background="#FF131313">

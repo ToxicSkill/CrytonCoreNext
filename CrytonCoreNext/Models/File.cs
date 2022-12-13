@@ -34,6 +34,18 @@ namespace CrytonCoreNext.Models
             Bytes = bytes;
         }
 
+        public File(File file, string name, byte[] bytes, int id)
+        {
+            Name = name;
+            NameWithExtension = name + '.' + file.Extension;
+            Path = file.Path;
+            Size = file.Size;
+            Date = file.Date;
+            Extension = file.Extension;
+            Id = id;
+            Bytes = bytes;
+        }
+
         public File(File file)
         {
             Name = file.Name;

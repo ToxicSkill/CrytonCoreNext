@@ -2,6 +2,7 @@
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.PDF.Services
@@ -18,21 +19,6 @@ namespace CrytonCoreNext.PDF.Services
             _pdfReader = pdfReader;
         }
 
-        public List<BitmapImage> GetAllPdfImages(PDFFile pdf)
-        {
-            return _pdfManager.GetAllPdfImages(pdf);
-        }
-
-        public WriteableBitmap GetImage(PDFFile pdf)
-        {
-            return _pdfManager.GetImage(pdf);
-        }
-
-        public WriteableBitmap GetImageFromPdf(PDFFile pdf, int pageNumber)
-        {
-            return _pdfManager.GetImageFromPdf(pdf, pageNumber);
-        }
-
         public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
         {
             await foreach (var image in _pdfManager.LoadAllPDFImages(pdfFile))
@@ -41,9 +27,9 @@ namespace CrytonCoreNext.PDF.Services
             }
         }
 
-        public void ExtractPages(PDFFile file)
+        public async Task<File> Merge(List<PDFFile> pdfFiles)
         {
-            _pdfManager.ExtractPages(file);
+            return await _pdfManager.Merge(pdfFiles);
         }
 
         public PDFFile? ReadPdf(File file, string password = "")

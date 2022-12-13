@@ -1,9 +1,12 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
+using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -12,11 +15,17 @@ namespace CrytonCoreNext.PDF.ViewModels
 {
     public class PdfMergeViewModel : ViewModelBase
     {
+        private readonly IPDFService _pdfService;
+
         private readonly InteractiveViewBase _pdfManagerViewModel;
 
         private List<PDFImage> _images;
 
+        private List<PDFFile> _files;
+
         public Visibility FileInformationVisibility { get; set; } = Visibility.Hidden;
+
+        public Visibility MergeButtonVisibility { get; set; } = Visibility.Hidden;
 
         public Visibility NavigationButtonsVisibility { get; set; }
 
@@ -24,21 +33,24 @@ namespace CrytonCoreNext.PDF.ViewModels
 
         public ImageSource Bitmap { get; set; }
 
-        public ICommand ClearFilesCommand { get; set; }
-
         public ICommand PreviousCommand { get; set; }
 
         public ICommand NextCommand { get; set; }
 
+        public ICommand MergeCommand { get; set; }
+
         public IImageView ImageViewerViewModel { get; init; }
 
-        public PdfMergeViewModel(InteractiveViewBase pdfManagerViewModel, IImageView imageView)
+        public PdfMergeViewModel(InteractiveViewBase pdfManagerViewModel, IPDFService pdfService, IImageView imageView)
         {
             _images = new();
+            _files = new();
+            _pdfService = pdfService;
             _pdfManagerViewModel = pdfManagerViewModel;
             ImageViewerViewModel = imageView;
             PreviousCommand = new Command(MovePreviousPage, CanExecute);
             NextCommand = new Command(MoveNextPage, CanExecute);
+            MergeCommand = new AsyncCommand(Merge, CanExecute);
         }
 
         public override void SendObject(object obj)
@@ -51,22 +63,21 @@ namespace CrytonCoreNext.PDF.ViewModels
             {
                 _images = images;
                 ImageViewerViewModel.PostImages(_images.Where(x => x.Guid == CurrentFile.Guid).First());
+                UpdateImages();
             }
-
-            FileInformationVisibility = obj == null ? Visibility.Hidden : Visibility.Visible;
-            NavigationButtonsVisibility = CurrentFile.NumberOfPages > 1 ? Visibility.Visible : Visibility.Collapsed;
-            UpdateContent();
-            UpdateImages();
+            if (obj is List<PDFFile> pdfFiles)
+            {
+                _files = pdfFiles;
+                MergeButtonVisibility = _files.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+                OnPropertyChanged(nameof(MergeButtonVisibility));
+            }
+            if (obj != null)
+            {
+                FileInformationVisibility = obj == null ? Visibility.Hidden : Visibility.Visible;
+                NavigationButtonsVisibility = CurrentFile.NumberOfPages > 1 ? Visibility.Visible : Visibility.Collapsed;
+                UpdateContent();
+            }
         }
-
-        private void UpdateContent()
-        {
-            OnPropertyChanged(nameof(FileInformationVisibility));
-            OnPropertyChanged(nameof(CurrentFile));
-            OnPropertyChanged(nameof(ImageViewerViewModel));
-            OnPropertyChanged(nameof(NavigationButtonsVisibility));
-        }
-
         private void MovePreviousPage()
         {
             var pageNumber = CurrentFile.LastPage;
@@ -81,6 +92,18 @@ namespace CrytonCoreNext.PDF.ViewModels
             UpdateImages();
         }
 
+        private async Task Merge()
+        {
+            if (_files.Count < 1)
+            {
+                Log(Enums.ELogLevel.Information, Language.Post("NotEnoughFiles"));
+                return;
+            }
+
+            var newFile = await _pdfService.Merge(_files);
+            _pdfManagerViewModel.SendObject(newFile);
+        }
+
         private void UpdateImages()
         {
             var pdfImage = _images.Where(x => x.Guid == CurrentFile.Guid).FirstOrDefault();
@@ -90,5 +113,14 @@ namespace CrytonCoreNext.PDF.ViewModels
                 OnPropertyChanged(nameof(Bitmap));
             }
         }
+
+        private void UpdateContent()
+        {
+            OnPropertyChanged(nameof(FileInformationVisibility));
+            OnPropertyChanged(nameof(CurrentFile));
+            OnPropertyChanged(nameof(ImageViewerViewModel));
+            OnPropertyChanged(nameof(NavigationButtonsVisibility));
+        }
+
     }
 }

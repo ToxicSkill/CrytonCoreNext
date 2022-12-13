@@ -1,6 +1,8 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
+using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using System;
@@ -14,7 +16,6 @@ namespace CrytonCoreNext.PDF.ViewModels
 {
     public class PdfManagerViewModel : InteractiveViewBase
     {
-
         private readonly IPDFService _pdfService;
 
         private List<PDFFile> _files;
@@ -38,13 +39,21 @@ namespace CrytonCoreNext.PDF.ViewModels
 
         public ICommand LoadFilesCommand { get; set; }
 
+        public ICommand SaveFileCommand { get; set; }
+
         public PdfManagerViewModel(IFileService fileService, IDialogService dialogService, IFilesView filesView, IProgressView progressView, IPDFService pdfService) : base(fileService, dialogService, filesView, progressView)
         {
             _images = new();
             _pdfService = pdfService;
             _files = new();
             LoadFilesCommand = new AsyncCommand(this.LoadPDFFiles, CanExecute);
+            SaveFileCommand = new Command(this.SavePDFFile, CanExecute);
             FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
+        }
+
+        private void SavePDFFile()
+        {
+            base.SaveFile(CurrentFile);
         }
 
         public override void SendObject(object obj)
@@ -54,6 +63,20 @@ namespace CrytonCoreNext.PDF.ViewModels
                 ExtensionViewModel = viewModel;
                 OnPropertyChanged(nameof(ExtensionViewModel));
             }
+            if (obj is string pageName)
+            {
+                PageName = pageName;
+                OnPropertyChanged(nameof(PageName));
+            }
+            if (obj is File file)
+            {
+                _ = CreateLegacyFile(file);
+            }
+        }
+
+        private async Task CreateLegacyFile(File file)
+        {
+            await AddFile(file);
         }
 
         private async Task LoadPDFFiles()
@@ -61,17 +84,23 @@ namespace CrytonCoreNext.PDF.ViewModels
             Lock();
             await foreach (var file in base.LoadFiles(Static.Extensions.DialogFilters.Pdf))
             {
-                FilesViewModel.AddFile(file);
-                var pdfFile = _pdfService.ReadPdf(file);
-                if (pdfFile != null)
-                {
-                    _files.Add(pdfFile);
-                    await LoadAllImages(pdfFile);
-                }
+                await AddFile(file);
             }
 
             FilesViewModel.UpdateFiles();
+            GCHelper.Collect();
             Unlock();
+        }
+
+        private async Task AddFile(File file)
+        {
+            FilesViewModel.AddFile(file);
+            var pdfFile = _pdfService.ReadPdf(file);
+            if (pdfFile != null)
+            {
+                _files.Add(pdfFile);
+                await LoadAllImages(pdfFile);
+            }
         }
 
         private async Task LoadAllImages(PDFFile file)
@@ -106,6 +135,7 @@ namespace CrytonCoreNext.PDF.ViewModels
             if (CurrentFile != null && _images != null)
             {
                 ExtensionViewModel.SendObject(CurrentFile);
+                ExtensionViewModel.SendObject(_files);
                 ExtensionViewModel.SendObject(_images.Where(x => x.Guid == CurrentFile.Guid).ToList());
             }
         }

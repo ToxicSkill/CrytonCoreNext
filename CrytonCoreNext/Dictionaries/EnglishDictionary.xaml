@@ -85,6 +85,7 @@
     <system:String x:Key="Extract">Extract</system:String>
     <system:String x:Key="Unlock">Unlock</system:String>
     <system:String x:Key="Protect">Protect</system:String>
+    <system:String x:Key="NotEnoughFiles">At least two documents needed</system:String>
     
    
     <system:String x:Key="OpenFileDialog">Open file(s)</system:String>

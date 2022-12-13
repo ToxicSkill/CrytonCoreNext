@@ -26,7 +26,7 @@
                 From="90"
                 To="300"
                 BeginTime="0:0:0"
-                Duration="0:0:1"/>
+                Duration="0:0:1.4"/>
         </Storyboard>
 
         <Storyboard x:Key="FoldNavigationBar">
@@ -36,7 +36,7 @@
                 From="300"
                 To="90"
                 BeginTime="0:0:0"
-                Duration="0:0:0.8"/>
+                Duration="0:0:0.2"/>
         </Storyboard>
     </Window.Resources>
     
