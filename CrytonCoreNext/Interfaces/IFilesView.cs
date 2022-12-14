@@ -12,6 +12,8 @@ namespace CrytonCoreNext.Interfaces
 
         event EventHandler AllFilesDeleted;
 
+        event EventHandler FilesReordered;
+
         void UpdateFiles();
 
         void AddFile(File newFile);
@@ -25,5 +27,7 @@ namespace CrytonCoreNext.Interfaces
         int GetSelectedFileIndex();
 
         int GetFilesCount();
+
+        Dictionary<Guid, int> GetFilesOrder();
     }
 }

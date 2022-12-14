@@ -33,7 +33,7 @@ namespace CrytonCoreNext.Abstract
             ProgressViewModel = progressView;
             FilesViewModel = filesView;
             PopupViewModel = new();
-            FilesViewModel.CurrentFileChanged += UpdateFilesVisibility;
+            FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
         }
 
         protected void PostPopup(string informationString, int seconds, Color color = default)
@@ -102,7 +102,7 @@ namespace CrytonCoreNext.Abstract
             }
         }
 
-        private void UpdateFilesVisibility(object? obj = null, EventArgs? a = null)
+        private void HandleCurrentFileChanged(object? obj = null, EventArgs? a = null)
         {
             FileInformationVisibility =
                 FilesViewModel.GetSelectedFileIndex() != -1 && FilesViewModel != null ?

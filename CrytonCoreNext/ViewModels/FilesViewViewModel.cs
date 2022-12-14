@@ -29,6 +29,8 @@ namespace CrytonCoreNext.ViewModels
 
         public event EventHandler AllFilesDeleted;
 
+        public event EventHandler FilesReordered;
+
         public ObservableCollection<File> FilesCollection { get; private set; }
 
         public Guid CurrentFileGuid { get; set; }
@@ -124,6 +126,16 @@ namespace CrytonCoreNext.ViewModels
             return SelectedItemIndex;
         }
 
+        public Dictionary<Guid, int> GetFilesOrder()
+        {
+            var orderDict = new Dictionary<Guid, int>();
+            foreach (var file in FilesCollection)
+            {
+                orderDict.Add(file.Guid, file.Id);
+            }
+            return orderDict;
+        }
+
         public void ClearAllFiles()
         {
             _deletedFileGuid = Guid.Empty;
@@ -151,6 +163,7 @@ namespace CrytonCoreNext.ViewModels
             if (!IsItemFirst())
             {
                 DoAction(_filesManager.SetItemAsFirst);
+                FilesReordered.Invoke(null, null);
             }
         }
 
@@ -159,6 +172,7 @@ namespace CrytonCoreNext.ViewModels
             if (!IsItemFirst())
             {
                 DoAction(_filesManager.MoveItemUp);
+                FilesReordered.Invoke(null, null);
             }
         }
 
@@ -167,6 +181,7 @@ namespace CrytonCoreNext.ViewModels
             if (!IsItemLast())
             {
                 DoAction(_filesManager.SetItemAsLast);
+                FilesReordered.Invoke(null, null);
             }
         }
 
@@ -175,6 +190,7 @@ namespace CrytonCoreNext.ViewModels
             if (!IsItemLast())
             {
                 DoAction(_filesManager.MoveItemDown);
+                FilesReordered.Invoke(null, null);
             }
         }
 
@@ -187,6 +203,7 @@ namespace CrytonCoreNext.ViewModels
         {
             return SelectedItemIndex == 0;
         }
+
         private void RefreshSelectedIndex()
         {
             if (FilesCollection != null && FilesCollection.Count > 0)

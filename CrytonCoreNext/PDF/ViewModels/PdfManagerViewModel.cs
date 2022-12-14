@@ -54,6 +54,7 @@ namespace CrytonCoreNext.PDF.ViewModels
             FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
             FilesViewModel.FileDeleted += HandleFileDeleted;
             FilesViewModel.AllFilesDeleted += HandleAllFilesDeleted;
+            FilesViewModel.FilesReordered += HandleFilesReordered;
         }
 
         private void SavePDFFile()
@@ -116,6 +117,13 @@ namespace CrytonCoreNext.PDF.ViewModels
                 images.Add(image);
             }
             _images.Add(new(images, file.Guid));
+        }
+
+        private void HandleFilesReordered(object? sender, EventArgs e)
+        {
+            var orderFiles = FilesViewModel.GetFilesOrder();
+            _files = _files.OrderBy(x => orderFiles[x.Guid]).ToList();
+            ExtensionViewModel.SendObject(_files);
         }
 
         private void HandleFileChanged(object? sender, EventArgs? e)
