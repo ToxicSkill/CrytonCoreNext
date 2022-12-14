@@ -53,9 +53,9 @@ namespace CrytonCoreNext.PDF.ViewModels
             MergeCommand = new AsyncCommand(Merge, CanExecute);
         }
 
-        public override void SendObject(object? obj)
+        public override void SendObject(object obj)
         {
-            if (obj == null)
+            if (obj is bool clear == true)
             {
                 _files.Clear();
                 CurrentFile = null;

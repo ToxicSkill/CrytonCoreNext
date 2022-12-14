@@ -126,7 +126,7 @@ namespace CrytonCoreNext.PDF.ViewModels
         private void HandleAllFilesDeleted(object? sender, EventArgs e)
         {
             _files.Clear();
-            ExtensionViewModel.SendObject(null);
+            ExtensionViewModel.SendObject(false);
         }
 
         private void HandleFileDeleted(object? sender, EventArgs e)
