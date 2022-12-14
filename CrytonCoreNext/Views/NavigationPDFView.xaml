@@ -82,12 +82,12 @@
                     RenderOptions.EdgeMode="Aliased"
                     RenderOptions.BitmapScalingMode="HighQuality" >
                     <Image.InputBindings>
-                        <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfMergeCommand}"/>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfSplitCommand}"/>
                     </Image.InputBindings>
                 </Image>
                 <Button Content="{DynamicResource Split}" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" 
-                        Command="{Binding NavigatePdfMergeCommand}"/>
+                        Command="{Binding NavigatePdfSplitCommand}"/>
                 <TextBlock Text="Split single document into two or more separate documents."
                        HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60, 160,0 ,0" Width="280" Height="80" TextWrapping="Wrap"
                        Style="{StaticResource TextBlockDefault}">

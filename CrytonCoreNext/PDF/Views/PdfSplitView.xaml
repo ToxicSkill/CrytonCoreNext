@@ -1,0 +1,116 @@
+﻿<UserControl x:Class="CrytonCoreNext.PDF.Views.PdfSplitView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             d:DesignHeight="450"
+             d:DesignWidth="1400"
+             mc:Ignorable="d"
+             Background="Transparent">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Red.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid Width="200" Margin="0, 80, 0, 0" Visibility="{Binding FileInformationVisibility}" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="{DynamicResource CurrentFileTitle}" Style="{StaticResource FileInformationsBold}"/>
+            <Label Grid.Row="1" Content="{Binding CurrentFile.Name}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="2" Content="{DynamicResource CurrentFilePages}" Style="{StaticResource FileInformationsBold}"/>
+            <Label Grid.Row="3" Content="{Binding CurrentFile.NumberOfPages}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="4" Content="{DynamicResource CurrentFileDate}" Style="{StaticResource FileInformationsBold}"/>
+            <Label Grid.Row="5" Content="{Binding CurrentFile.Date}" Style="{StaticResource FileInformations}"/>
+        </Grid>
+        <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
+              Height="110" Margin="20, 0, 70, 20">
+            <ContentControl Content="{Binding PopupViewModel}"/>
+        </Grid>
+
+        <!--<Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="350" Margin="0, 0, 50, 0" Visibility="{Binding FileInformationVisibility}">
+            <ContentControl Content="{Binding ImageViewerViewModel}"/>
+        </Grid>-->
+
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
+            <ContentControl Content="{Binding FilesViewModel}"/>
+        </Grid>
+
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200, 20, 200,20" Visibility="{Binding FileInformationVisibility}" >
+            <Slider x:Name="pdfSlider" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            Value="{Binding CurrentPage}" Maximum="{Binding CurrentFile.NumberOfPages}" Visibility="{Binding NavigationButtonsVisibility}" SmallChange="1">
+            </Slider>
+            <Image Source="{Binding Bitmap}" Margin="100, 25, 100, 0"
+                   RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" RenderOptions.CachingHint="Unspecified" RenderOptions.EdgeMode="Unspecified" />
+
+            <Button Background="Transparent" Visibility="{Binding PreviousImageVisibility}" 
+                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                Width="250" Height="250" BorderThickness="0"
+                HorizontalAlignment="Left" VerticalAlignment="Stretch" Cursor="Hand">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding PreviousCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="{Binding PreviousImage}"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               RenderOptions.EdgeMode="Aliased" Stretch="Uniform">
+                        </Image>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+
+            <Button Background="Transparent" Visibility="{Binding NextImageVisibility}" 
+                HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                Width="250" Height="250" BorderThickness="0"
+                HorizontalAlignment="Right" VerticalAlignment="Stretch" Cursor="Hand">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding NextCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="{Binding NextImage}"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform">
+                        </Image>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+
+        <Grid Height="50" Width="150" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,150"
+              Visibility="{Binding SplitButtonVisibility}">
+            <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="2" Margin="-10,0,20,8"
+                CornerRadius="0,15,15,0" BorderBrush="#FF131313" Background="#FF131313">
+            </Border>
+            <TabPanel>
+                <Button Content="{DynamicResource Split}" Command="{Binding SplitCommand}" Foreground="Salmon" Margin="8,0,0,0" MinWidth="173"
+                        Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
+            </TabPanel>
+        </Grid>
+        <Label     Height="60" Content="{Binding Logger.Message}"
+                   FontSize="18" FontFamily="Segoe UI Variable Text Light"   
+                    Foreground="{Binding Logger.Brush}" VerticalAlignment="Bottom" Margin="18, 0, 0, 190" />
+    </Grid>
+</UserControl>

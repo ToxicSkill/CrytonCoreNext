@@ -16,10 +16,11 @@ namespace CrytonCoreNext.ViewModels
         public MainViewModel(ViewModelBase homeViewModel,
             ViewModelBase cryptingViewModel,
             InteractiveViewBase pdfManagerViewModel,
-            ViewModelBase pdfMergeViewModel)
+            ViewModelBase pdfMergeViewModel,
+            ViewModelBase pdfSplitViewModel)
         {
             ViewModel = homeViewModel;
-            NavigationPDFViewView = new(this, pdfManagerViewModel, pdfMergeViewModel);
+            NavigationPDFViewView = new(this, pdfManagerViewModel, pdfMergeViewModel, pdfSplitViewModel);
             NavigationView = new(this, homeViewModel, cryptingViewModel, NavigationPDFViewView);
             UpdateNavigationBar();
         }

@@ -62,8 +62,9 @@ namespace CrytonCoreNext
                 .AddTransient<InformationPopupViewModel>()
                 .AddSingleton(CreateHomeViewModel)
                 .AddSingleton(CreateCryptingViewModel)
+                .AddTransient(CreatePdfManagerViewModel)
                 .AddSingleton(CreatePdfMergeViewModel)
-                .AddSingleton(CreatePdfManagerViewModel)
+                .AddSingleton(CreatePdfSplitViewModel)
                 .AddSingleton(CreateMainWindowViewModel)
                 .AddSingleton(s => new MainWindow()
                 {
@@ -97,14 +98,23 @@ namespace CrytonCoreNext
             return new PdfMergeViewModel(pdfManager, pdfService);
         }
 
+        private PdfSplitViewModel CreatePdfSplitViewModel(IServiceProvider provider)
+        {
+            var pdfManager = provider.GetRequiredService<PdfManagerViewModel>();
+            var pdfService = provider.GetRequiredService<IPDFService>();
+
+            return new PdfSplitViewModel(pdfManager, pdfService);
+        }
+
         private MainViewModel CreateMainWindowViewModel(IServiceProvider provider)
         {
             var homeView = provider.GetRequiredService<HomeViewModel>();
             var cryptingView = provider.GetRequiredService<CryptingViewModel>();
             var pdfManagerView = provider.GetRequiredService<PdfManagerViewModel>();
             var pdfMergeView = provider.GetRequiredService<PdfMergeViewModel>();
+            var pdfSplitView = provider.GetRequiredService<PdfSplitViewModel>();
 
-            return new(homeView, cryptingView, pdfManagerView, pdfMergeView);
+            return new(homeView, cryptingView, pdfManagerView, pdfMergeView, pdfSplitView);
         }
 
         private CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)

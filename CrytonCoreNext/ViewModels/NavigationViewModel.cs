@@ -10,7 +10,9 @@ namespace CrytonCoreNext.ViewModels
         private readonly INavigate _navigator;
 
         public ICommand NavigateHomeCommand { get; }
+
         public ICommand NavigateCrytpingCommand { get; }
+
         public ICommand NavigatePdfManagerCommand { get; }
 
         public NavigationViewModel(INavigate navigator,

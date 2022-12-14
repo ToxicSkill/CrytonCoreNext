@@ -43,6 +43,14 @@ namespace CrytonCoreNext.PDF.Models
             return new CrytonCoreNext.Models.File(pdfFiles.First(), name, mergedFileBytes, pdfFiles.Count() + 1);
         }
 
+        public async Task<CrytonCoreNext.Models.File> Split(PDFFile pdfFile, int fromPage, int toPage)
+        {
+            using IDocLib pdfLibrary = DocLib.Instance;
+            var mergedFileBytes = await Task.Run(() => pdfLibrary.Split(pdfFile.Bytes, fromPage, toPage));
+            var name = $"{pdfFile.Name}SplittedFile";
+            return new CrytonCoreNext.Models.File(pdfFile, name, mergedFileBytes, pdfFile.Id + 1);
+        }
+
         private static BitmapImage GetImage(IPageReader pageReader)
         {
             var memoryStream = new MemoryStream();

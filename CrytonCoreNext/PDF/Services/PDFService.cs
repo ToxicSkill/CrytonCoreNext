@@ -36,5 +36,10 @@ namespace CrytonCoreNext.PDF.Services
         {
             return _pdfReader.ReadPdf(file, password);
         }
+
+        public async Task<File> Split(PDFFile pdfFile, int fromPage, int toPage)
+        {
+            return await _pdfManager.Split(pdfFile, fromPage, toPage);
+        }
     }
 }
