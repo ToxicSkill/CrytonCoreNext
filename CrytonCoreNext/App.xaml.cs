@@ -92,10 +92,9 @@ namespace CrytonCoreNext
         private PdfMergeViewModel CreatePdfMergeViewModel(IServiceProvider provider)
         {
             var pdfManager = provider.GetRequiredService<PdfManagerViewModel>();
-            var imagesView = provider.GetRequiredService<IImageView>();
             var pdfService = provider.GetRequiredService<IPDFService>();
 
-            return new PdfMergeViewModel(pdfManager, pdfService, imagesView);
+            return new PdfMergeViewModel(pdfManager, pdfService);
         }
 
         private MainViewModel CreateMainWindowViewModel(IServiceProvider provider)

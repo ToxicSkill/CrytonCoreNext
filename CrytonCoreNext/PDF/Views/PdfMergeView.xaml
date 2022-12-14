@@ -8,7 +8,16 @@
              d:DesignWidth="1400"
              mc:Ignorable="d"
              Background="Transparent">
-
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Red.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid Width="200" Margin="0, 80, 0, 0" Visibility="{Binding FileInformationVisibility}" HorizontalAlignment="Left" VerticalAlignment="Stretch">
             <Grid.RowDefinitions>
@@ -31,20 +40,24 @@
             <ContentControl Content="{Binding PopupViewModel}"/>
         </Grid>
 
-        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="350" Margin="0, 0, 50, 0" Visibility="{Binding FileInformationVisibility}">
+        <!--<Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="350" Margin="0, 0, 50, 0" Visibility="{Binding FileInformationVisibility}">
             <ContentControl Content="{Binding ImageViewerViewModel}"/>
-        </Grid>
+        </Grid>-->
 
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
             <ContentControl Content="{Binding FilesViewModel}"/>
         </Grid>
         
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200, 20,400,20" Visibility="{Binding FileInformationVisibility}" >
-            <Image Source="{Binding Bitmap}" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" RenderOptions.CachingHint="Unspecified" RenderOptions.EdgeMode="Unspecified" />
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200, 20, 200,20" Visibility="{Binding FileInformationVisibility}" >
+            <Slider x:Name="pdfSlider" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            Value="{Binding CurrentPage}" Maximum="{Binding CurrentFile.NumberOfPages}" Visibility="{Binding NavigationButtonsVisibility}" SmallChange="1">
+            </Slider>
+            <Image Source="{Binding Bitmap}" Margin="100, 25, 100, 0"
+                   RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" RenderOptions.CachingHint="Unspecified" RenderOptions.EdgeMode="Unspecified" />
 
-            <Button Background="Transparent" Visibility="{Binding NavigationButtonsVisibility}" 
+            <Button Background="Transparent" Visibility="{Binding PreviousImageVisibility}" 
                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                Width="50"  BorderThickness="0"
+                Width="250" Height="250" BorderThickness="0"
                 HorizontalAlignment="Left" VerticalAlignment="Stretch" Cursor="Hand">
 
                 <i:Interaction.Triggers>
@@ -55,18 +68,18 @@
 
                 <Button.Template>
                     <ControlTemplate>
-                        <Image Source="/Assets/Previous.png"
-                           RenderOptions.BitmapScalingMode="HighQuality"
-                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform">
+                        <Image Source="{Binding PreviousImage}"
+                               RenderOptions.BitmapScalingMode="HighQuality"
+                               RenderOptions.EdgeMode="Aliased" Stretch="Uniform">
                         </Image>
                     </ControlTemplate>
                 </Button.Template>
             </Button>
 
 
-            <Button Background="Transparent" Visibility="{Binding NavigationButtonsVisibility}" 
+            <Button Background="Transparent" Visibility="{Binding NextImageVisibility}" 
                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                Width="50"  BorderThickness="0"
+                Width="250" Height="250" BorderThickness="0"
                 HorizontalAlignment="Right" VerticalAlignment="Stretch" Cursor="Hand">
 
                 <i:Interaction.Triggers>
@@ -77,10 +90,9 @@
 
                 <Button.Template>
                     <ControlTemplate>
-                        <Image Source="/Assets/Next.png" 
-                       RenderOptions.BitmapScalingMode="HighQuality"
-                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform">
-
+                        <Image Source="{Binding NextImage}"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform">
                         </Image>
                     </ControlTemplate>
                 </Button.Template>

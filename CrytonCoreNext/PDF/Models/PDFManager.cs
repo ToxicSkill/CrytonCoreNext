@@ -18,12 +18,12 @@ namespace CrytonCoreNext.PDF.Models
         public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
-            var dimensions = 1d;
+            var dimensions = pdfFile.Dimensions;
             var reader = pdfFile.Password.Equals(string.Empty) ?
                 pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
                 pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
             using var docReader = reader;
-            for (int i = 0; i < pdfFile.NumberOfPages; i++)
+            for (int i = 0; i <= pdfFile.NumberOfPages; i++)
             {
                 yield return await Task.Run(() =>
                 {

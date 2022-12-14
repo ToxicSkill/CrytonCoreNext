@@ -7,7 +7,7 @@ namespace CrytonCoreNext.PDF.Models
 {
     public class PDFReader : IPDFReader
     {
-        private readonly double _dimensions = 2.0d;
+        private readonly double _dimensions = 1.0d;
 
         public PDFFile? ReadPdf(File file, string password = "")
         {
@@ -30,7 +30,7 @@ namespace CrytonCoreNext.PDF.Models
                     password: string.Empty,
                     dimensions: _dimensions,
                     owner: string.Empty,
-                    numberOfPages: reader.GetPageCount(),
+                    numberOfPages: reader.GetPageCount() - 1,
                     lastPage: 0,
                     isProtectedByPassword: false,
                     format: "A4",
