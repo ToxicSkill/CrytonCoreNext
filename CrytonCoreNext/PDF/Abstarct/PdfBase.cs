@@ -100,6 +100,11 @@ namespace CrytonCoreNext.PDF.Abstarct
             UpdateContent();
         }
 
+        protected void ResetCurrentPage()
+        {
+            CurrentPage = 0;
+        }
+
         private void MovePreviousPage()
         {
             var pageNumber = CurrentFile?.LastPage ?? 0;

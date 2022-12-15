@@ -24,18 +24,7 @@ namespace CrytonCoreNext.PDF.ViewModels
 
         private void HandleUpdate(object? sender, EventArgs e)
         {
-            if (CurrentFile == null)
-            {
-                MergeButtonVisibility = Visibility.Hidden;
-            }
-            else
-            {
-                MergeButtonVisibility = Visibility.Hidden;
-            }
-            if (Files.Count > 1)
-            {
-                MergeButtonVisibility = Visibility.Visible;
-            }
+            MergeButtonVisibility = Files.Count > 1 ? Visibility.Visible : Visibility.Hidden;
             OnPropertyChanged(nameof(MergeButtonVisibility));
         }
 
