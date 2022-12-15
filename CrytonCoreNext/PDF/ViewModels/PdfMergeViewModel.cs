@@ -49,6 +49,7 @@ namespace CrytonCoreNext.PDF.ViewModels
 
             var newFile = await PdfService.Merge(Files);
             PdfManagerViewModel.SendObject(newFile);
+            ResetCurrentPage();
         }
     }
 }

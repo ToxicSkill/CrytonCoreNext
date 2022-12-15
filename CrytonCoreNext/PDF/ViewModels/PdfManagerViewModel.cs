@@ -67,6 +67,7 @@ namespace CrytonCoreNext.PDF.ViewModels
             if (obj is ViewModelBase viewModel)
             {
                 ExtensionViewModel = viewModel;
+                NotifyExtensionViewModel();
                 OnPropertyChanged(nameof(ExtensionViewModel));
             }
             if (obj is string pageName)
@@ -157,7 +158,11 @@ namespace CrytonCoreNext.PDF.ViewModels
                 CurrentFile = file;
                 OnPropertyChanged(nameof(CurrentFile));
             }
+            NotifyExtensionViewModel();
+        }
 
+        private void NotifyExtensionViewModel()
+        {
             if (CurrentFile != null && _images != null)
             {
                 ExtensionViewModel.SendObject(CurrentFile);

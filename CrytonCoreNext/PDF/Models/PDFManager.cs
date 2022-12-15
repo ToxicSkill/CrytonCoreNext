@@ -40,6 +40,18 @@ namespace CrytonCoreNext.PDF.Models
             var bytes = pdfFiles.Select(x => x.Bytes).ToArray();
             var mergedFileBytes = await Task.Run(() => pdfLibrary.Merge(bytes));
             var templateFile = pdfFiles.First();
+            return new CrytonCoreNext.Models.File(pdfFiles.First(), PrepareFileNameForMerge(pdfFiles), mergedFileBytes, pdfFiles.Count() + 1);
+        }
+
+        public async Task<CrytonCoreNext.Models.File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
+        {
+            using IDocLib pdfLibrary = DocLib.Instance;
+            var mergedFileBytes = await Task.Run(() => pdfLibrary.Split(pdfFile.Bytes, fromPage, toPage));
+            return new CrytonCoreNext.Models.File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), mergedFileBytes, newId);
+        }
+
+        private static string PrepareFileNameForMerge(List<PDFFile> pdfFiles)
+        {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append(pdfFiles.Count);
             stringBuilder.Append("MergedFiles");
@@ -47,13 +59,12 @@ namespace CrytonCoreNext.PDF.Models
             {
                 stringBuilder.Append(file.Name[0]);
             }
-            return new CrytonCoreNext.Models.File(pdfFiles.First(), stringBuilder.ToString(), mergedFileBytes, pdfFiles.Count() + 1);
+
+            return stringBuilder.ToString();
         }
 
-        public async Task<CrytonCoreNext.Models.File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
+        private static string PrepareFileNameForSplit(PDFFile pdfFile, int fromPage, int toPage)
         {
-            using IDocLib pdfLibrary = DocLib.Instance;
-            var mergedFileBytes = await Task.Run(() => pdfLibrary.Split(pdfFile.Bytes, fromPage, toPage));
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("From");
             stringBuilder.Append(fromPage);
@@ -61,7 +72,7 @@ namespace CrytonCoreNext.PDF.Models
             stringBuilder.Append(toPage);
             stringBuilder.Append("SplittedFile");
             stringBuilder.Append(pdfFile.Name);
-            return new CrytonCoreNext.Models.File(pdfFile, stringBuilder.ToString(), mergedFileBytes, newId);
+            return stringBuilder.ToString();
         }
 
         private static BitmapImage GetImage(IPageReader pageReader)

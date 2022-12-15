@@ -74,6 +74,7 @@ namespace CrytonCoreNext.PDF.ViewModels
             {
                 var newFile = await PdfService.Split(CurrentFile, FromPage - 1, ToPage - 1, Files.Count + 1);
                 PdfManagerViewModel.SendObject(newFile);
+                CurrentPage = 0;
             }
         }
     }
