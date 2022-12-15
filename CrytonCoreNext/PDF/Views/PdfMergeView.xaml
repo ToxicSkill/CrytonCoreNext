@@ -52,8 +52,8 @@
                     Foreground="{Binding Logger.Brush}" VerticalAlignment="Bottom" Margin="18, 0, 0, 190" />
         
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200, 20, 200,20" Visibility="{Binding FileInformationVisibility}" >
-            <Slider x:Name="pdfSlider" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                            Value="{Binding CurrentPage}" Maximum="{Binding CurrentFile.NumberOfPages}" Visibility="{Binding NavigationButtonsVisibility}" SmallChange="1">
+            <Slider x:Name="pdfSlider" VerticalAlignment="Top" Value="{Binding CurrentPage}" Maximum="{Binding CurrentFile.NumberOfPages}" Visibility="{Binding NavigationButtonsVisibility}" 
+                    SmallChange="1" Margin="150, 0, 150, 0">
             </Slider>
             <Image Source="{Binding Bitmap}" Margin="100, 25, 100, 0"
                    RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" RenderOptions.CachingHint="Unspecified" RenderOptions.EdgeMode="Unspecified" />

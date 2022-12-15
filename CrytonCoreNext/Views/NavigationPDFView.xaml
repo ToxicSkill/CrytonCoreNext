@@ -23,11 +23,11 @@
     <Grid>
 
         <Label Content="PDF" FontSize="50" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 5, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
-        <Grid Margin="10, 120, 100, 10">
+        <Grid Margin="40, 120, 40, 10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -105,10 +105,10 @@
                     </Button.Margin>
                 </Button>
                 <Image Cursor="Hand"
-                    Source="/Assets/Convert.png"
-                    Width="45"
+                    Source="/Assets/Switch.png"
+                    Width="80"
                     HorizontalAlignment="Left" VerticalAlignment="Top"
-                    Margin="65, 65"
+                    Margin="55, 55"
                     Stretch="Uniform"
                     RenderOptions.EdgeMode="Aliased"
                     RenderOptions.BitmapScalingMode="HighQuality" >
