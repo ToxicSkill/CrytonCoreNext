@@ -83,6 +83,7 @@ namespace CrytonCoreNext.PDF.ViewModels
         private async Task CreateLegacyFile(File file)
         {
             await AddFile(file);
+            FilesViewModel.UpdateFiles();
         }
 
         private async Task LoadPDFFiles()

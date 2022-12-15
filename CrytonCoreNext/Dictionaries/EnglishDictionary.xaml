@@ -11,6 +11,7 @@
     <system:String x:Key="CurrentFileDate">Creation time</system:String>
     <system:String x:Key="CurrentFileStatus">Status</system:String>
     <system:String x:Key="CurrentFileMethod">Method</system:String>
+    <system:String x:Key="CurrentFilePage">Current page</system:String>
     
     
     <system:String x:Key="SaveFile">Save file</system:String>
@@ -86,6 +87,8 @@
     <system:String x:Key="Unlock">Unlock</system:String>
     <system:String x:Key="Protect">Protect</system:String>
     <system:String x:Key="NotEnoughFiles">At least two documents needed</system:String>
+    <system:String x:Key="FromPage">From page</system:String>
+    <system:String x:Key="ToPage">To page</system:String>
     
    
     <system:String x:Key="OpenFileDialog">Open file(s)</system:String>

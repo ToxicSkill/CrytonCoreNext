@@ -35,6 +35,10 @@ namespace CrytonCoreNext.PDF.Abstarct
 
         public PDFFile? CurrentFile { get; set; }
 
+        public int CurrentPageDisplay { get => _currentPage + 1; }
+
+        public int MaxPageDisplay { get => CurrentFile == null ? 0 : CurrentFile.NumberOfPages + 1; }
+
         public int CurrentPage
         {
             get => _currentPage;
@@ -45,6 +49,7 @@ namespace CrytonCoreNext.PDF.Abstarct
                 CurrentFile.LastPage = _currentPage;
                 UpdateImages();
                 OnPropertyChanged(nameof(CurrentPage));
+                OnPropertyChanged(nameof(CurrentPageDisplay));
             }
         }
 
@@ -70,10 +75,9 @@ namespace CrytonCoreNext.PDF.Abstarct
             NextCommand = new Command(MoveNextPage, CanExecute);
         }
 
-
         public override void SendObject(object obj)
         {
-            if (obj is bool clear == true)
+            if (obj is bool)
             {
                 Files.Clear();
                 CurrentFile = null;
@@ -81,6 +85,7 @@ namespace CrytonCoreNext.PDF.Abstarct
             if (obj is PDFFile file)
             {
                 CurrentFile = file;
+                OnPropertyChanged(nameof(MaxPageDisplay));
             }
             if (obj is List<PDFImage> images)
             {

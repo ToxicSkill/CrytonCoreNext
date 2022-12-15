@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -39,16 +40,28 @@ namespace CrytonCoreNext.PDF.Models
             var bytes = pdfFiles.Select(x => x.Bytes).ToArray();
             var mergedFileBytes = await Task.Run(() => pdfLibrary.Merge(bytes));
             var templateFile = pdfFiles.First();
-            var name = $"{pdfFiles.Count}MergedFiles";
-            return new CrytonCoreNext.Models.File(pdfFiles.First(), name, mergedFileBytes, pdfFiles.Count() + 1);
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append(pdfFiles.Count);
+            stringBuilder.Append("MergedFiles");
+            foreach (var file in pdfFiles)
+            {
+                stringBuilder.Append(file.Name[0]);
+            }
+            return new CrytonCoreNext.Models.File(pdfFiles.First(), stringBuilder.ToString(), mergedFileBytes, pdfFiles.Count() + 1);
         }
 
-        public async Task<CrytonCoreNext.Models.File> Split(PDFFile pdfFile, int fromPage, int toPage)
+        public async Task<CrytonCoreNext.Models.File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
             var mergedFileBytes = await Task.Run(() => pdfLibrary.Split(pdfFile.Bytes, fromPage, toPage));
-            var name = $"{pdfFile.Name}SplittedFile";
-            return new CrytonCoreNext.Models.File(pdfFile, name, mergedFileBytes, pdfFile.Id + 1);
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append("From");
+            stringBuilder.Append(fromPage);
+            stringBuilder.Append("To");
+            stringBuilder.Append(toPage);
+            stringBuilder.Append("SplittedFile");
+            stringBuilder.Append(pdfFile.Name);
+            return new CrytonCoreNext.Models.File(pdfFile, stringBuilder.ToString(), mergedFileBytes, newId);
         }
 
         private static BitmapImage GetImage(IPageReader pageReader)

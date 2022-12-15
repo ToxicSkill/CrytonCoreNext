@@ -62,7 +62,7 @@ namespace CrytonCoreNext
                 .AddTransient<InformationPopupViewModel>()
                 .AddSingleton(CreateHomeViewModel)
                 .AddSingleton(CreateCryptingViewModel)
-                .AddTransient(CreatePdfManagerViewModel)
+                .AddSingleton(CreatePdfManagerViewModel)
                 .AddSingleton(CreatePdfMergeViewModel)
                 .AddSingleton(CreatePdfSplitViewModel)
                 .AddSingleton(CreateMainWindowViewModel)

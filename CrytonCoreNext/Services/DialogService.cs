@@ -25,14 +25,14 @@ namespace CrytonCoreNext.Services
             return openDialog.RunDialog();
         }
 
-        public List<string> GetFilesNamesToSave(Static.Extensions.DialogFilters filter, string title, string extension = Empty)
+        public List<string> GetFilesNamesToSave(Static.Extensions.DialogFilters filter, string title, string fileName = DefaultFileName, string extension = Empty)
         {
             WindowDialog.SaveDialog saveDialog = new(new DialogHelper()
             {
                 Filters = Static.Extensions.FilterToPrompt(filter),
                 Multiselect = false,
                 Title = title,
-                FileName = DefaultFileName + (!extension.Equals(Empty) ? Dot + extension : Empty) 
+                FileName = fileName + (!extension.Equals(Empty) ? Dot + extension : Empty)
             });
 
             return saveDialog.RunDialog();

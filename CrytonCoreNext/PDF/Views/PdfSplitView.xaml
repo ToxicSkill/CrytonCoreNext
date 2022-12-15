@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             d:DesignHeight="450"
+             d:DesignHeight="890"
              d:DesignWidth="1400"
              mc:Ignorable="d"
              Background="Transparent">
@@ -19,21 +19,21 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid Width="200" Margin="0, 80, 0, 0" Visibility="{Binding FileInformationVisibility}" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+        <Grid Width="200" Margin="0, 90, 0, 0" Visibility="{Binding FileInformationVisibility}" HorizontalAlignment="Left" VerticalAlignment="Stretch">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="40"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Content="{DynamicResource CurrentFileTitle}" Style="{StaticResource FileInformationsBold}"/>
-            <Label Grid.Row="1" Content="{Binding CurrentFile.Name}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="1" Content="{Binding CurrentFile.Name}" Style="{StaticResource LabelWhiteSmall}" Margin="10, 0, 0, 0"/>
             <Label Grid.Row="2" Content="{DynamicResource CurrentFilePages}" Style="{StaticResource FileInformationsBold}"/>
-            <Label Grid.Row="3" Content="{Binding CurrentFile.NumberOfPages}" Style="{StaticResource FileInformations}"/>
-            <Label Grid.Row="4" Content="{DynamicResource CurrentFileDate}" Style="{StaticResource FileInformationsBold}"/>
-            <Label Grid.Row="5" Content="{Binding CurrentFile.Date}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="3" Content="{Binding MaxPageDisplay}" Style="{StaticResource LabelWhiteSmall}" Margin="10, 0, 0, 0"/>
+            <Label Grid.Row="4" Content="{DynamicResource CurrentFilePage}" Style="{StaticResource FileInformationsBold}"/>
+            <Label Grid.Row="5" Content="{Binding CurrentPageDisplay}" Style="{StaticResource LabelWhiteSmall}" Margin="10, 0, 0, 0"/>
         </Grid>
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
               Height="110" Margin="20, 0, 70, 20">
@@ -47,18 +47,19 @@
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
             <ContentControl Content="{Binding FilesViewModel}"/>
         </Grid>
+        <Label     Height="60" Content="{Binding Logger.Message}"
+                   FontSize="18" FontFamily="Segoe UI Variable Text Light"   
+                    Foreground="{Binding Logger.Brush}" VerticalAlignment="Bottom" Margin="18, 0, 0, 290" />
 
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200, 20, 200,20" Visibility="{Binding FileInformationVisibility}" >
-            <Slider x:Name="pdfSlider" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                            Value="{Binding CurrentPage}" Maximum="{Binding CurrentFile.NumberOfPages}" Visibility="{Binding NavigationButtonsVisibility}" SmallChange="1">
-            </Slider>
-            <Image Source="{Binding Bitmap}" Margin="100, 25, 100, 0"
-                   RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" RenderOptions.CachingHint="Unspecified" RenderOptions.EdgeMode="Unspecified" />
+            <Slider x:Name="pdfSlider" Value="{Binding CurrentPage}" Maximum="{Binding CurrentFile.NumberOfPages}" Visibility="{Binding NavigationButtonsVisibility}" SmallChange="1" Grid.RowSpan="2"/>
+            <Image Source="{Binding Bitmap}" Margin="100,25,100,0"
+                   RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" RenderOptions.CachingHint="Unspecified" RenderOptions.EdgeMode="Unspecified" Grid.RowSpan="2" />
 
             <Button Background="Transparent" Visibility="{Binding PreviousImageVisibility}" 
                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                 Width="250" Height="250" BorderThickness="0"
-                HorizontalAlignment="Left" VerticalAlignment="Stretch" Cursor="Hand">
+                HorizontalAlignment="Left" Cursor="Hand" Grid.Row="1">
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -80,7 +81,7 @@
             <Button Background="Transparent" Visibility="{Binding NextImageVisibility}" 
                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
                 Width="250" Height="250" BorderThickness="0"
-                HorizontalAlignment="Right" VerticalAlignment="Stretch" Cursor="Hand">
+                HorizontalAlignment="Right" Cursor="Hand" Grid.Row="1">
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
@@ -109,8 +110,20 @@
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>
         </Grid>
-        <Label     Height="60" Content="{Binding Logger.Message}"
-                   FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                    Foreground="{Binding Logger.Brush}" VerticalAlignment="Bottom" Margin="18, 0, 0, 190" />
+        <Grid Visibility="{Binding SplitButtonVisibility}" Height="60" Width="182" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10, 0, 0, 220">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding FromPage}" Template="{StaticResource TextBoxRoundTemplate}" Style="{StaticResource TextBoxRound}"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ToPage}" Template="{StaticResource TextBoxRoundTemplate}" Style="{StaticResource TextBoxRound}"/>
+            <Label Grid.Row="0" Grid.Column="0"  Content="{DynamicResource FromPage}" Style="{StaticResource LabelWhiteSmall}"/>
+            <Label Grid.Row="1" Grid.Column="0"  Content="{DynamicResource ToPage}" Style="{StaticResource LabelWhiteSmall}"/>
+
+        </Grid>
     </Grid>
 </UserControl>

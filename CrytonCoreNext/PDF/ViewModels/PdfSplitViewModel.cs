@@ -11,9 +11,36 @@ namespace CrytonCoreNext.PDF.ViewModels
 {
     public class PdfSplitViewModel : PdfBase
     {
-        public int FromPage { get; set; }
+        private int _fromPage = 1;
 
-        public int ToPage { get; set; }
+        private int _toPage = 1;
+
+        public int FromPage
+        {
+            get => _fromPage;
+            set
+            {
+                var maxPage = CurrentFile.NumberOfPages + 1;
+                if (_fromPage == value || value > maxPage) return;
+                _fromPage = value;
+                if (_fromPage == maxPage)
+                {
+                    ToPage = maxPage;
+                }
+                OnPropertyChanged(nameof(FromPage));
+            }
+        }
+
+        public int ToPage
+        {
+            get => _toPage;
+            set
+            {
+                if (_toPage == value || value < _fromPage || value > CurrentFile.NumberOfPages + 1) return;
+                _toPage = value;
+                OnPropertyChanged(nameof(ToPage));
+            }
+        }
 
         public Visibility SplitButtonVisibility { get; set; } = Visibility.Hidden;
 
@@ -33,7 +60,10 @@ namespace CrytonCoreNext.PDF.ViewModels
             }
             else
             {
-                SplitButtonVisibility = Visibility.Hidden;
+                SplitButtonVisibility = Visibility.Visible;
+                FromPage = 1;
+                _toPage = CurrentFile.NumberOfPages + 1;
+                OnPropertyChanged(nameof(ToPage));
             }
             OnPropertyChanged(nameof(SplitButtonVisibility));
         }
@@ -42,7 +72,7 @@ namespace CrytonCoreNext.PDF.ViewModels
         {
             if (CurrentFile != null)
             {
-                var newFile = await PdfService.Split(CurrentFile, FromPage, ToPage);
+                var newFile = await PdfService.Split(CurrentFile, FromPage - 1, ToPage - 1, Files.Count + 1);
                 PdfManagerViewModel.SendObject(newFile);
             }
         }

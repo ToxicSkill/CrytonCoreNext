@@ -215,6 +215,16 @@
             <Setter Property="FontWeight" Value="Normal"/>
         </Style>
 
+        <Style x:Key="LabelWhiteSmall" TargetType="Label">
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+
         <Style x:Key="TextBlockDefault" TargetType="TextBlock">
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
@@ -232,8 +242,24 @@
         <Style x:Key="TextBoxDefault" TargetType="TextBox">
             <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
             <Setter Property="FontSize" Value="18"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
         </Style>
+
+        <Style x:Key="TextBoxRound" TargetType="TextBox">
+            <Setter Property="Height" Value="27"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+
+        <ControlTemplate x:Key="TextBoxRoundTemplate" TargetType="{x:Type TextBoxBase}">
+            <Border Background="{TemplateBinding Background}" 
+                                    x:Name="Bd" BorderBrush="Black"
+                                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10">
+                <ScrollViewer x:Name="PART_ContentHost"/>
+            </Border>
+        </ControlTemplate>
 
         <Style x:Key="TextBlockFilesView" TargetType="TextBlock">
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>

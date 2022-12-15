@@ -19,21 +19,21 @@
     </UserControl.Resources>
     
     <Grid>
-        <Grid Width="200" Margin="0, 80, 0, 0" Visibility="{Binding FileInformationVisibility}" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+        <Grid Width="200" Margin="0, 90, 0, 0" Visibility="{Binding FileInformationVisibility}" HorizontalAlignment="Left" VerticalAlignment="Stretch">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="40"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Content="{DynamicResource CurrentFileTitle}" Style="{StaticResource FileInformationsBold}"/>
-            <Label Grid.Row="1" Content="{Binding CurrentFile.Name}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="1" Content="{Binding CurrentFile.Name}" Style="{StaticResource LabelWhiteSmall}" Margin="10, 0, 0, 0"/>
             <Label Grid.Row="2" Content="{DynamicResource CurrentFilePages}" Style="{StaticResource FileInformationsBold}"/>
-            <Label Grid.Row="3" Content="{Binding CurrentFile.NumberOfPages}" Style="{StaticResource FileInformations}"/>
-            <Label Grid.Row="4" Content="{DynamicResource CurrentFileDate}" Style="{StaticResource FileInformationsBold}"/>
-            <Label Grid.Row="5" Content="{Binding CurrentFile.Date}" Style="{StaticResource FileInformations}"/>
+            <Label Grid.Row="3" Content="{Binding MaxPageDisplay}" Style="{StaticResource LabelWhiteSmall}" Margin="10, 0, 0, 0"/>
+            <Label Grid.Row="4" Content="{DynamicResource CurrentFilePage}" Style="{StaticResource FileInformationsBold}"/>
+            <Label Grid.Row="5" Content="{Binding CurrentPageDisplay}" Style="{StaticResource LabelWhiteSmall}" Margin="10, 0, 0, 0"/>
         </Grid>
         <Grid Name="informationBar" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
               Height="110" Margin="20, 0, 70, 20">
@@ -47,6 +47,9 @@
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="300">
             <ContentControl Content="{Binding FilesViewModel}"/>
         </Grid>
+        <Label     Height="60" Content="{Binding Logger.Message}"
+                   FontSize="18" FontFamily="Segoe UI Variable Text Light"   
+                    Foreground="{Binding Logger.Brush}" VerticalAlignment="Bottom" Margin="18, 0, 0, 190" />
         
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200, 20, 200,20" Visibility="{Binding FileInformationVisibility}" >
             <Slider x:Name="pdfSlider" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
@@ -109,8 +112,5 @@
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" Cursor="Hand"/>
             </TabPanel>
         </Grid>
-        <Label     Height="60" Content="{Binding Logger.Message}"
-                   FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                    Foreground="{Binding Logger.Brush}" VerticalAlignment="Bottom" Margin="18, 0, 0, 190" />
     </Grid>
 </UserControl>
