@@ -24,6 +24,7 @@
     <None Remove="Assets\Cogsv2.png" />
     <None Remove="Assets\Continue.png" />
     <None Remove="Assets\Convert.png" />
+    <None Remove="Assets\Crypting.png" />
     <None Remove="Assets\cryton.png" />
     <None Remove="Assets\DeleteAll.png" />
     <None Remove="Assets\Down.png" />
@@ -35,6 +36,7 @@
     <None Remove="Assets\FatalError.png" />
     <None Remove="Assets\FileOpen.png" />
     <None Remove="Assets\FileOpenError.png" />
+    <None Remove="Assets\FilesMenu.png" />
     <None Remove="Assets\FilesSelect.png" />
     <None Remove="Assets\FilesSelectHover.png" />
     <None Remove="Assets\FilesSelectSharp.png" />
@@ -69,6 +71,8 @@
     <None Remove="Assets\PartialSun.png" />
     <None Remove="Assets\PasswordKeeper — kopia.png" />
     <None Remove="Assets\PasswordKeeper.png" />
+    <None Remove="Assets\Pdf.png" />
+    <None Remove="Assets\PdfRed.png" />
     <None Remove="Assets\Previous.png" />
     <None Remove="Assets\ProgressConnector.png" />
     <None Remove="Assets\ProgressDot.png" />
@@ -112,7 +116,7 @@
     <PackageReference Include="Docnet.Core" Version="2.3.1" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.1" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.2" />
     <PackageReference Include="MaterialDesignColors" Version="2.0.9" />
     <PackageReference Include="MaterialDesignThemes" Version="4.6.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
@@ -134,9 +138,6 @@
     <Resource Include="Assets\2nxt.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\AddFile.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Assets\Back.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -155,7 +156,7 @@
     <Resource Include="Assets\Convert.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\cryton.png">
+    <Resource Include="Assets\Crypting.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\DeleteAll.png">
@@ -176,19 +177,13 @@
     <Resource Include="Assets\FatalError.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\FileOpen.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\FileOpenError.png">
+    <Resource Include="Assets\FilesMenu.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\FilesSelect.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\FilesSelectHover.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\FilesSelectSharp.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\FolderLocked.png">
@@ -210,9 +205,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Inform.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Information.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Informv2.png">
@@ -279,6 +271,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\PasswordKeeper.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Pdf.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\PdfRed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Previous.png">

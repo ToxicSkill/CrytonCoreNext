@@ -63,6 +63,9 @@
             <DataTemplate DataType="{x:Type pdfViewModels:PdfSplitViewModel}">
                 <pdfViews:PdfSplitView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type pdfViewModels:PdfImageToPdfViewModel}">
+                <pdfViews:PdfImageToPdfView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:InformationPopupViewModel}">
                 <views:InformationPage />
             </DataTemplate>
@@ -70,7 +73,13 @@
                 <views:ProgressView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:FilesViewViewModel}">
-                <views:FileViewViewPage />
+                <views:FileViewView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:FilesSelectorListingViewViewModel}">
+                <views:FilesSelectorListingView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:FilesSelectorViewViewModel}">
+                <views:FilesSelectorView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:ImageViewerViewModel}">
                 <views:ImageViewerView />

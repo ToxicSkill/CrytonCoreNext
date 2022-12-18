@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="CrytonCoreNext.Views.FilesSelectorListingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CrytonCoreNext.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+
+        <ListView
+            x:Name="lvItems"
+            AllowDrop="True"
+            DragLeave="ItemList_DragLeave"
+            DragOver="ItemList_DragOver"
+            ItemsSource="{Binding ItemViewModels}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="MouseMove" Handler="Item_MouseMove" />
+                    <EventSetter Event="DragOver" Handler="Item_DragOver" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

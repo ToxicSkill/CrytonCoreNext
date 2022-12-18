@@ -269,12 +269,37 @@
             <Setter Property="Margin" Value="70,0,0,0"/>
         </Style>
         
+        <Style x:Key="TextBlockFilesViewLeft" TargetType="TextBlock">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        
         <Style x:Key="TransparentButton" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
             <Setter Property="FontSize" Value="28"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="Transparent" >
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="TransparentButtonLeft" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontFamily" Value="Segoe UI Variable Text Light"/>
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Template">
                 <Setter.Value>

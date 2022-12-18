@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     MaxWidth="300"
     d:DesignHeight="700"
     d:DesignWidth="1700"
@@ -67,25 +68,29 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Image Source="/Assets/menu_home.png"
-                       HorizontalAlignment="Left"
-                       Margin="7,1,0,1"
-                       Stretch="Uniform"
-                       RenderOptions.EdgeMode="Aliased"
-                       RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="34">
-
-                    <Image.InputBindings>
+                <fa:ImageAwesome Name="Home" Icon="Home" HorizontalAlignment="Left" Foreground="Yellow" Stretch="Uniform" Width="40" Margin="5, 0 ,0 ,0" Cursor="Hand">
+                    <fa:ImageAwesome.InputBindings>
                         <MouseBinding Gesture="LeftClick" Command="{Binding NavigateHomeCommand}"/>
-                    </Image.InputBindings>
-                </Image>
+                    </fa:ImageAwesome.InputBindings>
+                    <!--<fa:ImageAwesome.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <Trigger Property="fa:ImageAwesome.IsMouseOver" Value="True">
+                                    <Setter Property="fa:ImageAwesome.Foreground" Value="Yellow"/>
+                                </Trigger>
+                                <Trigger Property="fa:ImageAwesome.IsMouseOver" Value="False">
+                                    <Setter Property="fa:ImageAwesome.Foreground" Value="GhostWhite"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </fa:ImageAwesome.Style>-->
+                </fa:ImageAwesome>
                 <Button FontFamily="Segoe UI Variable Text Light"
-                    Grid.Row="1"
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
                     FontSize="22"
                     Command="{Binding NavigateHomeCommand}"
-                    Content="Home" />
+                    Content="Home"/>
             </Grid>
 
             <Grid Grid.Row="2">
@@ -98,19 +103,30 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Image Grid.Row="2" 
+                <Image
                        Source="/Assets/Lock.png"
                        HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="45">
+                       Width="45" Cursor="Hand">
                     <Image.InputBindings>
                         <MouseBinding Gesture="LeftClick" Command="{Binding NavigateCrytpingCommand}"/>
                     </Image.InputBindings>
+                    <!--<Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Source" Value="/Assets/Lock.png"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="False">
+                                    <Setter Property="Source" Value="/Assets/Crypting.png"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>-->
                 </Image>
                 <Button FontFamily="Segoe UI Variable Text Light"
-                    Grid.Row="2"
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
                     FontSize="22"
@@ -129,7 +145,25 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Image Grid.Row="3" Source="/Assets/Cogs.png"
+                <!--<fa:ImageAwesome Icon="Spinner" Spin="True" SpinDuration="1" Foreground="Blue" />-->
+                <fa:ImageAwesome Icon="Cogs" HorizontalAlignment="Left" Foreground="Yellow" Stretch="Uniform" Margin="5, 0, 0 ,0" Width="37" Cursor="Hand">
+                    <fa:ImageAwesome.InputBindings>
+                        <MouseBinding Gesture="LeftClick"/>
+                    </fa:ImageAwesome.InputBindings>
+                    <!--<fa:ImageAwesome.Style>
+                        <Style>
+                            <Style.Triggers>
+                                <Trigger Property="fa:ImageAwesome.IsMouseOver" Value="True">
+                                    <Setter Property="fa:ImageAwesome.Foreground" Value="Yellow"/>
+                                </Trigger>
+                                <Trigger Property="fa:ImageAwesome.IsMouseOver" Value="False">
+                                    <Setter Property="fa:ImageAwesome.Foreground" Value="GhostWhite"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </fa:ImageAwesome.Style>-->
+                </fa:ImageAwesome>
+                <!--<Image Grid.Row="3" Source="/Assets/Cogs.png"
                        HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
@@ -138,9 +172,8 @@
                     <Image.InputBindings>
                         <MouseBinding Gesture="LeftClick"/>
                     </Image.InputBindings>
-                </Image>
+                </Image>-->
                 <Button FontFamily="Segoe UI Variable Text Light"
-                    Grid.Row="3"
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
                     FontSize="22"
@@ -159,19 +192,29 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Image Grid.Row="4" 
-                       Source="/Assets/Secure.png"
+                <Image Source="/Assets/PdfRed.png"
                        HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
                        RenderOptions.BitmapScalingMode="HighQuality" 
-                       Width="45">
+                       Width="45" Cursor="Hand">
                     <Image.InputBindings>
                         <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfManagerCommand}"/>
                     </Image.InputBindings>
+                    <!--<Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Source" Value="/Assets/PdfRed.png"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="False">
+                                    <Setter Property="Source" Value="/Assets/Pdf.png"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>-->
                 </Image>
                 <Button FontFamily="Segoe UI Variable Text Light"
-                    Grid.Row="4"
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
                     FontSize="22"

@@ -146,6 +146,11 @@ namespace CrytonCoreNext.ViewModels
 
         public void DeleteFile()
         {
+            if (!FilesCollection.Any())
+            {
+                return;
+            }
+
             if (FilesCollection.Count == 1)
             {
                 ClearAllFiles();

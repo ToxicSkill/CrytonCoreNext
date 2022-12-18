@@ -46,8 +46,8 @@ namespace CrytonCoreNext.PDF.Models
         public async Task<CrytonCoreNext.Models.File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
-            var mergedFileBytes = await Task.Run(() => pdfLibrary.Split(pdfFile.Bytes, fromPage, toPage));
-            return new CrytonCoreNext.Models.File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), mergedFileBytes, newId);
+            var splittedFileBytes = await Task.Run(() => pdfLibrary.Split(pdfFile.Bytes, fromPage, toPage));
+            return new CrytonCoreNext.Models.File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), splittedFileBytes, newId);
         }
 
         private static string PrepareFileNameForMerge(List<PDFFile> pdfFiles)

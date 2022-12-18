@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CrytonCoreNext.Views.FileViewViewPage"
+﻿<UserControl x:Class="CrytonCoreNext.Views.FileViewView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -60,7 +60,7 @@
                     </EventTrigger>
 
                 </ToggleButton.Triggers>
-                <Image Source="/Assets/FilesSelectSharp.png" Margin="8"
+                <Image Source="/Assets/FilesMenu.png" Margin="8"
                                    RenderOptions.EdgeMode="Aliased"
                                    RenderOptions.BitmapScalingMode="HighQuality" />
             </ToggleButton>

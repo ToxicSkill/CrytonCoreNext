@@ -19,21 +19,27 @@ namespace CrytonCoreNext.ViewModels
 
         private readonly ViewModelBase _pdfSplitViewModel;
 
+        private readonly ViewModelBase _pdfImageToPdfViewModel;
+
         public ICommand NavigatePdfMergeCommand { get; }
 
         public ICommand NavigatePdfSplitCommand { get; }
 
-        public NavigationPDFViewViewModel(INavigate navigator, InteractiveViewBase pdfManagerViewModel, ViewModelBase pdfMergeViewModel, ViewModelBase pdfSplitViewModel)
+        public ICommand NavigateImageToPdfCommand { get; }
+
+        public NavigationPDFViewViewModel(INavigate navigator, InteractiveViewBase pdfManagerViewModel, ViewModelBase pdfMergeViewModel, ViewModelBase pdfSplitViewModel, ViewModelBase pdfImageToPdfViewModel)
         {
             _navigator = navigator;
             _pdfMergeViewModel = pdfMergeViewModel;
             _pdfSplitViewModel = pdfSplitViewModel;
             _pdfManagerViewModel = pdfManagerViewModel;
+            _pdfImageToPdfViewModel = pdfImageToPdfViewModel;
 
             _navigatePdfManagerCommand = new NavigateService(_navigator, NavigatePDFManagerPage());
 
             NavigatePdfMergeCommand = new Command(NavigatePdfMerge, CanExecute);
             NavigatePdfSplitCommand = new Command(NavigatePdfSplit, CanExecute);
+            NavigateImageToPdfCommand = new Command(NavigateImageToPdf, CanExecute);
         }
 
         private void NavigatePdfSplit()
@@ -47,6 +53,13 @@ namespace CrytonCoreNext.ViewModels
         {
             _pdfManagerViewModel.SendObject(_pdfMergeViewModel);
             _pdfManagerViewModel.SendObject(Language.Post("Merge"));
+            _navigatePdfManagerCommand.Execute(null);
+        }
+
+        private void NavigateImageToPdf()
+        {
+            _pdfManagerViewModel.SendObject(_pdfImageToPdfViewModel);
+            _pdfManagerViewModel.SendObject(Language.Post("ImageToPdf"));
             _navigatePdfManagerCommand.Execute(null);
         }
 

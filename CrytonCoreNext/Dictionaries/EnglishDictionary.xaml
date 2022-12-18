@@ -83,6 +83,8 @@
     <system:String x:Key="Merge">Merge</system:String>
     <system:String x:Key="Split">Split</system:String>
     <system:String x:Key="Convert">Convert</system:String>
+    <system:String x:Key="PdfToImage">PDF to images</system:String>
+    <system:String x:Key="ImageToPdf">Images to PDF</system:String>
     <system:String x:Key="Extract">Extract</system:String>
     <system:String x:Key="Unlock">Unlock</system:String>
     <system:String x:Key="Protect">Protect</system:String>
@@ -90,6 +92,9 @@
     <system:String x:Key="FromPage">From page</system:String>
     <system:String x:Key="ToPage">To page</system:String>
     
+    
+    <!-- Files selector -->
+    <system:String x:Key="ChoseFiles">Select files by draging</system:String>
    
     <system:String x:Key="OpenFileDialog">Open file(s)</system:String>
 </ResourceDictionary>

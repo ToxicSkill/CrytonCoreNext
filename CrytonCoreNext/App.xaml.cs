@@ -50,7 +50,9 @@ namespace CrytonCoreNext
                 .AddSingleton(CreateFileService)
                 .AddTransient(CreatePDFService)
                 .AddTransient(CreateFilesView)
+                .AddTransient(CreateFilesLeftView)
                 .AddTransient(CreateImagesView)
+                .AddTransient(CreateFilesSelectorListingViewViewModel)
                 .AddSingleton<IDialogService, DialogService>()
                 .AddTransient<IProgressService, ProgressService>()
                 .AddSingleton<IJsonSerializer, JsonSerializer>()
@@ -65,6 +67,7 @@ namespace CrytonCoreNext
                 .AddSingleton(CreatePdfManagerViewModel)
                 .AddSingleton(CreatePdfMergeViewModel)
                 .AddSingleton(CreatePdfSplitViewModel)
+                .AddSingleton(CreatePdfImageToPdfViewModel)
                 .AddSingleton(CreateMainWindowViewModel)
                 .AddSingleton(s => new MainWindow()
                 {
@@ -90,6 +93,20 @@ namespace CrytonCoreNext
             return new(timeDate, internetConnection);
         }
 
+        private PdfImageToPdfViewModel CreatePdfImageToPdfViewModel(IServiceProvider provider)
+        {
+            var pdfManager = provider.GetRequiredService<PdfManagerViewModel>();
+            var pdfService = provider.GetRequiredService<IPDFService>();
+            var filesSelectorView = provider.GetRequiredService<FilesSelectorViewViewModel>();
+
+            return new PdfImageToPdfViewModel(pdfManager, filesSelectorView, pdfService);
+        }
+
+        private FilesSelectorListingViewViewModel CreateFilesSelectorListingViewViewModel(IServiceProvider provider)
+        {
+            return new FilesSelectorListingViewViewModel();
+        }
+
         private PdfMergeViewModel CreatePdfMergeViewModel(IServiceProvider provider)
         {
             var pdfManager = provider.GetRequiredService<PdfManagerViewModel>();
@@ -113,8 +130,9 @@ namespace CrytonCoreNext
             var pdfManagerView = provider.GetRequiredService<PdfManagerViewModel>();
             var pdfMergeView = provider.GetRequiredService<PdfMergeViewModel>();
             var pdfSplitView = provider.GetRequiredService<PdfSplitViewModel>();
+            var pdfImageToPdfView = provider.GetRequiredService<PdfImageToPdfViewModel>();
 
-            return new(homeView, cryptingView, pdfManagerView, pdfMergeView, pdfSplitView);
+            return new(homeView, cryptingView, pdfManagerView, pdfMergeView, pdfSplitView, pdfImageToPdfView);
         }
 
         private CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
@@ -187,6 +205,13 @@ namespace CrytonCoreNext
         {
             var fileService = provider.GetRequiredService<IFileService>();
             return new FilesViewViewModel(fileService);
+        }
+
+        public FilesSelectorViewViewModel CreateFilesLeftView(IServiceProvider provider)
+        {
+            var progressItemViewViewModel = provider.GetRequiredService<FilesSelectorListingViewViewModel>();
+            var completedItemViewViewModel = provider.GetRequiredService<FilesSelectorListingViewViewModel>();
+            return new FilesSelectorViewViewModel(progressItemViewViewModel, completedItemViewViewModel);
         }
 
         public IImageView CreateImagesView(IServiceProvider provider)

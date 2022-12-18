@@ -113,12 +113,12 @@
                     RenderOptions.EdgeMode="Aliased"
                     RenderOptions.BitmapScalingMode="HighQuality" >
                         <Image.InputBindings>
-                            <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfMergeCommand}"/>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding NavigateImageToPdfCommand}"/>
                         </Image.InputBindings>
                     </Image>
                     <Button Content="{DynamicResource Convert}" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="60"
                         Style="{StaticResource TransparentButtonMedium}" Template="{DynamicResource TransparnetButtonControlTemplate}" 
-                        Command="{Binding NavigatePdfMergeCommand}"/>
+                        Command="{Binding NavigateImageToPdfCommand}"/>
                     <TextBlock Text="Convert PDF to image or image to PDF."
                        HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60, 160,0 ,0" Width="280" Height="80" TextWrapping="Wrap"
                        Style="{StaticResource TextBlockDefault}">
