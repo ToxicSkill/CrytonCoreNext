@@ -95,6 +95,8 @@
     
     <!-- Files selector -->
     <system:String x:Key="ChoseFiles">Select files by draging</system:String>
+    <system:String x:Key="Available">Available</system:String>
+    <system:String x:Key="Chosen">Chosen</system:String>
    
     <system:String x:Key="OpenFileDialog">Open file(s)</system:String>
 </ResourceDictionary>

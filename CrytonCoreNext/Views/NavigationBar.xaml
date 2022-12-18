@@ -68,7 +68,7 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <fa:ImageAwesome Name="Home" Icon="Home" HorizontalAlignment="Left" Foreground="Yellow" Stretch="Uniform" Width="40" Margin="5, 0 ,0 ,0" Cursor="Hand">
+                <fa:ImageAwesome Name="Home" Icon="Home" HorizontalAlignment="Left" Foreground="Yellow" Stretch="Uniform" Width="40" Margin="2, 0 ,0 ,0" Cursor="Hand">
                     <fa:ImageAwesome.InputBindings>
                         <MouseBinding Gesture="LeftClick" Command="{Binding NavigateHomeCommand}"/>
                     </fa:ImageAwesome.InputBindings>

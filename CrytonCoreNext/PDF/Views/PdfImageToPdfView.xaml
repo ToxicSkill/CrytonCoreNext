@@ -19,7 +19,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White" Margin="50, 90, 300, 50">
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="400" Margin="50, 90, 0, 200">
             <ContentControl Content="{Binding FilesSelectorModel}"/>
         </Grid>
     </Grid>

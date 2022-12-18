@@ -7,7 +7,8 @@
             d:DesignHeight="450"
             d:DesignWidth="800"
             mc:Ignorable="d">
-    <Grid Background="White">
+    
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
@@ -21,11 +22,14 @@
 
             <TextBlock
                 Grid.Row="0"
+                HorizontalAlignment="Center"
                 FontSize="24"
-                Text="{DynamicResource ChoseFiles}" />
-
+                Text="{DynamicResource Available}" 
+                Style="{StaticResource TextBlockDefault}"/>
+            <Border Grid.Row="1" BorderThickness="1" BorderBrush="White" Margin="-2" CornerRadius="5"/>
             <local:FilesSelectorListingView
                 Grid.Row="1"
+                Background="Transparent"
                 DataContext="{Binding InProgressItemListingViewModel}"
                 IncomingItem="{Binding IncomingItemViewModel}"
                 InsertedItem="{Binding InsertedItemViewModel}"
@@ -43,11 +47,14 @@
             </Grid.RowDefinitions>
 
             <TextBlock
+                HorizontalAlignment="Center"
                 Grid.Row="0"
                 FontSize="24"
-                Text="Completed" />
+                Text="{DynamicResource Chosen}" 
+                Style="{StaticResource TextBlockDefault}"/>
 
-            <local:FilesSelectorListingView
+            <Border Grid.Row="1" BorderThickness="1" BorderBrush="White" Margin="-2" CornerRadius="5"/>
+            <local:FilesSelectorListingView 
                 Grid.Row="1"
                 DataContext="{Binding CompletedItemListingViewModel}"
                 IncomingItem="{Binding IncomingItemViewModel}"
