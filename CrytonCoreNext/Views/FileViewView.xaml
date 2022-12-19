@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       mc:Ignorable="d" 
       d:DesignHeight="900"
@@ -46,7 +47,7 @@
                 VerticalAlignment="Top"
                 Width="50"
                 Height="100"
-                Style="{DynamicResource OnOffToggleImageStyle}"
+                Style="{DynamicResource OnOffToggleImageStyleRight}"
                 IsChecked="{Binding ShowFilesView}"
                 ToolTip="{DynamicResource FilesView}" Cursor="Hand">
 
@@ -61,7 +62,6 @@
                     </EventTrigger>
 
                 </ToggleButton.Triggers>
-                <fa:ImageAwesome Icon="ListUl" Foreground="White" Width="25" Margin="8"/>
             </ToggleButton>
 
             <Label Content="Files" VerticalAlignment="Top" HorizontalAlignment="Stretch"
@@ -157,7 +157,7 @@
                     </i:Interaction.Triggers>
 
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <fa:ImageAwesome Icon="AngleDoubleUp" Foreground="White" Width="25" Margin="10,0,0,0"/>
+                        <materialDesign:PackIcon Kind="ArrowCollapseUp" Height="25" Width="25" Margin="10, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource SetAsFirst}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
@@ -171,7 +171,7 @@
                     </i:Interaction.Triggers>
 
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <fa:ImageAwesome Icon="AngleUp" Foreground="White" Width="25" Margin="10,0,0,0"/>
+                        <materialDesign:PackIcon Kind="ArrowUp" Height="25" Width="25" Margin="10, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource MoveUp}"  Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
@@ -185,7 +185,7 @@
                     </i:Interaction.Triggers>
 
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <fa:ImageAwesome Icon="AngleDown" Foreground="White" Width="25" Margin="10,0,0,0"/>
+                        <materialDesign:PackIcon Kind="ArrowDown" Height="25" Width="25" Margin="10, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource MoveDown}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
@@ -199,7 +199,7 @@
                     </i:Interaction.Triggers>
 
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <fa:ImageAwesome Icon="AngleDoubleDown" Foreground="White" Width="25" Margin="10,0,0,0"/>
+                        <materialDesign:PackIcon Kind="ArrowCollapseDown" Height="25" Width="25" Margin="10, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource SetAsLast}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
@@ -213,7 +213,7 @@
                     </i:Interaction.Triggers>
 
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <fa:ImageAwesome Icon="TrashOutline" Foreground="White" Width="22" Margin="12,0,0,0"/>
+                        <materialDesign:PackIcon Kind="Delete" Height="25" Width="25" Margin="10, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource RemoveSelected}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
@@ -227,7 +227,7 @@
                     </i:Interaction.Triggers>
 
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <fa:ImageAwesome Icon="Trash" Foreground="White" Width="21" Margin="12.5,0,0,0"/>
+                        <materialDesign:PackIcon Kind="DeleteAlert" Height="25" Width="25" Margin="12, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource RemoveAll}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>

@@ -24,7 +24,7 @@
                 Storyboard.Target = "{Binding ElementName=NavigationBar}"
                 Storyboard.TargetProperty="Width"
                 From="90"
-                To="300"
+                To="250"
                 BeginTime="0:0:0"
                 Duration="0:0:1.4"/>
         </Storyboard>
@@ -33,7 +33,7 @@
             <DoubleAnimation   
                 Storyboard.Target = "{Binding ElementName=NavigationBar}"
                 Storyboard.TargetProperty="Width"
-                From="300"
+                From="250"
                 To="90"
                 BeginTime="0:0:0"
                 Duration="0:0:0.2"/>
@@ -98,7 +98,7 @@
 
         <ContentControl HorizontalAlignment="Stretch" Margin="90, 0, 0, 0" Content="{Binding ViewModel}"/>
 
-        <views:NavigationBar x:Name="NavigationBar" HorizontalAlignment="Left" Width="300" DataContext="{Binding NavigationView}" />
+        <views:NavigationBar x:Name="NavigationBar" HorizontalAlignment="Left" Width="250" DataContext="{Binding NavigationView}" />
 
         <ToggleButton Visibility="Hidden"
                       IsChecked="{Binding NavigationBarFolded}">

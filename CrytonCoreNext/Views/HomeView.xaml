@@ -3,11 +3,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     MinWidth="900"
     d:DesignHeight="665"
     d:DesignWidth="1400"
     mc:Ignorable="d">
-
+    
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Hyperlink.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="MaterialDesignDisplayLargeTextBlock" TargetType="{x:Type TextBlock}">
+                <Setter Property="FontSize" Value="75" />
+                <Setter Property="FontWeight" Value="Thin" />
+                <Setter Property="LineHeight" Value="64" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Grid x:Name="mainGrid">
         <Grid.Triggers>
             <EventTrigger RoutedEvent="Grid.Loaded">
@@ -26,15 +41,18 @@
         <Grid.Effect>
             <BlurEffect x:Name="blurEffect" Radius="6" />
         </Grid.Effect>
-        
+
         <Grid.Background>
+            <SolidColorBrush Color="{StaticResource BackgroundActionColor}"/>
+        </Grid.Background>
+        <!--<Grid.Background>
             <LinearGradientBrush EndPoint="0.3,1" StartPoint="0.4,0"
                                  MappingMode="RelativeToBoundingBox" 
                                  Opacity="0.8">
                 <GradientStop Color="#FFE25E5E"/>
                 <GradientStop Offset="1"/>
             </LinearGradientBrush>
-        </Grid.Background>
+        </Grid.Background>-->
 
         <Grid>
 
@@ -114,8 +132,7 @@
                 </Rectangle.Fill>
             </Rectangle>
 
-            <Label Content="C R Y T O N" Margin="235,135,0,0"  HorizontalContentAlignment="Center" VerticalAlignment="Top"  HorizontalAlignment="Left"
-                FontSize="76" Foreground="White"  FontFamily="Lato Light" Height="100" FontWeight="Normal" FontStyle="Normal"/>
+            <TextBlock Text="C R Y T O N" Margin="235,135,0,0" VerticalAlignment="Top"  HorizontalAlignment="Left" Foreground="White" Style="{StaticResource MaterialDesignDisplayLargeTextBlock}"/>
 
             <Rectangle x:Name="internetConnectionDiode" Fill="{Binding FillDiode}" ToolTip="{Binding ToolTip}" 
                        HorizontalAlignment="Right" Height="27" Margin="0,0,10,25" VerticalAlignment="Bottom" Width="4"/>
