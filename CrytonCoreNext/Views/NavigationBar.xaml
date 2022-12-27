@@ -4,9 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    MaxWidth="300"
+    MaxWidth="250"
     d:DesignHeight="700"
     d:DesignWidth="1700"
     mc:Ignorable="d">
@@ -32,8 +32,59 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Grid HorizontalAlignment="Left">
-        <Grid Margin="23 10" VerticalAlignment="Top">
+
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+            </Grid.ColumnDefinitions>
+            <Image Source="/Assets/2nxt.png" DockPanel.Dock="Top"
+                       Stretch="Uniform"
+                       RenderOptions.EdgeMode="Aliased"
+                       RenderOptions.BitmapScalingMode="HighQuality" 
+                       Width="100"/>
+            <DockPanel Grid.Row="2">
+                <Button Background="{DynamicResource BackgroundColorBrush}" Style="{DynamicResource TransparentButton}" Command="{Binding NavigateHomeCommand}" HorizontalAlignment="Stretch" Cursor="Hand">
+                    <DockPanel Margin="40, 0, 0 ,0">
+                        <materialDesign:PackIcon Kind="HomeOutline" Foreground="White"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="35" Height="50" DockPanel.Dock="Left" Cursor="Hand"/>
+                        <TextBlock Text="Home" Margin="30, 0 ,0 ,0" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                    </DockPanel>
+                </Button>
+            </DockPanel>
+            <DockPanel Grid.Row="3">
+                <Button Background="{DynamicResource BackgroundColorBrush}" Style="{DynamicResource TransparentButton}" Command="{Binding NavigateHomeCommand}" HorizontalAlignment="Stretch" Cursor="Hand">
+                    <DockPanel Margin="40, 0, 0 ,0">
+                        <materialDesign:PackIcon Kind="Safe" Foreground="White"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="35" Height="50" DockPanel.Dock="Left" Cursor="Hand"/>
+                        <TextBlock Text="Crypting" Margin="30, 0 ,0 ,0" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                    </DockPanel>
+                </Button>
+            </DockPanel>
+            <DockPanel Grid.Row="4">
+                <Button Background="{DynamicResource BackgroundColorBrush}" Style="{DynamicResource TransparentButton}" Command="{Binding NavigateHomeCommand}" HorizontalAlignment="Stretch" Cursor="Hand">
+                    <DockPanel Margin="40, 0, 0 ,0">
+                        <materialDesign:PackIcon Kind="FileCheckOutline" Foreground="White"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="35" Height="50" DockPanel.Dock="Left" Cursor="Hand"/>
+                        <TextBlock Text="Pdf" Margin="30, 0 ,0 ,0" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                    </DockPanel>
+                </Button>
+            </DockPanel>
+            <DockPanel Grid.Row="5">
+                <Button Background="{DynamicResource BackgroundColorBrush}" Style="{DynamicResource TransparentButton}" Command="{Binding NavigateHomeCommand}" HorizontalAlignment="Stretch" Cursor="Hand">
+                    <DockPanel Margin="40, 0, 0 ,0">
+                        <materialDesign:PackIcon Kind="CogOutline" Foreground="White"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="35" Height="50" DockPanel.Dock="Left" Cursor="Hand"/>
+                        <TextBlock Text="Settings" Margin="30, 0 ,0 ,0" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                    </DockPanel>
+                </Button>
+            </DockPanel>
+        </Grid>
+        <!--<Grid Margin="23 10" VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="75"/>
                 <RowDefinition Height="75"/>
@@ -42,13 +93,13 @@
                 <RowDefinition Height="75"/>
             </Grid.RowDefinitions>
 
-            <!--<TextBlock FontFamily="Segoe UI Variable Text Light"
+            --><!--<TextBlock FontFamily="Segoe UI Variable Text Light"
                        Margin="10"
                 Grid.Row="0"
                 FontSize="34"
                 Foreground="White"
                 Text="Cryton">
-            </TextBlock>-->
+            </TextBlock>--><!--
 
             <Image Source="/Assets/2nxt.png"
                    Margin="60, 0, 0, 0"
@@ -60,17 +111,14 @@
 
 
             <Grid Grid.Row="1">
-                <materialDesign:PackIcon Kind="HomeOutline" Foreground="White"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="35" Height="50" Margin="5" Cursor="Hand">
-                    <materialDesign:PackIcon.InputBindings>
-                        <MouseBinding Gesture="LeftClick" Command="{Binding NavigateHomeCommand}"/>
-                    </materialDesign:PackIcon.InputBindings>
-                </materialDesign:PackIcon>
-                <Button FontFamily="Segoe UI Variable Text Light"
-                    VerticalAlignment="Center"
-                    Margin="65 0 0 0"
-                    FontSize="22"
-                    Command="{Binding NavigateHomeCommand}"
-                    Content="Home"/>
+                <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        Style="{DynamicResource TransparentButton}"
+                        Command="{Binding NavigateHomeCommand}">
+                    <DockPanel>
+                        <materialDesign:PackIcon Kind="HomeOutline" Foreground="White"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="35" Height="50" DockPanel.Dock="Left" Cursor="Hand"/>
+                        <TextBlock Text="Home" Margin="30, 0 ,0 ,0" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                    </DockPanel>
+                </Button>
             </Grid>
 
             <Grid Grid.Row="2">
@@ -93,7 +141,7 @@
                     <Image.InputBindings>
                         <MouseBinding Gesture="LeftClick" Command="{Binding NavigateCrytpingCommand}"/>
                     </Image.InputBindings>
-                    <!--<Image.Style>
+                    --><!--<Image.Style>
                         <Style TargetType="{x:Type Image}">
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -104,7 +152,7 @@
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
-                    </Image.Style>-->
+                    </Image.Style>--><!--
                 </Image>
                 <Button FontFamily="Segoe UI Variable Text Light"
                     VerticalAlignment="Center"
@@ -125,12 +173,12 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <!--<fa:ImageAwesome Icon="Spinner" Spin="True" SpinDuration="1" Foreground="Blue" />-->
+                --><!--<fa:ImageAwesome Icon="Spinner" Spin="True" SpinDuration="1" Foreground="Blue" />--><!--
                 <fa:ImageAwesome Icon="Cogs" HorizontalAlignment="Left" Foreground="Yellow" Stretch="Uniform" Margin="5, 0, 0 ,0" Width="37" Cursor="Hand">
                     <fa:ImageAwesome.InputBindings>
                         <MouseBinding Gesture="LeftClick"/>
                     </fa:ImageAwesome.InputBindings>
-                    <!--<fa:ImageAwesome.Style>
+                    --><!--<fa:ImageAwesome.Style>
                         <Style>
                             <Style.Triggers>
                                 <Trigger Property="fa:ImageAwesome.IsMouseOver" Value="True">
@@ -141,9 +189,9 @@
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
-                    </fa:ImageAwesome.Style>-->
+                    </fa:ImageAwesome.Style>--><!--
                 </fa:ImageAwesome>
-                <!--<Image Grid.Row="3" Source="/Assets/Cogs.png"
+                --><!--<Image Grid.Row="3" Source="/Assets/Cogs.png"
                        HorizontalAlignment="Left"
                        Stretch="Uniform"
                        RenderOptions.EdgeMode="Aliased"
@@ -152,7 +200,7 @@
                     <Image.InputBindings>
                         <MouseBinding Gesture="LeftClick"/>
                     </Image.InputBindings>
-                </Image>-->
+                </Image>--><!--
                 <Button FontFamily="Segoe UI Variable Text Light"
                     VerticalAlignment="Center"
                     Margin="65 0 0 0"
@@ -181,7 +229,7 @@
                     <Image.InputBindings>
                         <MouseBinding Gesture="LeftClick" Command="{Binding NavigatePdfManagerCommand}"/>
                     </Image.InputBindings>
-                    <!--<Image.Style>
+                    --><!--<Image.Style>
                         <Style TargetType="{x:Type Image}">
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -192,7 +240,7 @@
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
-                    </Image.Style>-->
+                    </Image.Style>--><!--
                 </Image>
                 <Button FontFamily="Segoe UI Variable Text Light"
                     VerticalAlignment="Center"
@@ -225,6 +273,6 @@
                     Margin="65 0 0 0"
                     FontSize="22"
                     Content="Help" />
-        </Grid>
+        </Grid>-->
     </Grid>
 </UserControl>

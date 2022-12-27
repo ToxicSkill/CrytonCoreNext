@@ -1,14 +1,16 @@
 ﻿<Application x:Class="CrytonCoreNext.App"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
     <Application.Resources>
         <DropShadowEffect x:Key="EffectPurple" ShadowDepth="0" Color="BlueViolet" Opacity="1" BlurRadius="20"/>
         <DropShadowEffect x:Key="EffectBlue" ShadowDepth="0" Color="Blue" Opacity="1" BlurRadius="40"/>
         <DropShadowEffect x:Key="EffectRed" ShadowDepth="0" Color="LightCoral" Opacity="0.8" BlurRadius="20"/>
         <DropShadowEffect x:Key="EffectGreen" ShadowDepth="0" Color="LightGreen" Opacity="1" BlurRadius="20"/>
-        <DropShadowEffect x:Key="EffectYellow" ShadowDepth="0" Color="Yellow" Opacity="1" BlurRadius="20"/>
-
+        <ui:ThemesDictionary x:Key="Theme"  Theme="Dark" />
+        <ui:ControlsDictionary x:Key="ThemeDict" />
+        <FontFamily x:Key="SegoeFluentIcons">pack://application:,,,/;component/Fonts/#Segoe Fluent Icons</FontFamily>
         <materialDesign:PackIcon x:Key="FoldIcon" Kind="Menu" Foreground="White" Width="35" Height="45" Margin="6" />
         <materialDesign:PackIcon x:Key="UnoldIcon" Kind="Backburger" Foreground="White" Width="35" Height="45" Margin="6" />
         <Color x:Key="BackgroundColor">#202020</Color>
@@ -296,7 +298,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="Transparent" >
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{StaticResource BackgroundColorBrush}" >
                             <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
