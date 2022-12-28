@@ -8,10 +8,7 @@
     d:Width="250"
     d:Height="250">
 
-    <busyIndicator:BusyMask Resources="{StaticResource ResourceKey=indicator}" Visibility="{Binding ProgressService.ProgressVisibility}"
-                            IndicatorType="{Binding IndicatorType}" 
-                            IsBusy="{Binding ProgressService.IsBusy}"
-                            BusyContent="" 
+    <Grid Resources="{StaticResource ResourceKey=indicator}" Visibility="{Binding ProgressService.ProgressVisibility}"
                             Background="Transparent">
         <Grid Visibility="{Binding ProgressService.ShowLabels, FallbackValue=Visible}">
             <Label Content="{Binding ProgressService.ProgressCounter}" Style="{StaticResource CryptingSettings}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, -120, 0 ,0"
@@ -19,5 +16,5 @@
             <Label Content="{Binding ProgressService.ProgressMessage}" Style="{StaticResource CryptingSettings}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, -70, 0 ,0"
                    FontSize="22" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Top"/>
         </Grid>
-    </busyIndicator:BusyMask>
+    </Grid>
 </UserControl>

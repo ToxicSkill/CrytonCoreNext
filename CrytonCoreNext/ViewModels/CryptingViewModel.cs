@@ -55,7 +55,6 @@ namespace CrytonCoreNext.ViewModels
         {
             _files = new();
             _cryptingService = cryptingService;
-            ProgressViewModel.ChangeProgressType(BusyIndicator.IndicatorType.ThreeDots);
 
             CurrentCryptingViewModel = new();
             CryptingComboBox = new();

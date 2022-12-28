@@ -8,19 +8,11 @@ namespace CrytonCoreNext.ViewModels
     {
         public IProgressService ProgressService { get; init; }
 
-        public BusyIndicator.IndicatorType IndicatorType { get; private set; }
-
-        public ProgressViewModel(IProgressService progressService, BusyIndicator.IndicatorType indicatorType = BusyIndicator.IndicatorType.Bar)
+        public ProgressViewModel(IProgressService progressService)
         {
             ProgressService = progressService;
-            IndicatorType = indicatorType;
         }
 
-        public void ChangeProgressType(BusyIndicator.IndicatorType indicatorType)
-        {
-            IndicatorType = indicatorType;
-            OnPropertyChanged(nameof(IndicatorType));
-        }
 
         public IProgress<T> InitializeProgress<T>(int stages = 0)
         {

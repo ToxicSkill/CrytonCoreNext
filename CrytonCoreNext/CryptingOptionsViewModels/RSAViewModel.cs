@@ -57,7 +57,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             _jsonSerializer = json;
             _rsaHelper = rsaHelper;
             ProgressView = progressView;
-            ProgressView.ChangeProgressType(BusyIndicator.IndicatorType.Cupertino);
             ProgressView.ShowLabels(false);
 
             ExportPublicKeyCommand = new Command(ExportPublicKey, CanExecute);
