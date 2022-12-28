@@ -9,6 +9,7 @@ using CrytonCoreNext.PDF.Services;
 using CrytonCoreNext.PDF.ViewModels;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
+using CrytonCoreNext.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,6 +36,10 @@ namespace CrytonCoreNext
             services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
+
+            services.AddScoped<Dashboard>();
+            services.AddScoped<DashboardViewModel>();
+
             services.AddScoped<INavigationWindow, MainWindow>();
             services.AddScoped<MainViewModel>();
 
@@ -94,10 +99,8 @@ namespace CrytonCoreNext
         private async void OnExit(object sender, ExitEventArgs e)
         {
             await _host.StopAsync();
-
             _host.Dispose();
         }
-
 
         private static PdfImageToPdfViewModel CreatePdfImageToPdfViewModel(IServiceProvider provider)
         {

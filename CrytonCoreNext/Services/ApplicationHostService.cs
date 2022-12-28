@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using CrytonCoreNext.Views;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
 using System.Threading;
@@ -62,11 +63,7 @@ public class ApplicationHostService : IHostedService
             _navigationWindow = _serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow;
             _navigationWindow!.ShowWindow();
 
-            // NOTICE: You can set this service directly in the window 
-            // _navigationWindow.SetPageService(_pageService);
-
-            // NOTICE: In the case of this window, we navigate to the Dashboard after loading with Container.InitializeUi()
-            // _navigationWindow.Navigate(typeof(Views.Pages.Dashboard));
+            _navigationWindow.Navigate(typeof(Dashboard));
         }
 
         await Task.CompletedTask;

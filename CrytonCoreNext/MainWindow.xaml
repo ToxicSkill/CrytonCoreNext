@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pages="CrytonCoreNext.Views"
+    xmlns:pages="clr-namespace:CrytonCoreNext.Views"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Width="1200"
     Height="654"
@@ -52,19 +52,18 @@
                         Cache="True"
                         Content="Home"
                         Icon="Home24"
-                        PageTag="dashboard" />
+                        PageTag="home" 
+                        PageType="{x:Type pages:Dashboard}"/>
                     <ui:NavigationSeparator />
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>
-                    <!--  A navigation element that does not point to the page can be used as a button.  -->
                     <ui:NavigationItem
                         Click="NavigationButtonTheme_OnClick"
                         Content="Theme"
-                        Icon="DarkTheme24" />
+                        Icon="DarkTheme24"/>
                 </ui:NavigationStore.Footer>
             </ui:NavigationStore>
-
-            <!--  We display our pages inside this element.  -->
+            
             <Border
                 Grid.Column="1"
                 CornerRadius="8,0,0,0">
@@ -82,44 +81,10 @@
                         FontSize="24"
                         Navigation="{Binding ElementName=RootNavigation}" />
 
-                    <ui:Snackbar
-                        x:Name="RootSnackbar"
-                        Title="Hello World!"
-                        Grid.Row="1"
-                        MaxWidth="600"
-                        Appearance="Secondary"
-                        CloseButtonEnabled="True"
-                        Icon="PuzzlePiece24"
-                        Message="Remember that the Heat Death of Universe is coming someday, no time to explain - let's go!"
-                        Timeout="5000" />
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid
-            x:Name="RootWelcomeGrid"
-            Grid.Row="1"
-            Visibility="Hidden">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Image
-                    MaxWidth="180"
-                    RenderOptions.BitmapScalingMode="HighQuality"/>
-            </Grid>
-            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <ui:ProgressRing IsIndeterminate="True" />
-                <TextBlock
-                    Margin="0,12,0,0"
-                    FontSize="16"
-                    FontWeight="Medium"
-                    Text="Preparing app for you."
-                    TextAlignment="Center"
-                    TextWrapping="Wrap" />
-            </StackPanel>
-        </Grid>
 
         <ui:TitleBar
             Title="Cryton Core Next"
