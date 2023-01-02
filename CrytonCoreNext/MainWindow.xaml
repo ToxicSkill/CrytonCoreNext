@@ -55,6 +55,12 @@
                         PageTag="home" 
                         PageType="{x:Type pages:Dashboard}"/>
                     <ui:NavigationSeparator />
+                    <ui:NavigationItem
+                        Cache="True"
+                        Content="Crypting"
+                        Icon="CreditCardClock20"
+                        PageTag="home" 
+                        PageType="{x:Type pages:Dashboard}"/>
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>
                     <ui:NavigationItem
