@@ -58,8 +58,20 @@
                     <ui:NavigationItem
                         Cache="True"
                         Content="Crypting"
-                        Icon="CreditCardClock20"
+                        Icon="Fingerprint48"
                         PageTag="home" 
+                        PageType="{x:Type pages:CryptingView}"/>
+                    <ui:NavigationItem
+                        Cache="True"
+                        Content="Pdf"
+                        Icon="Layer20"  
+                        PageTag="pdf" 
+                        PageType="{x:Type pages:Dashboard}"/>
+                    <ui:NavigationItem
+                        Cache="True"
+                        Content="Settings"
+                        Icon="Settings48"
+                        PageTag="settings" 
                         PageType="{x:Type pages:Dashboard}"/>
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>
@@ -69,21 +81,21 @@
                         Icon="DarkTheme24"/>
                 </ui:NavigationStore.Footer>
             </ui:NavigationStore>
-            
+
             <Border
                 Grid.Column="1"
                 CornerRadius="8,0,0,0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="33*" />
+                        <RowDefinition Height="226*"/>
                     </Grid.RowDefinitions>
-                    <Frame x:Name="RootFrame" Grid.Row="1" />
+                    <Frame x:Name="RootFrame" Grid.Row="1" Grid.RowSpan="2" />
                     <ui:Breadcrumb
-                        Grid.Row="0"
-                        Margin="18"
+                        Margin="18,0,0,0"
                         HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
+                        VerticalAlignment="Center"
                         FontSize="24"
                         Navigation="{Binding ElementName=RootNavigation}" />
 

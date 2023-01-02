@@ -1,4 +1,5 @@
-﻿<UserControl
+﻿<ui:UiPage
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     x:Class="CrytonCoreNext.Views.CryptingView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,13 +9,7 @@
     d:DesignHeight="850"
     d:DesignWidth="1400"
     mc:Ignorable="d">
-
-    <UserControl.Background>
-        <LinearGradientBrush  StartPoint="0.3,0" EndPoint="0.4,1">
-            <GradientStop Color="{StaticResource BackgroundColor}" Offset="1"/>
-            <GradientStop Color="#FF203E65" Offset="0"/>
-        </LinearGradientBrush>
-    </UserControl.Background>
+    
     <Grid>
         <Label Content="Crypting" FontSize="50" Foreground="White" Height="80" VerticalAlignment="Top" Margin="10, 5, 10, 0" FontFamily="Segoe UI Variable Text Light" FontWeight="Normal" />
 
@@ -101,4 +96,4 @@
             <ContentControl Content="{Binding ProgressViewModel}"/>
         </Grid>
     </Grid>
-</UserControl>
+</ui:UiPage>
