@@ -23,7 +23,7 @@ namespace CrytonCoreNext
             get;
         }
 
-        public MainWindow(MainViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService)
+        public MainWindow(MainViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ISnackbarService snackbarService)
         {
             ViewModel = viewModel;
             DataContext = this;
@@ -33,6 +33,7 @@ namespace CrytonCoreNext
 
             SetPageService(pageService);
             navigationService.SetNavigationControl(RootNavigation);
+            snackbarService.SetSnackbarControl(RootSnackbar);
         }
 
         public Frame GetFrame()
@@ -68,7 +69,7 @@ namespace CrytonCoreNext
         {
             RootFrame.Margin = new Thickness(
                 left: 0,
-                top: sender?.Current?.PageTag == "dashboard" ? -69 : 0,
+                top: sender?.Current?.PageTag == "home" ? -69 : 0,
                 right: 0,
                 bottom: 0);
         }

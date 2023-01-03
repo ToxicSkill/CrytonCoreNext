@@ -59,7 +59,7 @@
                         Cache="True"
                         Content="Crypting"
                         Icon="Fingerprint48"
-                        PageTag="home" 
+                        PageTag="crypting" 
                         PageType="{x:Type pages:CryptingView}"/>
                     <ui:NavigationItem
                         Cache="True"
@@ -85,21 +85,7 @@
             <Border
                 Grid.Column="1"
                 CornerRadius="8,0,0,0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="33*" />
-                        <RowDefinition Height="226*"/>
-                    </Grid.RowDefinitions>
-                    <Frame x:Name="RootFrame" Grid.Row="1" Grid.RowSpan="2" />
-                    <ui:Breadcrumb
-                        Margin="18,0,0,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        FontSize="24"
-                        Navigation="{Binding ElementName=RootNavigation}" />
-
-                </Grid>
+                <Frame x:Name="RootFrame"/>
             </Border>
         </Grid>
 
@@ -115,5 +101,13 @@
             ShowMinimize="True"
             UseSnapLayout="True">
         </ui:TitleBar>
+        <ui:Snackbar
+                        x:Name="RootSnackbar"
+                        Grid.Row="1"
+                        MaxWidth="600"
+                        Appearance="Secondary"
+                        CloseButtonEnabled="True"
+                        Icon="PuzzlePiece24"
+                        Timeout="5000" />
     </Grid>
 </ui:UiWindow>

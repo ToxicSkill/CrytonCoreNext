@@ -7,6 +7,7 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Services;
 using CrytonCoreNext.PDF.ViewModels;
+using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
 using CrytonCoreNext.Views;
@@ -36,12 +37,31 @@ namespace CrytonCoreNext
             services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<ISnackbarService, SnackbarService>();
+
+            services.AddSingleton<Interfaces.IDialogService, Services.DialogService>();
+            services.AddTransient<IProgressService, ProgressService>();
+            services.AddSingleton<IFilesLoader, FilesLoader>();
+            services.AddSingleton<IFilesSaver, FilesSaver>();
+            services.AddSingleton<IFilesManager, FilesManager>();
+            services.AddSingleton(CreateFileService);
+            services.AddTransient(CreateFilesView);
+
+            services.AddSingleton<IJsonSerializer, JsonSerializer>();
+            services.AddSingleton<IXmlSerializer, XmlSerializer>();
+
+            services.AddSingleton(CreateCryptingRecognition);
+            services.AddSingleton<ICryptingReader, CryptingReader>();
+            services.AddTransient(CreateProgressViewModel);
+            services.AddTransient(CreateAES);
+            services.AddTransient(CreateRSA);
+            services.AddTransient(CreateCryptingService);
 
             services.AddScoped<Dashboard>();
             services.AddScoped<DashboardViewModel>();
 
             services.AddScoped<CryptingView>();
-            services.AddScoped<CryptingViewModel>();
+            services.AddScoped(CreateCryptingViewModel);
 
             services.AddScoped<INavigationWindow, MainWindow>();
             services.AddScoped<MainViewModel>();
@@ -147,8 +167,9 @@ namespace CrytonCoreNext
             var cryptingService = provider.GetRequiredService<ICryptingService>();
             var filesView = provider.GetRequiredService<IFilesView>();
             var progressView = provider.GetRequiredService<IProgressView>();
+            var snackbar = provider.GetRequiredService<ISnackbarService>();
 
-            return new(fileService, dialogService, cryptingService, filesView, progressView);
+            return new(fileService, dialogService, cryptingService, filesView, progressView, snackbar);
         }
 
         private static PdfManagerViewModel CreatePdfManagerViewModel(IServiceProvider provider)

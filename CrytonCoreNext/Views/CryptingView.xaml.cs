@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.ViewModels;
-using System.Windows.Controls;
 using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.Views
@@ -18,6 +17,7 @@ namespace CrytonCoreNext.Views
         {
             ViewModel = viewModel;
             InitializeComponent();
+            DataContext = ViewModel;
         }
     }
 }
