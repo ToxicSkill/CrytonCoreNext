@@ -1,14 +1,9 @@
-﻿using System.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CrytonCoreNext.Abstract
 {
-    public class NotificationBase : INotifyPropertyChanged
+    [ObservableObject]
+    public partial class NotificationBase
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

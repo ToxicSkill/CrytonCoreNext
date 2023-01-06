@@ -1,5 +1,6 @@
 ﻿<ui:UiPage
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:models="clr-namespace:CrytonCoreNext.Models"
     x:Class="CrytonCoreNext.Views.CryptingView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -17,16 +18,35 @@
             <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Crypting" FontSize="48"  />
+        <TextBlock Grid.Row="0" Text="CRYPTING" FontSize="32"  />
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" VerticalAlignment="Bottom">
-                <ui:Button Icon="DocumentAdd20" Command="{Binding OpenSnackbarCommand}" Content="Load file" Padding="6" Appearance="Secondary" HorizontalAlignment="Stretch" />
-                <ui:Button Icon="Save20" Content="Save file" Padding="6" Appearance="Secondary" HorizontalAlignment="Stretch" />
-            </StackPanel>
+            <DockPanel Grid.Column="0" >
+                <ListView DockPanel.Dock="Top" ItemsSource="{Binding Files}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="models:File">
+                            <ui:CardAction Icon="Document28">
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="13"
+                                        FontWeight="Medium"
+                                        Text="{Binding NameWithExtension}" />
+                                    <TextBlock
+                                        FontSize="12"
+                                        Text="{Binding Date}" />
+                                </StackPanel>
+                            </ui:CardAction>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <StackPanel DockPanel.Dock="Bottom">
+                    <ui:Button Icon="DocumentAdd20" Command="{Binding LoadCryptFilesCommand}" Content="Load file" Padding="6" Appearance="Secondary" HorizontalAlignment="Stretch" />
+                    <ui:Button Icon="Save20" Content="Save file" Padding="6" Appearance="Secondary" HorizontalAlignment="Stretch" />
+                </StackPanel>
+            </DockPanel>
         </Grid>
     </Grid>
 </ui:UiPage>

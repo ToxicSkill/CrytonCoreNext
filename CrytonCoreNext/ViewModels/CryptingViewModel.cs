@@ -1,25 +1,30 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Interfaces;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
 
 namespace CrytonCoreNext.ViewModels
 {
-    [ObservableObject]
-    public partial class CryptingViewModel
+    public partial class CryptingViewModel : InteractiveViewBase
     {
         private readonly ISnackbarService _snackbarService;
 
         private readonly ICryptingService _cryptingService;
 
+        [ObservableProperty]
+        public ObservableCollection<CryptFile> files;
+
         //private List<CryptFile> _files;
 
         //public CryptFile CurrentFile { get; set; }
 
-        //public ICommand LoadFilesCommand { get; init; }
 
         //public ICommand SaveFileCommand { get; init; }
 
@@ -47,17 +52,16 @@ namespace CrytonCoreNext.ViewModels
         //    }
         //}
         public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, IProgressView progressView, ISnackbarService snackabrService)
-        //: base(fileService, dialogService, filesView, progressView)
+            : base(fileService, dialogService, filesView, progressView)
         {
             //_files = new();
             _cryptingService = cryptingService;
             _snackbarService = snackabrService;
-
+            files = new ObservableCollection<CryptFile>();
             //CurrentCryptingViewModel = new();
             //CryptingComboBox = new();
 
             //CryptCommand = new Command(PerformCrypting, CanExecute);
-            //LoadFilesCommand = new AsyncCommand(LoadCryptFiles, CanExecute);
             //SaveFileCommand = new Command(SaveCryptFile, CanExecute);
 
             //InitializeCryptingComboBox();
@@ -101,18 +105,19 @@ namespace CrytonCoreNext.ViewModels
         //    }
         //}
 
-        //private async Task LoadCryptFiles()
-        //{
-        //    Lock();
-        //    await foreach (var file in base.LoadFiles())
-        //    {
-        //        FilesViewModel.AddFile(file);
-        //        _files.Add(_cryptingService.ReadCryptFile(file));
-        //    }
+        [RelayCommand]
+        private async Task LoadCryptFiles()
+        {
+            Lock();
+            await foreach (var file in base.LoadFiles())
+            {
+                FilesViewModel.AddFile(file);
+                Files.Add(_cryptingService.ReadCryptFile(file));
+            }
 
-        //    FilesViewModel.UpdateFiles();
-        //    Unlock();
-        //}
+            FilesViewModel.UpdateFiles();
+            Unlock();
+        }
 
         //private void SaveCryptFile()
         //{
