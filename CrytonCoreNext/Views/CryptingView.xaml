@@ -53,6 +53,7 @@
                             <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
                                         FontSize="13"
                                         FontWeight="Medium"
+                                        TextWrapping="WrapWithOverflow"
                                         Text="{Binding NameWithExtension}"/>
                             <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left"
                                         FontSize="12"

@@ -44,10 +44,17 @@ namespace CrytonCoreNext.Abstract
             var loadedFilesCounter= 0;
             await foreach (var file in _fileService.LoadFiles(filesPaths))
             {
-                loadedFilesCounter++;
-                yield return file;
+                if (file != null)
+                {
+                    loadedFilesCounter++;
+                    yield return file;
+                }
             }
-            if (loadedFilesCounter == 1)
+            if ((filesPaths.Count - loadedFilesCounter) > 0 && loadedFilesCounter > 0)
+            {
+                PostSnackbar("Warning", $"{Language.Post("NotAllFilesLoadedWarning")} ({filesPaths.Count - loadedFilesCounter})", SymbolRegular.Warning20, ControlAppearance.Caution);
+            }
+            else if (loadedFilesCounter == 1)
             {
                 PostSnackbar("Information", Language.Post("FileLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
             }

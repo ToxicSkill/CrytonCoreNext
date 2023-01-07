@@ -25,15 +25,35 @@
 
         </Grid>
         <Grid Margin="0, 125, 0, 50">
-            <Path StrokeThickness="1" Stretch="Fill">
-                <Path.Stroke>
-                    <LinearGradientBrush EndPoint="0.0,1.0"
-                         StartPoint="1.0,0.0"
-                         SpreadMethod="Reflect">
-                        <GradientStop Color="Lime" Offset="0.0"/>
-                        <GradientStop Color="DarkGreen" Offset="1"/>
-                    </LinearGradientBrush>
-                </Path.Stroke>
+            <Path StrokeThickness="2" Stretch="Fill">
+                <Path.Resources>
+                    <Style TargetType="Path">
+                        <Setter Property="Stroke">
+                            <Setter.Value>
+                                <LinearGradientBrush>
+                                    <GradientStop Color="Lime" Offset="0.0" />
+                                    <GradientStop Color="DarkGreen" Offset="0.5" />
+                                    <GradientStop Color="Lime" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneTime}" Value="true">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                    Storyboard.TargetProperty="Stroke.(GradientBrush.GradientStops)[1].(GradientStop.Offset)"
+                                                    From="0" To="1" Duration="0:0:3"
+                                                    AutoReverse="True" RepeatBehavior="Forever"
+                                                    />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Path.Resources>
                 <Path.Data>
                     <PathGeometry>
                         <PathGeometry.Figures>

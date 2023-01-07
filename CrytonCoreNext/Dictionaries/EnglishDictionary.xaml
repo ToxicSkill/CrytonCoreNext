@@ -25,6 +25,7 @@
     <system:String x:Key="RemoveSelected">Remove selcted</system:String>
     <system:String x:Key="RemoveAll">Remove all</system:String>
     <system:String x:Key="FilesView">Files panel</system:String>
+    <system:String x:Key="NotAllFilesLoadedWarning">Not all files were loaded</system:String>
     
     <!--Crypting-->
     <system:String x:Key="Decrypting">Decrypting</system:String>
