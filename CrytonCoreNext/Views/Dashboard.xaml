@@ -11,11 +11,47 @@
             mc:Ignorable="d" 
             d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,258,0,0" Text="{Binding Source={x:Static sys:DateTime.Today},   
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="500" Height="120">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static sys:DateTime.Today},   
                 StringFormat='{}{0:dddd, MMMM dd, yyyy}'}"/>
-        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-            <TextBlock Text="CRYT" TextOptions.TextFormattingMode="Ideal"  FontSize="54" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Text="ON" Foreground="{DynamicResource PaletteLimeBrush }" Margin="0, 0, 0, 18" TextOptions.TextFormattingMode="Ideal"  FontSize="74" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </StackPanel>
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal">
+                <TextBlock Text="CRYT" TextOptions.TextFormattingMode="Ideal"  FontSize="54" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="ON" Foreground="{DynamicResource PaletteLimeBrush }" Margin="0, 0, 0, 18" TextOptions.TextFormattingMode="Ideal"  FontSize="74" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+
+        </Grid>
+        <Grid Margin="0, 125, 0, 50">
+            <Path StrokeThickness="1" Stretch="Fill">
+                <Path.Stroke>
+                    <LinearGradientBrush EndPoint="0.0,1.0"
+                         StartPoint="1.0,0.0"
+                         SpreadMethod="Reflect">
+                        <GradientStop Color="Lime" Offset="0.0"/>
+                        <GradientStop Color="DarkGreen" Offset="1"/>
+                    </LinearGradientBrush>
+                </Path.Stroke>
+                <Path.Data>
+                    <PathGeometry>
+                        <PathGeometry.Figures>
+                            <PathFigureCollection>
+                                <PathFigure StartPoint="0,20">
+                                    <PathFigure.Segments>
+                                        <PathSegmentCollection>
+                                            <QuadraticBezierSegment IsSmoothJoin="True" IsStroked="True" Point1="50,0" Point2="120,72" />
+                                            <QuadraticBezierSegment IsSmoothJoin="True" IsStroked="True" Point1="240,200" Point2="300,150" />
+                                            <QuadraticBezierSegment IsSmoothJoin="True" IsStroked="True" Point1="390, 68" Point2="500, 120"  />
+                                        </PathSegmentCollection>
+                                    </PathFigure.Segments>
+                                </PathFigure>
+                            </PathFigureCollection>
+                        </PathGeometry.Figures>
+                    </PathGeometry>
+                </Path.Data>
+            </Path>
+        </Grid>
     </Grid>
 </ui:UiPage>
