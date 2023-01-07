@@ -14,7 +14,6 @@ namespace CrytonCoreNext.ViewModels
 {
     public partial class CryptingViewModel : InteractiveViewBase
     {
-        private readonly ISnackbarService _snackbarService;
 
         private readonly ICryptingService _cryptingService;
 
@@ -51,12 +50,11 @@ namespace CrytonCoreNext.ViewModels
         //        }
         //    }
         //}
-        public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, IProgressView progressView, ISnackbarService snackabrService)
-            : base(fileService, dialogService, filesView, progressView)
+        public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, IProgressView progressView, ISnackbarService snackbarService)
+            : base(fileService, dialogService, snackbarService)
         {
             //_files = new();
             _cryptingService = cryptingService;
-            _snackbarService = snackabrService;
             files = new ObservableCollection<CryptFile>();
             //CurrentCryptingViewModel = new();
             //CryptingComboBox = new();
@@ -76,12 +74,6 @@ namespace CrytonCoreNext.ViewModels
         //{
         //    return !IsBusy && !CurrentCryptingViewModel.IsBusy;
         //}
-
-        [RelayCommand]
-        private void OpenSnackbar()
-        {
-            _snackbarService.Show("Tip", "Hello, crypt files by loading then, chosing method and running operation", SymbolRegular.CommentMultiple24, ControlAppearance.Danger);
-        }
 
         //private void HandleAllFilesDeleted(object? sender, EventArgs e)
         //{
@@ -111,11 +103,8 @@ namespace CrytonCoreNext.ViewModels
             Lock();
             await foreach (var file in base.LoadFiles())
             {
-                FilesViewModel.AddFile(file);
                 Files.Add(_cryptingService.ReadCryptFile(file));
             }
-
-            FilesViewModel.UpdateFiles();
             Unlock();
         }
 

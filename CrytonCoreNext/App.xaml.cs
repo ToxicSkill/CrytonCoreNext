@@ -119,6 +119,11 @@ namespace CrytonCoreNext
             await _host.StartAsync();
         }
 
+        private void OnLoaded(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            InitializeDictionary();
+        }
+
         private async void OnExit(object sender, ExitEventArgs e)
         {
             await _host.StopAsync();
@@ -179,8 +184,10 @@ namespace CrytonCoreNext
             var filesView = provider.GetRequiredService<IFilesView>();
             var progressView = provider.GetRequiredService<IProgressView>();
             var pdfService = provider.GetRequiredService<IPDFService>();
+            var snackbar = provider.GetRequiredService<ISnackbarService>();
 
-            return new(fileService, dialogService, filesView, progressView, pdfService);
+            //return new(fileService, dialogService, filesView, progressView, pdfService);
+            return new(fileService, dialogService, snackbar);
         }
 
         private static IPDFService CreatePDFService(IServiceProvider provider)
@@ -253,7 +260,7 @@ namespace CrytonCoreNext
 
         private void InitializeDictionary()
         {
-            this.Resources.MergedDictionaries.Clear();
+            //this.Resources.MergedDictionaries.Clear();
             this.Resources.MergedDictionaries.Add(LanguagesDictionaries[0]);
         }
     }

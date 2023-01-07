@@ -73,9 +73,11 @@
     
     
     <!--Files-->
-    <system:String x:Key="FilesLoaded">File(s) where loaded successfuly</system:String>
+    <system:String x:Key="FilesLoaded">Files where loaded successfuly</system:String>
+    <system:String x:Key="FileLoaded">File was loaded successfuly</system:String>
     <system:String x:Key="FilesSaved">File has been saved successfuly</system:String>
-    <system:String x:Key="FilesError">Error when saving file</system:String>
+    <system:String x:Key="FilesSavingError">Error when saving file</system:String>
+    <system:String x:Key="FilesLoadingError">Error when loading file</system:String>
     <system:String x:Key="OpenFiles">Open files</system:String>
     
     
