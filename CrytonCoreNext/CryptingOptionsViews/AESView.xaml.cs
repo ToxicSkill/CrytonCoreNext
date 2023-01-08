@@ -1,14 +1,18 @@
-﻿using System.Windows.Controls;
+﻿using CrytonCoreNext.CryptingOptionsViewModels;
+using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.CryptingOptionsViews
 {
     /// <summary>
     /// Interaction logic for AESView.xaml
     /// </summary>
-    public partial class AESView : UserControl
+    public partial class AESView : INavigableView<AESViewModel>
     {
-        public AESView()
+        public AESViewModel ViewModel { get; }
+
+        public AESView(AESViewModel viewModel)
         {
+            ViewModel = viewModel;
             InitializeComponent();
         }
     }

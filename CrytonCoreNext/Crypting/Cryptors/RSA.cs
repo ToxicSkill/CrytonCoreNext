@@ -2,10 +2,12 @@
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.CryptingOptionsViewModels;
+using CrytonCoreNext.CryptingOptionsViews;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
 using System;
 using System.Threading.Tasks;
+using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.Crypting.Cryptors
 {
@@ -17,17 +19,19 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public string Name => nameof(RSA);
 
+        public string DescriptionName => $"{Name} - Asymmetric alorithm";
+
         public int ProgressCount => 3;
 
-        public ViewModelBase ViewModel { get; init; }
+        public INavigableView<ViewModelBase> ViewModel { get; init; }
 
         public RSA(IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer, IProgressView progressView)
         {
             _rsaHelper = new(_useOAEP);
-            ViewModel = new RSAViewModel(jsonSerializer, xmlSerializer, progressView, _rsaHelper, Name);
+            ViewModel = new RSAView(new RSAViewModel(jsonSerializer, xmlSerializer, progressView, _rsaHelper, Name));
         }
 
-        public ViewModelBase GetViewModel() => ViewModel;
+        public INavigableView<ViewModelBase> GetViewModel() => ViewModel;
 
         public string GetName() => Name;
 
@@ -46,7 +50,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
             var emptyArray = Array.Empty<byte>();
             progress.Report(Language.Post("CollectingKeys"));
 
-            if (ViewModel.IsBusy)
+            if (ViewModel.ViewModel.IsBusy)
             {
                 progress.Report(Language.Post("Busy"));
                 return emptyArray;

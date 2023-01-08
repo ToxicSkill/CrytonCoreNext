@@ -2,12 +2,14 @@
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.CryptingOptionsViewModels;
+using CrytonCoreNext.CryptingOptionsViews;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
 using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.Crypting.Cryptors
 {
@@ -21,18 +23,20 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public string Name => nameof(AES);
 
+        public string DescriptionName => $"{Name} - Symmetric alorithm";
+
         public int ProgressCount => 2;
 
-        public ViewModelBase ViewModel { get; init; }
+        public INavigableView<ViewModelBase> ViewModel { get; init; }
 
         public AES(IJsonSerializer jsonSerializer)
         {
             _aes = new();
             _aesHelper = new AESHelper(_aes, _paddingMode);
-            ViewModel = new AESViewModel(jsonSerializer, _aesHelper, Name);
+            ViewModel = new AESView(new AESViewModel(jsonSerializer, _aesHelper, Name));
         }
 
-        public ViewModelBase GetViewModel() => ViewModel;
+        public INavigableView<ViewModelBase> GetViewModel() => ViewModel;
 
         public string GetName() => Name;
 

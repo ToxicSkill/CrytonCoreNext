@@ -12,62 +12,101 @@
     d:DesignHeight="850"
     d:DesignWidth="1400"
     mc:Ignorable="d">
-    
-    <Grid Margin="10, 0 ,0 ,0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="70"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Crypting" FontSize="32" FontWeight="Light" />
-        <Grid Grid.Row="1" Grid.Column="0">
-            <StackPanel Orientation="Horizontal">
-                <ui:Button Icon="Add20" Command="{Binding LoadCryptFilesCommand}" Content="Load files" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Stretch" />
-                <ui:Button Icon="Save20" Content="Save selected" Padding="6" Appearance="Secondary" HorizontalAlignment="Right" />
-            </StackPanel>
+
+    <Grid>
+        <Grid Margin="10, 0 ,0 ,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Crypting" FontSize="32" FontWeight="Light" />
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Column="0">
+                        <ui:Button Icon="Add20" Command="{Binding LoadCryptFilesCommand}" Content="Load files" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Stretch" />
+                        <ui:Button Icon="Save20" Content="Save selected" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
+                    </StackPanel>
+                    <ComboBox Grid.Column="1" Margin="0, 10, 0, 10" Padding="6" DisplayMemberPath="DescriptionName" ItemsSource="{Binding CryptingMethods, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedCryptingMethod}"/>
+                </Grid>
+                <ScrollViewer Grid.Row="2"  CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                    <ListView ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedFile}">
+                        <ListView.Template>
+                            <ControlTemplate TargetType="ListBox">
+                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
+                                    <ItemsPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="models:CryptFile">
+                                <Grid Height="40">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="20"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
+                                                FontSize="13"
+                                                FontWeight="Medium"
+                                                TextWrapping="WrapWithOverflow"
+                                                Text="{Binding NameWithExtension}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left"
+                                                FontSize="12"
+                                                Text="{Binding Date}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Text="{Binding Size}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Text="{Binding Status}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+                <Grid Grid.Row="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <!--<ui:Button Grid.Column="1" Grid.Row="1" Margin="10" Padding="6" HorizontalAlignment="Stretch" Icon="LockClosed20" Content="Encrypt" Appearance="Secondary"/>-->
+
+                    <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Current file" FontSize="16"/>
+                    <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Status" FontSize="16"/>
+                    <TextBlock Grid.Column="1" Grid.Row="0" Height="35" Text="{Binding SelectedFile.Name}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1" Height="35" Text="{Binding SelectedFile.Status}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
+             
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="65"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1" >
+                    <Frame Content="{Binding CurrentCryptingViewModel}"/>
+                </Grid>
+            </Grid>
         </Grid>
-        <ScrollViewer Grid.Row="2" Grid.Column="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto">
-            <ListView ItemsSource="{Binding Files}">
-                <ListView.Template>
-                    <ControlTemplate TargetType="ListBox">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
-                            <ItemsPresenter/>
-                        </Border>
-                    </ControlTemplate>
-                </ListView.Template>
-                <ListView.ItemTemplate>
-                    <DataTemplate DataType="models:CryptFile">
-                        <Grid Height="40">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="20"/>
-                                <RowDefinition Height="20"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
-                                        FontSize="13"
-                                        FontWeight="Medium"
-                                        TextWrapping="WrapWithOverflow"
-                                        Text="{Binding NameWithExtension}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left"
-                                        FontSize="12"
-                                        Text="{Binding Date}"/>
-                            <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
-                                        FontSize="12"
-                                        Text="{Binding Size}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right"
-                                        FontSize="12"
-                                        Text="{Binding Status}"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </ScrollViewer>
     </Grid>
 </ui:UiPage>

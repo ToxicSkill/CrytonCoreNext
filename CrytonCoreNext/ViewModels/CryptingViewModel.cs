@@ -5,8 +5,10 @@ using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Interfaces;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Wpf.Ui.Common;
+using Wpf.Ui.Common.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
 
@@ -14,11 +16,22 @@ namespace CrytonCoreNext.ViewModels
 {
     public partial class CryptingViewModel : InteractiveViewBase
     {
-
         private readonly ICryptingService _cryptingService;
 
         [ObservableProperty]
+        public ObservableCollection<ICrypting> cryptingMethods;
+
+        [ObservableProperty]
+        public ICrypting selectedCryptingMethod;
+
+        [ObservableProperty]
         public ObservableCollection<CryptFile> files;
+
+        [ObservableProperty]
+        public CryptFile selectedFile;
+
+        [ObservableProperty]
+        public INavigableView<ViewModelBase> currentCryptingViewModel;
 
         //private List<CryptFile> _files;
 
@@ -62,7 +75,7 @@ namespace CrytonCoreNext.ViewModels
             //CryptCommand = new Command(PerformCrypting, CanExecute);
             //SaveFileCommand = new Command(SaveCryptFile, CanExecute);
 
-            //InitializeCryptingComboBox();
+            InitializeCryptingComboBox();
             //UpdateCurrentCrypting();
 
             //FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
@@ -70,6 +83,17 @@ namespace CrytonCoreNext.ViewModels
             //FilesViewModel.AllFilesDeleted += HandleAllFilesDeleted;
         }
 
+        partial void OnSelectedFileChanged(CryptFile value)
+        {
+            CurrentCryptingViewModel = _cryptingService.GetCurrentCrypting().GetViewModel();
+            OnPropertyChanged(nameof(CurrentCryptingViewModel));
+        }
+
+        partial void OnSelectedCryptingMethodChanged(ICrypting value)
+        {
+            _cryptingService.SetCurrentCrypting(value);
+            CurrentCryptingViewModel = _cryptingService.GetCurrentCrypting().GetViewModel();
+        }
         //public override bool CanExecute()
         //{
         //    return !IsBusy && !CurrentCryptingViewModel.IsBusy;
@@ -114,10 +138,12 @@ namespace CrytonCoreNext.ViewModels
         //    base.SaveFile(CurrentFile);
         //}
 
-        //private void InitializeCryptingComboBox()
-        //{
-        //    CryptingComboBox = new(_cryptingService.GetCryptors());
-        //}
+        private void InitializeCryptingComboBox()
+        {
+            CryptingMethods = new(_cryptingService.GetCryptors());
+            SelectedCryptingMethod = CryptingMethods.First();
+            OnPropertyChanged(nameof(SelectedCryptingMethod));
+        }
 
         //private void UpdateCurrentCrypting()
         //{
