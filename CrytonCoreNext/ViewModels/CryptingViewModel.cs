@@ -129,6 +129,10 @@ namespace CrytonCoreNext.ViewModels
             {
                 Files.Add(_cryptingService.ReadCryptFile(file));
             }
+            if (SelectedFile == null)
+            {
+                SelectedFile = Files.First();
+            }
             Unlock();
         }
 

@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Enums;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Logger;
 using System;
 using System.Collections.Generic;
@@ -6,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Abstract
 {
-    public class ViewModelBase : NotificationBase
+    public partial class ViewModelBase : NotificationBase
     {
-        public string PageName { get; set; }
+        [ObservableProperty]
+        public string pageName;
 
         public Log Logger { get; set; }
+
 
         public bool IsBusy;
 

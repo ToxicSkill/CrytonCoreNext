@@ -5,130 +5,85 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:viewmodels="clr-namespace:CrytonCoreNext.CryptingOptionsViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:AESViewModel}"
              xmlns:c="clr-namespace:CrytonCoreNext.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="680" d:DesignWidth="800" 
              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
-    
+    <ui:UiPage.Resources>
+        <ResourceDictionary>
+            <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter"/>
+        </ResourceDictionary>
+    </ui:UiPage.Resources>
+
     <Grid>
-        <TextBlock Text="AES" FontSize="54"/>
-        <!--<Label Content="{Binding PageName}" FontSize="45" Foreground="White" Height="60" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="5,10" />
-        <Label Content="{DynamicResource BlockSize}" VerticalContentAlignment="Center" Foreground="White" HorizontalAlignment="Stretch" Margin="5,100,0,0" Style="{StaticResource CryptingSettings}"/>
-        <Label Content="{DynamicResource KeySize}" VerticalContentAlignment="Center" Foreground="White" HorizontalAlignment="Stretch" Margin="5,195,0,0" Style="{StaticResource CryptingSettings}"/>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="{DynamicResource BlockSize}" VerticalAlignment="Center" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="{DynamicResource KeySize}" VerticalAlignment="Center" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
+                <ComboBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding BlockSizesComboBox}" SelectedItem="{Binding SelectedBlock}" 
+                      Padding="6" MinWidth="200" HorizontalAlignment="Right" FontSize="14"/>
+                <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding KeySizesComboBox}" SelectedItem="{Binding SelectedKey}" 
+                      Padding="6" MinWidth="200" HorizontalAlignment="Right" FontSize="14"/>
+            </Grid>
+            <ui:Button Icon="New20" Content="{DynamicResource GenerateKeys}" Command="{Binding GenerateRandomKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
 
-        <ComboBox ItemsSource="{Binding BlockSizesComboBox}" SelectedItem="{Binding SelectedBlock}" 
-                  ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
-                  SelectedIndex="0" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,150"/>
 
-        <ComboBox ItemsSource="{Binding KeySizesComboBox}" SelectedItem="{Binding SelectedKey}" 
-                  ItemContainerStyle="{DynamicResource theComboBoxItem}" Style="{DynamicResource theComboBox}" 
-                  SelectedIndex="0" Width="200" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,245"/>
-
-
-        <Grid Height="40" Width="200"  Margin="5, 305, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Button Content="{DynamicResource GenerateKeys}" VerticalAlignment="Center"
-                        Style="{StaticResource TransparentButtonSmall}" 
-                        Template="{DynamicResource TransparnetButtonControlTemplate}" 
-                        Command="{Binding GenerateKeysCommand}"
-                        Margin="35, 0, 0, 0" Cursor="Hand"/>
-            <Button ToolTip="{DynamicResource GenerateKeys}" Background="#00000000" 
-                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                    Width="20" Height="20" BorderThickness="0" Cursor="Hand"
-                    HorizontalAlignment="Left" VerticalAlignment="Center">
-
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                        <i:InvokeCommandAction Command="{Binding ImportKeysCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-
-                <Button.Template>
-                    <ControlTemplate>
-                        <Image Source="/Assets/Swap.png" Width="22" Height="22"
-                           HorizontalAlignment="Center" VerticalAlignment="Center"
-                           RenderOptions.BitmapScalingMode="HighQuality"
-                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-        </Grid>
-
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="50" Margin="5, 350, 0, 0">
-            <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center"
-                   Content="{DynamicResource KeyAvailable}"  Style="{StaticResource CryptingInfoSettings}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
-            
-            <Label Margin="30, 0, 0, 0"  Width="150" HorizontalAlignment="Left" VerticalAlignment="Stretch" VerticalContentAlignment="Center"
-                   Content="{DynamicResource NoKeyAvailable}"  Style="{StaticResource CryptingInfoSettings}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
-
-            <Image Source="/Assets/Continue.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"
-                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-
-            <Image Source="/Assets/Info.png" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"
-                       RenderOptions.BitmapScalingMode="HighQuality" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"
-                       RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-
-        </Grid>
-
-        <Grid Width="250" Height="75" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,410,0,0">
-
-            <Button Style="{DynamicResource TransparentButtonSmall }" Template="{DynamicResource TransparnetButtonControlTemplate}"
-                    VerticalAlignment="Top" Margin="35, 2, 0 ,0"
-                    Command="{Binding ImportKeysCommand}"
-                    Content="{DynamicResource ImportKeys}" Cursor="Hand"/>
-            <Button ToolTip="{DynamicResource ImportToolTip}" Background="#00000000" 
-                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                    Width="22" Height="22" BorderThickness="0" Cursor="Hand"
-                    HorizontalAlignment="Left" VerticalAlignment="Top"
-                    Margin="0, 6, 0, 0">
-
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                        <i:InvokeCommandAction Command="{Binding ImportKeysCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-
-                <Button.Template>
-                    <ControlTemplate>
-                        <Image Source="/Assets/LoadObjects.png" Width="22" Height="22"
-                           HorizontalAlignment="Center" VerticalAlignment="Center"
-                           RenderOptions.BitmapScalingMode="HighQuality"
-                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-
-            <Button Style="{DynamicResource TransparentButtonSmall }" Template="{DynamicResource TransparnetButtonControlTemplate}"
-                    VerticalAlignment="Bottom" Margin="35, 0, 0 ,2"
-                    Command="{Binding ExportKeysCommand}"
-                    Content="{DynamicResource ExportKeys}" Cursor="Hand"/>
-            <Button  ToolTip="{DynamicResource ExportToolTip}" Background="#00000000" 
-                    HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                    Width="22" Height="22" BorderThickness="0" Cursor="Hand" 
-                    HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                    Margin="0, 0, 0, 3">
-
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                        <i:InvokeCommandAction Command="{Binding ExportKeysCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-
-                <Button.Template>
-                    <ControlTemplate>
-                        <Image Source="/Assets/SaveObjects.png" Width="22" Height="22"
-                           HorizontalAlignment="Center" VerticalAlignment="Center"
-                           RenderOptions.BitmapScalingMode="HighQuality"
-                           RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-        </Grid>
-
-        <Label     Height="60" Content="{Binding Logger.Message}"
-                   FontSize="18" FontFamily="Segoe UI Variable Text Light"   
-                    Foreground="{Binding Logger.Brush}" VerticalAlignment="Top" 
-                    Margin="5,575,10,0"/>-->
+            <ui:CardExpander
+                Padding="6"
+                HorizontalContentAlignment="Center"
+                Icon="ArrowCircleDown20"
+                IsEnabled="True"
+                IsExpanded="False">
+                <ui:CardExpander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                            FontSize="13"
+                            FontWeight="Medium"
+                            Text="Export keys" />
+                            <TextBlock FontSize="12" FontWeight="Light" Text="Decide which key members to export." />
+                        </StackPanel>
+                        <ui:Button
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Appearance="Secondary"
+                            Command="{Binding ExportKeysCommand}"
+                            Content="{DynamicResource ExportKeys}"
+                            Cursor="Hand" Margin="0, 5, 10, 5" MinWidth="100"/>
+                    </Grid>
+                </ui:CardExpander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Include private members" Margin="0, 0, 10, 0"/>
+                    <ui:ToggleSwitch/>
+                </StackPanel>
+            </ui:CardExpander>
+            <ui:Button Icon="ArrowCircleUp20" Content="{DynamicResource ImportKeys}" Command="{Binding ImportKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
+            <Grid Height="30" Margin="7, 0, 0, 0">
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="CheckmarkCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource KeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
+                    <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource NoKeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
     </Grid>
 </ui:UiPage>

@@ -1,5 +1,6 @@
-﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
@@ -7,75 +8,62 @@ using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
 {
-    public class AESViewModel : ViewModelBase
+    public partial class AESViewModel : ViewModelBase
     {
         private readonly IJsonSerializer _jsonSerializer;
 
         private readonly AESHelper _aesHelper;
 
-        private int _selectedKey;
+        [ObservableProperty]
+        public ObservableCollection<int> blockSizesComboBox;
 
-        private int _selectedBlock;
+        [ObservableProperty]
+        public ObservableCollection<int> keySizesComboBox;
 
-        public ObservableCollection<int> BlockSizesComboBox { get; init; }
+        [ObservableProperty]
+        public bool keysAvailable;
 
-        public ObservableCollection<int> KeySizesComboBox { get; init; }
+        [ObservableProperty]
+        public int selectedBlock;
 
-        public bool KeysAvailable { get; set; }
+        [ObservableProperty]
+        public int selectedKey;
 
-        public int SelectedBlock
+        partial void OnSelectedBlockChanged(int value)
         {
-            get => _selectedBlock;
-            set
+            if (SelectedBlock != value)
             {
-                if (_selectedBlock != value)
+                SelectedBlock = value;
+                OnPropertyChanged(nameof(SelectedBlock));
+                if (!IsBusy)
                 {
-                    _selectedBlock = value;
-                    OnPropertyChanged(nameof(SelectedBlock));
-                    if (!IsBusy)
-                    {
-                        _aesHelper.SetBlockSize(value);
-                        Log(Enums.ELogLevel.Information, Language.Post("RegenerateIV"));
-                    }
+                    _aesHelper.SetBlockSize(value);
+                    Log(Enums.ELogLevel.Information, Language.Post("RegenerateIV"));
                 }
             }
         }
 
-        public int SelectedKey
+        partial void OnSelectedKeyChanged(int value)
         {
-            get => _selectedKey;
-            set
+            if (SelectedKey != value)
             {
-                if (_selectedKey != value)
+                SelectedKey = value;
+                OnPropertyChanged(nameof(SelectedKey));
+                if (!IsBusy)
                 {
-                    _selectedKey = value;
-                    OnPropertyChanged(nameof(SelectedKey));
-                    if (!IsBusy)
-                    {
-                        _aesHelper.SetKeySize(value);
-                        Log(Enums.ELogLevel.Information, Language.Post("RegenerateKey"));
-                    }
+                    _aesHelper.SetKeySize(value);
+                    Log(Enums.ELogLevel.Information, Language.Post("RegenerateKey"));
                 }
             }
         }
-
-        public ICommand GenerateKeysCommand { get; init; }
-
-        public ICommand ExportKeysCommand { get; init; }
-
-        public ICommand ImportKeysCommand { get; init; }
 
         public AESViewModel(IJsonSerializer json, AESHelper aesHelper, string pageName) : base(pageName)
         {
             _jsonSerializer = json;
             _aesHelper = aesHelper;
-            GenerateKeysCommand = new Command(GenerateRandomKeys, CanExecute);
-            ExportKeysCommand = new Command(ExportKeys, CanExecute);
-            ImportKeysCommand = new Command(ImportKeys, CanExecute);
 
             BlockSizesComboBox = new();
             KeySizesComboBox = new();
@@ -84,15 +72,10 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             BlockSizesComboBox = new ObservableCollection<int>(_aesHelper.LegalBlocks);
             SelectedBlock = _aesHelper.GetCurrentBlockSize();
             SelectedKey = _aesHelper.GetCurrentKeySize();
-
-            OnPropertyChanged(nameof(SelectedBlock));
-            OnPropertyChanged(nameof(SelectedKey));
-            OnPropertyChanged(nameof(BlockSizesComboBox));
-            OnPropertyChanged(nameof(KeySizesComboBox));
-
             UpdateKeyAvailability(true);
         }
 
+        [RelayCommand]
         private void ExportKeys()
         {
             var serialzieObjects = new Objects()
@@ -120,6 +103,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
+        [RelayCommand]
         private void ImportKeys()
         {
             WindowDialog.OpenDialog openDialog = new(new DialogHelper()
@@ -192,10 +176,10 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         private void UpdateKeyAvailability(bool available)
         {
             KeysAvailable = available;
-
             OnPropertyChanged(nameof(KeysAvailable));
         }
 
+        [RelayCommand]
         private void GenerateRandomKeys()
         {
             _aesHelper.GenerateKey();
