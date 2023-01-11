@@ -1,7 +1,6 @@
 ﻿using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
-using CrytonCoreNext.Static;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace CrytonCoreNext.Abstract
         {
             _snackbarService.Show(title, text, icon, type);
         }
-        
+
         protected async IAsyncEnumerable<File> LoadFiles()
         {
             await foreach (var file in LoadFiles(Static.Extensions.DialogFilters.All))
@@ -41,7 +40,7 @@ namespace CrytonCoreNext.Abstract
         protected async IAsyncEnumerable<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
             var filesPaths = _dialogService.GetFilesNamesToOpen(filters, Language.Post("OpenFiles"), true);
-            var loadedFilesCounter= 0;
+            var loadedFilesCounter = 0;
             await foreach (var file in _fileService.LoadFiles(filesPaths))
             {
                 if (file != null)

@@ -8,11 +8,15 @@ using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Wpf.Ui.Common;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
 {
     public partial class AESViewModel : ViewModelBase
     {
+        private readonly ISnackbarService _snackbarService;
+
         private readonly IJsonSerializer _jsonSerializer;
 
         private readonly AESHelper _aesHelper;
@@ -60,8 +64,9 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             }
         }
 
-        public AESViewModel(IJsonSerializer json, AESHelper aesHelper, string pageName) : base(pageName)
+        public AESViewModel(ISnackbarService snackbarService, IJsonSerializer json, AESHelper aesHelper, string pageName) : base(pageName)
         {
+            _snackbarService = snackbarService;
             _jsonSerializer = json;
             _aesHelper = aesHelper;
 
@@ -99,7 +104,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             if (saveDestination != null)
             {
                 _jsonSerializer.Serialize(serialzieObjects, saveDestination.First());
-                Log(Enums.ELogLevel.Information, Language.Post("Exported"));
+                _snackbarService.Show(Language.Post("Information"), Language.Post("Exported"), SymbolRegular.Checkmark20, ControlAppearance.Success);
             }
         }
 
@@ -122,7 +127,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     var castedObjects = (Objects)objects;
                     if (castedObjects.Name != PageName)
                     {
-                        Log(Enums.ELogLevel.Warning, Language.Post("IncorrectFile"));
+                        _snackbarService.Show(Language.Post("Warning"), Language.Post("IncorrectFile"), SymbolRegular.Warning20, ControlAppearance.Caution);
                         _aesHelper.GenerateNewKeys();
                         return;
                     }
@@ -130,12 +135,12 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     {
                         if (!ValidateKeys(castedObjects.ToSerialzie.IV, castedObjects.ToSerialzie.Key))
                         {
-                            Log(Enums.ELogLevel.Warning, Language.Post("IncorrectKeys"));
+                            _snackbarService.Show(Language.Post("Warning"), Language.Post("IncorrectKeys"), SymbolRegular.Warning20, ControlAppearance.Caution);
                             _aesHelper.GenerateNewKeys();
                             return;
                         }
 
-                        Log(Enums.ELogLevel.Information, Language.Post("Imported"));
+                        _snackbarService.Show(Language.Post("Success"), Language.Post("Imported"), SymbolRegular.Checkmark20, ControlAppearance.Success);
                     }
                 }
             }
@@ -185,7 +190,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             _aesHelper.GenerateKey();
             _aesHelper.GenerateIV();
             UpdateKeyAvailability(true);
-            Log(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
+            _snackbarService.Show(Language.Post("Success"), Language.Post("KeysGenerated"), SymbolRegular.Checkmark20, ControlAppearance.Success);
         }
     }
 }

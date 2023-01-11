@@ -16,6 +16,9 @@ namespace CrytonCoreNext
     {
         private bool _initialized = false;
 
+
+        private readonly ISnackbarService _snackbarService;
+
         private readonly IThemeService _themeService;
 
         public MainViewModel ViewModel
@@ -28,6 +31,7 @@ namespace CrytonCoreNext
             ViewModel = viewModel;
             DataContext = this;
 
+            _snackbarService = snackbarService;
             _themeService = themeService;
             InitializeComponent();
 

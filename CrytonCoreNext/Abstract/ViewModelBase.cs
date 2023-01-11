@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Abstract
 {
-    public partial class ViewModelBase : NotificationBase
+    [ObservableObject]
+    public partial class ViewModelBase
     {
         [ObservableProperty]
         public string pageName;
@@ -17,10 +18,10 @@ namespace CrytonCoreNext.Abstract
 
         public bool IsBusy;
 
-        public ViewModelBase(string pageName = "")
+        public ViewModelBase(string name = "")
         {
             Logger = new Log();
-            PageName = pageName;
+            this.PageName = name;
             Logger.OnLoggerChanged += NotifyLoggerChanged;
         }
 

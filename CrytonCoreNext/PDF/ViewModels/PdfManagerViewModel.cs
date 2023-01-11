@@ -1,16 +1,5 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
-using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Models;
-using CrytonCoreNext.PDF.Interfaces;
-using CrytonCoreNext.PDF.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows.Media;
 using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.PDF.ViewModels

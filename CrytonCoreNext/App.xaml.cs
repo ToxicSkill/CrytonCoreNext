@@ -201,7 +201,8 @@ namespace CrytonCoreNext
         private static ICrypting CreateAES(IServiceProvider provider)
         {
             var jsonSerialzer = provider.GetRequiredService<IJsonSerializer>();
-            return new AES(jsonSerialzer);
+            var snackbar = provider.GetRequiredService<ISnackbarService>();
+            return new AES(snackbar, jsonSerialzer);
         }
 
         private static ICrypting CreateRSA(IServiceProvider provider)
@@ -209,7 +210,8 @@ namespace CrytonCoreNext
             var jsonSerialzer = provider.GetRequiredService<IJsonSerializer>();
             var xmlSerialzer = provider.GetRequiredService<IXmlSerializer>();
             var progressView = provider.GetRequiredService<IProgressView>();
-            return new RSA(jsonSerialzer, xmlSerialzer, progressView);
+            var snackbar = provider.GetRequiredService<ISnackbarService>();
+            return new RSA(snackbar, jsonSerialzer, xmlSerialzer, progressView);
         }
 
         private static ICryptingRecognition CreateCryptingRecognition(IServiceProvider provider)

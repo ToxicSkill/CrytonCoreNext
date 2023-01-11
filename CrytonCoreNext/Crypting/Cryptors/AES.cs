@@ -10,6 +10,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.Cryptors
 {
@@ -29,11 +30,11 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public INavigableView<ViewModelBase> ViewModel { get; init; }
 
-        public AES(IJsonSerializer jsonSerializer)
+        public AES(ISnackbarService snackbarService, IJsonSerializer jsonSerializer)
         {
             _aes = new();
             _aesHelper = new AESHelper(_aes, _paddingMode);
-            ViewModel = new AESView(new AESViewModel(jsonSerializer, _aesHelper, Name));
+            ViewModel = new AESView(new AESViewModel(snackbarService, jsonSerializer, _aesHelper, Name));
         }
 
         public INavigableView<ViewModelBase> GetViewModel() => ViewModel;

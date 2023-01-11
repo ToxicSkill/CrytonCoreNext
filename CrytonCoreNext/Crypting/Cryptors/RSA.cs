@@ -8,6 +8,7 @@ using CrytonCoreNext.Interfaces;
 using System;
 using System.Threading.Tasks;
 using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.Cryptors
 {
@@ -25,10 +26,10 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public INavigableView<ViewModelBase> ViewModel { get; init; }
 
-        public RSA(IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer, IProgressView progressView)
+        public RSA(ISnackbarService snackbarService, IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer, IProgressView progressView)
         {
             _rsaHelper = new(_useOAEP);
-            ViewModel = new RSAView(new RSAViewModel(jsonSerializer, xmlSerializer, progressView, _rsaHelper, Name));
+            ViewModel = new RSAView(new RSAViewModel(snackbarService, jsonSerializer, xmlSerializer, progressView, _rsaHelper, Name));
         }
 
         public INavigableView<ViewModelBase> GetViewModel() => ViewModel;

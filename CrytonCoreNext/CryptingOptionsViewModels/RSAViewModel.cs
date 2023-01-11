@@ -9,11 +9,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.CryptingOptionsViewModels
 {
     public class RSAViewModel : ViewModelBase
     {
+        private readonly ISnackbarService _snackbarService;
+
         private readonly IJsonSerializer _jsonSerializer;
 
         private readonly RSAHelper _rsaHelper;
@@ -52,8 +55,9 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public ICommand GenerateKeysCommand { get; init; }
 
-        public RSAViewModel(IJsonSerializer json, IXmlSerializer xml, IProgressView progressView, RSAHelper rsaHelper, string pageName) : base(pageName)
+        public RSAViewModel(ISnackbarService snackbarService, IJsonSerializer json, IXmlSerializer xml, IProgressView progressView, RSAHelper rsaHelper, string pageName) : base(pageName)
         {
+            _snackbarService = snackbarService;
             _jsonSerializer = json;
             _rsaHelper = rsaHelper;
             ProgressView = progressView;

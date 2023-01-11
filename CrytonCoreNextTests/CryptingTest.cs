@@ -6,6 +6,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Wpf.Ui.Mvvm.Contracts;
 using Xunit;
 
 namespace CrytonCoreNextTests
@@ -18,9 +19,10 @@ namespace CrytonCoreNextTests
 
         private readonly ICryptingReader _cryptingReader = new Mock<ICryptingReader>().Object;
 
-        private readonly ICrypting _aes = new AES(new Mock<IJsonSerializer>().Object);
 
-        private readonly ICrypting _rsa = new RSA(new Mock<IJsonSerializer>().Object, new Mock<IXmlSerializer>().Object, new Mock<IProgressView>().Object);
+        private readonly ICrypting _aes = new AES(new Mock<ISnackbarService>().Object, new Mock<IJsonSerializer>().Object);
+
+        private readonly ICrypting _rsa = new RSA(new Mock<ISnackbarService>().Object, new Mock<IJsonSerializer>().Object, new Mock<IXmlSerializer>().Object, new Mock<IProgressView>().Object);
 
         private readonly IProgress<string> _progress = new Mock<Progress<string>>().Object;
 

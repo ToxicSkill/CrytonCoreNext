@@ -18,6 +18,11 @@
     <system:String x:Key="AddFile">Add file</system:String>
     
     
+    <system:String x:Key="Warning">Warning</system:String>
+    <system:String x:Key="Information">Information</system:String>
+    <system:String x:Key="Success">Success</system:String> 
+    
+    
     <system:String x:Key="SetAsFirst">Set as first</system:String>
     <system:String x:Key="MoveUp">Move up</system:String>
     <system:String x:Key="MoveDown">Move down</system:String>
@@ -39,8 +44,8 @@
     <system:String x:Key="IncorrectSizes">Incorrect size, loaded deafult</system:String>
     <system:String x:Key="IncorrectFile">Incorrect file. New keys generated</system:String>
     <system:String x:Key="Busy">Wait for task complete</system:String>
-    <system:String x:Key="Error">Process failed (wrong keys)</system:String>
-    <system:String x:Key="Success">Process successed</system:String>
+    <system:String x:Key="CryptingError">Process failed</system:String>
+    <system:String x:Key="ProcessSuccess">Process successed</system:String>
     <system:String x:Key="ExportKeys">Export keys</system:String>
     <system:String x:Key="ImportKeys">Import keys</system:String>
     
