@@ -148,7 +148,10 @@ namespace CrytonCoreNext.ViewModels
                 OnPropertyChanged(nameof(SelectedFile));
                 PostSnackbar("Success", Language.Post("Success"), SymbolRegular.Checkmark20, ControlAppearance.Success);
             }
-            PostSnackbar("Success", Language.Post("CryptingError"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+            else
+            {
+                PostSnackbar("Error", Language.Post("CryptingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+            }
             Unlock();
         }
 

@@ -18,6 +18,7 @@
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
             <c:ReverseCollectionToVisibilityConverter x:Key="ReverseCollectionToVisibilityConverter"/>
+            <SolidColorBrush x:Key="BrushBlueTransparent" Color="#7F8484EF"/>
         </ResourceDictionary>
     </ui:UiPage.Resources>
 
@@ -50,32 +51,32 @@
                     <ComboBox Grid.Column="1" Margin="0, 10, 0, 10" Padding="6" DisplayMemberPath="DescriptionName" ItemsSource="{Binding CryptingMethods, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedCryptingMethod}"/>
                 </Grid>
                 <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }">
-                    <Border  CornerRadius="15" Opacity="0.5">
-                        <Border.Background>
+                    <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="0, 0, 0, -30">
+                        <!--<Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#002F3BEF" Offset="1"/>
                                 <GradientStop Color="#7F4CB1FF" Offset="0"/>
                             </LinearGradientBrush>
-                        </Border.Background>
+                        </Border.Background>-->
                     </Border>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ui:SymbolIcon Symbol="DocumentBulletListMultiple20" FontSize="72"/>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Margin="10, 0 ,0 ,20" Text="Here will be the files that you upload"/>
+                        <ui:SymbolIcon Symbol="DocumentBulletListMultiple20" FontSize="62" Filled="True" FontWeight="Thin"/>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" Margin="10, 0 ,0 ,20" Text="Here will be the files that you upload" FontWeight="Thin"/>
                         <DockPanel  HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="Add20" FontSize="16" Margin="40, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="Upload files"/>
+                            <ui:SymbolIcon Symbol="Add20" FontSize="18" Margin="20, 0, 0 ,0"/>
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="upload files" FontWeight="Light"/>
                         </DockPanel>
                         <DockPanel HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="Save20" FontSize="16" Margin="40, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="Save selected file"/>
+                            <ui:SymbolIcon Symbol="Save20" FontSize="18" Margin="20, 0, 0 ,0"/>
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="save selected file" FontWeight="Light"/>
                         </DockPanel>
                         <DockPanel HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="Delete20" FontSize="16" Margin="40, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="Delete selected file"/>
+                            <ui:SymbolIcon Symbol="Delete20" FontSize="18" Margin="20, 0, 0 ,0"/>
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="delete selected file" FontWeight="Light"/>
                         </DockPanel>
                         <DockPanel HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="TextIndentIncreaseLtr20" FontSize="16" Margin="40, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="Select crypting method"/>
+                            <ui:SymbolIcon Symbol="TextIndentIncreaseLtr20" FontSize="18" Margin="20, 0, 0 ,0"/>
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="select crypting method" FontWeight="Light"/>
                         </DockPanel>
                     </StackPanel>
                 </Grid>
@@ -133,17 +134,17 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Row="1" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <Border  CornerRadius="10" Opacity="0.5">
-                            <Border.Background>
-                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                    <GradientStop Color="#002F3BEF" Offset="0"/>
-                                    <GradientStop Color="#7F4CB1FF" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Border.Background>
+                        <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" >
+                            <!--<Border.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#002F3BEF" Offset="1"/>
+                                <GradientStop Color="#7F4CB1FF" Offset="0"/>
+                            </LinearGradientBrush>
+                        </Border.Background>-->
                         </Border>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <ui:SymbolIcon Symbol="AppsListDetail20" FontSize="34"/>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here are the details of the file" FontSize="16"/>
+                            <ui:SymbolIcon Symbol="AppsListDetail20" FontSize="28"/>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be the details of chosen the file" FontSize="14" FontWeight="Light"/>
                         </StackPanel>
                     </Grid>
                     <Grid Grid.Column="0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -167,34 +168,34 @@
                     </Grid>
 
                     <Grid Grid.Column="1" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="20, 0, 0, 0">
-                        <Border  CornerRadius="10" Opacity="0.5" Margin="0, 0, 20, 0">
-                            <Border.Background>
-                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                    <GradientStop Color="#002F3BEF" Offset="0"/>
-                                    <GradientStop Color="#7F1F6AFF" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Border.Background>
+                        <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="0, 0, 20, 0">
+                            <!--<Border.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#002F3BEF" Offset="1"/>
+                                <GradientStop Color="#7F4CB1FF" Offset="0"/>
+                            </LinearGradientBrush>
+                        </Border.Background>-->
                         </Border>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <ui:SymbolIcon Symbol="TextBaseline20" FontSize="34"/>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here are chosen method name" FontSize="16"/>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 0, 20, 0">
+                            <ui:SymbolIcon Symbol="TextBaseline20" FontSize="28"/>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be name of chosen method" FontSize="14" FontWeight="Light"/>
                         </StackPanel>
                     </Grid>
                     <TextBlock Grid.Column="1" Text="{Binding CurrentCryptingViewModel.ViewModel.PageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                FontSize="78" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <Border CornerRadius="15" Opacity="0.5" Margin="0, 20, 20, 0">
-                        <Border.Background>
+                    <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="0, 20, 20, 20">
+                        <!--<Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#002F3BEF" Offset="1"/>
-                                <GradientStop Color="#7F1F6AFF" Offset="0"/>
+                                <GradientStop Color="#7F4CB1FF" Offset="0"/>
                             </LinearGradientBrush>
-                        </Border.Background>
+                        </Border.Background>-->
                     </Border>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ui:SymbolIcon Symbol="Fingerprint20" FontSize="72"/>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here are the chosen crypting method settings view" FontSize="18"/>
+                        <ui:SymbolIcon Symbol="Fingerprint20" FontSize="62"/>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be the chosen crypting method settings view" FontSize="16" FontWeight="Light"/>
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="2" Margin="0, 20, 20, 0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -207,11 +208,26 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="100"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="2">
+
+                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="20, 0, 0, 0">
+                    <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="-18, 10, 20, 10">
+                        <!--<Border.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#002F3BEF" Offset="1"/>
+                                <GradientStop Color="#7F4CB1FF" Offset="0"/>
+                            </LinearGradientBrush>
+                        </Border.Background>-->
+                    </Border>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ui:SymbolIcon Symbol="Fire20" FontSize="34"/>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be action panel" FontSize="14" FontWeight="Light"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
                     <ui:CardAction Grid.Column="2" Icon="Fingerprint20" HorizontalAlignment="Right" Command="{Binding PerformCryptingCommand}">
                         <StackPanel>
