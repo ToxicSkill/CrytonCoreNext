@@ -67,18 +67,14 @@
                         Icon="Layer20"  
                         PageTag="pdf" 
                         PageType="{x:Type pages:Dashboard}"/>
+                </ui:NavigationStore.Items>
+                <ui:NavigationStore.Footer>
                     <ui:NavigationItem
                         Cache="True"
                         Content="Settings"
                         Icon="Settings48"
                         PageTag="settings" 
-                        PageType="{x:Type pages:Dashboard}"/>
-                </ui:NavigationStore.Items>
-                <ui:NavigationStore.Footer>
-                    <ui:NavigationItem
-                        Click="NavigationButtonTheme_OnClick"
-                        Content="Theme"
-                        Icon="DarkTheme24"/>
+                        PageType="{x:Type pages:SettingsView}"/>
                 </ui:NavigationStore.Footer>
             </ui:NavigationStore>
 

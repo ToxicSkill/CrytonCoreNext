@@ -2,7 +2,6 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
@@ -57,11 +56,6 @@ namespace CrytonCoreNext
 
         public void CloseWindow()
             => Close();
-
-        private void NavigationButtonTheme_OnClick(object sender, RoutedEventArgs e)
-        {
-            _themeService.SetTheme(_themeService.GetTheme() == ThemeType.Dark ? ThemeType.Light : ThemeType.Dark);
-        }
 
         private void TrayMenuItem_OnClick(object sender, RoutedEventArgs e)
         {

@@ -59,6 +59,9 @@ namespace CrytonCoreNext
             services.AddScoped<Dashboard>();
             services.AddScoped<DashboardViewModel>();
 
+            services.AddScoped<SettingsView>();
+            services.AddScoped<SettingsViewModel>();
+
             services.AddScoped<CryptingView>();
             services.AddScoped(CreateCryptingViewModel);
 
