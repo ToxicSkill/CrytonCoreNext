@@ -240,8 +240,8 @@
                             Text="Start crypting process for current file" />
                         </StackPanel>
                     </ui:CardAction>
-                    <ui:ProgressRing Grid.Column="1" IsIndeterminate="True" HorizontalAlignment="Center" />
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40, 0 ,0 ,0" Text="Preparing crypting 1/5" FontSize="13"/>
+                    <ui:ProgressRing Grid.Column="1" IsIndeterminate="{Binding IsBusy}" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40, 0 ,0 ,0" Text="{Binding ProgressReport}" FontSize="13"/>
                 </Grid>
             </Grid>
         </Grid>

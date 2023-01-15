@@ -45,7 +45,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 if (!IsBusy)
                 {
                     _aesHelper.SetBlockSize(value);
-                    Log(Enums.ELogLevel.Information, Language.Post("RegenerateIV"));
+                    _snackbarService.Show(Language.Post("Information"), Language.Post("RegenerateIV"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info); _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 if (!IsBusy)
                 {
                     _aesHelper.SetKeySize(value);
-                    Log(Enums.ELogLevel.Information, Language.Post("RegenerateKey"));
+                    _snackbarService.Show(Language.Post("Information"), Language.Post("RegenerateKey"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info); _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
                 }
             }
         }

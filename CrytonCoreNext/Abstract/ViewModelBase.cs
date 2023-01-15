@@ -1,6 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CrytonCoreNext.Enums;
-using CrytonCoreNext.Logger;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,16 +11,12 @@ namespace CrytonCoreNext.Abstract
         [ObservableProperty]
         public string pageName;
 
-        public Log Logger { get; set; }
-
-
-        public bool IsBusy;
+        [ObservableProperty]
+        public bool isBusy;
 
         public ViewModelBase(string name = "")
         {
-            Logger = new Log();
             this.PageName = name;
-            Logger.OnLoggerChanged += NotifyLoggerChanged;
         }
 
         public virtual Dictionary<string, object> GetObjects()
@@ -40,10 +34,6 @@ namespace CrytonCoreNext.Abstract
 
         }
 
-        public void Log(ELogLevel level, string message)
-        {
-            Logger.Post(level, message).ContinueWith(OnAsyncFailed, TaskContinuationOptions.OnlyOnFaulted);
-        }
 
         public virtual void Lock()
         {

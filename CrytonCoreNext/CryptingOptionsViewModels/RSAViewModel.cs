@@ -100,7 +100,8 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             finally
             {
                 await Task.Run(() => UpdateKeys());
-                Log(Enums.ELogLevel.Information, Language.Post("KeysGenerated"));
+
+                _snackbarService.Show(Language.Post("Information"), Language.Post("KeysGenerated"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info); _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
                 ProgressView.ClearProgress();
                 Unlock();
             }
@@ -147,7 +148,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         private void NoKeyError()
         {
-            Log(Enums.ELogLevel.Error, Language.Post("NoGeneratedKeys"));
+            _snackbarService.Show(Language.Post("Error"), Language.Post("NoGeneratedKeys"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
             OnPropertyChanged(nameof(Logger));
             return;
         }
@@ -175,7 +176,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             if (saveDestination != null)
             {
                 _jsonSerializer.Serialize(serialzieObjects, saveDestination.First());
-                Log(Enums.ELogLevel.Information, Language.Post("Exported"));
+                _snackbarService.Show(Language.Post("Information"), Language.Post("Exported"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
             }
         }
 
@@ -197,14 +198,14 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                     var castedObjects = (Objects)objects;
                     if (castedObjects.Name != PageName)
                     {
-                        Log(Enums.ELogLevel.Error, Language.Post("IncorrectFile"));
+                        _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
                     }
                     else
                     {
                         _rsaHelper.FromXmlString(castedObjects.ToSerialzie.Keys);
                         _selectedKey = castedObjects.ToSerialzie.SelectedKeySize;
                         await Task.Run(() => UpdateKeys());
-                        Log(Enums.ELogLevel.Information, Language.Post("Imported"));
+                        _snackbarService.Show(Language.Post("Information"), Language.Post("Imported"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
                         OnPropertyChanged(nameof(SelectedKey));
                     }
                 }

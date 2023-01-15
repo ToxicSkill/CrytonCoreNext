@@ -1,11 +1,12 @@
-﻿using CrytonCoreNext.Abstract;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CrytonCoreNext.Interfaces;
 using System;
 using System.Windows;
 
 namespace CrytonCoreNext.Services
 {
-    public class ProgressService : NotificationBase, IProgressService
+    [ObservableObject]
+    public partial class ProgressService : IProgressService
     {
         private const int ProgressMaxValue = 100;
 
@@ -17,17 +18,20 @@ namespace CrytonCoreNext.Services
 
         private int _stages = 1;
 
-        public Visibility ProgressVisibility { get; private set; }
+        [ObservableProperty]
+        public Visibility progressVisibility;
 
-        public int ProgressValue { get; set; }
+        [ObservableProperty]
+        public int progressValue;
 
-        public bool IsBusy { get; private set; }
+        [ObservableProperty]
+        public string progressCounter;
 
-        public string ProgressCounter { get; private set; }
+        [ObservableProperty]
+        public string progressMessage;
 
-        public string ProgressMessage { get; private set; }
-
-        public Visibility ShowLabels { get; private set; }
+        [ObservableProperty]
+        public Visibility showLabels;
 
         public ProgressService()
         {
@@ -44,8 +48,6 @@ namespace CrytonCoreNext.Services
             _stages = DefaultStageCount;
             SetProgresstMessages(string.Empty);
             SetProgressCounter();
-            IsBusy = false;
-            OnPropertyChanged(nameof(IsBusy));
         }
 
         public IProgress<T> SetProgress<T>(int stages)
@@ -53,27 +55,22 @@ namespace CrytonCoreNext.Services
             _stages = stages;
             _progressCounter = 0;
             UpdateProgress();
-            IsBusy = true;
-            OnPropertyChanged(nameof(IsBusy));
             return new Progress<T>(ReportProgress<T>);
         }
 
         public void SetLabelsVisibility(bool visible)
         {
             ShowLabels = visible ? Visibility.Visible : Visibility.Hidden;
-            OnPropertyChanged(nameof(ShowLabels));
         }
 
         private void UpdateProgress(Visibility visibility = Visibility.Visible)
         {
             ProgressVisibility = visibility;
-            OnPropertyChanged(nameof(ProgressVisibility));
         }
 
         private void SetProgresstMessages(string message)
         {
             ProgressMessage = message;
-            OnPropertyChanged(nameof(ProgressMessage));
         }
 
         private void SetProgressCounter()
@@ -81,13 +78,11 @@ namespace CrytonCoreNext.Services
             _progressCounter++;
             ProgressCounter = _progressCounter.ToString() + " / " + _stages.ToString();
             SetProgressValue();
-            OnPropertyChanged(nameof(ProgressCounter));
         }
 
         private void SetProgressValue()
         {
             ProgressValue = _progressCounter * (ProgressMaxValue / _stages);
-            OnPropertyChanged(nameof(ProgressValue));
         }
 
         private void ReportProgress<T>(T progressMessage)

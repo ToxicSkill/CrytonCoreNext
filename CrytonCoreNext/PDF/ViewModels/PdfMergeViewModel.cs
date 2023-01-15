@@ -1,6 +1,5 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Commands;
-using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.PDF.Abstarct;
 using CrytonCoreNext.PDF.Interfaces;
 using System;
@@ -32,7 +31,7 @@ namespace CrytonCoreNext.PDF.ViewModels
         {
             if (Files.Count < 1)
             {
-                Log(Enums.ELogLevel.Information, Language.Post("NotEnoughFiles"));
+                //Log(Enums.ELogLevel.Information, Language.Post("NotEnoughFiles"));
                 return;
             }
 
