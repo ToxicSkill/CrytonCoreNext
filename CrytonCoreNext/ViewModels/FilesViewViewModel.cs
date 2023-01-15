@@ -1,13 +1,10 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
-using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -34,18 +31,6 @@ namespace CrytonCoreNext.ViewModels
         public ObservableCollection<File> FilesCollection { get; private set; }
 
         public Guid CurrentFileGuid { get; set; }
-
-        public ICommand ClearFilesCommand { get; set; }
-
-        public ICommand DeleteCurrentFileCommand { get; set; }
-
-        public ICommand SetFileAsFirstCommand { get; set; }
-
-        public ICommand SetFileAsLastCommand { get; set; }
-
-        public ICommand MoveFileUpCommand { get; set; }
-
-        public ICommand MoveFileDownCommand { get; set; }
 
         public int SelectedItemIndex
         {
@@ -75,12 +60,6 @@ namespace CrytonCoreNext.ViewModels
         public FilesViewViewModel(IFilesManager filesManager)
         {
             FilesCollection = new ObservableCollection<File>();
-            ClearFilesCommand = new Command(ClearAllFiles, CanExecute);
-            DeleteCurrentFileCommand = new Command(DeleteFile, CanExecute);
-            SetFileAsFirstCommand = new Command(SetFileAsFirst, CanExecute);
-            SetFileAsLastCommand = new Command(SetFileAsLast, CanExecute);
-            MoveFileUpCommand = new Command(MoveFileUp, CanExecute);
-            MoveFileDownCommand = new Command(MoveFileDown, CanExecute);
             _filesManager = filesManager;
         }
 
@@ -141,7 +120,7 @@ namespace CrytonCoreNext.ViewModels
             _deletedFileGuid = Guid.Empty;
             DoAction(_filesManager.ClearAllFiles);
             AllFilesDeleted.Invoke(null, null);
-            GCHelper.Collect();
+            GC.Collect();
         }
 
         public void DeleteFile()
@@ -160,7 +139,7 @@ namespace CrytonCoreNext.ViewModels
             _deletedFileGuid = CurrentFileGuid;
             DoAction(_filesManager.DeleteItem);
             FileDeleted.Invoke(null, null);
-            GCHelper.Collect();
+            GC.Collect();
         }
 
         public void SetFileAsFirst()

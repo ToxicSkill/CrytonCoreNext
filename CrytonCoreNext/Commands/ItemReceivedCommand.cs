@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Input;
 
-namespace DragDropDemo.Commands
+namespace CrytonCoreNext.Commands
 {
     public class ItemReceivedCommand : ICommand
     {

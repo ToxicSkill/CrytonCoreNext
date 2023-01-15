@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
 using CrytonCoreNext.PDF.Abstarct;
 using CrytonCoreNext.PDF.Interfaces;
 using System;
@@ -49,7 +48,6 @@ namespace CrytonCoreNext.PDF.ViewModels
         public PdfSplitViewModel(InteractiveViewBase pdfManagerViewModel, IPDFService pdfService) : base(pdfManagerViewModel, pdfService)
         {
             OnUpdate += HandleUpdate;
-            SplitCommand = new AsyncCommand(Split, CanExecute);
         }
 
         private void HandleUpdate(object? sender, EventArgs e)

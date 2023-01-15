@@ -1,5 +1,4 @@
-﻿using CrytonCoreNext.Helpers;
-using CrytonCoreNext.PDF.Interfaces;
+﻿using CrytonCoreNext.PDF.Interfaces;
 using Docnet.Core;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
@@ -112,7 +111,7 @@ namespace CrytonCoreNext.PDF.Models
             }
             Array.Clear(array, 0, array.Length);
             array = null;
-            GCHelper.Collect();
+            GC.Collect();
         }
 
         private static byte[] RearrangeBytesToRGBA(byte[] BGRABytes)

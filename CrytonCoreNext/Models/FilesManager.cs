@@ -155,7 +155,7 @@ namespace CrytonCoreNext.Models
             file.Bytes = bytes;
             //file.Status = status;
             //file.Method = methodName ?? string.Empty;
-            Helpers.GCHelper.Collect();
+            GC.Collect();
             return new(true, file.Id);
         }
 

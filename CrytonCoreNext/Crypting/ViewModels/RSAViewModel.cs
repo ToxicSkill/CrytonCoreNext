@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
@@ -8,10 +7,9 @@ using CrytonCoreNext.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Wpf.Ui.Mvvm.Contracts;
 
-namespace CrytonCoreNext.CryptingOptionsViewModels
+namespace CrytonCoreNext.Crypting.ViewModels
 {
     public class RSAViewModel : ViewModelBase
     {
@@ -24,8 +22,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         private int _selectedKey;
 
         public ObservableCollection<int> KeySizesComboBox { get; init; }
-
-        public IProgressView ProgressView { get; init; }
 
         public bool IsPublicKeyAvailable { get; set; }
 
@@ -47,33 +43,14 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
 
         public string MaxBytes { get; set; }
 
-        public ICommand ExportPublicKeyCommand { get; init; }
-
-        public ICommand ExportPrivateKeyCommand { get; init; }
-
-        public ICommand ImportCryptorCommand { get; init; }
-
-        public ICommand GenerateKeysCommand { get; init; }
-
-        public RSAViewModel(ISnackbarService snackbarService, IJsonSerializer json, IXmlSerializer xml, IProgressView progressView, RSAHelper rsaHelper, string pageName) : base(pageName)
+        public RSAViewModel(ISnackbarService snackbarService, IJsonSerializer json, IXmlSerializer xml, RSAHelper rsaHelper, string pageName) : base(pageName)
         {
             _snackbarService = snackbarService;
             _jsonSerializer = json;
             _rsaHelper = rsaHelper;
-            ProgressView = progressView;
-            ProgressView.ShowLabels(false);
-
-            ExportPublicKeyCommand = new Command(ExportPublicKey, CanExecute);
-            ExportPrivateKeyCommand = new Command(ExportPrivateKey, CanExecute);
-            ImportCryptorCommand = new AsyncCommand(ImportCryptor, CanExecute);
-            GenerateKeysCommand = new AsyncCommand(GenerateKeys, CanExecute);
 
             KeySizesComboBox = new ObservableCollection<int>(rsaHelper.LegalKeys);
             SelectedKey = _rsaHelper.GetKeySize();
-
-            OnPropertyChanged(nameof(ProgressView));
-            OnPropertyChanged(nameof(KeySizesComboBox));
-            OnPropertyChanged(nameof(SelectedKey));
         }
 
         private struct ToSerialzieObjects
@@ -93,7 +70,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             try
             {
                 Lock();
-                ProgressView.InitializeProgress<int>(0);
                 await Task.Run(() => _rsaHelper.SetKeySize(_selectedKey));
                 CombineMaxBytesMessage();
             }
@@ -101,7 +77,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             {
                 await Task.Run(() => UpdateKeys());
                 _snackbarService.Show(Language.Post("Information"), Language.Post("KeysGenerated"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
-                ProgressView.ClearProgress();
+
                 Unlock();
             }
         }
@@ -110,8 +86,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             IsPublicKeyAvailable = true;
             IsPrivateKeyAvailable = _rsaHelper.IsPrivateKeyAvailable();
-            OnPropertyChanged(nameof(IsPublicKeyAvailable));
-            OnPropertyChanged(nameof(IsPrivateKeyAvailable));
         }
 
         private void ExportPublicKey()
@@ -142,13 +116,11 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             var prefix = Language.Post("MaximumFileSize");
             MaxBytes = $"{prefix}{_rsaHelper.MaxFileSize} B";
-            OnPropertyChanged(nameof(MaxBytes));
         }
 
         private void NoKeyError()
         {
             _snackbarService.Show(Language.Post("Error"), Language.Post("NoGeneratedKeys"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
-            OnPropertyChanged(nameof(Logger));
             return;
         }
 
@@ -159,7 +131,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                 ToSerialzie = new ToSerialzieObjects()
                 {
                     Keys = _rsaHelper.ToXmlString(includePrivate),
-                    SelectedKeySize = this.SelectedKey
+                    SelectedKeySize = SelectedKey
                 },
                 Name = PageName
             };
@@ -205,7 +177,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
                         _selectedKey = castedObjects.ToSerialzie.SelectedKeySize;
                         await Task.Run(() => UpdateKeys());
                         _snackbarService.Show(Language.Post("Information"), Language.Post("Imported"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
-                        OnPropertyChanged(nameof(SelectedKey));
                     }
                 }
             }

@@ -1,8 +1,8 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
-using CrytonCoreNext.CryptingOptionsViewModels;
-using CrytonCoreNext.CryptingOptionsViews;
+using CrytonCoreNext.Crypting.ViewModels;
+using CrytonCoreNext.Crypting.Views;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
 using System;
@@ -26,10 +26,10 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public INavigableView<ViewModelBase> ViewModel { get; init; }
 
-        public RSA(ISnackbarService snackbarService, IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer, IProgressView progressView)
+        public RSA(ISnackbarService snackbarService, IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer)
         {
             _rsaHelper = new(_useOAEP);
-            ViewModel = new RSAView(new RSAViewModel(snackbarService, jsonSerializer, xmlSerializer, progressView, _rsaHelper, Name));
+            ViewModel = new RSAView(new RSAViewModel(snackbarService, jsonSerializer, xmlSerializer, _rsaHelper, Name));
         }
 
         public INavigableView<ViewModelBase> GetViewModel() => ViewModel;

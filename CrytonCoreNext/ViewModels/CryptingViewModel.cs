@@ -43,7 +43,7 @@ namespace CrytonCoreNext.ViewModels
         public INavigableView<ViewModelBase> currentCryptingViewModel;
 
 
-        public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, IProgressView progressView, ISnackbarService snackbarService)
+        public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, ISnackbarService snackbarService)
             : base(fileService, dialogService, snackbarService)
         {
             _progressService = new ProgressService();

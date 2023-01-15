@@ -1,7 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Abstract
 {
@@ -43,20 +41,6 @@ namespace CrytonCoreNext.Abstract
         public virtual void Unlock()
         {
             IsBusy = false;
-        }
-
-        private void NotifyLoggerChanged(object? o, EventArgs? e)
-        {
-            OnPropertyChanged(nameof(Logger));
-        }
-
-        private static void OnAsyncFailed(Task task)
-        {
-            if (task != null)
-            {
-                var ex = task.Exception;
-                Console.Write(ex?.Message);
-            }
         }
     }
 }

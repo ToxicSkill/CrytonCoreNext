@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
 using CrytonCoreNext.PDF.Abstarct;
 using CrytonCoreNext.PDF.Interfaces;
 using System;
@@ -18,7 +17,6 @@ namespace CrytonCoreNext.PDF.ViewModels
         public PdfMergeViewModel(InteractiveViewBase pdfManagerViewModel, IPDFService pdfService) : base(pdfManagerViewModel, pdfService)
         {
             OnUpdate += HandleUpdate;
-            MergeCommand = new AsyncCommand(Merge, CanExecute);
         }
 
         private void HandleUpdate(object? sender, EventArgs e)

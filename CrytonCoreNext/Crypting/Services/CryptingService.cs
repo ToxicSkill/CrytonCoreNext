@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static CrytonCoreNext.Helpers.GCHelper;
 using static CrytonCoreNext.Static.CryptingStatus;
 
 namespace CrytonCoreNext.Crypting.Services
@@ -72,7 +71,7 @@ namespace CrytonCoreNext.Crypting.Services
             file.Bytes = bytes;
             file.Status = status;
             file.Method = methodName ?? string.Empty;
-            Collect();
+            GC.Collect();
         }
 
         public async Task<byte[]> RunCrypting(CryptFile file, IProgress<string> progress)

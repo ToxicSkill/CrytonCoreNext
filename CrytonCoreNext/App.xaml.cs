@@ -52,7 +52,6 @@ namespace CrytonCoreNext
 
             services.AddSingleton(CreateCryptingRecognition);
             services.AddSingleton<ICryptingReader, CryptingReader>();
-            services.AddTransient(CreateProgressViewModel);
             services.AddTransient(CreateAES);
             services.AddTransient(CreateRSA);
             services.AddTransient(CreateCryptingService);
@@ -171,10 +170,9 @@ namespace CrytonCoreNext
             var dialogService = provider.GetRequiredService<Interfaces.IDialogService>();
             var cryptingService = provider.GetRequiredService<ICryptingService>();
             var filesView = provider.GetRequiredService<IFilesView>();
-            var progressView = provider.GetRequiredService<IProgressView>();
             var snackbar = provider.GetRequiredService<ISnackbarService>();
 
-            return new(fileService, dialogService, cryptingService, filesView, progressView, snackbar);
+            return new(fileService, dialogService, cryptingService, filesView, snackbar);
         }
 
         private static PdfManagerViewModel CreatePdfManagerViewModel(IServiceProvider provider)
@@ -182,7 +180,6 @@ namespace CrytonCoreNext
             var fileService = provider.GetRequiredService<IFileService>();
             var dialogService = provider.GetRequiredService<Interfaces.IDialogService>();
             var filesView = provider.GetRequiredService<IFilesView>();
-            var progressView = provider.GetRequiredService<IProgressView>();
             var pdfService = provider.GetRequiredService<IPDFService>();
             var snackbar = provider.GetRequiredService<ISnackbarService>();
 
@@ -209,9 +206,8 @@ namespace CrytonCoreNext
         {
             var jsonSerialzer = provider.GetRequiredService<IJsonSerializer>();
             var xmlSerialzer = provider.GetRequiredService<IXmlSerializer>();
-            var progressView = provider.GetRequiredService<IProgressView>();
             var snackbar = provider.GetRequiredService<ISnackbarService>();
-            return new RSA(snackbar, jsonSerialzer, xmlSerialzer, progressView);
+            return new RSA(snackbar, jsonSerialzer, xmlSerialzer);
         }
 
         private static ICryptingRecognition CreateCryptingRecognition(IServiceProvider provider)
@@ -252,12 +248,6 @@ namespace CrytonCoreNext
         public static IImageView CreateImagesView(IServiceProvider provider)
         {
             return new ImageViewerViewModel();
-        }
-
-        public static IProgressView CreateProgressViewModel(IServiceProvider provider)
-        {
-            var progressService = provider.GetRequiredService<IProgressService>();
-            return new ProgressViewModel(progressService);
         }
 
         private void InitializeDictionary()

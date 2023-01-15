@@ -22,7 +22,7 @@ namespace CrytonCoreNextTests
 
         private readonly ICrypting _aes = new AES(new Mock<ISnackbarService>().Object, new Mock<IJsonSerializer>().Object);
 
-        private readonly ICrypting _rsa = new RSA(new Mock<ISnackbarService>().Object, new Mock<IJsonSerializer>().Object, new Mock<IXmlSerializer>().Object, new Mock<IProgressView>().Object);
+        private readonly ICrypting _rsa = new RSA(new Mock<ISnackbarService>().Object, new Mock<IJsonSerializer>().Object, new Mock<IXmlSerializer>().Object);
 
         private readonly IProgress<string> _progress = new Mock<Progress<string>>().Object;
 

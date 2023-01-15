@@ -1,7 +1,7 @@
-﻿using CrytonCoreNext.CryptingOptionsViewModels;
+﻿using CrytonCoreNext.Crypting.ViewModels;
 using Wpf.Ui.Common.Interfaces;
 
-namespace CrytonCoreNext.CryptingOptionsViews
+namespace CrytonCoreNext.Crypting.Views
 {
     /// <summary>
     /// Interaction logic for RSAView.xaml

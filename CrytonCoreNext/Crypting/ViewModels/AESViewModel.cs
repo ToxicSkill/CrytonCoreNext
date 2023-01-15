@@ -11,7 +11,7 @@ using System.Linq;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 
-namespace CrytonCoreNext.CryptingOptionsViewModels
+namespace CrytonCoreNext.Crypting.ViewModels
 {
     public partial class AESViewModel : ViewModelBase
     {
@@ -45,8 +45,8 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             BlockSizesComboBox = new();
             KeySizesComboBox = new();
 
-            KeySizesComboBox = new (_aesHelper.LegalKeys);
-            BlockSizesComboBox = new (_aesHelper.LegalBlocks);
+            KeySizesComboBox = new(_aesHelper.LegalKeys);
+            BlockSizesComboBox = new(_aesHelper.LegalBlocks);
 
             SelectedBlock = _aesHelper.GetCurrentBlockSize();
             SelectedKey = _aesHelper.GetCurrentKeySize();
