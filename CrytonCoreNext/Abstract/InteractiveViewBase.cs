@@ -67,7 +67,6 @@ namespace CrytonCoreNext.Abstract
             }
         }
 
-
         protected void SaveFile(File? file)
         {
             if (file == null)

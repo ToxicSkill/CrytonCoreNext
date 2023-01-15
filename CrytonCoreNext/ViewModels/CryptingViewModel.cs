@@ -57,7 +57,6 @@ namespace CrytonCoreNext.ViewModels
         partial void OnSelectedFileChanged(CryptFile value)
         {
             CurrentCryptingViewModel = _cryptingService.GetCurrentCrypting().GetViewModel();
-            OnPropertyChanged(nameof(CurrentCryptingViewModel));
         }
 
         partial void OnSelectedCryptingMethodChanged(ICrypting value)
@@ -76,12 +75,6 @@ namespace CrytonCoreNext.ViewModels
         //    _files.Clear();
         //}
 
-        //private void HandleFileDeleted(object? sender, EventArgs e)
-        //{
-        //    var deletedFileGuid = FilesViewModel.GetDeletedFileGuid();
-        //    _files.Remove(_files.Select(x => x).Where(x => x.Guid == deletedFileGuid).First());
-        //}
-
         //private void HandleSelectedFileChanged(object? sender, EventArgs? e)
         //{
         //    var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetSelectedFileGuid());
@@ -92,6 +85,24 @@ namespace CrytonCoreNext.ViewModels
         //        OnPropertyChanged(nameof(CryptButtonName));
         //    }
         //}
+
+
+        [RelayCommand]
+        private void ClearFiles()
+        {
+            Files.Clear();
+        }
+
+        [RelayCommand]
+        private void DeleteFile()
+        {
+            var oldIndex = Files.IndexOf(SelectedFile);
+            Files.Remove(SelectedFile);
+            if (Files.Any())
+            {
+                SelectedFile = Files.ElementAt(oldIndex--);
+            }
+        }
 
         [RelayCommand]
         private async Task LoadCryptFiles()
@@ -139,13 +150,7 @@ namespace CrytonCoreNext.ViewModels
             if (!result.Equals(Array.Empty<byte>()) && Files.Any())
             {
                 _cryptingService.ModifyFile(SelectedFile, result, GetOpositeStatus(SelectedFile.Status), _cryptingService.GetCurrentCrypting().GetName());
-                var oldIndex = Files.IndexOf(SelectedFile);
-                var temp = SelectedFile;
-                Files.RemoveAt(oldIndex);
-                Files.Insert(oldIndex, temp);
-                SelectedFile = temp;
-                OnPropertyChanged(nameof(Files));
-                OnPropertyChanged(nameof(SelectedFile));
+                UpdateStateOfSelectedFile();
                 PostSnackbar("Success", Language.Post("Success"), SymbolRegular.Checkmark20, ControlAppearance.Success);
             }
             else
@@ -153,6 +158,17 @@ namespace CrytonCoreNext.ViewModels
                 PostSnackbar("Error", Language.Post("CryptingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
             }
             Unlock();
+        }
+
+        private void UpdateStateOfSelectedFile()
+        {
+            var oldIndex = Files.IndexOf(SelectedFile);
+            var temp = SelectedFile;
+            Files.RemoveAt(oldIndex);
+            Files.Insert(oldIndex, temp);
+            SelectedFile = temp;
+            OnPropertyChanged(nameof(Files));
+            OnPropertyChanged(nameof(SelectedFile));
         }
 
         private bool IsCorrectMethod()

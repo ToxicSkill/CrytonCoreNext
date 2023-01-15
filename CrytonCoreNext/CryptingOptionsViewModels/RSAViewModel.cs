@@ -100,8 +100,7 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             finally
             {
                 await Task.Run(() => UpdateKeys());
-
-                _snackbarService.Show(Language.Post("Information"), Language.Post("KeysGenerated"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info); _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
+                _snackbarService.Show(Language.Post("Information"), Language.Post("KeysGenerated"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
                 ProgressView.ClearProgress();
                 Unlock();
             }

@@ -18,6 +18,7 @@
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
             <c:ReverseCollectionToVisibilityConverter x:Key="ReverseCollectionToVisibilityConverter"/>
+            <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <SolidColorBrush x:Key="BrushBlueTransparent" Color="#7F8484EF"/>
         </ResourceDictionary>
     </ui:UiPage.Resources>
@@ -45,8 +46,8 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Column="0">
                         <ui:Button Icon="Add20" Command="{Binding LoadCryptFilesCommand}" Content="Add files" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Stretch" />
-                        <ui:Button Icon="Save20" Content="Save" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
-                        <ui:Button Icon="Delete20" Content="Delete" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
+                        <ui:Button Icon="Save20" Command="{Binding SaveCryptFileCommand}" Content="Save" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
+                        <ui:Button Icon="Delete20" Command="{Binding DeleteFileCommand}" Content="Delete" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
                     </StackPanel>
                     <ComboBox Grid.Column="1" Margin="0, 10, 0, 10" Padding="6" DisplayMemberPath="DescriptionName" ItemsSource="{Binding CryptingMethods, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedCryptingMethod}"/>
                 </Grid>
@@ -240,7 +241,7 @@
                             Text="Start crypting process for current file" />
                         </StackPanel>
                     </ui:CardAction>
-                    <ui:ProgressRing Grid.Column="1" IsIndeterminate="{Binding IsBusy}" HorizontalAlignment="Center" />
+                    <ui:ProgressRing Grid.Column="1" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" IsIndeterminate="{Binding IsBusy}" HorizontalAlignment="Center" />
                     <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40, 0 ,0 ,0" Text="{Binding ProgressReport}" FontSize="13"/>
                 </Grid>
             </Grid>

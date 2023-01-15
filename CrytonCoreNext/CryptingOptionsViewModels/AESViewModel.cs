@@ -36,34 +36,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         [ObservableProperty]
         public int selectedKey;
 
-        partial void OnSelectedBlockChanged(int value)
-        {
-            if (SelectedBlock != value)
-            {
-                SelectedBlock = value;
-                OnPropertyChanged(nameof(SelectedBlock));
-                if (!IsBusy)
-                {
-                    _aesHelper.SetBlockSize(value);
-                    _snackbarService.Show(Language.Post("Information"), Language.Post("RegenerateIV"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info); _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
-                }
-            }
-        }
-
-        partial void OnSelectedKeyChanged(int value)
-        {
-            if (SelectedKey != value)
-            {
-                SelectedKey = value;
-                OnPropertyChanged(nameof(SelectedKey));
-                if (!IsBusy)
-                {
-                    _aesHelper.SetKeySize(value);
-                    _snackbarService.Show(Language.Post("Information"), Language.Post("RegenerateKey"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info); _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
-                }
-            }
-        }
-
         public AESViewModel(ISnackbarService snackbarService, IJsonSerializer json, AESHelper aesHelper, string pageName) : base(pageName)
         {
             _snackbarService = snackbarService;
@@ -73,10 +45,12 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
             BlockSizesComboBox = new();
             KeySizesComboBox = new();
 
-            KeySizesComboBox = new ObservableCollection<int>(_aesHelper.LegalKeys);
-            BlockSizesComboBox = new ObservableCollection<int>(_aesHelper.LegalBlocks);
+            KeySizesComboBox = new (_aesHelper.LegalKeys);
+            BlockSizesComboBox = new (_aesHelper.LegalBlocks);
+
             SelectedBlock = _aesHelper.GetCurrentBlockSize();
             SelectedKey = _aesHelper.GetCurrentKeySize();
+
             UpdateKeyAvailability(true);
         }
 
@@ -162,7 +136,6 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             Lock();
             var keysCorrect = _aesHelper.ValidateKeys(iv, key);
-
             UpdateKeyAvailability(keysCorrect);
             UpdateSelectedKeys();
             Unlock();
@@ -174,14 +147,11 @@ namespace CrytonCoreNext.CryptingOptionsViewModels
         {
             SelectedBlock = _aesHelper.GetCurrentBlockSize();
             SelectedKey = _aesHelper.GetCurrentKeySize();
-            OnPropertyChanged(nameof(SelectedBlock));
-            OnPropertyChanged(nameof(SelectedKey));
         }
 
         private void UpdateKeyAvailability(bool available)
         {
             KeysAvailable = available;
-            OnPropertyChanged(nameof(KeysAvailable));
         }
 
         [RelayCommand]

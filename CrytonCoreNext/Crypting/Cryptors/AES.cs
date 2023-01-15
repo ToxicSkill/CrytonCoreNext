@@ -24,7 +24,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public string Name => nameof(AES);
 
-        public string DescriptionName => $"{Name} - Symmetric alorithm";
+        public string DescriptionName => $"{Name} - Symmetric algorithm";
 
         public int ProgressCount => 2;
 
