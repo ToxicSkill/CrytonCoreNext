@@ -45,13 +45,13 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Column="0">
-                        <ui:Button Icon="Add20" Command="{Binding LoadCryptFilesCommand}" Content="Add files" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Stretch" />
-                        <ui:Button Icon="Save20" Command="{Binding SaveCryptFileCommand}" Content="Save" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
-                        <ui:Button Icon="Delete20" Command="{Binding DeleteFileCommand}" Content="Delete" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
+                        <ui:Button Icon="Add20" Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Stretch" />
+                        <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Save20" Command="{Binding SaveCryptFileCommand}" Content="Save" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
+                        <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Delete20" Command="{Binding DeleteFileCommand}" Content="Delete" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
                     </StackPanel>
-                    <ComboBox Grid.Column="1" Margin="0, 10, 0, 10" Padding="6" DisplayMemberPath="DescriptionName" ItemsSource="{Binding CryptingMethods, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedCryptingMethod}"/>
+                    <ComboBox Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Margin="0, 10, 0, 10" Padding="6" DisplayMemberPath="DescriptionName" ItemsSource="{Binding CryptingMethods, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedCryptingMethod}"/>
                 </Grid>
-                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }">
+                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged }">
                     <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="0, 0, 0, -30">
                         <!--<Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -81,7 +81,7 @@
                         </DockPanel>
                     </StackPanel>
                 </Grid>
-                <ScrollViewer Grid.Row="2"  CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Row="2" CanContentScroll="True" VerticalScrollBarVisibility="Auto">
                     <ListView ItemsSource="{Binding Files, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFile}">
                         <ListView.Template>
                             <ControlTemplate TargetType="ListBox">
@@ -134,7 +134,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Row="1" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <Grid Grid.Row="1" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                         <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" >
                             <!--<Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -148,7 +148,7 @@
                             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be the details of chosen the file" FontSize="14" FontWeight="Light"/>
                         </StackPanel>
                     </Grid>
-                    <Grid Grid.Column="0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <Grid Grid.Column="0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
@@ -168,7 +168,7 @@
                         <TextBlock Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Text="{Binding SelectedFile.Extension}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
                     </Grid>
 
-                    <Grid Grid.Column="1" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="20, 0, 0, 0">
+                    <Grid Grid.Column="1" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="20, 0, 0, 0">
                         <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="0, 0, 20, 0">
                             <!--<Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -182,10 +182,11 @@
                             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be name of chosen method" FontSize="14" FontWeight="Light"/>
                         </StackPanel>
                     </Grid>
-                    <TextBlock Grid.Column="1" Text="{Binding CurrentCryptingViewModel.ViewModel.PageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBlock Grid.Column="1" Text="{Binding CurrentCryptingViewModel.ViewModel.PageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                               Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                FontSize="78" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
-                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="0, 20, 20, 20">
                         <!--<Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -199,7 +200,7 @@
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be the chosen crypting method settings view" FontSize="16" FontWeight="Light"/>
                     </StackPanel>
                 </Grid>
-                <Grid Grid.Row="2" Margin="0, 20, 20, 0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Grid Grid.Row="2" Margin="0, 20, 20, 0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Frame Grid.Row="1" Content="{Binding CurrentCryptingViewModel}"/>
                 </Grid>
             </Grid>
@@ -210,7 +211,7 @@
                     <RowDefinition Height="100"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="20, 0, 0, 0">
+                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="20, 0, 0, 0">
                     <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="-18, 10, 20, 10">
                         <!--<Border.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -224,7 +225,7 @@
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be action panel" FontSize="14" FontWeight="Light"/>
                     </StackPanel>
                 </Grid>
-                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
