@@ -38,41 +38,7 @@
                       Padding="6" MinWidth="200" HorizontalAlignment="Right" FontSize="14"/>
             </Grid>
             <ui:Button Icon="New20" Content="{DynamicResource GenerateKeys}" Command="{Binding GenerateRandomKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
-
-
-            <ui:CardExpander
-                Padding="6"
-                HorizontalContentAlignment="Center"
-                Icon="ArrowCircleDown20"
-                IsEnabled="True"
-                IsExpanded="False">
-                <ui:CardExpander.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock
-                            FontSize="13"
-                            FontWeight="Medium"
-                            Text="Export keys" />
-                            <TextBlock FontSize="12" FontWeight="Light" Text="Decide which key members to export." />
-                        </StackPanel>
-                        <ui:Button
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            Appearance="Secondary"
-                            Command="{Binding ExportKeysCommand}"
-                            Content="{DynamicResource ExportKeys}"
-                            Cursor="Hand" Margin="0, 5, 10, 5" MinWidth="100"/>
-                    </Grid>
-                </ui:CardExpander.Header>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Include private members" Margin="0, 0, 10, 0"/>
-                    <ui:ToggleSwitch/>
-                </StackPanel>
-            </ui:CardExpander>
+            <ui:Button Icon="ArrowCircleDown20" Content="{DynamicResource ExportKeys}" Command="{Binding ExportKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
             <ui:Button Icon="ArrowCircleUp20" Content="{DynamicResource ImportKeys}" Command="{Binding ImportKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
             <Grid Height="30" Margin="7, 0, 0, 0">
                 <StackPanel Orientation="Horizontal">

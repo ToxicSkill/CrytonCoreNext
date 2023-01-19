@@ -39,13 +39,14 @@
                     <RowDefinition Height="20"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Crypting" FontSize="32" FontWeight="Light" />
+                <ui:Button Grid.Row="1" Icon="Add20" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" Appearance="Primary" HorizontalAlignment="Stretch" />
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Column="0">
-                        <ui:Button Icon="Add20" Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Stretch" />
+                        <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Add20" Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Stretch" />
                         <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Save20" Command="{Binding SaveCryptFileCommand}" Content="Save" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
                         <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Delete20" Command="{Binding DeleteFileCommand}" Content="Delete" Padding="6" Margin="0, 10, 10, 10" Appearance="Secondary" HorizontalAlignment="Right" />
                     </StackPanel>

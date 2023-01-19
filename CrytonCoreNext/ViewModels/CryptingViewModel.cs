@@ -100,7 +100,7 @@ namespace CrytonCoreNext.ViewModels
             Files.Remove(SelectedFile);
             if (Files.Any())
             {
-                SelectedFile = Files.ElementAt(oldIndex--);
+                SelectedFile = Files.ElementAt(oldIndex > 0 ? --oldIndex : oldIndex);
             }
         }
 

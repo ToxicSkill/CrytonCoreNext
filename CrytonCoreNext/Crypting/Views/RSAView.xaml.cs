@@ -14,6 +14,7 @@ namespace CrytonCoreNext.Crypting.Views
         {
             ViewModel = viewModel;
             InitializeComponent();
+            DataContext = ViewModel;
         }
     }
 }

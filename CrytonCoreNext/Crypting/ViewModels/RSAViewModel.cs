@@ -1,4 +1,6 @@
-﻿using CrytonCoreNext.Abstract;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
@@ -11,7 +13,7 @@ using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.ViewModels
 {
-    public class RSAViewModel : ViewModelBase
+    public partial class RSAViewModel : ViewModelBase
     {
         private readonly ISnackbarService _snackbarService;
 
@@ -19,27 +21,21 @@ namespace CrytonCoreNext.Crypting.ViewModels
 
         private readonly RSAHelper _rsaHelper;
 
-        private int _selectedKey;
+        [ObservableProperty]
+        public bool isPublicKeyAvailable;
 
-        public ObservableCollection<int> KeySizesComboBox { get; init; }
+        [ObservableProperty]
+        public bool isPrivateKeyAvailable;
 
-        public bool IsPublicKeyAvailable { get; set; }
+        [ObservableProperty]
+        public int selectedKeySize;
 
-        public bool IsPrivateKeyAvailable { get; set; }
+        [ObservableProperty]
+        public ObservableCollection<int> keySizesComboBox;
 
-        public int SelectedKey
-        {
-            get => _selectedKey;
-            set
-            {
-                if (_selectedKey != value && !IsBusy)
-                {
-                    _selectedKey = value;
-                    GenerateKeys().ConfigureAwait(true);
-                    OnPropertyChanged(nameof(SelectedKey));
-                }
-            }
-        }
+        [ObservableProperty]
+        public bool includePrivateKey;
+
 
         public string MaxBytes { get; set; }
 
@@ -50,7 +46,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
             _rsaHelper = rsaHelper;
 
             KeySizesComboBox = new ObservableCollection<int>(rsaHelper.LegalKeys);
-            SelectedKey = _rsaHelper.GetKeySize();
+            SelectedKeySize = _rsaHelper.GetKeySize();
         }
 
         private struct ToSerialzieObjects
@@ -70,7 +66,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
             try
             {
                 Lock();
-                await Task.Run(() => _rsaHelper.SetKeySize(_selectedKey));
+                await Task.Run(() => _rsaHelper.SetKeySize(selectedKeySize));
                 CombineMaxBytesMessage();
             }
             finally
@@ -92,7 +88,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
         {
             if (IsPublicKeyAvailable)
             {
-                ExportKey(false);
+                ExportKeys();
             }
             else
             {
@@ -104,7 +100,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
         {
             if (IsPrivateKeyAvailable)
             {
-                ExportKey(true);
+                ExportKeys();
             }
             else
             {
@@ -124,14 +120,15 @@ namespace CrytonCoreNext.Crypting.ViewModels
             return;
         }
 
-        private void ExportKey(bool includePrivate)
+        [RelayCommand]
+        private void ExportKeys()
         {
             var serialzieObjects = new Objects()
             {
                 ToSerialzie = new ToSerialzieObjects()
                 {
-                    Keys = _rsaHelper.ToXmlString(includePrivate),
-                    SelectedKeySize = SelectedKey
+                    Keys = _rsaHelper.ToXmlString(includePrivateKey),
+                    SelectedKeySize = selectedKeySize
                 },
                 Name = PageName
             };
@@ -151,7 +148,8 @@ namespace CrytonCoreNext.Crypting.ViewModels
             }
         }
 
-        private async Task ImportCryptor()
+        [RelayCommand]
+        private async Task ImportKeys()
         {
             WindowDialog.OpenDialog openDialog = new(new DialogHelper()
             {
@@ -174,7 +172,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
                     else
                     {
                         _rsaHelper.FromXmlString(castedObjects.ToSerialzie.Keys);
-                        _selectedKey = castedObjects.ToSerialzie.SelectedKeySize;
+                        selectedKeySize = castedObjects.ToSerialzie.SelectedKeySize;
                         await Task.Run(() => UpdateKeys());
                         _snackbarService.Show(Language.Post("Information"), Language.Post("Imported"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
                     }
