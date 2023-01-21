@@ -6,7 +6,7 @@ using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Wpf.Ui.Mvvm.Contracts;
@@ -21,6 +21,8 @@ namespace CrytonCoreNext.Crypting.ViewModels
 
         private readonly RSAHelper _rsaHelper;
 
+        private readonly List<int> _legalKeyValues;
+
         [ObservableProperty]
         public bool isPublicKeyAvailable;
 
@@ -31,7 +33,13 @@ namespace CrytonCoreNext.Crypting.ViewModels
         public int selectedKeySize;
 
         [ObservableProperty]
-        public ObservableCollection<int> keySizesComboBox;
+        public int sliderFrequency;
+
+        [ObservableProperty]
+        public int sliderMinimum;
+
+        [ObservableProperty]
+        public int sliderMaximum;
 
         [ObservableProperty]
         public bool includePrivateKey;
@@ -45,9 +53,18 @@ namespace CrytonCoreNext.Crypting.ViewModels
             _jsonSerializer = json;
             _rsaHelper = rsaHelper;
 
-            KeySizesComboBox = new ObservableCollection<int>(rsaHelper.LegalKeys);
+            _legalKeyValues = rsaHelper.LegalKeys;
             SelectedKeySize = _rsaHelper.GetKeySize();
+            InitializeSlider();
         }
+
+        private void InitializeSlider()
+        {
+            SliderMinimum = _legalKeyValues.First();
+            SliderMaximum = _legalKeyValues.Last();
+            SliderFrequency = _rsaHelper.GetKeyValueStep();
+        }
+
 
         private struct ToSerialzieObjects
         {

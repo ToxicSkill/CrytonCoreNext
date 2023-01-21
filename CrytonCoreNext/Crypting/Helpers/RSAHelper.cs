@@ -13,6 +13,8 @@ namespace CrytonCoreNext.Crypting.Helpers
 
         public List<int> LegalKeys = new();
 
+        public int KeyValueStep = 1;
+
         public int MaxFileSize = 0;
 
         public RSAHelper(bool useOAEP)
@@ -83,6 +85,11 @@ namespace CrytonCoreNext.Crypting.Helpers
                 keySize >= _rsaCryptoServiceProvider.LegalKeySizes[0].MinSize;
         }
 
+        public int GetKeyValueStep()
+        {
+            return KeyValueStep;
+        }
+
         public RSAParameters GetOnlyPublicMembers(RSAParameters parameters)
         {
             var rsaParameters = new RSAParameters()
@@ -97,7 +104,8 @@ namespace CrytonCoreNext.Crypting.Helpers
         private void ParseLegalKeys()
         {
             var legalKeys = _rsaCryptoServiceProvider.LegalKeySizes[0];
-            for (var key = legalKeys.MinSize; key < legalKeys.MaxSize; key += legalKeys.SkipSize * 16)
+            KeyValueStep = legalKeys.SkipSize * 16;
+            for (var key = legalKeys.MinSize; key < legalKeys.MaxSize; key += KeyValueStep)
             {
                 LegalKeys.Add(key);
             }

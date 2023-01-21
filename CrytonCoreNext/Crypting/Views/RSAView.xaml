@@ -22,20 +22,13 @@
     <Grid>
         <StackPanel>
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0" Text="{DynamicResource BlockSize}" VerticalAlignment="Center" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
-                <TextBlock Grid.Column="0" Grid.Row="1" Text="{DynamicResource KeySize}" VerticalAlignment="Center" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
-                <ComboBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding BlockSizesComboBox}" SelectedItem="{Binding SelectedBlock}" 
-                      Padding="6" MinWidth="200" HorizontalAlignment="Right" FontSize="14"/>
-                <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding KeySizesComboBox}" SelectedItem="{Binding SelectedKey}" 
-                      Padding="6" MinWidth="200" HorizontalAlignment="Right" FontSize="14"/>
+                <TextBlock Grid.Row="0" Text="{DynamicResource KeySize}" VerticalAlignment="Center" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
+                <TextBlock Grid.Row="0" Text="{Binding SelectedKeySize}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
+                <Slider Grid.Row="1" Value="{Binding SelectedKeySize}" IsSnapToTickEnabled="True" TickPlacement="BottomRight" TickFrequency="{Binding SliderFrequency}" Minimum="{Binding SliderMinimum}" Maximum="{Binding SliderMaximum}" />
             </Grid>
             <ui:Button Icon="New20" Content="{DynamicResource GenerateKeys}" Command="{Binding GenerateRandomKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
 
