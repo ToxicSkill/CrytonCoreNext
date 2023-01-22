@@ -244,8 +244,10 @@
                         </StackPanel>
                     </ui:CardAction>
                     <ui:ProgressRing Grid.Column="1" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" IsIndeterminate="{Binding IsBusy}" HorizontalAlignment="Center" />
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40, 0 ,0 ,0" Text="{Binding ProgressReport}" FontSize="13"/>
-                </Grid>
+                    <Grid Grid.Column="0" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" >
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40, 0 ,0 ,0" Text="{Binding ProgressMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DataContext="{Binding ProgressService}"  FontSize="13"/>
+                    </Grid>
+                 </Grid>
             </Grid>
         </Grid>
     </Grid>

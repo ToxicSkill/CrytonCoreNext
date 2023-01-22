@@ -22,9 +22,10 @@ namespace CrytonCoreNext.ViewModels
     {
         private readonly ICryptingService _cryptingService;
 
-        private readonly IProgressService _progressService;
-
         private readonly IFileService _fileService;
+
+        [ObservableProperty]
+        public IProgressService progressService;
 
         [ObservableProperty]
         public ObservableCollection<ICrypting> cryptingMethods;
@@ -46,7 +47,7 @@ namespace CrytonCoreNext.ViewModels
         public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, ISnackbarService snackbarService)
             : base(fileService, dialogService, snackbarService)
         {
-            _progressService = new ProgressService();
+            ProgressService = new ProgressService();
             _fileService = fileService;
             _cryptingService = cryptingService;
             files = new ObservableCollection<CryptFile>();
@@ -144,7 +145,7 @@ namespace CrytonCoreNext.ViewModels
                 return;
             }
 
-            var progressReport = _progressService.SetProgress<string>(_cryptingService.GetCurrentCryptingProgressCount());
+            var progressReport = ProgressService.SetProgress<string>(_cryptingService.GetCurrentCryptingProgressCount());
             var result = await _cryptingService.RunCrypting(SelectedFile, progressReport);
 
             if (!result.Equals(Array.Empty<byte>()) && Files.Any())
@@ -182,16 +183,6 @@ namespace CrytonCoreNext.ViewModels
             return currentStatus.Equals(CryptingStatus.Status.Decrypted) ?
                 CryptingStatus.Status.Encrypted :
                 CryptingStatus.Status.Decrypted;
-        }
-
-        private string GetCryptName()
-        {
-            if (SelectedFile == null)
-            {
-                return string.Empty;
-            }
-
-            return GetOpositeStatus(SelectedFile.Status).ToDescription();
         }
     }
 }

@@ -76,6 +76,7 @@
     <system:String x:Key="TooBigFile">File is too big</system:String>
     <system:String x:Key="ExportPublicKey">Export public key</system:String>
     <system:String x:Key="ExportPrivateKey">Export private key</system:String>
+    <system:String x:Key="GeneratingKeys">Generating keys</system:String>
     
     
     <!--Files-->

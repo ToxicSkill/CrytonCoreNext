@@ -44,8 +44,8 @@ namespace CrytonCoreNext.Crypting.ViewModels
         [ObservableProperty]
         public bool includePrivateKey;
 
-
-        public string MaxBytes { get; set; }
+        [ObservableProperty]
+        public string maxBytesMessage;
 
         public RSAViewModel(ISnackbarService snackbarService, IJsonSerializer json, IXmlSerializer xml, RSAHelper rsaHelper, string pageName) : base(pageName)
         {
@@ -65,7 +65,6 @@ namespace CrytonCoreNext.Crypting.ViewModels
             SliderFrequency = _rsaHelper.GetKeyValueStep();
         }
 
-
         private struct ToSerialzieObjects
         {
             public string Keys;
@@ -78,21 +77,10 @@ namespace CrytonCoreNext.Crypting.ViewModels
             public string Name;
         }
 
-        private async Task GenerateKeys()
+        partial void OnSelectedKeySizeChanged(int value)
         {
-            try
-            {
-                Lock();
-                await Task.Run(() => _rsaHelper.SetKeySize(selectedKeySize));
-                CombineMaxBytesMessage();
-            }
-            finally
-            {
-                await Task.Run(() => UpdateKeys());
-                _snackbarService.Show(Language.Post("Information"), Language.Post("KeysGenerated"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
-
-                Unlock();
-            }
+            CombineMaxBytesMessage();
+            _rsaHelper.SetKeySize(value);
         }
 
         private void UpdateKeys()
@@ -101,41 +89,18 @@ namespace CrytonCoreNext.Crypting.ViewModels
             IsPrivateKeyAvailable = _rsaHelper.IsPrivateKeyAvailable();
         }
 
-        private void ExportPublicKey()
-        {
-            if (IsPublicKeyAvailable)
-            {
-                ExportKeys();
-            }
-            else
-            {
-                NoKeyError();
-            }
-        }
-
-        private void ExportPrivateKey()
-        {
-            if (IsPrivateKeyAvailable)
-            {
-                ExportKeys();
-            }
-            else
-            {
-                NoKeyError();
-            }
-        }
 
         private void CombineMaxBytesMessage()
         {
             var prefix = Language.Post("MaximumFileSize");
-            MaxBytes = $"{prefix}{_rsaHelper.MaxFileSize} B";
+            MaxBytesMessage = $"{prefix}{_rsaHelper.GetMaxNumberOfBytes(selectedKeySize)} B";
         }
 
-        private void NoKeyError()
-        {
-            _snackbarService.Show(Language.Post("Error"), Language.Post("NoGeneratedKeys"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
-            return;
-        }
+        //private void NoKeyError()
+        //{
+        //    _snackbarService.Show(Language.Post("Error"), Language.Post("NoGeneratedKeys"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
+        //    return;
+        //}
 
         [RelayCommand]
         private void ExportKeys()

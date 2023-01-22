@@ -26,7 +26,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public string DescriptionName => $"{Name} - Symmetric algorithm";
 
-        public int ProgressCount => 2;
+        public int ProgressCount => 1;
 
         public INavigableView<ViewModelBase> ViewModel { get; init; }
 
@@ -65,11 +65,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
             }
             catch (Exception)
             {
-                progress.Report(Language.Post("Error"));
                 return Array.Empty<byte>();
             }
-
-            progress.Report(Language.Post("Success"));
             return ms.ToArray();
         }
     }

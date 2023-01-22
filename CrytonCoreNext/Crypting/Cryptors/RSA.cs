@@ -49,6 +49,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
         private byte[] PerformCryptography(byte[] data, IProgress<string> progress, bool encryption)
         {
             var emptyArray = Array.Empty<byte>();
+            progress.Report(Language.Post("GeneratingKeys"));
+            _rsaHelper.GenerateKey();
             progress.Report(Language.Post("CollectingKeys"));
 
             if (ViewModel.ViewModel.IsBusy)
@@ -75,11 +77,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
             }
             catch (Exception)
             {
-                progress.Report(Language.Post("Error"));
                 return emptyArray;
             }
-
-            progress.Report(Language.Post("Success"));
             return result;
         }
     }
