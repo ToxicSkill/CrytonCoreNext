@@ -112,8 +112,9 @@ namespace CrytonCoreNext.ViewModels
             await foreach (var file in base.LoadFiles())
             {
                 Files.Add(_cryptingService.ReadCryptFile(file));
+                SelectedFile = Files.Last();
             }
-            if (SelectedFile == null)
+            if (SelectedFile == null && Files.Any())
             {
                 SelectedFile = Files.First();
             }

@@ -50,7 +50,11 @@ namespace CrytonCoreNext.Crypting.Cryptors
         {
             var emptyArray = Array.Empty<byte>();
             progress.Report(Language.Post("GeneratingKeys"));
-            _rsaHelper.GenerateKey();
+            if (encryption)
+            {
+                _rsaHelper.GenerateKey();
+            }
+
             progress.Report(Language.Post("CollectingKeys"));
 
             if (ViewModel.ViewModel.IsBusy)
