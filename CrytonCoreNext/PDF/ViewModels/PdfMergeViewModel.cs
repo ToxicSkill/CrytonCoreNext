@@ -1,41 +1,16 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.PDF.Abstarct;
 using CrytonCoreNext.PDF.Interfaces;
-using System;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
 
 namespace CrytonCoreNext.PDF.ViewModels
 {
-    public class PdfMergeViewModel : PdfBase
+    public class PdfMergeViewModel : ViewModelBase
     {
-        public Visibility MergeButtonVisibility { get; set; } = Visibility.Hidden;
+        private readonly IPDFService _pdfService;
 
-        public ICommand MergeCommand { get; set; }
-
-        public PdfMergeViewModel(InteractiveViewBase pdfManagerViewModel, IPDFService pdfService) : base(pdfManagerViewModel, pdfService)
+        public PdfMergeViewModel(IPDFService pdfService)
         {
-            OnUpdate += HandleUpdate;
-        }
-
-        private void HandleUpdate(object? sender, EventArgs e)
-        {
-            MergeButtonVisibility = Files.Count > 1 ? Visibility.Visible : Visibility.Hidden;
-            OnPropertyChanged(nameof(MergeButtonVisibility));
-        }
-
-        private async Task Merge()
-        {
-            if (Files.Count < 1)
-            {
-                //Log(Enums.ELogLevel.Information, Language.Post("NotEnoughFiles"));
-                return;
-            }
-
-            var newFile = await PdfService.Merge(Files);
-            PdfManagerViewModel.SendObject(newFile);
-            ResetCurrentPage();
+            _pdfService = pdfService;
+            PageName = "Merge pdf";
         }
     }
 }

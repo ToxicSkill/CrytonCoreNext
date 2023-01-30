@@ -1,15 +1,23 @@
-﻿using System.Windows.Controls;
+﻿using CrytonCoreNext.PDF.ViewModels;
+using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.PDF.Views
 {
     /// <summary>
-    /// Interaction logic for PdfMergeView.xaml
+    /// Interaction logic for PeopleView.xaml
     /// </summary>
-    public partial class PdfMergeView : UserControl
+    public partial class PdfMergeView : INavigableView<PdfMergeViewModel>
     {
-        public PdfMergeView()
+        public PdfMergeViewModel ViewModel
         {
+            get;
+        }
+
+        public PdfMergeView(PdfMergeViewModel viewModel)
+        {
+            ViewModel = viewModel;
             InitializeComponent();
+            DataContext = ViewModel;
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using CrytonCoreNext.ViewModels;
 using System;
-using System.Windows;
 using System.Windows.Controls;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 
@@ -15,23 +13,15 @@ namespace CrytonCoreNext
     {
         private bool _initialized = false;
 
-
-        private readonly ISnackbarService _snackbarService;
-
-        private readonly IThemeService _themeService;
-
         public MainViewModel ViewModel
         {
             get;
         }
 
-        public MainWindow(MainViewModel viewModel, INavigationService navigationService, IPageService pageService, IThemeService themeService, ISnackbarService snackbarService)
+        public MainWindow(MainViewModel viewModel, INavigationService navigationService, IPageService pageService, ISnackbarService snackbarService)
         {
             ViewModel = viewModel;
             DataContext = this;
-
-            _snackbarService = snackbarService;
-            _themeService = themeService;
             InitializeComponent();
 
             SetPageService(pageService);
@@ -56,20 +46,5 @@ namespace CrytonCoreNext
 
         public void CloseWindow()
             => Close();
-
-        private void TrayMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (sender is not MenuItem menuItem)
-                return;
-        }
-
-        private void RootNavigation_OnNavigated(INavigation sender, RoutedNavigationEventArgs e)
-        {
-            RootFrame.Margin = new Thickness(
-                left: 0,
-                top: sender?.Current?.PageTag == "home" ? -69 : 0,
-                right: 0,
-                bottom: 0);
-        }
     }
 }
