@@ -11,8 +11,6 @@ namespace CrytonCoreNext
     /// </summary>
     public partial class MainWindow : INavigationWindow
     {
-        private bool _initialized = false;
-
         public MainViewModel ViewModel
         {
             get;
@@ -23,7 +21,6 @@ namespace CrytonCoreNext
             ViewModel = viewModel;
             DataContext = ViewModel;
             InitializeComponent();
-            //RootNavigation.Items = ViewModel.menuItems;
 
             SetPageService(pageService);
             navigationService.SetNavigationControl(RootNavigation);
