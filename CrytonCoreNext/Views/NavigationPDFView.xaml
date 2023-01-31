@@ -13,60 +13,62 @@
              d:DesignWidth="1400">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <ItemsControl Grid.Row="0"
+        <Grid x:Name="ctrlAutoHeight">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ItemsControl Grid.Row="0" Margin="10" 
             VirtualizingPanel.CacheLengthUnit="Pixel"
             ItemsSource="{Binding NavigationItems, Mode=OneWay}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="models:PDFPageItem">
-                    <ui:CardExpander
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="models:PDFPageItem">
+                        <ui:CardExpander
                         Margin="0,8,0,0"
                         FontSize="45"
                         HorizontalContentAlignment="Center"
                         Icon="{Binding Icon}"
                         IsEnabled="True"
                         IsExpanded="False">
-                        <ui:CardExpander.Header>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                    <TextBlock
+                            <ui:CardExpander.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock
                                         FontSize="22"
                                         FontWeight="Medium"
                                         Text="{Binding Title}" />
-                                    <TextBlock
+                                        <TextBlock
                                             FontSize="12"
                                             Text="{Binding ShortDescription}" />
-                                </StackPanel>
+                                    </StackPanel>
 
-                                <ui:Button Grid.Column="1"
+                                    <ui:Button Grid.Column="1"
                                            MinWidth="200"
                                            HorizontalContentAlignment="Center"
                                             FontSize="16"
                                             Margin="10"
                                             Content="{Binding Title}">
-                                    <ui:Button.InputBindings>
-                                        <MouseBinding Gesture="LeftClick" Command="{Binding ClickedCommand}"/>
-                                    </ui:Button.InputBindings>
-                                </ui:Button>
-                            </Grid>
-                        </ui:CardExpander.Header>
-                        <TextBlock
+                                        <ui:Button.InputBindings>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding ClickedCommand}"/>
+                                        </ui:Button.InputBindings>
+                                    </ui:Button>
+                                </Grid>
+                            </ui:CardExpander.Header>
+                            <TextBlock
                             FontSize="16"
                             MaxWidth="300"
                             Text="{Binding Description}"
                             TextAlignment="Justify"
                             TextWrapping="Wrap" />
-                    </ui:CardExpander>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <Frame Grid.Row="1" Content="{Binding CurrentView}"/>
+                        </ui:CardExpander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Frame Grid.Row="1" Content="{Binding CurrentView}"/>
+        </Grid>
     </Grid>
 </ui:UiPage>

@@ -21,8 +21,9 @@ namespace CrytonCoreNext
         public MainWindow(MainViewModel viewModel, INavigationService navigationService, IPageService pageService, ISnackbarService snackbarService)
         {
             ViewModel = viewModel;
-            DataContext = this;
+            DataContext = ViewModel;
             InitializeComponent();
+            //RootNavigation.Items = ViewModel.menuItems;
 
             SetPageService(pageService);
             navigationService.SetNavigationControl(RootNavigation);

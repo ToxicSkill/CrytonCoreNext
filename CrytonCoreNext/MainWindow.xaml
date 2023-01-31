@@ -10,16 +10,14 @@
     MinHeight="650"
     d:DesignHeight="650"
     d:DesignWidth="900"
+    xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels" 
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
     Background="{ui:ThemeResource ApplicationBackgroundBrush}"
     ExtendsContentIntoTitleBar="True"
     WindowBackdropType="Mica"
     WindowCornerPreference="Round"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-
-    <!--
-        So far Visual Studio has been very reluctant to accept the default window styles.
-    -->
 
     <Grid>
         <Grid.RowDefinitions>
@@ -45,8 +43,10 @@
                 Precache="False"
                 SelectedPageIndex="-1"
                 TransitionDuration="200"
+                Items="{Binding MenuItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                Footer="{Binding FooterItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 TransitionType="FadeInWithSlide">
-                <ui:NavigationStore.Items>
+                <!--<ui:NavigationStore.Items>
                     <ui:NavigationItem
                         Cache="True"
                         Content="Home"
@@ -74,7 +74,7 @@
                         Icon="Settings48"
                         PageTag="settings" 
                         PageType="{x:Type pages:SettingsView}"/>
-                </ui:NavigationStore.Footer>
+                </ui:NavigationStore.Footer>-->
             </ui:NavigationStore>
 
             <Border
