@@ -1,5 +1,6 @@
 ﻿using CrytonCoreNext.Interfaces;
 using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace CrytonCoreNext.Services;
@@ -36,17 +37,8 @@ public class PageService : ICustomPageService
     public FrameworkElement? GetPage(Type pageType)
     {
         if (!typeof(FrameworkElement).IsAssignableFrom(pageType))
-            throw new InvalidOperationException("The page should be a WPF control.");
+            Trace.WriteLine("Form is inassingable");
         OnPageNavigate.Invoke(null, pageType.Name);
-        //if (pageType == typeof(PdfMergeView) && !e)
-        //{
-        //    e = !e;
-        //    return GetPage(typeof(NavigationPDFView));
-        //}
-        //if (pageType == typeof(NavigationPDFView) && e)
-        //{
-        //    return GetPage(typeof(PdfMergeView));
-        //}
         return _serviceProvider.GetService(pageType) as FrameworkElement;
     }
 }
