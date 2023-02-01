@@ -33,6 +33,14 @@ namespace CrytonCoreNext.ViewModels
         public MainViewModel(ICustomPageService pageService)
         {
             _pageService = pageService;
+            InitializeMenu();
+            InitializePdfTypesTags();
+            SetPdfNavigationView();
+            _pageService.OnPageNavigate += HandlePageChange;
+        }
+
+        private void InitializeMenu()
+        {
             MenuItems = new ObservableCollection<INavigationControl>()
             {
                 new NavigationItem(){ Icon = SymbolRegular.Home20,  PageTag="home", Cache=true, Content="Home", PageType=typeof(Dashboard) },
@@ -47,12 +55,14 @@ namespace CrytonCoreNext.ViewModels
             {
                 new NavigationItem(){ Icon = SymbolRegular.Settings20,  PageTag="settings", Cache=true, Content="Settings", PageType=typeof(SettingsView) }
             };
+        }
+
+        private void InitializePdfTypesTags()
+        {
             _pdfTypeTags.Add(nameof(PdfMergeView));
             _pdfTypeTags.Add(nameof(PdfSplitView));
             _pdfTypeTags.Add(nameof(PdfImageToPdfView));
             _pdfTypeTags.Add(nameof(NavigationPDFView));
-            SetPdfNavigationView();
-            _pageService.OnPageNavigate += HandlePageChange;
         }
 
         private void SetPdfNavigationView()

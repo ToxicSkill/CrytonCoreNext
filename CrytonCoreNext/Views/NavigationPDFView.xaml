@@ -14,11 +14,7 @@
 
     <Grid>
         <Grid x:Name="ctrlAutoHeight">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <ItemsControl Grid.Row="0" Margin="10" 
+            <ItemsControl Margin="10" 
             VirtualizingPanel.CacheLengthUnit="Pixel"
             ItemsSource="{Binding NavigationItems, Mode=OneWay}">
                 <ItemsControl.ItemTemplate>
@@ -68,7 +64,6 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Frame Grid.Row="1" Content="{Binding CurrentView}"/>
         </Grid>
     </Grid>
 </ui:UiPage>

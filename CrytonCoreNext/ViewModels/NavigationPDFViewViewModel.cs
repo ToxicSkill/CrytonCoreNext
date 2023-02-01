@@ -2,6 +2,7 @@
 using CrytonCoreNext.Abstract;
 using CrytonCoreNext.PDF.Models;
 using CrytonCoreNext.PDF.Views;
+using System;
 using System.Collections.ObjectModel;
 using Wpf.Ui.Common.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
@@ -21,12 +22,11 @@ namespace CrytonCoreNext.ViewModels
         public NavigationPDFViewViewModel(INavigationService navigationService, PdfMergeView pdfMergeViewModel, PdfSplitView pdfSplitViewModel, PdfImageToPdfView pdfImageToPdfViewModel)
         {
             _navigationService = navigationService;
-            navigationItems = new ObservableCollection<PDFPageItem>()
+            NavigationItems = new ObservableCollection<PDFPageItem>()
             {
                 new PDFPageItem(Navigate)
                 {
                     Icon = Wpf.Ui.Common.SymbolRegular.Merge20,
-                    View = pdfMergeViewModel,
                     Type = typeof(PdfMergeView),
                     Description = "Merge pdf",
                     ShortDescription = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
@@ -34,7 +34,6 @@ namespace CrytonCoreNext.ViewModels
                 new PDFPageItem(Navigate)
                 {
                     Icon = Wpf.Ui.Common.SymbolRegular.ArrowSplit20,
-                    View = pdfSplitViewModel,
                     Type = typeof(PdfSplitView),
                     Description = "Split pdf",
                     ShortDescription = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
@@ -42,19 +41,16 @@ namespace CrytonCoreNext.ViewModels
                 new PDFPageItem(Navigate)
                 {
                     Icon = Wpf.Ui.Common.SymbolRegular.ImageArrowBack20,
-                    View = pdfImageToPdfViewModel,
                     Type = typeof(PdfImageToPdfView),
                     Description = "Convert pdf",
                     ShortDescription = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
                 },
             };
-            OnPropertyChanged(nameof(NavigationItems));
         }
 
-        private void Navigate(INavigableView<ViewModelBase> view)
+        private void Navigate(Type type)
         {
-            CurrentView = view;
-            //_navigationService.Navigate(typeof(PdfMergeView));
+            _navigationService.Navigate(type);
         }
     }
 }

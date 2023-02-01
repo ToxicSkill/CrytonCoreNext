@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CrytonCoreNext.Abstract;
 using System;
 using Wpf.Ui.Common;
-using Wpf.Ui.Common.Interfaces;
 using static CrytonCoreNext.Helpers.Delegate;
 
 namespace CrytonCoreNext.PDF.Models
@@ -11,8 +9,6 @@ namespace CrytonCoreNext.PDF.Models
     [ObservableObject]
     public partial class PDFPageItem
     {
-        public INavigableView<ViewModelBase> View { get; set; }
-
         public SymbolRegular Icon { get; set; }
 
         public string ShortDescription { get; set; }
@@ -21,7 +17,7 @@ namespace CrytonCoreNext.PDF.Models
 
         public Type Type { get; set; }
 
-        public string Title { get => View.ViewModel.PageName; }
+        public string Title { get => Type.Name; }
 
         private NavigationDelegate Delegate;
 
@@ -33,7 +29,7 @@ namespace CrytonCoreNext.PDF.Models
         [RelayCommand]
         private void Clicked()
         {
-            Delegate(View);
+            Delegate(Type);
         }
     }
 }
