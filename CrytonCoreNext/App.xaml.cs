@@ -37,7 +37,7 @@ namespace CrytonCoreNext
         {
             services.AddHostedService<ApplicationHostService>();
             services.AddSingleton<IThemeService, ThemeService>();
-            services.AddSingleton<IPageService, PageService>();
+            services.AddSingleton<ICustomPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ISnackbarService, SnackbarService>();
 
@@ -180,7 +180,8 @@ namespace CrytonCoreNext
 
         private static MainViewModel CreateMainWindowViewModel(IServiceProvider provider)
         {
-            return new();
+            var pageService = provider.GetRequiredService<ICustomPageService>();
+            return new(pageService);
         }
 
         private static CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)

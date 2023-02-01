@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Views;
+﻿using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Views;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
@@ -16,13 +17,13 @@ public class ApplicationHostService : IHostedService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly INavigationService _navigationService;
-    private readonly IPageService _pageService;
+    private readonly ICustomPageService _pageService;
     private readonly IThemeService _themeService;
 
     private INavigationWindow _navigationWindow;
 
     public ApplicationHostService(IServiceProvider serviceProvider, INavigationService navigationService,
-        IPageService pageService, IThemeService themeService)
+        ICustomPageService pageService, IThemeService themeService)
     {
         // If you want, you can do something with these services at the beginning of loading the application.
         _serviceProvider = serviceProvider;
