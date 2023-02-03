@@ -31,8 +31,6 @@ public class PageService : ICustomPageService
         return (T?)_serviceProvider.GetService(typeof(T));
     }
 
-    bool e = false;
-
     /// <inheritdoc />
     public FrameworkElement? GetPage(Type pageType)
     {

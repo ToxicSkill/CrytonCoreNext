@@ -23,7 +23,7 @@
 
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel Orientation="Horizontal" >
+            <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Theme" Margin="0, 0, 30, 0"/>
                 <Grid>
                     <ui:SymbolIcon Margin="20,0,0,0" Symbol="WeatherMoon20" Visibility="{Binding IsThemeSwitchChecked, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
