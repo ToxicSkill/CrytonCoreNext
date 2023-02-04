@@ -12,7 +12,7 @@
             xmlns:sys="clr-namespace:System;assembly=mscorlib"
             Title="Dashboard"
             mc:Ignorable="d" 
-            d:DesignHeight="2450" d:DesignWidth="800">
+            d:DesignHeight="2450" d:DesignWidth="800" Loaded="UiPage_Loaded" MouseMove="UiPage_MouseMove">
 
     <ui:UiPage.Resources>
         <ResourceDictionary>
@@ -22,10 +22,16 @@
     </ui:UiPage.Resources>
 
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Hidden">
-            <StackPanel Margin="10,0,0,0">
+        <TextBlock Name="txt"/>
+        <ScrollViewer x:Name="scrollViewver" VerticalScrollBarVisibility="Visible">
+            <StackPanel x:Name="stackPanel" Margin="10,0,0,0">
                 <TextBlock Text="Settings" FontSize="32" Margin="0,0,0,20" FontWeight="Light" />
-                <TextBlock Text="Style &amp; apperance" FontSize="18" FontWeight="Light"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Navigate" Click="Button_Click"/>
+                    <Button Content="Navigate" Click="Button_Click_1" />
+                    <Button Content="Navigate" Click="Button_Click_2" />
+                </StackPanel>
+                <TextBlock x:Name="firstHeader" Text="Style &amp; apperance" FontSize="18" FontWeight="Light"/>
                 <ui:CardControl Margin="15,8,15,0" Icon="DarkTheme20">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
@@ -72,7 +78,7 @@
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch IsChecked="{Binding IsThemeSwitchChecked}" />
                 </ui:CardControl>
-                <ui:CardControl Margin="15,8,15,0" Icon="Alert20">
+                <ui:CardControl Name="al" Margin="15,8,15,0" Icon="Alert20">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock FontSize="13" FontWeight="Medium" Text="Notification atuohide time"/>
@@ -103,7 +109,7 @@
                 <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default encryption sufix"/>
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default encryption suffix"/>
                             <TextBlock FontSize="12" Text="Set default encrypted file suffix."/>
                         </StackPanel>
                     </ui:CardControl.Header>
@@ -112,7 +118,178 @@
                 <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
                     <ui:CardControl.Header>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption sufix"/>
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl x:Name="tr" Margin="15,8,15,0" Icon="Translate16">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl x:Name="acc" Margin="15,8,15,0" Icon="Accessibility20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
+                            <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                </ui:CardControl>
+                <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl.Header>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
                             <TextBlock FontSize="12" Text="Set default decrypted file suffix."/>
                         </StackPanel>
                     </ui:CardControl.Header>
