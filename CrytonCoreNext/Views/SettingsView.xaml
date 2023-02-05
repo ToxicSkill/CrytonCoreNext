@@ -3,6 +3,7 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:c="clr-namespace:CrytonCoreNext.Converters"
+            xmlns:e="http://schemas.microsoft.com/expression/2010/interactivity"
             xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels" 
             xmlns:models="clr-namespace:CrytonCoreNext.Models" 
             xmlns:extensions="clr-namespace:CrytonCoreNext.Extensions" 
@@ -27,16 +28,18 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
-            <extensions:ExtendedTreeView Grid.Column="0" BorderThickness="0" Margin="0, 20, 0,0 "
-                                         ItemsSource="{Binding TreeViewItemSource}" 
-                                         SelectedItem_="{Binding SelectedTreeViewItem, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                <extensions:ExtendedTreeView.ItemContainerStyle>
+            <TreeView Grid.Column="0" BorderThickness="0" Margin="0, 20, 0,0 "
+                                         ItemsSource="{Binding TreeViewItemSource}" >
+                <e:Interaction.Behaviors>
+                    <extensions:BindableSelectedItemBehavior SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </e:Interaction.Behaviors>
+                
+                <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                        <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
                     </Style>
-                </extensions:ExtendedTreeView.ItemContainerStyle>
-                <extensions:ExtendedTreeView.ItemTemplate>
+                </TreeView.ItemContainerStyle>
+                <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="models:TreeViewItemModel" ItemsSource="{Binding Childs}">
                         <Grid>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
@@ -45,8 +48,8 @@
                             </StackPanel>
                         </Grid>
                     </HierarchicalDataTemplate>                    
-                </extensions:ExtendedTreeView.ItemTemplate>
-            </extensions:ExtendedTreeView>
+                </TreeView.ItemTemplate>
+            </TreeView>
             <ScrollViewer Grid.Column="1" x:Name="scrollViewer">
                 <StackPanel x:Name="stackPanel" Margin="10,0,0,0" MouseMove="stackPanel_MouseMove">
 

@@ -11,7 +11,6 @@ using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Mvvm.Contracts;
-using Wpf.Ui.Mvvm.Interfaces;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -51,22 +50,33 @@ namespace CrytonCoreNext.ViewModels
         public void UpdateSelectedTreeViewItem(CardControl card)
         {
             var newSelectedItem = _cardByTreeViewItem.First(c => c.Value == card).Key;
+            UpdateTreeView(newSelectedItem);
+            _lockTreeViewItem = true;
             if (newSelectedItem.Childs != null)
             {
-                newSelectedItem = newSelectedItem.Childs[0];
+                SelectedTreeViewItem = newSelectedItem.Childs[0];
             }
-            if (SelectedTreeViewItem != newSelectedItem)
+            else
             {
-                _lockTreeViewItem = true;
                 SelectedTreeViewItem = newSelectedItem;
-                _lockTreeViewItem = false;
-                UpdateTreeView(SelectedTreeViewItem);
             }
+            _lockTreeViewItem = false;
+            //if (newSelectedItem.Childs != null)
+            //{
+            //    newSelectedItem = newSelectedItem.Childs[0];
+            //}
+            //if (SelectedTreeViewItem != newSelectedItem)
+            //{
+            //    _lockTreeViewItem = true;
+            //    SelectedTreeViewItem = newSelectedItem;
+            //    _lockTreeViewItem = false;
+            //    UpdateTreeView(SelectedTreeViewItem);
+            //}
         }
 
         public void SetVerticalScrollUpdateFunction(Action<double> update)
         {
-            VerticalOffsetScrollUpdate = new (update);
+            VerticalOffsetScrollUpdate = new(update);
         }
 
         partial void OnSelectedTreeViewItemChanged(TreeViewItemModel value)
@@ -79,7 +89,7 @@ namespace CrytonCoreNext.ViewModels
 
         public void RegisterNewUiNavigableElement(CardControl card, bool hasHeader, double headerHeight, string headerTitle, SymbolRegular mainItemSymbol)
         {
-            _elements.Add(new (card, hasHeader, headerHeight));
+            _elements.Add(new(card, hasHeader, headerHeight));
             RegisterTreeViewItem(card, hasHeader, headerTitle, mainItemSymbol);
         }
 
@@ -101,23 +111,18 @@ namespace CrytonCoreNext.ViewModels
 
         private void UpdateTreeView(TreeViewItemModel selectedTreeViewItem)
         {
-            var tempTreeView = new ObservableCollection<TreeViewItemModel>();
             foreach (var treeViewItem in TreeViewItemSource)
             {
                 treeViewItem.IsExpanded = false;
                 foreach (var subItems in treeViewItem.Childs)
                 {
-                    subItems.IsSelected = false;
                     if (subItems == selectedTreeViewItem)
                     {
-                        subItems.IsSelected = true;
                         treeViewItem.IsExpanded = true;
                     }
                 }
-                tempTreeView.Add(treeViewItem);
             }
-            TreeViewItemSource.Clear();
-            TreeViewItemSource = tempTreeView;
+            OnPropertyChanged(nameof(TreeViewItemSource));
         }
 
         private void RegisterTreeViewItem(CardControl card, bool hasHeader, string headerTitle, SymbolRegular mainItemSymbol)
