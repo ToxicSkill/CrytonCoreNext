@@ -3,6 +3,7 @@ using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.PDF.Views;
 using CrytonCoreNext.Views;
+using CrytonCoreNext.Views.Settings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -53,7 +54,8 @@ namespace CrytonCoreNext.ViewModels
             };
             FooterItems = new ObservableCollection<INavigationControl>()
             {
-                new NavigationItem(){ Icon = SymbolRegular.Settings20,  PageTag="settings", Cache=true, Content="Settings", PageType=typeof(SettingsView) }
+                new NavigationItem(){ Icon = SymbolRegular.Settings20,  PageTag="settings", Cache=true, Content="Settings", PageType=typeof(SettingsView) },
+                new NavigationItem(){ Icon = SymbolRegular.Settings20,  PageTag="testSettings", Cache=true, Content="Appearance", PageType=typeof(AppearanceView) }
             };
         }
 
