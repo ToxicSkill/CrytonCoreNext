@@ -54,21 +54,9 @@ namespace CrytonCoreNext.ViewModels
             {
                 newSelectedItem = newSelectedItem.Childs[0];
             }
-            //UpdateTreeView(newSelectedItem);
             _lockTreeViewItem = true;
             SelectedTreeViewItem = newSelectedItem;
             _lockTreeViewItem = false;
-            //if (newSelectedItem.Childs != null)
-            //{
-            //    newSelectedItem = newSelectedItem.Childs[0];
-            //}
-            //if (SelectedTreeViewItem != newSelectedItem)
-            //{
-            //    _lockTreeViewItem = true;
-            //    SelectedTreeViewItem = newSelectedItem;
-            //    _lockTreeViewItem = false;
-            //    UpdateTreeView(SelectedTreeViewItem);
-            //}
         }
 
         public void SetVerticalScrollUpdateFunction(Action<double> update)
@@ -80,6 +68,12 @@ namespace CrytonCoreNext.ViewModels
         {
             if (!_lockTreeViewItem)
             {
+                var newSelectedItem = value;
+                if (value.Childs != null)
+                {
+                    newSelectedItem = value.Childs.First();
+                }
+                SelectedTreeViewItem = newSelectedItem;
                 VerticalOffsetScrollUpdate.Invoke(GetYOffset(_cardByTreeViewItem[value]));
             }
         }
