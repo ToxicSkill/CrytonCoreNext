@@ -50,16 +50,13 @@ namespace CrytonCoreNext.ViewModels
         public void UpdateSelectedTreeViewItem(CardControl card)
         {
             var newSelectedItem = _cardByTreeViewItem.First(c => c.Value == card).Key;
-            UpdateTreeView(newSelectedItem);
-            _lockTreeViewItem = true;
             if (newSelectedItem.Childs != null)
             {
-                SelectedTreeViewItem = newSelectedItem.Childs[0];
+                newSelectedItem = newSelectedItem.Childs[0];
             }
-            else
-            {
-                SelectedTreeViewItem = newSelectedItem;
-            }
+            //UpdateTreeView(newSelectedItem);
+            _lockTreeViewItem = true;
+            SelectedTreeViewItem = newSelectedItem;
             _lockTreeViewItem = false;
             //if (newSelectedItem.Childs != null)
             //{
@@ -114,15 +111,16 @@ namespace CrytonCoreNext.ViewModels
             foreach (var treeViewItem in TreeViewItemSource)
             {
                 treeViewItem.IsExpanded = false;
-                foreach (var subItems in treeViewItem.Childs)
+                foreach (var subItem in treeViewItem.Childs)
                 {
-                    if (subItems == selectedTreeViewItem)
+                    subItem.IsExpanded = false;
+                    if (subItem == selectedTreeViewItem)
                     {
                         treeViewItem.IsExpanded = true;
+                        subItem.IsExpanded = true;
                     }
                 }
             }
-            OnPropertyChanged(nameof(TreeViewItemSource));
         }
 
         private void RegisterTreeViewItem(CardControl card, bool hasHeader, string headerTitle, SymbolRegular mainItemSymbol)

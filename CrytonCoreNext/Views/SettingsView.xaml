@@ -34,11 +34,11 @@
                     <extensions:BindableSelectedItemBehavior SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </e:Interaction.Behaviors>
                 
-                <TreeView.ItemContainerStyle>
+                <!--<TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
                     </Style>
-                </TreeView.ItemContainerStyle>
+                </TreeView.ItemContainerStyle>-->
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="models:TreeViewItemModel" ItemsSource="{Binding Childs}">
                         <Grid>

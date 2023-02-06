@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrytonCoreNext.Models;
+using System;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -100,7 +101,7 @@ public class BindableSelectedItemBehavior : Behavior<TreeView>
     /// <returns>
     /// The TreeViewItem that contains the specified item.
     /// </returns>
-    private static TreeViewItem GetTreeViewItem(ItemsControl container, object item)
+    private static TreeViewItem GetTreeViewItem(ItemsControl container, object item, bool reverse)
     {
         if (container != null)
         {
@@ -110,9 +111,12 @@ public class BindableSelectedItemBehavior : Behavior<TreeView>
             }
 
             // Expand the current container
-            if (container is TreeViewItem && !((TreeViewItem)container).IsExpanded)
+            if (container is TreeViewItem treeViewItem)
             {
-                container.SetValue(TreeViewItem.IsExpandedProperty, true);
+                if (treeViewItem.Header is TreeViewItemModel treeViewItemModel)
+                {
+                    container.SetValue(TreeViewItem.IsExpandedProperty, treeViewItemModel.IsExpanded);
+                }
             }
 
             // Try to generate the ItemsPresenter and the ItemsPanel.
@@ -147,44 +151,91 @@ public class BindableSelectedItemBehavior : Behavior<TreeView>
 #pragma warning restore 168
 
             var bringIndexIntoView = GetBringIndexIntoView(itemsHostPanel);
-            for (int i = 0, count = container.Items.Count; i < count; i++)
+
+            if (reverse)
             {
-                TreeViewItem subContainer;
-                if (bringIndexIntoView != null)
+                for (int i = container.Items.Count - 1; i >= 0; i--)
                 {
-                    // Bring the item into view so 
-                    // that the container will be generated.
-                    bringIndexIntoView(i);
-                    subContainer =
-                        (TreeViewItem)container.ItemContainerGenerator.
-                                                ContainerFromIndex(i);
+                    TreeViewItem subContainer;
+                    if (bringIndexIntoView != null)
+                    {
+                        // Bring the item into view so 
+                        // that the container will be generated.
+                        bringIndexIntoView(i);
+                        subContainer =
+                            (TreeViewItem)container.ItemContainerGenerator.
+                                                    ContainerFromIndex(i);
+                    }
+                    else
+                    {
+                        subContainer =
+                            (TreeViewItem)container.ItemContainerGenerator.
+                                                    ContainerFromIndex(i);
+
+                        // Bring the item into view to maintain the 
+                        // same behavior as with a virtualizing panel.
+                        subContainer.BringIntoView();
+                    }
+
+                    if (subContainer == null)
+                    {
+                        continue;
+                    }
+
+                    // Search the next level for the object.
+                    var resultContainer = GetTreeViewItem(subContainer, item, reverse);
+                    if (resultContainer != null)
+                    {
+                        return resultContainer;
+                    }
+
+                    // The object is not under this TreeViewItem
+                    // so collapse it.
+                    subContainer.IsExpanded = false;
                 }
-                else
+            }
+            else
+            {
+
+                for (int i = 0, count = container.Items.Count; i < count; i++)
                 {
-                    subContainer =
-                        (TreeViewItem)container.ItemContainerGenerator.
-                                                ContainerFromIndex(i);
+                    TreeViewItem subContainer;
+                    if (bringIndexIntoView != null)
+                    {
+                        // Bring the item into view so 
+                        // that the container will be generated.
+                        bringIndexIntoView(i);
+                        subContainer =
+                            (TreeViewItem)container.ItemContainerGenerator.
+                                                    ContainerFromIndex(i);
+                    }
+                    else
+                    {
+                        subContainer =
+                            (TreeViewItem)container.ItemContainerGenerator.
+                                                    ContainerFromIndex(i);
 
-                    // Bring the item into view to maintain the 
-                    // same behavior as with a virtualizing panel.
-                    subContainer.BringIntoView();
+                        // Bring the item into view to maintain the 
+                        // same behavior as with a virtualizing panel.
+                        subContainer.BringIntoView();
+                    }
+
+                    if (subContainer == null)
+                    {
+                        continue;
+                    }
+
+                    // Search the next level for the object.
+                    var resultContainer = GetTreeViewItem(subContainer, item, reverse);
+                    if (resultContainer != null)
+                    {
+                        return resultContainer;
+                    }
+
+                    // The object is not under this TreeViewItem
+                    // so collapse it.
+                    subContainer.IsExpanded = false;
                 }
-
-                if (subContainer == null)
-                {
-                    continue;
-                }
-
-                // Search the next level for the object.
-                var resultContainer = GetTreeViewItem(subContainer, item);
-                if (resultContainer != null)
-                {
-                    return resultContainer;
-                }
-
-                // The object is not under this TreeViewItem
-                // so collapse it.
-                subContainer.IsExpanded = false;
             }
         }
 
@@ -208,8 +259,9 @@ public class BindableSelectedItemBehavior : Behavior<TreeView>
             return;
         }
 
-        item = GetTreeViewItem(treeView, e.NewValue);
-        if (item != null)
+        item = GetTreeViewItem(treeView, e.NewValue, false);
+        var reversedItem = GetTreeViewItem(treeView, e.NewValue, true);
+        if (item != null && item.Equals(reversedItem))
         {
             item.IsSelected = true;
         }
