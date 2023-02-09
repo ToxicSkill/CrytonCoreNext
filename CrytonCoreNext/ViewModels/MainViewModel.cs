@@ -3,7 +3,6 @@ using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.PDF.Views;
 using CrytonCoreNext.Views;
-using CrytonCoreNext.Views.Settings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -50,12 +49,11 @@ namespace CrytonCoreNext.ViewModels
                 new NavigationItem(){ Icon = SymbolRegular.Layer20,  PageTag="pdf", Cache=true, Content="Pdf", PageType=typeof(NavigationPDFView) },
                 new NavigationItem(){ Icon = SymbolRegular.Merge20,  PageTag="merge", Cache=true, Content="Merge", PageType=typeof(PdfMergeView) },
                 new NavigationItem(){ Icon = SymbolRegular.ArrowSplit20,  PageTag="split", Cache=true, Content="Split", PageType=typeof(PdfSplitView) },
-                new NavigationItem(){ Icon = SymbolRegular.ImageArrowBack20,  PageTag="convert", Cache=true, Content="Convert", PageType=typeof(PdfImageToPdfView) }
+                new NavigationItem(){ Icon = SymbolRegular.ArrowSync20,  PageTag="convert", Cache=true, Content="Convert", PageType=typeof(PdfImageToPdfView) }
             };
             FooterItems = new ObservableCollection<INavigationControl>()
             {
-                new NavigationItem(){ Icon = SymbolRegular.Settings20,  PageTag="settings", Cache=true, Content="Settings", PageType=typeof(SettingsView) },
-                new NavigationItem(){ Icon = SymbolRegular.Settings20,  PageTag="testSettings", Cache=true, Content="Appearance", PageType=typeof(AppearanceView) }
+                new NavigationItem(){ Icon = SymbolRegular.Settings20,  PageTag="settings", Cache=true, Content="Settings", PageType=typeof(SettingsView) }
             };
         }
 

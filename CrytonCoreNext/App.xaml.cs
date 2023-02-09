@@ -12,9 +12,7 @@ using CrytonCoreNext.PDF.Views;
 using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
-using CrytonCoreNext.ViewModels.Settings;
 using CrytonCoreNext.Views;
-using CrytonCoreNext.Views.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -89,11 +87,6 @@ namespace CrytonCoreNext
 
             services.AddScoped<INavigationWindow, MainWindow>();
             services.AddScoped<MainViewModel>();
-
-
-            // settings
-            services.AddScoped<AppearanceView>();
-            services.AddScoped<AppearanceViewModel>();
 
 
             //services.AddSingleton<IInternetConnection, InternetConnection>();
