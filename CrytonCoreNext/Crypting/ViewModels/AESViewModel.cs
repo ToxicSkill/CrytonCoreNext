@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Crypting.Helpers;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
@@ -13,7 +13,7 @@ using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.ViewModels
 {
-    public partial class AESViewModel : ViewModelBase
+    public partial class AESViewModel : CryptingMethodViewModel
     {
         private readonly ISnackbarService _snackbarService;
 

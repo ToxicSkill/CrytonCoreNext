@@ -43,6 +43,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public INavigableView<ViewModelBase> currentCryptingViewModel;
 
+        public delegate void HandleFileChanged(CryptFile file);
+
+        public event HandleFileChanged OnFileChanged;
 
         public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, ISnackbarService snackbarService)
             : base(fileService, dialogService, snackbarService)
@@ -51,8 +54,13 @@ namespace CrytonCoreNext.ViewModels
             _fileService = fileService;
             _cryptingService = cryptingService;
             files = new ObservableCollection<CryptFile>();
-
             InitializeCryptingComboBox();
+            _cryptingService.RegisterFileChangedEvent(ref OnFileChanged!);
+        }
+
+        partial void OnSelectedFileChanged(CryptFile value)
+        {
+            OnFileChanged.Invoke(value);
         }
 
         partial void OnSelectedCryptingMethodChanged(ICrypting value)

@@ -1,5 +1,6 @@
 ﻿using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,5 +25,7 @@ namespace CrytonCoreNext.Crypting.Interfaces
         int GetCurrentCryptingProgressCount();
 
         CryptFile ReadCryptFile(File file);
+
+        void RegisterFileChangedEvent(ref CryptingViewModel.HandleFileChanged? onFileChanged);
     }
 }

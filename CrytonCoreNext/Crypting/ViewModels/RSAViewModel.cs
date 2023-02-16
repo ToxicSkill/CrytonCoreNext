@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Crypting.Helpers;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
@@ -9,11 +9,12 @@ using CrytonCoreNext.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.ViewModels
 {
-    public partial class RSAViewModel : ViewModelBase
+    public partial class RSAViewModel : CryptingMethodViewModel
     {
         private readonly ISnackbarService _snackbarService;
 
@@ -22,6 +23,8 @@ namespace CrytonCoreNext.Crypting.ViewModels
         private readonly RSAHelper _rsaHelper;
 
         private readonly List<int> _legalKeyValues;
+
+        private int _selectedFileKeySize = 0;
 
         [ObservableProperty]
         public bool isPublicKeyAvailable;
@@ -46,6 +49,9 @@ namespace CrytonCoreNext.Crypting.ViewModels
 
         [ObservableProperty]
         public string maxBytesMessage;
+
+        [ObservableProperty]
+        public System.Windows.Media.Brush fileTooBigCautionColor = new SolidColorBrush(Colors.White);
 
         public RSAViewModel(ISnackbarService snackbarService, IJsonSerializer json, IXmlSerializer xml, RSAHelper rsaHelper, string pageName) : base(pageName)
         {
@@ -93,14 +99,23 @@ namespace CrytonCoreNext.Crypting.ViewModels
         private void CombineMaxBytesMessage()
         {
             var prefix = Language.Post("MaximumFileSize");
-            MaxBytesMessage = $"{prefix}{_rsaHelper.GetMaxNumberOfBytes(selectedKeySize)} B";
+            var maxNumberOfBytes = _rsaHelper.GetMaxNumberOfBytes(selectedKeySize);
+            MaxBytesMessage = $"{prefix}{maxNumberOfBytes} B";
+            if (maxNumberOfBytes < _selectedFileKeySize)
+            {
+                FileTooBigCautionColor = new SolidColorBrush(Colors.Orange);
+            }
+            else
+            {
+                FileTooBigCautionColor = new SolidColorBrush(Colors.White);
+            }
         }
 
-        //private void NoKeyError()
-        //{
-        //    _snackbarService.Show(Language.Post("Error"), Language.Post("NoGeneratedKeys"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
-        //    return;
-        //}
+        public override void HandleFileChanged(CryptFile file)
+        {
+            _selectedFileKeySize = file.Bytes.Length;
+            CombineMaxBytesMessage();
+        }
 
         [RelayCommand]
         private void ExportKeys()

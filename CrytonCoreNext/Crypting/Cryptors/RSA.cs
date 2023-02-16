@@ -1,13 +1,12 @@
-﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Crypting.Helpers;
+﻿using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.ViewModels;
 using CrytonCoreNext.Crypting.Views;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
 using System;
 using System.Threading.Tasks;
-using Wpf.Ui.Common.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.Cryptors
@@ -24,7 +23,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public int ProgressCount => 3;
 
-        public INavigableView<ViewModelBase> ViewModel { get; init; }
+        public ICryptingView<CryptingMethodViewModel> ViewModel { get; init; }
 
         public RSA(ISnackbarService snackbarService, IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer)
         {
@@ -32,7 +31,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
             ViewModel = new RSAView(new RSAViewModel(snackbarService, jsonSerializer, xmlSerializer, _rsaHelper, Name));
         }
 
-        public INavigableView<ViewModelBase> GetViewModel() => ViewModel;
+        public ICryptingView<CryptingMethodViewModel> GetViewModel() => ViewModel;
 
         public string GetName() => Name;
 

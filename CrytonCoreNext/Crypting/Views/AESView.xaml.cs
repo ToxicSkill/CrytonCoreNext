@@ -1,12 +1,12 @@
-﻿using CrytonCoreNext.Crypting.ViewModels;
-using Wpf.Ui.Common.Interfaces;
+﻿using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.ViewModels;
 
 namespace CrytonCoreNext.Crypting.Views
 {
     /// <summary>
     /// Interaction logic for AESView.xaml
     /// </summary>
-    public partial class AESView : INavigableView<AESViewModel>
+    public partial class AESView : ICryptingView<AESViewModel>
     {
         public AESViewModel ViewModel { get; }
 

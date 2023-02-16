@@ -4,8 +4,8 @@ namespace CrytonCoreNext.Crypting.Models
 {
     public partial class CryptingMethodViewModel : ViewModelBase
     {
-        public delegate void HandleFileChanged();
+        public CryptingMethodViewModel(string pageName) : base(pageName) { }
 
-        public event HandleFileChanged OnFileChanged;
+        public virtual void HandleFileChanged(CryptFile file) { }
     }
 }

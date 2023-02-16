@@ -1,6 +1,6 @@
-﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Crypting.Helpers;
+﻿using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.ViewModels;
 using CrytonCoreNext.Crypting.Views;
 using CrytonCoreNext.Dictionaries;
@@ -9,7 +9,6 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Wpf.Ui.Common.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.Cryptors
@@ -28,7 +27,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public int ProgressCount => 1;
 
-        public INavigableView<ViewModelBase> ViewModel { get; init; }
+        public ICryptingView<CryptingMethodViewModel> ViewModel { get; init; }
 
         public AES(ISnackbarService snackbarService, IJsonSerializer jsonSerializer)
         {
@@ -37,7 +36,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
             ViewModel = new AESView(new AESViewModel(snackbarService, jsonSerializer, _aesHelper, Name));
         }
 
-        public INavigableView<ViewModelBase> GetViewModel() => ViewModel;
+        public ICryptingView<CryptingMethodViewModel> GetViewModel() => ViewModel;
 
         public string GetName() => Name;
 

@@ -71,8 +71,8 @@
                 <StackPanel>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22"/>
-                            <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{Binding MaxBytesMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22" Foreground="{Binding FileTooBigCautionColor}"/>
+                            <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{Binding MaxBytesMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding FileTooBigCautionColor}"/>
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">

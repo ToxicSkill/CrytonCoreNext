@@ -1,12 +1,12 @@
-﻿using CrytonCoreNext.Crypting.ViewModels;
-using Wpf.Ui.Common.Interfaces;
+﻿using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.ViewModels;
 
 namespace CrytonCoreNext.Crypting.Views
 {
     /// <summary>
     /// Interaction logic for RSAView.xaml
     /// </summary>
-    public partial class RSAView : INavigableView<RSAViewModel>
+    public partial class RSAView : ICryptingView<RSAViewModel>
     {
         public RSAViewModel ViewModel { get; }
 

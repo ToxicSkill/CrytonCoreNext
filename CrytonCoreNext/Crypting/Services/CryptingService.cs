@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,6 +90,14 @@ namespace CrytonCoreNext.Crypting.Services
         public int GetCurrentCryptingProgressCount()
         {
             return CurrentCrypting.ProgressCount;
+        }
+
+        public void RegisterFileChangedEvent(ref CryptingViewModel.HandleFileChanged? onFileChanged)
+        {
+            foreach (var cryptor in _cryptors)
+            {
+                onFileChanged += cryptor.GetViewModel().ViewModel.HandleFileChanged;
+            }
         }
     }
 }

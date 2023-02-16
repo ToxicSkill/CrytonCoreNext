@@ -1,7 +1,6 @@
-﻿using CrytonCoreNext.Abstract;
+﻿using CrytonCoreNext.Crypting.Models;
 using System;
 using System.Threading.Tasks;
-using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.Crypting.Interfaces
 {
@@ -17,7 +16,7 @@ namespace CrytonCoreNext.Crypting.Interfaces
 
         Task<byte[]> Decrypt(byte[] data, IProgress<string> progress);
 
-        INavigableView<ViewModelBase> GetViewModel();
+        ICryptingView<CryptingMethodViewModel> GetViewModel();
 
         string GetName();
     }
