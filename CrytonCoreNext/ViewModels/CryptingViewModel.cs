@@ -55,11 +55,6 @@ namespace CrytonCoreNext.ViewModels
             InitializeCryptingComboBox();
         }
 
-        partial void OnSelectedFileChanged(CryptFile value)
-        {
-            CurrentCryptingViewModel = _cryptingService.GetCurrentCrypting().GetViewModel();
-        }
-
         partial void OnSelectedCryptingMethodChanged(ICrypting value)
         {
             _cryptingService.SetCurrentCrypting(value);
