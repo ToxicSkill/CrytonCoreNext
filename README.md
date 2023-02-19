@@ -15,8 +15,8 @@ Upcoming implementations:
 Support touch & windows MICA maetrial.
 
 # WPF UI Fluent Modern Design
-<https://github.com/lepoco/wpfui>
-<https://wpfui.lepo.co>
+..* <https://github.com/lepoco/wpfui>
+..* <https://wpfui.lepo.co>
 
 ## Main page
 
