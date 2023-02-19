@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.Generic;
 
 namespace CrytonCoreNext.Abstract
 {
@@ -17,21 +16,10 @@ namespace CrytonCoreNext.Abstract
             this.PageName = name;
         }
 
-        public virtual Dictionary<string, object> GetObjects()
-        {
-            return new Dictionary<string, object>();
-        }
-
         public virtual bool CanExecute()
         {
             return !IsBusy;
         }
-
-        public virtual void SendObject(object obj)
-        {
-
-        }
-
 
         public virtual void Lock()
         {

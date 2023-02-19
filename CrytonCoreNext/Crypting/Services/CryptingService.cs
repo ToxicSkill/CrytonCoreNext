@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.Static;
 using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,39 +17,21 @@ namespace CrytonCoreNext.Crypting.Services
 
         private readonly ICryptingReader _cryptingReader;
 
-        private readonly List<ICrypting> _cryptors;
+        private readonly List<ICryptingView<CryptingMethodViewModel>> _cryptingViews;
 
-        public ICrypting CurrentCrypting { get; private set; }
+        private List<string> _methodsNames;
 
-        public CryptingService(ICryptingRecognition cryptingRecognition, ICryptingReader cryptingReader, IEnumerable<ICrypting> cryptors)
+        public CryptingService(ICryptingRecognition cryptingRecognition,
+            ICryptingReader cryptingReader,
+            List<ICryptingView<CryptingMethodViewModel>> cryptingViews)
         {
             _cryptingReader = cryptingReader;
             _cryptingRecognition = cryptingRecognition;
-            _cryptors = cryptors.ToList();
-            SetCurrentCrypting(_cryptors.First());
+            _cryptingViews = cryptingViews;
         }
-
-        public ICrypting GetCurrentCrypting()
+        public List<ICryptingView<CryptingMethodViewModel>> GetCryptingViews()
         {
-            return CurrentCrypting;
-        }
-
-        public List<ICrypting> GetCryptors()
-        {
-            return _cryptors.ToList();
-        }
-
-        public void SetCurrentCrypting(ICrypting crypting)
-        {
-            if (!_cryptors.Any())
-            {
-                return;
-            }
-
-            if (_cryptors.Contains(crypting))
-            {
-                CurrentCrypting = crypting;
-            }
+            return _cryptingViews;
         }
 
         public void AddRecognitionBytes(CryptFile file)
@@ -75,11 +58,11 @@ namespace CrytonCoreNext.Crypting.Services
             GC.Collect();
         }
 
-        public async Task<byte[]> RunCrypting(CryptFile file, IProgress<string> progress)
+        public async Task<byte[]> RunCrypting(ICryptingView<CryptingMethodViewModel> cryptingView, CryptFile file, IProgress<string> progress)
         {
             return file.Status.Equals(Status.Encrypted) ?
-               await CurrentCrypting.Decrypt(file.Bytes, progress) :
-               await CurrentCrypting.Encrypt(file.Bytes, progress);
+               await cryptingView.ViewModel.Crypting.Decrypt(file.Bytes, progress) :
+               await cryptingView.ViewModel.Crypting.Encrypt(file.Bytes, progress);
         }
 
         public CryptFile ReadCryptFile(File file)
@@ -87,17 +70,25 @@ namespace CrytonCoreNext.Crypting.Services
             return _cryptingReader.ReadCryptFile(file, _cryptingRecognition.RecognizeBytes(file.Bytes));
         }
 
-        public int GetCurrentCryptingProgressCount()
-        {
-            return CurrentCrypting.ProgressCount;
-        }
-
         public void RegisterFileChangedEvent(ref CryptingViewModel.HandleFileChanged? onFileChanged)
         {
-            foreach (var cryptor in _cryptors)
+            foreach (var view in _cryptingViews)
             {
-                onFileChanged += cryptor.GetViewModel().ViewModel.HandleFileChanged;
+                onFileChanged += view.ViewModel.HandleFileChanged;
             }
+        }
+
+        public bool IsCorrectMethod(CryptFile file, ICryptingView<CryptingMethodViewModel> cryptingView)
+        {
+            return file.Status == CryptingStatus.Status.Encrypted &&
+                cryptingView.ViewModel.PageName != file.Method;
+        }
+
+        public CryptingStatus.Status GetOpositeStatus(CryptingStatus.Status currentStatus)
+        {
+            return currentStatus.Equals(CryptingStatus.Status.Decrypted) ?
+                CryptingStatus.Status.Encrypted :
+                CryptingStatus.Status.Decrypted;
         }
     }
 }

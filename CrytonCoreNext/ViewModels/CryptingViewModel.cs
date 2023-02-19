@@ -6,13 +6,11 @@ using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Services;
-using CrytonCoreNext.Static;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Wpf.Ui.Common;
-using Wpf.Ui.Common.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
 
@@ -28,10 +26,10 @@ namespace CrytonCoreNext.ViewModels
         public IProgressService progressService;
 
         [ObservableProperty]
-        public ObservableCollection<ICrypting> cryptingMethods;
+        public ObservableCollection<ICryptingView<CryptingMethodViewModel>> cryptingViewsItemSource;
 
         [ObservableProperty]
-        public ICrypting selectedCryptingMethod;
+        public ICryptingView<CryptingMethodViewModel> selectedCryptingView;
 
         [ObservableProperty]
         public ObservableCollection<CryptFile> files;
@@ -40,33 +38,35 @@ namespace CrytonCoreNext.ViewModels
         [NotifyPropertyChangedFor(nameof(Files))]
         public CryptFile selectedFile;
 
-        [ObservableProperty]
-        public INavigableView<ViewModelBase> currentCryptingViewModel;
 
         public delegate void HandleFileChanged(CryptFile file);
 
         public event HandleFileChanged OnFileChanged;
 
-        public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, ISnackbarService snackbarService)
+        public CryptingViewModel(IFileService fileService,
+            IDialogService dialogService,
+            ICryptingService cryptingService,
+            IFilesView filesView,
+            ISnackbarService snackbarService)
             : base(fileService, dialogService, snackbarService)
         {
             ProgressService = new ProgressService();
             _fileService = fileService;
             _cryptingService = cryptingService;
-            files = new ObservableCollection<CryptFile>();
-            InitializeCryptingComboBox();
+            files = new();
+            UpdateCryptingViews();
+            SelectedCryptingView = CryptingViewsItemSource.First();
             _cryptingService.RegisterFileChangedEvent(ref OnFileChanged!);
+        }
+
+        private void UpdateCryptingViews()
+        {
+            CryptingViewsItemSource = new(_cryptingService.GetCryptingViews());
         }
 
         partial void OnSelectedFileChanged(CryptFile value)
         {
             OnFileChanged.Invoke(value);
-        }
-
-        partial void OnSelectedCryptingMethodChanged(ICrypting value)
-        {
-            _cryptingService.SetCurrentCrypting(value);
-            CurrentCryptingViewModel = _cryptingService.GetCurrentCrypting().GetViewModel();
         }
 
         //public override bool CanExecute()
@@ -131,30 +131,23 @@ namespace CrytonCoreNext.ViewModels
             base.SaveFile(SelectedFile);
         }
 
-        private void InitializeCryptingComboBox()
-        {
-            CryptingMethods = new(_cryptingService.GetCryptors());
-            SelectedCryptingMethod = CryptingMethods.First();
-            OnPropertyChanged(nameof(SelectedCryptingMethod));
-        }
-
 
         [RelayCommand]
         private async void PerformCrypting()
         {
             Lock();
-            if (!_fileService.HasBytes(SelectedFile) || IsCorrectMethod())
+            if (!_fileService.HasBytes(SelectedFile) || _cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
             {
                 PostSnackbar("Error", Language.Post("WrongMethod"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
                 return;
             }
 
-            var progressReport = ProgressService.SetProgress<string>(_cryptingService.GetCurrentCryptingProgressCount());
-            var result = await _cryptingService.RunCrypting(SelectedFile, progressReport);
+            var progressReport = ProgressService.SetProgress<string>(SelectedCryptingView.ViewModel.Crypting.ProgressCount);
+            var result = await _cryptingService.RunCrypting(SelectedCryptingView, SelectedFile, progressReport);
 
             if (!result.Equals(Array.Empty<byte>()) && Files.Any())
             {
-                _cryptingService.ModifyFile(SelectedFile, result, GetOpositeStatus(SelectedFile.Status), _cryptingService.GetCurrentCrypting().GetName());
+                _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedFile.Name);
                 UpdateStateOfSelectedFile();
                 PostSnackbar("Success", Language.Post("Success"), SymbolRegular.Checkmark20, ControlAppearance.Success);
             }
@@ -174,19 +167,6 @@ namespace CrytonCoreNext.ViewModels
             SelectedFile = temp;
             OnPropertyChanged(nameof(Files));
             OnPropertyChanged(nameof(SelectedFile));
-        }
-
-        private bool IsCorrectMethod()
-        {
-            return SelectedFile.Status == CryptingStatus.Status.Encrypted &&
-                CurrentCryptingViewModel.ViewModel.PageName != SelectedFile.Method;
-        }
-
-        private static CryptingStatus.Status GetOpositeStatus(CryptingStatus.Status currentStatus)
-        {
-            return currentStatus.Equals(CryptingStatus.Status.Decrypted) ?
-                CryptingStatus.Status.Encrypted :
-                CryptingStatus.Status.Decrypted;
         }
     }
 }

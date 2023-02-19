@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Crypting.Helpers;
+using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
@@ -20,9 +21,9 @@ namespace CrytonCoreNext.Crypting.ViewModels
 
         private readonly IJsonSerializer _jsonSerializer;
 
-        private readonly RSAHelper _rsaHelper;
+        private List<int> _legalKeyValues;
 
-        private readonly List<int> _legalKeyValues;
+        private RSAHelper _rsaHelper;
 
         private int _selectedFileKeySize = 0;
 
@@ -53,10 +54,21 @@ namespace CrytonCoreNext.Crypting.ViewModels
         [ObservableProperty]
         public System.Windows.Media.Brush fileTooBigCautionColor = new SolidColorBrush(Colors.White);
 
-        public RSAViewModel(ISnackbarService snackbarService, IJsonSerializer json, IXmlSerializer xml, RSAHelper rsaHelper, string pageName) : base(pageName)
+        public RSAViewModel(ICrypting crypting,
+            ISnackbarService snackbarService,
+            IJsonSerializer json,
+            IXmlSerializer xml,
+            string pageName) : base(pageName)
         {
+            Crypting = crypting;
+
             _snackbarService = snackbarService;
             _jsonSerializer = json;
+            InitializeHelper((RSAHelper)Crypting.GetHelper());
+        }
+
+        private void InitializeHelper(RSAHelper rsaHelper)
+        {
             _rsaHelper = rsaHelper;
 
             _legalKeyValues = rsaHelper.LegalKeys;
@@ -113,6 +125,10 @@ namespace CrytonCoreNext.Crypting.ViewModels
 
         public override void HandleFileChanged(CryptFile file)
         {
+            if (file == null)
+            {
+                return;
+            }
             _selectedFileKeySize = file.Bytes.Length;
             CombineMaxBytesMessage();
         }
