@@ -2,7 +2,6 @@
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,7 +11,9 @@ namespace CrytonCoreNext.Crypting.Models
     public class CryptingRecognition : ICryptingRecognition
     {
         private const int MethodMaxSize = 14;
+
         private const int ExtensionMaxSize = 18;
+
         private readonly MD5 _MD5Hash;
 
         private static RecognitionValues _recognitionValues;
@@ -126,13 +127,6 @@ namespace CrytonCoreNext.Crypting.Models
                     return false;
             }
             return true;
-        }
-
-        static string BytesToString(byte[] bytes)
-        {
-            using MemoryStream stream = new(bytes);
-            using StreamReader streamReader = new(stream);
-            return streamReader.ReadToEnd();
         }
     }
 }

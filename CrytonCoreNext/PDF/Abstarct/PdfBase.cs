@@ -72,30 +72,30 @@ namespace CrytonCoreNext.PDF.Abstarct
             PdfManagerViewModel = pdfManagerViewModel;
         }
 
-        public override void SendObject(object obj)
-        {
-            if (obj is bool)
-            {
-                Files.Clear();
-                CurrentFile = null;
-            }
-            if (obj is PDFFile file)
-            {
-                CurrentFile = file;
-                OnPropertyChanged(nameof(MaxPageDisplay));
-            }
-            if (obj is List<PDFImage> images)
-            {
-                _images = images;
-                //ImageViewerViewModel.PostImages(_images.Where(x => x.Guid == CurrentFile.Guid).First());
-                UpdateImages();
-            }
-            if (obj is List<PDFFile> pdfFiles)
-            {
-                Files = pdfFiles;
-            }
-            UpdateContent();
-        }
+        //public override void SendObject(object obj)
+        //{
+        //    if (obj is bool)
+        //    {
+        //        Files.Clear();
+        //        CurrentFile = null;
+        //    }
+        //    if (obj is PDFFile file)
+        //    {
+        //        CurrentFile = file;
+        //        OnPropertyChanged(nameof(MaxPageDisplay));
+        //    }
+        //    if (obj is List<PDFImage> images)
+        //    {
+        //        _images = images;
+        //        //ImageViewerViewModel.PostImages(_images.Where(x => x.Guid == CurrentFile.Guid).First());
+        //        UpdateImages();
+        //    }
+        //    if (obj is List<PDFFile> pdfFiles)
+        //    {
+        //        Files = pdfFiles;
+        //    }
+        //    UpdateContent();
+        //}
 
         protected void ResetCurrentPage()
         {

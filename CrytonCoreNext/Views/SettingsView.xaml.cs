@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.ViewModels;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;

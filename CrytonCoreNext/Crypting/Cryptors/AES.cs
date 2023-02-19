@@ -1,16 +1,11 @@
-﻿using CrytonCoreNext.Abstract;
+﻿using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
-using CrytonCoreNext.Crypting.ViewModels;
-using CrytonCoreNext.Crypting.Views;
 using CrytonCoreNext.Dictionaries;
-using CrytonCoreNext.Interfaces;
 using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Wpf.Ui.Common.Interfaces;
-using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.Cryptors
 {
@@ -22,24 +17,22 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         private readonly AESHelper _aesHelper;
 
-        public string Name => nameof(AES);
+        public EMethod Method => EMethod.AES;
 
-        public string DescriptionName => $"{Name} - Symmetric algorithm";
+        public string DescriptionName => $"{Method} - Symmetric algorithm";
 
         public int ProgressCount => 1;
 
-        public INavigableView<ViewModelBase> ViewModel { get; init; }
-
-        public AES(ISnackbarService snackbarService, IJsonSerializer jsonSerializer)
+        public AES()
         {
             _aes = new();
             _aesHelper = new AESHelper(_aes, _paddingMode);
-            ViewModel = new AESView(new AESViewModel(snackbarService, jsonSerializer, _aesHelper, Name));
         }
 
-        public INavigableView<ViewModelBase> GetViewModel() => ViewModel;
-
-        public string GetName() => Name;
+        public object GetHelper()
+        {
+            return _aesHelper;
+        }
 
         public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {

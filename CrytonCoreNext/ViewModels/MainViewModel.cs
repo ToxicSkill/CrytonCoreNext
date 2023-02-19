@@ -49,7 +49,7 @@ namespace CrytonCoreNext.ViewModels
                 new NavigationItem(){ Icon = SymbolRegular.Layer20,  PageTag="pdf", Cache=true, Content="Pdf", PageType=typeof(NavigationPDFView) },
                 new NavigationItem(){ Icon = SymbolRegular.Merge20,  PageTag="merge", Cache=true, Content="Merge", PageType=typeof(PdfMergeView) },
                 new NavigationItem(){ Icon = SymbolRegular.ArrowSplit20,  PageTag="split", Cache=true, Content="Split", PageType=typeof(PdfSplitView) },
-                new NavigationItem(){ Icon = SymbolRegular.ImageArrowBack20,  PageTag="convert", Cache=true, Content="Convert", PageType=typeof(PdfImageToPdfView) }
+                new NavigationItem(){ Icon = SymbolRegular.ArrowSync20,  PageTag="convert", Cache=true, Content="Convert", PageType=typeof(PdfImageToPdfView) }
             };
             FooterItems = new ObservableCollection<INavigationControl>()
             {

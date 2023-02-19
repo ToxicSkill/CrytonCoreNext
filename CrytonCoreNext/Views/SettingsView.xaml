@@ -33,12 +33,6 @@
                 <e:Interaction.Behaviors>
                     <extensions:BindableSelectedItemBehavior SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </e:Interaction.Behaviors>
-                
-                <!--<TreeView.ItemContainerStyle>
-                    <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                        <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
-                    </Style>
-                </TreeView.ItemContainerStyle>-->
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="models:TreeViewItemModel" ItemsSource="{Binding Childs}">
                         <Grid>
@@ -50,22 +44,12 @@
                     </HierarchicalDataTemplate>                    
                 </TreeView.ItemTemplate>
             </TreeView>
-            <ScrollViewer Grid.Column="1" x:Name="scrollViewer">
+            <ScrollViewer Grid.Column="1" x:Name="scrollViewer" VerticalScrollBarVisibility="Hidden">
                 <StackPanel x:Name="stackPanel" Margin="10,0,0,0" MouseMove="stackPanel_MouseMove">
-
-                    <!--<StackPanel.Resources>
-                        <Style TargetType="{x:Type ui:CardControl}" BasedOn="{StaticResource {x:Type ui:CardControl}}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type StackPanel}},Path=IsMouseOver}" Value="True">
-                                    <Setter Property="Opacity" Value="0.2"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Resources>-->
                     <TextBlock x:Name="firstHeader" Text="Style &amp; apperance" Margin="0,20,0,0" FontSize="18" FontWeight="Light"/>
                     <ui:CardControl Margin="15,8,15,0" Icon="DarkTheme20">
                         <ui:CardControl.Header>
-                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <StackPanel VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Theme"/>
                                 <TextBlock FontSize="12" Text="Set light or dark theme."/>
                             </StackPanel>

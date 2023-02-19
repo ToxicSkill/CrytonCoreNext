@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Crypting.Helpers;
+using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
@@ -13,13 +14,13 @@ using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.ViewModels
 {
-    public partial class AESViewModel : ViewModelBase
+    public partial class AESViewModel : CryptingMethodViewModel
     {
         private readonly ISnackbarService _snackbarService;
 
         private readonly IJsonSerializer _jsonSerializer;
 
-        private readonly AESHelper _aesHelper;
+        private AESHelper _aesHelper;
 
         [ObservableProperty]
         public ObservableCollection<int> blockSizesComboBox;
@@ -36,22 +37,31 @@ namespace CrytonCoreNext.Crypting.ViewModels
         [ObservableProperty]
         public int selectedKey;
 
-        public AESViewModel(ISnackbarService snackbarService, IJsonSerializer json, AESHelper aesHelper, string pageName) : base(pageName)
+        public AESViewModel(ICrypting crypting,
+            ISnackbarService snackbarService,
+            IJsonSerializer json,
+            string pageName) : base(pageName)
         {
+            Crypting = crypting;
+
             _snackbarService = snackbarService;
             _jsonSerializer = json;
-            _aesHelper = aesHelper;
 
             BlockSizesComboBox = new();
             KeySizesComboBox = new();
+            UpdateKeyAvailability(true);
+            InitializeHelper((AESHelper)Crypting.GetHelper());
+        }
+
+        private void InitializeHelper(AESHelper aesHelper)
+        {
+            _aesHelper = aesHelper;
 
             KeySizesComboBox = new(_aesHelper.LegalKeys);
             BlockSizesComboBox = new(_aesHelper.LegalBlocks);
 
             SelectedBlock = _aesHelper.GetCurrentBlockSize();
             SelectedKey = _aesHelper.GetCurrentKeySize();
-
-            UpdateKeyAvailability(true);
         }
 
         [RelayCommand]

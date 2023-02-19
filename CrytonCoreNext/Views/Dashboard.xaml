@@ -20,7 +20,7 @@
                 StringFormat='{}{0:dddd, MMMM dd, yyyy}'}"/>
             <StackPanel Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal">
                 <TextBlock Text="CRYT" TextOptions.TextFormattingMode="Ideal"  FontSize="54" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBlock Text="ON" Foreground="{DynamicResource PaletteLimeBrush }" Margin="0, 0, 0, 18" TextOptions.TextFormattingMode="Ideal"  FontSize="74" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="ON" Foreground="{DynamicResource SystemAccentBrush}" Margin="0, 0, 0, 18" TextOptions.TextFormattingMode="Ideal"  FontSize="74" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </StackPanel>
 
         </Grid>
@@ -31,9 +31,9 @@
                         <Setter Property="Stroke">
                             <Setter.Value>
                                 <LinearGradientBrush>
-                                    <GradientStop Color="Lime" Offset="0.0" />
-                                    <GradientStop Color="DarkGreen" Offset="0.5" />
-                                    <GradientStop Color="Lime" Offset="1.0" />
+                                    <GradientStop Color="{DynamicResource SystemAccentColorPrimary}" Offset="0.0" />
+                                    <GradientStop Color="Transparent" Offset="0.5" />
+                                    <GradientStop Color="{DynamicResource SystemAccentColorPrimary}" Offset="1.0" />
                                 </LinearGradientBrush>
                             </Setter.Value>
                         </Setter>
@@ -44,7 +44,7 @@
                                         <Storyboard>
                                             <DoubleAnimation
                                                     Storyboard.TargetProperty="Stroke.(GradientBrush.GradientStops)[1].(GradientStop.Offset)"
-                                                    From="0" To="1" Duration="0:0:3"
+                                                    From="0" To="1" Duration="0:0:7"
                                                     AutoReverse="True" RepeatBehavior="Forever"
                                                     />
                                         </Storyboard>

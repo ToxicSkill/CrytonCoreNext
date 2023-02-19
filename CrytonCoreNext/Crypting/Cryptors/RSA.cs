@@ -1,14 +1,9 @@
-﻿using CrytonCoreNext.Abstract;
+﻿using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
-using CrytonCoreNext.Crypting.ViewModels;
-using CrytonCoreNext.Crypting.Views;
 using CrytonCoreNext.Dictionaries;
-using CrytonCoreNext.Interfaces;
 using System;
 using System.Threading.Tasks;
-using Wpf.Ui.Common.Interfaces;
-using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.Cryptors
 {
@@ -18,23 +13,21 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         private bool _useOAEP = false;
 
-        public string Name => nameof(RSA);
+        public EMethod Method => EMethod.RSA;
 
-        public string DescriptionName => $"{Name} - Asymmetric alorithm";
+        public string DescriptionName => $"{Method} - Asymmetric alorithm";
 
         public int ProgressCount => 3;
 
-        public INavigableView<ViewModelBase> ViewModel { get; init; }
-
-        public RSA(ISnackbarService snackbarService, IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer)
+        public RSA()
         {
             _rsaHelper = new(_useOAEP);
-            ViewModel = new RSAView(new RSAViewModel(snackbarService, jsonSerializer, xmlSerializer, _rsaHelper, Name));
         }
 
-        public INavigableView<ViewModelBase> GetViewModel() => ViewModel;
-
-        public string GetName() => Name;
+        public object GetHelper()
+        {
+            return _rsaHelper;
+        }
 
         public async Task<byte[]> Decrypt(byte[] data, IProgress<string> progress)
         {
@@ -57,11 +50,6 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
             progress.Report(Language.Post("CollectingKeys"));
 
-            if (ViewModel.ViewModel.IsBusy)
-            {
-                progress.Report(Language.Post("Busy"));
-                return emptyArray;
-            }
 
             var rsaCryptoService = _rsaHelper.GetRSACryptoServiceProvider();
 
