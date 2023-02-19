@@ -1,22 +1,132 @@
-﻿using CrytonCoreNext.Crypting;
-using CrytonCoreNext.InformationsServices;
+﻿using CrytonCoreNext.Crypting.Cryptors;
+using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
+using CrytonCoreNext.Crypting.Services;
+using CrytonCoreNext.Crypting.ViewModels;
+using CrytonCoreNext.Crypting.Views;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.PDF.Models;
+using CrytonCoreNext.PDF.Services;
+using CrytonCoreNext.PDF.ViewModels;
+using CrytonCoreNext.PDF.Views;
 using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
+using CrytonCoreNext.Views;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
+using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui.Mvvm.Services;
 
 namespace CrytonCoreNext
 {
-    public partial class App : Application
+    public partial class App
     {
         private static readonly Guid AppKey = new("adae2137-dead-beef-6666-3eb841121af8");
 
-        private readonly IServiceProvider _serviceProvider;
+        private static readonly IHost _host = Host
+        .CreateDefaultBuilder()
+        .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)); })
+        .ConfigureServices((context, services) =>
+        {
+            services.AddHostedService<ApplicationHostService>();
+            services.AddSingleton<IThemeService, ThemeService>();
+            services.AddSingleton<ICustomPageService, PageService>();
+            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<ISnackbarService, SnackbarService>();
+
+            services.AddSingleton<Interfaces.IDialogService, Services.DialogService>();
+            services.AddTransient<IProgressService, ProgressService>();
+            services.AddSingleton<IFilesLoader, FilesLoader>();
+            services.AddSingleton<IFilesSaver, FilesSaver>();
+            services.AddSingleton<IFilesManager, FilesManager>();
+            services.AddSingleton(CreateFileService);
+            services.AddTransient(CreateFilesView);
+
+            services.AddSingleton<IJsonSerializer, JsonSerializer>();
+            services.AddSingleton<IXmlSerializer, XmlSerializer>();
+
+            // crypting
+            services.AddScoped(CreateCryptingRecognition);
+            services.AddScoped<ICryptingReader, CryptingReader>();
+            services.AddScoped<ICrypting, AES>();
+            services.AddScoped<ICrypting, RSA>();
+            services.AddScoped(CreateAESViewModel);
+            services.AddScoped(CreateRSAViewModel);
+            services.AddSingleton(CreateAESView);
+            services.AddSingleton(CreateRSAView);
+            services.AddSingleton(CreateCryptingService);
+            services.AddSingleton<CryptingView>();
+            services.AddSingleton(CreateCryptingViewModel);
+
+            // pdf
+            services.AddTransient(CreateFilesLeftView);
+            services.AddTransient(CreateFilesSelectorListingViewViewModel);
+            services.AddSingleton<IPDFManager, PDFManager>();
+            services.AddSingleton<IPDFReader, PDFReader>();
+            services.AddSingleton(CreatePDFService);
+            services.AddScoped(CreateFileService);
+            services.AddScoped<PdfMergeView>();
+            services.AddScoped(CreatePdfMergeViewModel);
+            services.AddScoped<PdfSplitView>();
+            services.AddScoped(CreatePdfSplitViewModel);
+            services.AddScoped<PdfImageToPdfView>();
+            services.AddScoped(CreatePdfImageToPdfViewModel);
+
+            services.AddScoped<Dashboard>();
+            services.AddScoped<DashboardViewModel>();
+
+            services.AddScoped<SettingsView>();
+            services.AddScoped<SettingsViewModel>();
+
+            services.AddScoped<NavigationPDFView>();
+            services.AddScoped(CreateNavigationPDFViewModel);
+
+            services.AddScoped<INavigationWindow, MainWindow>();
+            services.AddScoped<MainViewModel>();
+
+
+            //services.AddSingleton<IInternetConnection, InternetConnection>();
+            //services.AddSingleton<ITimeDate, TimeDate>();
+            //services.AddSingleton(CreateCryptingRecognition);
+            //services.AddSingleton<IFilesLoader, FilesLoader>();
+            //services.AddSingleton<IFilesSaver, FilesSaver>();
+            //services.AddSingleton<IFilesManager, FilesManager>(); ;
+            //services.AddSingleton<IPDFManager, PDFManager>();
+            //services.AddSingleton<IPDFReader, PDFReader>();
+            //services.AddSingleton<ICryptingReader, CryptingReader>();
+            //services.AddSingleton(CreateFileService);
+            //services.AddTransient(CreatePDFService);
+            //services.AddTransient(CreateFilesView);
+            //services.AddTransient(CreateFilesLeftView);
+            //services.AddTransient(CreateImagesView);
+            //services.AddTransient(CreateFilesSelectorListingViewViewModel);
+            //services.AddSingleton<IDialogService, DialogService>();
+            //services.AddTransient<IProgressService, ProgressService>();
+            //services.AddSingleton<IJsonSerializer, JsonSerializer>();
+            //services.AddSingleton<IXmlSerializer, XmlSerializer>();
+            //services.AddTransient(CreateProgressViewModel);
+            //services.AddTransient(CreateAES);
+            //services.AddTransient(CreateRSA);
+            //services.AddTransient(CreateCryptingService);
+            //services.AddTransient<InformationPopupViewModel>();
+            //services.AddSingleton(CreateCryptingViewModel);
+            //services.AddSingleton(CreatePdfManagerViewModel);
+            //services.AddSingleton(CreatePdfMergeViewModel);
+            //services.AddSingleton(CreatePdfSplitViewModel);
+            //services.AddSingleton(CreatePdfImageToPdfViewModel);
+            //services.AddSingleton(CreateMainWindowViewModel);
+            //services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
+        }).Build();
 
         private readonly List<ResourceDictionary> LanguagesDictionaries;
 
@@ -25,122 +135,134 @@ namespace CrytonCoreNext
             LanguagesDictionaries = new List<ResourceDictionary>(){
                 new ResourceDictionary() { Source = new Uri("..\\Dictionaries\\EnglishDictionary.xaml", UriKind.Relative) }
             };
+        }
+        public static T GetService<T>()
+        where T : class
+        {
+            return _host.Services.GetService(typeof(T)) as T;
+        }
 
+        private async void OnStartup(object sender, StartupEventArgs e)
+        {
+            await _host.StartAsync();
+        }
+
+        private void OnLoaded(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
             InitializeDictionary();
-
-            IServiceCollection services = new ServiceCollection();
-
-            _ = services
-                .AddSingleton<IInternetConnection, InternetConnection>()
-                .AddSingleton<ITimeDate, TimeDate>()
-                .AddSingleton(CreateCryptingRecognition)
-                .AddSingleton(CreateFilesLoader)
-                .AddSingleton(CreateFilesSaver)
-                .AddSingleton<IFilesManager, FilesManager>()
-                .AddSingleton(CreateFileService)
-                .AddSingleton(CreateFilesView)
-                .AddSingleton<IDialogService, DialogService>()
-                .AddTransient<IProgressService, ProgressService>()
-                .AddSingleton<IJsonSerializer, JsonSerializer>()
-                .AddSingleton<IXmlSerializer, XmlSerializer>()
-                .AddTransient(CreateProgressViewModel)
-                .AddTransient<FilesViewViewModel>()
-                .AddTransient(CreateAES)
-                .AddTransient(CreateRSA)
-                .AddTransient(CreateCryptingService)
-                .AddTransient<InformationPopupViewModel>()
-                .AddSingleton(CreateHomeViewModel)
-                .AddSingleton(CreateCryptingViewModel)
-                .AddSingleton(CreatePdfManagerViewModel)
-                .AddSingleton(CreateMainWindowViewModel)
-                .AddSingleton(s => new MainWindow()
-                {
-                    DataContext = s.GetRequiredService<MainViewModel>()
-                });
-
-            _serviceProvider = services.BuildServiceProvider();
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        private async void OnExit(object sender, ExitEventArgs e)
         {
-            MainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            MainWindow.Show();
-
-            base.OnStartup(e);
+            await _host.StopAsync();
+            _host.Dispose();
         }
 
-        private HomeViewModel CreateHomeViewModel(IServiceProvider provider)
+        private static FilesSelectorListingViewViewModel CreateFilesSelectorListingViewViewModel(IServiceProvider provider)
         {
-            var timeDate = provider.GetService<ITimeDate>();
-            var internetConnection = provider.GetService<IInternetConnection>();
-
-            return new(timeDate, internetConnection);
+            return new FilesSelectorListingViewViewModel();
         }
 
-
-        private MainViewModel CreateMainWindowViewModel(IServiceProvider provider)
+        private static PdfMergeViewModel CreatePdfMergeViewModel(IServiceProvider provider)
         {
-            var homeView = provider.GetRequiredService<HomeViewModel>();
-            var cryptingView = provider.GetRequiredService<CryptingViewModel>();
-            var pdfManagerView = provider.GetRequiredService<PdfManagerViewModel>();
+            var pdfService = provider.GetRequiredService<IPDFService>();
 
-            return new(homeView, cryptingView, pdfManagerView);
+            return new PdfMergeViewModel(pdfService);
+        }
+        private static PdfImageToPdfViewModel CreatePdfImageToPdfViewModel(IServiceProvider provider)
+        {
+            var pdfService = provider.GetRequiredService<IPDFService>();
+            var filesSelectorView = provider.GetRequiredService<FilesSelectorViewViewModel>();
+
+            return new PdfImageToPdfViewModel(pdfService, filesSelectorView);
         }
 
-        private CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
+        private static PdfSplitViewModel CreatePdfSplitViewModel(IServiceProvider provider)
+        {
+            var pdfService = provider.GetRequiredService<IPDFService>();
+
+            return new PdfSplitViewModel(pdfService);
+        }
+
+        private static MainViewModel CreateMainWindowViewModel(IServiceProvider provider)
+        {
+            var pageService = provider.GetRequiredService<ICustomPageService>();
+            return new(pageService);
+        }
+
+        private static NavigationPDFViewViewModel CreateNavigationPDFViewModel(IServiceProvider provider)
+        {
+            var pdfMergeView = provider.GetRequiredService<PdfMergeView>();
+            var pdfSplitView = provider.GetRequiredService<PdfSplitView>();
+            var pdfImageView = provider.GetRequiredService<PdfImageToPdfView>();
+            var navigationService = provider.GetRequiredService<INavigationService>();
+
+            return new NavigationPDFViewViewModel(navigationService, pdfMergeView, pdfSplitView, pdfImageView);
+        }
+
+        private static IPDFService CreatePDFService(IServiceProvider provider)
+        {
+            var pdfManager = provider.GetRequiredService<IPDFManager>();
+            var pdfReader = provider.GetRequiredService<IPDFReader>();
+
+            return new PDFService(pdfManager, pdfReader);
+        }
+
+        private static CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
         {
             var fileService = provider.GetRequiredService<IFileService>();
-            var dialogService = provider.GetRequiredService<IDialogService>();
+            var dialogService = provider.GetRequiredService<Interfaces.IDialogService>();
             var cryptingService = provider.GetRequiredService<ICryptingService>();
             var filesView = provider.GetRequiredService<IFilesView>();
-            var progressView = provider.GetRequiredService<IProgressView>();
+            var snackbar = provider.GetRequiredService<ISnackbarService>();
 
-            return new(fileService, dialogService, cryptingService, filesView, progressView);
+            return new(fileService, dialogService, cryptingService, filesView, snackbar);
         }
 
-        private PdfManagerViewModel CreatePdfManagerViewModel(IServiceProvider provider)
+        public static ICryptingService CreateCryptingService(IServiceProvider provider)
         {
-            var fileService = provider.GetRequiredService<IFileService>();
-            var dialogService = provider.GetRequiredService<IDialogService>();
-            var filesView = provider.GetRequiredService<IFilesView>();
-            var progressView = provider.GetRequiredService<IProgressView>();
-
-            return new(fileService, dialogService, filesView, progressView);
+            var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
+            var cryptingReader = provider.GetRequiredService<ICryptingReader>();
+            var cryptors = provider.GetServices<ICryptingView<CryptingMethodViewModel>>();
+            return new CryptingService(cryptingRecognition, cryptingReader, cryptors.ToList());
         }
 
-        private ICrypting CreateAES(IServiceProvider provider)
+        private static ICryptingView<CryptingMethodViewModel> CreateAESView(IServiceProvider provider)
+        {
+            var aesViewModel = provider.GetServices<CryptingMethodViewModel>().ToList().Where(x => x.PageName == Crypting.Enums.EMethod.AES.ToString()).First();
+            return new AESView(aesViewModel);
+        }
+
+        private static ICryptingView<CryptingMethodViewModel> CreateRSAView(IServiceProvider provider)
+        {
+            var rsaViewModel = provider.GetServices<CryptingMethodViewModel>().ToList().Where(x => x.PageName == Crypting.Enums.EMethod.RSA.ToString()).First();
+            return new RSAView(rsaViewModel);
+        }
+
+        private static CryptingMethodViewModel CreateAESViewModel(IServiceProvider provider)
         {
             var jsonSerialzer = provider.GetRequiredService<IJsonSerializer>();
-            return new AES(jsonSerialzer);
+            var snackbar = provider.GetRequiredService<ISnackbarService>();
+            var aes = provider.GetServices<ICrypting>().ToList().Where(x => x.Method == Crypting.Enums.EMethod.AES).First();
+            return new AESViewModel(aes, snackbar, jsonSerialzer, aes.Method.ToString());
         }
 
-        private ICrypting CreateRSA(IServiceProvider provider)
+        private static CryptingMethodViewModel CreateRSAViewModel(IServiceProvider provider)
         {
             var jsonSerialzer = provider.GetRequiredService<IJsonSerializer>();
             var xmlSerialzer = provider.GetRequiredService<IXmlSerializer>();
-            var progressView = provider.GetRequiredService<IProgressView>();
-            return new RSA(jsonSerialzer, xmlSerialzer, progressView);
+            var snackbar = provider.GetRequiredService<ISnackbarService>();
+            var rsa = provider.GetServices<ICrypting>().ToList().Where(x => x.Method == Crypting.Enums.EMethod.RSA).First();
+            return new RSAViewModel(rsa, snackbar, jsonSerialzer, xmlSerialzer, rsa.Method.ToString());
         }
 
-        private ICryptingRecognition CreateCryptingRecognition(IServiceProvider provider)
+        private static ICryptingRecognition CreateCryptingRecognition(IServiceProvider provider)
         {
             var recognitionValues = new RecognitionValues(AppKey);
             return new CryptingRecognition(recognitionValues);
         }
 
-        private IFilesLoader CreateFilesLoader(IServiceProvider provider)
-        {
-            var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
-            return new FilesLoader(cryptingRecognition);
-        }
-
-        private IFilesSaver CreateFilesSaver(IServiceProvider provider)
-        {
-            var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
-            return new FilesSaver(cryptingRecognition);
-        }
-
-        private IFileService CreateFileService(IServiceProvider provider)
+        private static IFileService CreateFileService(IServiceProvider provider)
         {
             var fileLoader = provider.GetRequiredService<IFilesLoader>();
             var fileSaver = provider.GetRequiredService<IFilesSaver>();
@@ -148,27 +270,27 @@ namespace CrytonCoreNext
             return new FileService(fileSaver, fileLoader, fileManager);
         }
 
-        public ICryptingService CreateCryptingService(IServiceProvider provider)
-        {
-            var cryptors = provider.GetServices<ICrypting>();
-            return new CryptingService(cryptors);
-        }
-
-        public IFilesView CreateFilesView(IServiceProvider provider)
+        public static IFilesView CreateFilesView(IServiceProvider provider)
         {
             var fileService = provider.GetRequiredService<IFileService>();
             return new FilesViewViewModel(fileService);
         }
 
-        public IProgressView CreateProgressViewModel(IServiceProvider provider)
+        public static FilesSelectorViewViewModel CreateFilesLeftView(IServiceProvider provider)
         {
-            var progressService = provider.GetRequiredService<IProgressService>();
-            return new ProgressViewModel(progressService);
+            var progressItemViewViewModel = provider.GetRequiredService<FilesSelectorListingViewViewModel>();
+            var completedItemViewViewModel = provider.GetRequiredService<FilesSelectorListingViewViewModel>();
+            return new FilesSelectorViewViewModel(progressItemViewViewModel, completedItemViewViewModel);
+        }
+
+        public static IImageView CreateImagesView(IServiceProvider provider)
+        {
+            return new ImageViewerViewModel();
         }
 
         private void InitializeDictionary()
         {
-            this.Resources.MergedDictionaries.Clear();
+            //this.Resources.MergedDictionaries.Clear();
             this.Resources.MergedDictionaries.Add(LanguagesDictionaries[0]);
         }
     }

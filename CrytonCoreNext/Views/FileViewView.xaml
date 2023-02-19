@@ -1,0 +1,194 @@
+﻿<UserControl x:Class="CrytonCoreNext.Views.FileViewView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d" 
+      d:DesignHeight="900"
+      d:DesignWidth="300">
+
+
+    <UserControl.Resources>
+        <Storyboard x:Key="UnFoldFilesView">
+            <DoubleAnimation   
+                Storyboard.Target = "{Binding ElementName=FilesView}"
+                Storyboard.TargetProperty="Width"
+                From="50"
+                To="300"
+                BeginTime="0:0:0"
+                Duration="0:0:1"/>
+        </Storyboard>
+
+        <Storyboard x:Key="FoldFilesView">
+            <DoubleAnimation   
+                Storyboard.Target = "{Binding ElementName=FilesView}"
+                Storyboard.TargetProperty="Width"
+                From="300"
+                To="50"
+                BeginTime="0:0:0"
+                Duration="0:0:0.8"/>
+        </Storyboard>
+        <SolidColorBrush x:Key="fileSelectColor" Color="CornflowerBlue" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid x:Name="FilesView" Margin="-1" HorizontalAlignment="Right" Width="50">
+
+            <Grid.Background>
+                <SolidColorBrush Color="{StaticResource BackgroundColor}"/>
+            </Grid.Background>
+
+
+            <ToggleButton
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Width="50"
+                Height="100"
+                Style="{DynamicResource OnOffToggleImageStyleRight}"
+                IsChecked="{Binding ShowFilesView}"
+                ToolTip="{DynamicResource FilesView}" Cursor="Hand">
+
+
+                <ToggleButton.Triggers>
+                    <EventTrigger RoutedEvent="ToggleButton.Checked">
+                        <BeginStoryboard Storyboard="{StaticResource UnFoldFilesView}"/>
+                    </EventTrigger>
+
+                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                        <BeginStoryboard Storyboard="{StaticResource FoldFilesView}"/>
+                    </EventTrigger>
+
+                </ToggleButton.Triggers>
+            </ToggleButton>
+
+            <Label Content="Files" VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                   Margin="50, 0, 50, 0" Height="100" 
+                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                   FontFamily="Segoe UI Variable Text Light" FontSize="36" Foreground="White"/>
+
+
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,100,0,300" MaxWidth="300">
+                <SelectiveScrollingGrid>
+                    <ListView BorderBrush="{StaticResource BackgroundColorBrush}"
+                              SelectedIndex="{Binding SelectedItemIndex, Mode=TwoWay}"
+                              ItemsSource="{Binding FilesCollection, IsAsync=True}"
+                              Background="{StaticResource BackgroundColorBrush}" 
+                              HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" 
+                              VerticalAlignment="Stretch" 
+                              Visibility="Visible" 
+                              ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                              ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                              IsSynchronizedWithCurrentItem="True" Foreground="White"
+                              FontSize="20">
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Height="60" MaxWidth="290" HorizontalAlignment="Stretch" Margin="-3,0,-3,0">
+                                    <TextBlock Text="{Binding Id, Mode=OneWay}" Style="{StaticResource TextBlockDefault}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="18,0,0,0" />
+                                    <TextBlock Text="{Binding NameWithExtension, Mode=OneWay}" Style="{StaticResource TextBlockDefault}" Margin="45,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                            <Border x:Name="brdr" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True"/>
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Background" TargetName="brdr" Value="#1F26A0DA"/>
+                                                    <Setter Property="BorderBrush" TargetName="brdr" Value="#a826A0Da"/>
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="Selector.IsSelectionActive" Value="False"/>
+                                                        <Condition Property="IsSelected" Value="True"/>
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Background" TargetName="brdr" Value="{StaticResource fileSelectColor}"/>
+                                                    <Setter Property="BorderBrush" TargetName="brdr" Value="{StaticResource fileSelectColor}"/>
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                                        <Condition Property="IsSelected" Value="True"/>
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Background" TargetName="brdr" Value="{StaticResource fileSelectColor}"/>
+                                                    <Setter Property="BorderBrush" TargetName="brdr" Value="{StaticResource fileSelectColor}"/>
+                                                </MultiTrigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="TextElement.Foreground" TargetName="brdr" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </SelectiveScrollingGrid>
+            </Grid>
+
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="300" MaxWidth="300">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource SetAsFirst}" Cursor="Hand">
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <TextBlock Text="{DynamicResource SetAsFirst}" Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="1" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource MoveUp}" Cursor="Hand">
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <TextBlock Text="{DynamicResource MoveUp}"  Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="2" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource MoveDown}" Cursor="Hand">
+
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <TextBlock Text="{DynamicResource MoveDown}" Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="3" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource SetAsLast}" Cursor="Hand">
+
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <TextBlock Text="{DynamicResource SetAsLast}" Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="4" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource RemoveSelected}" Cursor="Hand">
+
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <TextBlock Text="{DynamicResource RemoveSelected}" Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Row="5" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
+                        ToolTip="{DynamicResource RemoveAll}" Cursor="Hand">
+
+                    <StackPanel Orientation="Horizontal" Width="230">
+                        <TextBlock Text="{DynamicResource RemoveAll}" Style="{StaticResource TextBlockFilesView}"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -10,7 +10,7 @@ namespace CrytonCoreNext.Models
 {
     public class FilesManager : ViewModelBase, IFilesManager
     {
-        public (bool result, int newIndex) DeleteItem(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) DeleteItem(ObservableCollection<File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
@@ -37,7 +37,7 @@ namespace CrytonCoreNext.Models
             return new(false, -1);
         }
 
-        public (bool result, int newIndex) SetItemAsFirst(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) SetItemAsFirst(ObservableCollection<File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
@@ -58,7 +58,7 @@ namespace CrytonCoreNext.Models
             return new(true, 0);
         }
 
-        public (bool result, int newIndex) SetItemAsLast(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) SetItemAsLast(ObservableCollection<File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
@@ -79,7 +79,7 @@ namespace CrytonCoreNext.Models
             return new(true, files.Count - 1);
         }
 
-        public (bool result, int newIndex) MoveItemUp(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) MoveItemUp(ObservableCollection<File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
@@ -108,7 +108,7 @@ namespace CrytonCoreNext.Models
             }
         }
 
-        public (bool result, int newIndex) MoveItemDown(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) MoveItemDown(ObservableCollection<File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
@@ -137,7 +137,7 @@ namespace CrytonCoreNext.Models
             }
         }
 
-        public (bool result, int newIndex) ClearAllFiles(ObservableCollection<Models.File> files, Guid guid)
+        public (bool result, int newIndex) ClearAllFiles(ObservableCollection<File> files, Guid guid)
         {
             if (files.IsCollectionEmpty())
             {
@@ -149,36 +149,27 @@ namespace CrytonCoreNext.Models
             return new(true, -1);
         }
 
-        public (bool result, int newIndex) ModifyFile(ObservableCollection<Models.File> files, Guid guid, byte[] bytes, CryptingStatus.Status status, string? methodName)
+        public (bool result, int newIndex) ModifyFile(ObservableCollection<File> files, Guid guid, byte[] bytes, CryptingStatus.Status status, string? methodName)
         {
             var file = files.Where(x => x.Guid == guid).First();
             file.Bytes = bytes;
-            file.Status = status;
-            file.Method = methodName ?? string.Empty;
-            Helpers.GCHelper.Collect();
+            //file.Status = status;
+            //file.Method = methodName ?? string.Empty;
+            GC.Collect();
             return new(true, file.Id);
         }
 
-        public (bool result, int newIndex) ModifyFile(Models.File file, byte[] bytes, CryptingStatus.Status status, string? methodName)
-        {
-            file.Bytes = bytes;
-            file.Status = status;
-            file.Method = methodName ?? string.Empty;
-            Helpers.GCHelper.Collect();
-            return new(true, file.Id);
-        }
-
-        private Models.File? GetFileByGuid(ObservableCollection<Models.File> files, Guid guid)
-        {
-            return files.Where(x => x.Guid == guid).Select(x => x).FirstOrDefault();
-        }
-
-        private void ReorderFiles(ObservableCollection<Models.File> files)
+        public void ReorderFiles(ObservableCollection<File> files)
         {
             foreach (var item in files.Select((file, i) => new { i, file }))
             {
                 item.file.Id = item.i + 1;
             }
+        }
+
+        private File? GetFileByGuid(ObservableCollection<File> files, Guid guid)
+        {
+            return files.Where(x => x.Guid == guid).Select(x => x).FirstOrDefault();
         }
     }
 }

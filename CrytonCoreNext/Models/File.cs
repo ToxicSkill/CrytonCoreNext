@@ -1,5 +1,4 @@
-﻿using CrytonCoreNext.Static;
-using System;
+﻿using System;
 
 namespace CrytonCoreNext.Models
 {
@@ -7,7 +6,7 @@ namespace CrytonCoreNext.Models
     {
         public string Name { get; init; }
 
-        public string NameWithExtension { get; init; }
+        public string NameWithExtension { get => $"{Name}.{Extension}"; }
 
         public string Path { get; init; }
 
@@ -15,33 +14,45 @@ namespace CrytonCoreNext.Models
 
         public DateTime Date { get; init; }
 
-        public string Extension { get; init; }
+        public string Extension { get; set; }
 
         public int Id { get; set; }
 
         public byte[] Bytes { get; set; }
 
-        public CryptingStatus.Status Status { get; set; }
+        public Guid Guid { get; init; } = Guid.NewGuid();
 
-        public Guid Guid { get; init; }
-
-        public string Method { get; set; }
-
-        public File() { }
-
-        public File(string name, string path, string size, string nameWithExtension, DateTime date, string extension, int id, byte[] bytes)
+        public File(string name, string path, string size, DateTime date, string extension, int id, byte[] bytes)
         {
             Name = name;
-            NameWithExtension = nameWithExtension;
             Path = path;
             Size = size;
             Date = date;
             Extension = extension;
             Id = id;
             Bytes = bytes;
-            Method = string.Empty;
-            //Text = Parsers.FileContentParser.GetStringFromBytes(bytes);
-            Guid = new Guid();
+        }
+
+        public File(File file, string name, byte[] bytes, int id)
+        {
+            Name = name;
+            Path = file.Path;
+            Size = file.Size;
+            Date = file.Date;
+            Extension = file.Extension;
+            Id = id;
+            Bytes = bytes;
+        }
+
+        public File(File file)
+        {
+            Name = file.Name;
+            Path = file.Path;
+            Size = file.Size;
+            Date = file.Date;
+            Extension = file.Extension;
+            Id = file.Id;
+            Bytes = file.Bytes;
         }
     }
 }

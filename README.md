@@ -12,10 +12,40 @@ Upcoming implementations:
 - photo manager
 - weather information
 
+Support touch & windows MICA maetrial.
 
+# WPF UI Fluent Modern Design
+<https://github.com/lepoco/wpfui>
+<https://wpfui.lepo.co>
+
+## Main page
 
 <div align="center">
     <a href="./">
-        <img src="./CrytonCoreNext/Assets/show1.png"/>
+        <img src="./Pictures/MainPage.jpg"/>
+    </a>
+</div>
+
+## Crypting page
+
+<div align="center">
+    <a href="./">
+        <img src="./Pictures/CryptingPage.jpg"/>
+    </a>
+</div>
+
+## Settings page
+
+<div align="center">
+    <a href="./">
+        <img src="./Pictures/SettingsPage.jpg"/>
+    </a>
+</div>
+
+## Pdf page
+
+<div align="center">
+    <a href="./">
+        <img src="./Pictures/PdfPage.jpg"/>
     </a>
 </div>

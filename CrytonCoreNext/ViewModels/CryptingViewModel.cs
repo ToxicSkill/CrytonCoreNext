@@ -1,121 +1,172 @@
-﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
-using CrytonCoreNext.Helpers;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
+using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Static;
+using CrytonCoreNext.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
+using System.Linq;
+using System.Threading.Tasks;
+using Wpf.Ui.Common;
+using Wpf.Ui.Mvvm.Contracts;
+using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
 
 namespace CrytonCoreNext.ViewModels
 {
-    public class CryptingViewModel : InteractiveViewBase
+    public partial class CryptingViewModel : InteractiveViewBase
     {
         private readonly ICryptingService _cryptingService;
 
-        public ICommand LoadFilesCommand { get; init; }
+        private readonly IFileService _fileService;
 
-        public ICommand SaveFileCommand { get; init; }
+        [ObservableProperty]
+        public IProgressService progressService;
 
-        public ICommand CryptCommand { get; init; }
+        [ObservableProperty]
+        public ObservableCollection<ICryptingView<CryptingMethodViewModel>> cryptingViewsItemSource;
 
-        public ObservableCollection<ICrypting> CryptingComboBox { get; private set; }
+        [ObservableProperty]
+        public ICryptingView<CryptingMethodViewModel> selectedCryptingView;
 
-        public ViewModelBase CurrentCryptingViewModel { get; private set; }
+        [ObservableProperty]
+        public ObservableCollection<CryptFile> files;
 
-        public string ProgessMessage { get; set; } = string.Empty;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(Files))]
+        public CryptFile selectedFile;
 
-        public string CryptButtonName => GetCryptName();
 
-        public ICrypting CurrentCryptingName
+        public delegate void HandleFileChanged(CryptFile file);
+
+        public event HandleFileChanged OnFileChanged;
+
+        public CryptingViewModel(IFileService fileService,
+            IDialogService dialogService,
+            ICryptingService cryptingService,
+            IFilesView filesView,
+            ISnackbarService snackbarService)
+            : base(fileService, dialogService, snackbarService)
         {
-            get => _cryptingService.GetCurrentCrypting();
-            set
+            ProgressService = new ProgressService();
+            _fileService = fileService;
+            _cryptingService = cryptingService;
+            files = new();
+            UpdateCryptingViews();
+            SelectedCryptingView = CryptingViewsItemSource.First();
+            _cryptingService.RegisterFileChangedEvent(ref OnFileChanged!);
+        }
+
+        private void UpdateCryptingViews()
+        {
+            CryptingViewsItemSource = new(_cryptingService.GetCryptingViews());
+        }
+
+        partial void OnSelectedFileChanged(CryptFile value)
+        {
+            OnFileChanged.Invoke(value);
+        }
+
+        //public override bool CanExecute()
+        //{
+        //    return !IsBusy && !CurrentCryptingViewModel.IsBusy;
+        //}
+
+        //private void HandleAllFilesDeleted(object? sender, EventArgs e)
+        //{
+        //    _files.Clear();
+        //}
+
+        //private void HandleSelectedFileChanged(object? sender, EventArgs? e)
+        //{
+        //    var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetSelectedFileGuid());
+        //    if (file != null)
+        //    {
+        //        SelectedFile = file;
+        //        OnPropertyChanged(nameof(SelectedFile));
+        //        OnPropertyChanged(nameof(CryptButtonName));
+        //    }
+        //}
+
+
+        [RelayCommand]
+        private void ClearFiles()
+        {
+            Files.Clear();
+        }
+
+        [RelayCommand]
+        private void DeleteFile()
+        {
+            var oldIndex = Files.IndexOf(SelectedFile);
+            Files.Remove(SelectedFile);
+            if (Files.Any())
             {
-                if (value != _cryptingService.GetCurrentCrypting())
-                {
-                    _cryptingService.SetCurrentCrypting(value);
-                    UpdateCurrentCrypting();
-                    OnPropertyChanged(nameof(CurrentCryptingName));
-                }
+                SelectedFile = Files.ElementAt(oldIndex > 0 ? --oldIndex : oldIndex);
             }
         }
-        public CryptingViewModel(IFileService fileService, IDialogService dialogService, ICryptingService cryptingService, IFilesView filesView, IProgressView progressView) : base(fileService, dialogService, filesView, progressView)
+
+        [RelayCommand]
+        private async Task LoadCryptFiles()
         {
-            _cryptingService = cryptingService;
-            ProgressViewModel.ChangeProgressType(BusyIndicator.IndicatorType.ThreeDots);
-
-            CurrentCryptingViewModel = new();
-            CryptingComboBox = new();
-
-            CryptCommand = new Command(PerformCrypting, CanExecute);
-            LoadFilesCommand = new Command(LoadFiles, CanExecute);
-            SaveFileCommand = new Command(SaveFile, CanExecute);
-
-            InitializeCryptingComboBox();
-            UpdateCurrentCrypting();
-
-            FilesViewModel.FilesChanged += HandleFileChanged;
-
-            //var t = new Crypting.Crypting(new() { new(new AES(), ECrypting.EnumToString(ECrypting.Methods.aes)) });
-            //t.Encrypt(FilesViewViewModel.FilesView[0].Bytes, ECrypting.EnumToString(ECrypting.Methods.aes));
+            Lock();
+            await foreach (var file in base.LoadFiles())
+            {
+                Files.Add(_cryptingService.ReadCryptFile(file));
+                SelectedFile = Files.Last();
+            }
+            if (SelectedFile == null && Files.Any())
+            {
+                SelectedFile = Files.First();
+            }
+            Unlock();
         }
 
-        public override bool CanExecute()
+        [RelayCommand]
+        private void SaveCryptFile()
         {
-            return !IsBusy && !CurrentCryptingViewModel.IsBusy;
+            _cryptingService.AddRecognitionBytes(SelectedFile);
+            base.SaveFile(SelectedFile);
         }
 
-        private new void HandleFileChanged(object? sender, EventArgs? e)
-        {
-            OnPropertyChanged(nameof(CryptButtonName));
-        }
 
-        private void InitializeCryptingComboBox()
-        {
-            CryptingComboBox = new(_cryptingService.GetCryptors());
-        }
-
-        private void UpdateCurrentCrypting()
-        {
-            CurrentCryptingViewModel = _cryptingService.GetCurrentCrypting().GetViewModel();
-            OnPropertyChanged(nameof(CurrentCryptingViewModel));
-        }
-
+        [RelayCommand]
         private async void PerformCrypting()
         {
-            var progressReport = ProgressViewModel.InitializeProgress<string>(_cryptingService.GetCurrentCryptingProgressCount());
-            if (!_fileService.HasBytes(CurrentFile) || CurrentFile == null)
+            Lock();
+            if (!_fileService.HasBytes(SelectedFile) || _cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
             {
+                PostSnackbar("Error", Language.Post("WrongMethod"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
                 return;
             }
 
-            var result = await _cryptingService.RunCrypting(CurrentFile, progressReport);
+            var progressReport = ProgressService.SetProgress<string>(SelectedCryptingView.ViewModel.Crypting.ProgressCount);
+            var result = await _cryptingService.RunCrypting(SelectedCryptingView, SelectedFile, progressReport);
 
-            if (result != null && result.Length > 0 && FilesViewModel.AnyFiles())
+            if (!result.Equals(Array.Empty<byte>()) && Files.Any())
             {
-                ModifyFile(CurrentFile, result, GetOpositeStatus(CurrentFile.Status), _cryptingService.GetCurrentCrypting()?.GetName());
-                OnPropertyChanged(nameof(CryptButtonName));
+                _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedFile.Name);
+                UpdateStateOfSelectedFile();
+                PostSnackbar("Success", Language.Post("Success"), SymbolRegular.Checkmark20, ControlAppearance.Success);
             }
-
-            ActionTimer.InitializeTimerWithAction(ProgressViewModel.ClearProgress, 2);
+            else
+            {
+                PostSnackbar("Error", Language.Post("CryptingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+            }
+            Unlock();
         }
 
-        private static CryptingStatus.Status GetOpositeStatus(CryptingStatus.Status curremtStatus)
+        private void UpdateStateOfSelectedFile()
         {
-            return curremtStatus.Equals(CryptingStatus.Status.Decrypted) ?
-                CryptingStatus.Status.Encrypted :
-                CryptingStatus.Status.Decrypted;
-        }
-
-        private string GetCryptName()
-        {
-            if (CurrentFile == null)
-            {
-                return string.Empty;
-            }
-
-            return GetOpositeStatus(CurrentFile.Status).ToDescription();
+            var oldIndex = Files.IndexOf(SelectedFile);
+            var temp = SelectedFile;
+            Files.RemoveAt(oldIndex);
+            Files.Insert(oldIndex, temp);
+            SelectedFile = temp;
+            OnPropertyChanged(nameof(Files));
+            OnPropertyChanged(nameof(SelectedFile));
         }
     }
 }

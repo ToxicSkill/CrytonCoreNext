@@ -1,13 +1,10 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
-using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -15,47 +12,41 @@ namespace CrytonCoreNext.ViewModels
     {
         private bool _showFilesView = false;
 
-        private int _selectedItemIndex = 0;
+        private int _selectedItemIndex = -1;
 
         private static readonly (bool result, int newIndex) DefaultResult = new(false, -1);
 
-        private readonly IFileService _filesService;
+        private readonly IFilesManager _filesManager;
 
-        private bool _fileChangeBlocker = false;
+        private Guid _deletedFileGuid = Guid.Empty;
+
+        public event EventHandler CurrentFileChanged;
+
+        public event EventHandler FileDeleted;
+
+        public event EventHandler AllFilesDeleted;
+
+        public event EventHandler FilesReordered;
 
         public ObservableCollection<File> FilesCollection { get; private set; }
 
-        public event EventHandler FilesChanged;
-
-        public File? CurrentFile { get; set; }
-
-        public ICommand ClearFilesCommand { get; set; }
-
-        public ICommand DeleteCurrentFileCommand { get; set; }
-
-        public ICommand SetFileAsFirstCommand { get; set; }
-
-        public ICommand SetFileAsLastCommand { get; set; }
-
-        public ICommand MoveFileUpCommand { get; set; }
-
-        public ICommand MoveFileDownCommand { get; set; }
+        public Guid CurrentFileGuid { get; set; }
 
         public int SelectedItemIndex
         {
             get => _selectedItemIndex;
             set
             {
-                if ((_selectedItemIndex != value || value == 0) && !_fileChangeBlocker)
+                if (_selectedItemIndex != value && !IsBusy)
                 {
                     _selectedItemIndex = value;
                     UpdateCurrentFile();
-                    NotifyFilesView();
+                    ChangeShowFilesView();
                     OnPropertyChanged(nameof(SelectedItemIndex));
                 }
-                ChangeShowFilesView();
             }
         }
+
         public bool ShowFilesView
         {
             get => _showFilesView;
@@ -66,16 +57,10 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
-        public FilesViewViewModel(IFileService filesService)
+        public FilesViewViewModel(IFilesManager filesManager)
         {
             FilesCollection = new ObservableCollection<File>();
-            ClearFilesCommand = new Command(ClearAllFiles, CanExecute);
-            DeleteCurrentFileCommand = new Command(DeleteFile, CanExecute);
-            SetFileAsFirstCommand = new Command(SetFileAsFirst, CanExecute);
-            SetFileAsLastCommand = new Command(SetFileAsLast, CanExecute);
-            MoveFileUpCommand = new Command(MoveFileUp, CanExecute);
-            MoveFileDownCommand = new Command(MoveFileDown, CanExecute);
-            _filesService = filesService;
+            _filesManager = filesManager;
         }
 
         public override bool CanExecute()
@@ -83,29 +68,36 @@ namespace CrytonCoreNext.ViewModels
             return !IsBusy;
         }
 
-        public File? GetCurrentFile()
-        {
-            return CurrentFile;
-        }
-
-        public File? GetFileByIndex(int index)
-        {
-            if (GetFilesCount() < index)
-            {
-                return null;
-            }
-
-            return FilesCollection[index];
-        }
-
         public int GetFilesCount()
         {
-            if (FilesCollection == null)
-            {
-                return 0;
-            }
+            return FilesCollection.Count;
+        }
 
-            return FilesCollection.Any() ? FilesCollection.Count() : 0;
+        public Guid GetCurrentFileGuid()
+        {
+            return CurrentFileGuid;
+        }
+
+        public void AddFile(File newFile)
+        {
+            FilesCollection.Add(newFile);
+            OnPropertyChanged(nameof(FilesCollection));
+        }
+
+        public void UpdateFiles()
+        {
+            RefreshSelectedIndex();
+            _filesManager.ReorderFiles(FilesCollection);
+        }
+
+        public Guid GetDeletedFileGuid()
+        {
+            return _deletedFileGuid;
+        }
+
+        public List<Guid> GetFilesGuids()
+        {
+            return FilesCollection.Select(x => x.Guid).ToList();
         }
 
         public int GetSelectedFileIndex()
@@ -113,87 +105,114 @@ namespace CrytonCoreNext.ViewModels
             return SelectedItemIndex;
         }
 
-        public bool AddNewFiles(List<File> files)
+        public Dictionary<Guid, int> GetFilesOrder()
         {
-            if (files == null)
+            var orderDict = new Dictionary<Guid, int>();
+            foreach (var file in FilesCollection)
             {
-                return false;
+                orderDict.Add(file.Guid, file.Id);
             }
+            return orderDict;
+        }
 
-            FilesCollection = new(FilesCollection.ToList().Concat(files));
-            OnPropertyChanged(nameof(FilesCollection));
+        public void ClearAllFiles()
+        {
+            _deletedFileGuid = Guid.Empty;
+            DoAction(_filesManager.ClearAllFiles);
+            AllFilesDeleted.Invoke(null, null);
+            GC.Collect();
+        }
 
-            if (FilesCollection != null && FilesCollection.Count > 0)
+        public void DeleteFile()
+        {
+            if (!FilesCollection.Any())
             {
-                SelectedItemIndex = 0;
-            }
-
-            return true;
-        }
-        public bool AnyFiles()
-        {
-            return FilesCollection.Any();
-        }
-
-        public void Update(IEnumerable<File>? files = null, bool showFilesView = false)
-        {
-            ShowFilesView = showFilesView;
-            FilesCollection = new ObservableCollection<File>(files)?.Copy();
-            InitializeFiles();
-        }
-
-        public void ClearAllFiles() => DoAction(_filesService.ClearAllFiles);
-
-        public void DeleteFile() => DoAction(_filesService.DeleteItem);
-
-        public void SetFileAsFirst() => DoAction(_filesService.SetItemAsFirst);
-
-        public void SetFileAsLast() => DoAction(_filesService.SetItemAsLast);
-
-        public void MoveFileUp() => DoAction(_filesService.MoveItemUp);
-
-        public void MoveFileDown() => DoAction(_filesService.MoveItemDown);
-
-        private void DoAction(Func<ObservableCollection<File>, Guid, (bool result, int newIndex)> function)
-        {
-            if (FilesCollection == null)
                 return;
+            }
 
-            _fileChangeBlocker = true;
-            var (result, newIndex) = CurrentFile != null ? function(FilesCollection, CurrentFile.Guid) : DefaultResult;
-            _fileChangeBlocker = false;
-            if (result)
+            if (FilesCollection.Count == 1)
             {
-                SelectedItemIndex = newIndex;
-                OnPropertyChanged(nameof(FilesCollection));
+                ClearAllFiles();
+                return;
+            }
+
+            _deletedFileGuid = CurrentFileGuid;
+            DoAction(_filesManager.DeleteItem);
+            FileDeleted.Invoke(null, null);
+            GC.Collect();
+        }
+
+        public void SetFileAsFirst()
+        {
+            if (!IsItemFirst())
+            {
+                DoAction(_filesManager.SetItemAsFirst);
+                FilesReordered.Invoke(null, null);
             }
         }
 
-        private void NotifyFilesView(object o = null, EventArgs s = null)
+        public void MoveFileUp()
         {
-            FilesChanged?.Invoke(o, s);
+            if (!IsItemFirst())
+            {
+                DoAction(_filesManager.MoveItemUp);
+                FilesReordered.Invoke(null, null);
+            }
         }
 
-        private void InitializeFiles()
+        public void SetFileAsLast()
+        {
+            if (!IsItemLast())
+            {
+                DoAction(_filesManager.SetItemAsLast);
+                FilesReordered.Invoke(null, null);
+            }
+        }
+
+        public void MoveFileDown()
+        {
+            if (!IsItemLast())
+            {
+                DoAction(_filesManager.MoveItemDown);
+                FilesReordered.Invoke(null, null);
+            }
+        }
+
+        private bool IsItemLast()
+        {
+            return SelectedItemIndex == FilesCollection.Count - 1;
+        }
+
+        private bool IsItemFirst()
+        {
+            return SelectedItemIndex == 0;
+        }
+
+        private void RefreshSelectedIndex()
         {
             if (FilesCollection != null && FilesCollection.Count > 0)
             {
-                SelectedItemIndex = 0;
+                SelectedItemIndex = FilesCollection.Count - 1;
             }
+        }
 
-            OnPropertyChanged(nameof(FilesCollection));
+        private void NotifyCurrentFileChanged(object? o = null, EventArgs? s = null)
+        {
+            CurrentFileChanged?.Invoke(o, s);
         }
 
         private void UpdateCurrentFile()
         {
             if (SelectedItemIndex != -1 && FilesCollection.Count >= SelectedItemIndex + 1)
             {
-                CurrentFile = FilesCollection.ElementAt(SelectedItemIndex);
+                CurrentFileGuid = FilesCollection.ElementAt(SelectedItemIndex).Guid;
             }
             else
             {
-                CurrentFile = null;
+                CurrentFileGuid = Guid.Empty;
             }
+
+            NotifyCurrentFileChanged();
         }
 
         private void ChangeShowFilesView()
@@ -204,6 +223,25 @@ namespace CrytonCoreNext.ViewModels
             }
 
             OnPropertyChanged(nameof(ShowFilesView));
+        }
+
+        private void DoAction(Func<ObservableCollection<File>, Guid, (bool result, int newIndex)> function)
+        {
+            if (FilesCollection == null)
+                return;
+
+            Lock();
+            var (result, newIndex) = !CurrentFileGuid.Equals(Guid.Empty) ? function(FilesCollection, CurrentFileGuid) : DefaultResult;
+            Unlock();
+            if (result)
+            {
+                SelectedItemIndex = newIndex;
+                Lock();
+                OnPropertyChanged(nameof(FilesCollection));
+                Unlock();
+            }
+
+            UpdateCurrentFile();
         }
     }
 }

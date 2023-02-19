@@ -1,0 +1,90 @@
+﻿<ui:UiPage x:Class="CrytonCoreNext.Crypting.Views.RSAView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:viewmodels="clr-namespace:CrytonCoreNext.Crypting.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:RSAViewModel}"
+             xmlns:c="clr-namespace:CrytonCoreNext.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="680" d:DesignWidth="800" 
+             HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+    <ui:UiPage.Resources>
+        <ResourceDictionary>
+            <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter"/>
+        </ResourceDictionary>
+    </ui:UiPage.Resources>
+
+    <Grid>
+        <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{DynamicResource KeySize}" VerticalAlignment="Center" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
+                <TextBlock Grid.Row="0" Text="{Binding SelectedKeySize}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
+                <Slider Grid.Row="1" Value="{Binding SelectedKeySize}" IsSnapToTickEnabled="True" TickPlacement="BottomRight" TickFrequency="{Binding SliderFrequency}" Minimum="{Binding SliderMinimum}" Maximum="{Binding SliderMaximum}" />
+            </Grid>
+            <ui:Button Icon="New20" Content="{DynamicResource GenerateKeys}" Command="{Binding GenerateRandomKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
+
+
+            <ui:CardExpander
+                Padding="6"
+                HorizontalContentAlignment="Center"
+                Icon="ArrowCircleDown20"
+                IsEnabled="True"
+                IsExpanded="False">
+                <ui:CardExpander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock
+                            FontSize="13"
+                            FontWeight="Medium"
+                            Text="Export keys" />
+                            <TextBlock FontSize="12" FontWeight="Light" Text="Decide which key members to export." />
+                        </StackPanel>
+                        <ui:Button
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Appearance="Secondary"
+                            Command="{Binding ExportKeysCommand}"
+                            Content="{DynamicResource ExportKeys}"
+                            Cursor="Hand" Margin="0, 5, 10, 5" MinWidth="100"/>
+                    </Grid>
+                </ui:CardExpander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Include private members" Margin="0, 0, 10, 0"/>
+                    <ui:ToggleSwitch IsChecked="{Binding IncludePrivateKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+            </ui:CardExpander>
+            <ui:Button Icon="ArrowCircleUp20" Content="{DynamicResource ImportKeys}" Command="{Binding ImportKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
+            <Grid Margin="7, 0, 0, 0">
+                <StackPanel>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22" Foreground="{Binding FileTooBigCautionColor}"/>
+                            <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{Binding MaxBytesMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding FileTooBigCautionColor}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="CheckmarkCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource KeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
+                        <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource NoKeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</ui:UiPage>

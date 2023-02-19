@@ -4,15 +4,23 @@
                     xml:space="preserve" >
 
     <system:String x:Key="CurrentFileName">Name</system:String>
+    <system:String x:Key="CurrentFileTitle">Title</system:String>
+    <system:String x:Key="CurrentFilePages">Pages</system:String>
     <system:String x:Key="CurrentFileExtension">Extension</system:String>
     <system:String x:Key="CurrentFileSize">Size</system:String>
     <system:String x:Key="CurrentFileDate">Creation time</system:String>
     <system:String x:Key="CurrentFileStatus">Status</system:String>
     <system:String x:Key="CurrentFileMethod">Method</system:String>
+    <system:String x:Key="CurrentFilePage">Current page</system:String>
     
     
     <system:String x:Key="SaveFile">Save file</system:String>
     <system:String x:Key="AddFile">Add file</system:String>
+    
+    
+    <system:String x:Key="Warning">Warning</system:String>
+    <system:String x:Key="Information">Information</system:String>
+    <system:String x:Key="Success">Success</system:String> 
     
     
     <system:String x:Key="SetAsFirst">Set as first</system:String>
@@ -22,42 +30,82 @@
     <system:String x:Key="RemoveSelected">Remove selcted</system:String>
     <system:String x:Key="RemoveAll">Remove all</system:String>
     <system:String x:Key="FilesView">Files panel</system:String>
+    <system:String x:Key="NotAllFilesLoadedWarning">Not all files were loaded</system:String>
     
     <!--Crypting-->
     <system:String x:Key="Decrypting">Decrypting</system:String>
     <system:String x:Key="Encrypting">Encrypting</system:String>
     <system:String x:Key="Encrypt">Encrypt</system:String>
     <system:String x:Key="Decrypt">Decrypt</system:String>
+    <system:String x:Key="WrongMethod">Inconsistent crypting method</system:String>
+    <system:String x:Key="Imported">Keys has been imported</system:String>
+    <system:String x:Key="Exported">Keys has been exported</system:String>
+    <system:String x:Key="IncorrectKeys">Incorrect keys. New keys generated.</system:String>
+    <system:String x:Key="IncorrectSizes">Incorrect size, loaded deafult</system:String>
+    <system:String x:Key="IncorrectFile">Incorrect file. New keys generated</system:String>
+    <system:String x:Key="Busy">Wait for task complete</system:String>
+    <system:String x:Key="CryptingError">Process failed</system:String>
+    <system:String x:Key="ProcessSuccess">Process successed</system:String>
+    <system:String x:Key="ExportKeys">Export keys</system:String>
+    <system:String x:Key="ImportKeys">Import keys</system:String>
     
     <!--AES View Model-->
     <system:String x:Key="BlockSize">Block size</system:String>
     <system:String x:Key="KeySize">Key size</system:String>
     <system:String x:Key="Key">Key</system:String>
+    <system:String x:Key="KeyAvailable">Keys available</system:String>
+    <system:String x:Key="NoKeyAvailable">No keys available</system:String>
     <system:String x:Key="IV">IV</system:String>
     <system:String x:Key="GenerateRandomKey">Generate random Key</system:String>
     <system:String x:Key="GenerateRandomIV">Generate random IV</system:String>
     <system:String x:Key="ExportToolTip">Export</system:String>
     <system:String x:Key="ImportToolTip">Import</system:String>
-    <system:String x:Key="GenerateKeys">Generate keys</system:String>
+    <system:String x:Key="GenerateKeys">Generate new keys</system:String>
+    <system:String x:Key="KeysGenerationFail">Error while generating keys</system:String>
     <system:String x:Key="PrivateKey">Private key</system:String>
     <system:String x:Key="PublicKey">Public key</system:String>
+    <system:String x:Key="RegenerateKey">New key generated</system:String>
+    <system:String x:Key="RegenerateIV">New IV generated</system:String>
     
     <!--RSA View Model-->
     <system:String x:Key="CollectingKeys">Collecting keys</system:String>
-    <system:String x:Key="IncorrectFile">Incorrect file</system:String>
     <system:String x:Key="MaximumFileSize">Maximum file size: </system:String>
-    <system:String x:Key="KeysImported">Keys has been imported</system:String>
     <system:String x:Key="KeysGenerated">Keys has been generated</system:String>
     <system:String x:Key="NoPrivateKeyError">Private key is required for decryption</system:String>
     <system:String x:Key="NoGeneratedKeys">No generated or imported keys available</system:String>
     <system:String x:Key="TooBigFile">File is too big</system:String>
+    <system:String x:Key="ExportPublicKey">Export public key</system:String>
+    <system:String x:Key="ExportPrivateKey">Export private key</system:String>
+    <system:String x:Key="GeneratingKeys">Generating keys</system:String>
     
     
     <!--Files-->
-    <system:String x:Key="FilesLoaded">File(s) where loaded successfuly</system:String>
+    <system:String x:Key="FilesLoaded">Files were loaded successfuly</system:String>
+    <system:String x:Key="FileLoaded">File was loaded successfuly</system:String>
     <system:String x:Key="FilesSaved">File has been saved successfuly</system:String>
-    <system:String x:Key="FilesError">Error when saving file</system:String>
+    <system:String x:Key="FilesSavingError">Error whe n saving file</system:String>
+    <system:String x:Key="FilesLoadingError">Error when loading file</system:String>
     <system:String x:Key="OpenFiles">Open files</system:String>
+    
+    
+    <!--PDF-->
+    <system:String x:Key="Merge">Merge</system:String>
+    <system:String x:Key="Split">Split</system:String>
+    <system:String x:Key="Convert">Convert</system:String>
+    <system:String x:Key="PdfToImage">PDF to images</system:String>
+    <system:String x:Key="ImageToPdf">Images to PDF</system:String>
+    <system:String x:Key="Extract">Extract</system:String>
+    <system:String x:Key="Unlock">Unlock</system:String>
+    <system:String x:Key="Protect">Protect</system:String>
+    <system:String x:Key="NotEnoughFiles">At least two documents needed</system:String>
+    <system:String x:Key="FromPage">From page</system:String>
+    <system:String x:Key="ToPage">To page</system:String>
+    
+    
+    <!-- Files selector -->
+    <system:String x:Key="ChoseFiles">Select files by draging</system:String>
+    <system:String x:Key="Available">Available</system:String>
+    <system:String x:Key="Chosen">Chosen</system:String>
    
     <system:String x:Key="OpenFileDialog">Open file(s)</system:String>
 </ResourceDictionary>

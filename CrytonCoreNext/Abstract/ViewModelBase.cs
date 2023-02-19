@@ -1,31 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CrytonCoreNext.Abstract
 {
-    public class ViewModelBase : NotificationBase
+    [ObservableObject]
+    public partial class ViewModelBase
     {
-        public string PageName { get; set; }
+        [ObservableProperty]
+        public string pageName;
 
-        public bool IsBusy;
+        [ObservableProperty]
+        public bool isBusy;
 
-        public ViewModelBase(string pageName = "")
+        public ViewModelBase(string name = "")
         {
-            PageName = pageName;
-        }
-
-        public virtual Dictionary<string, object> GetObjects()
-        {
-            return default;
-        }
-
-        public virtual void SetObjects(Dictionary<string, object> objects)
-        {
-            return;
+            this.PageName = name;
         }
 
         public virtual bool CanExecute()
         {
             return !IsBusy;
+        }
+
+        public virtual void Lock()
+        {
+            IsBusy = true;
+        }
+
+        public virtual void Unlock()
+        {
+            IsBusy = false;
         }
     }
 }

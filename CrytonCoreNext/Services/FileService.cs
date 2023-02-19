@@ -27,19 +27,17 @@ namespace CrytonCoreNext.Services
             return file != null && file.Bytes.Length > 0;
         }
 
-        public List<File>? LoadFiles(List<string> filesNames, int currentIndex = 0)
+        public async IAsyncEnumerable<File> LoadFiles(List<string> filesNames, int currentIndex = 0)
         {
-            return _filesLoader.LoadFiles(filesNames, currentIndex);
+            await foreach (var file in _filesLoader.LoadFiles(filesNames, currentIndex))
+            {
+                yield return file;
+            }
         }
 
         public bool SaveFile(string fileName, File file)
         {
             return _filesSaver.SaveFile(fileName, file);
-        }
-
-        public (bool result, int newIndex) ModifyFile(File file, byte[] bytes, CryptingStatus.Status status, string? methodName)
-        {
-            return _filesManager.ModifyFile(file, bytes, status, methodName);
         }
 
         public (bool result, int newIndex) MoveItemDown(ObservableCollection<File> files, Guid guid)
@@ -75,6 +73,11 @@ namespace CrytonCoreNext.Services
         public (bool result, int newIndex) ModifyFile(ObservableCollection<File> files, Guid guid, byte[] bytes, CryptingStatus.Status status, string? methodName)
         {
             return _filesManager.ModifyFile(files, guid, bytes, status, methodName);
+        }
+
+        public void ReorderFiles(ObservableCollection<File> files)
+        {
+            _filesManager.ReorderFiles(files);
         }
     }
 }
