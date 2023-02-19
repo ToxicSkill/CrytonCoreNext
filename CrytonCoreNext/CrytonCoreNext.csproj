@@ -2,125 +2,31 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Abstarct\**" />
+    <Compile Remove="Assets\**" />
     <EmbeddedResource Remove="Abstarct\**" />
+    <EmbeddedResource Remove="Assets\**" />
     <None Remove="Abstarct\**" />
+    <None Remove="Assets\**" />
     <Page Remove="Abstarct\**" />
+    <Page Remove="Assets\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\1nxt.png" />
-    <None Remove="Assets\2nxt.png" />
-    <None Remove="Assets\AddFile.png" />
-    <None Remove="Assets\Back.png" />
-    <None Remove="Assets\Cloud.png" />
-    <None Remove="Assets\Cogs.png" />
-    <None Remove="Assets\Cogsv2.png" />
-    <None Remove="Assets\Continue.png" />
-    <None Remove="Assets\Convert.png" />
-    <None Remove="Assets\Crypting.png" />
-    <None Remove="Assets\cryton.png" />
-    <None Remove="Assets\DeleteAll.png" />
-    <None Remove="Assets\Down.png" />
-    <None Remove="Assets\DownBottom.png" />
-    <None Remove="Assets\Error.png" />
-    <None Remove="Assets\Exit.png" />
-    <None Remove="Assets\Exit_Mo.png" />
-    <None Remove="Assets\Extract.png" />
-    <None Remove="Assets\FatalError.png" />
-    <None Remove="Assets\FileOpen.png" />
-    <None Remove="Assets\FileOpenError.png" />
-    <None Remove="Assets\FilesMenu.png" />
-    <None Remove="Assets\FilesSelect.png" />
-    <None Remove="Assets\FilesSelectHover.png" />
-    <None Remove="Assets\FilesSelectSharp.png" />
-    <None Remove="Assets\FolderLocked.png" />
-    <None Remove="Assets\FolderUnlocked.png" />
-    <None Remove="Assets\HeavyStorm.png" />
-    <None Remove="Assets\Help.png" />
-    <None Remove="Assets\Humidity.png" />
-    <None Remove="Assets\Info.png" />
-    <None Remove="Assets\Inform.png" />
-    <None Remove="Assets\Information.png" />
-    <None Remove="Assets\Informv2.png" />
-    <None Remove="Assets\LoadObjects.png" />
-    <None Remove="Assets\Lock.png" />
-    <None Remove="Assets\Lock2.png" />
-    <None Remove="Assets\Lockv2.png" />
-    <None Remove="Assets\Maximize.png" />
-    <None Remove="Assets\Maximize_Mo.png" />
-    <None Remove="Assets\menu.png" />
-    <None Remove="Assets\menu2.png" />
-    <None Remove="Assets\menu_bars — kopia.png" />
-    <None Remove="Assets\menu_bars.png" />
-    <None Remove="Assets\menu_home.png" />
-    <None Remove="Assets\Merge.png" />
-    <None Remove="Assets\Minimize.png" />
-    <None Remove="Assets\Minimize_Mo.png" />
-    <None Remove="Assets\Moon.png" />
-    <None Remove="Assets\MoonCloud.png" />
-    <None Remove="Assets\Next.png" />
-    <None Remove="Assets\PadlockClose.png" />
-    <None Remove="Assets\PadlockOpen.png" />
-    <None Remove="Assets\PartialSun.png" />
-    <None Remove="Assets\PasswordKeeper — kopia.png" />
-    <None Remove="Assets\PasswordKeeper.png" />
-    <None Remove="Assets\Pdf.png" />
-    <None Remove="Assets\PdfRed.png" />
-    <None Remove="Assets\Previous.png" />
-    <None Remove="Assets\ProgressConnector.png" />
-    <None Remove="Assets\ProgressDot.png" />
-    <None Remove="Assets\ProgressIndicator.png" />
-    <None Remove="Assets\Protect.png" />
-    <None Remove="Assets\Rain.png" />
-    <None Remove="Assets\Ratio.png" />
-    <None Remove="Assets\RemoveSelected.png" />
-    <None Remove="Assets\Rotate — kopia.png" />
-    <None Remove="Assets\Rotate.png" />
-    <None Remove="Assets\Rubbish.png" />
-    <None Remove="Assets\SaveFile.png" />
-    <None Remove="Assets\SaveFiles.png" />
-    <None Remove="Assets\SaveObjects.png" />
-    <None Remove="Assets\Secure.png" />
-    <None Remove="Assets\Securev2.png" />
-    <None Remove="Assets\Snow.png" />
-    <None Remove="Assets\Split.png" />
-    <None Remove="Assets\Statistical.png" />
-    <None Remove="Assets\Storm.png" />
-    <None Remove="Assets\Subtract.png" />
-    <None Remove="Assets\Sun.png" />
-    <None Remove="Assets\Sunrise.png" />
-    <None Remove="Assets\Sunset.png" />
-    <None Remove="Assets\Swap.png" />
-    <None Remove="Assets\Switch — kopia.png" />
-    <None Remove="Assets\Switch.png" />
-    <None Remove="Assets\Temperature.png" />
-    <None Remove="Assets\Unlock.png" />
-    <None Remove="Assets\unnamed.png" />
-    <None Remove="Assets\Up.png" />
-    <None Remove="Assets\UpSharp.png" />
-    <None Remove="Assets\UpTop.png" />
-    <None Remove="Assets\UpUpSharp.png" />
-    <None Remove="Assets\Warning.png" />
-    <None Remove="Assets\Wind.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="BusyIndicator" Version="2.0.2.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
     <PackageReference Include="Docnet.Core" Version="2.3.1" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.2" />
-    <PackageReference Include="MaterialDesignColors" Version="2.0.9" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.6.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
     <PackageReference Include="Moq" Version="4.18.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="PasswordBoxMVVM" Version="1.0.5" />
@@ -130,255 +36,6 @@
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <PackageReference Include="WPF-UI" Version="2.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Assets\1nxt.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\2nxt.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Back.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Cloud.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Cogs.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Cogsv2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Continue.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Convert.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Crypting.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\DeleteAll.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Error.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Exit.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Exit_Mo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Extract.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\FatalError.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\FilesMenu.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\FilesSelect.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\FilesSelectHover.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\FolderLocked.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\FolderUnlocked.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\HeavyStorm.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Help.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Humidity.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Info.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Inform.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Informv2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\LoadObjects.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Lock.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Lock2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Lockv2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Maximize.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Maximize_Mo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\menu.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\menu2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\menu_bars.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\menu_home.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Merge.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Minimize.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Minimize_Mo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Moon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\MoonCloud.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Next.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\PadlockClose.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\PadlockOpen.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\PartialSun.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\PasswordKeeper — kopia.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\PasswordKeeper.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Pdf.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\PdfRed.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Previous.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\ProgressConnector.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\ProgressDot.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\ProgressIndicator.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Protect.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Rain.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Ratio.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\RemoveSelected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Rotate — kopia.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Rubbish.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\SaveFile.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\SaveFiles.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\SaveObjects.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Secure.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Securev2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Snow.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Split.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Statistical.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Storm.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Subtract.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Sun.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Sunrise.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Sunset.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Swap.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Switch — kopia.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Switch.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Temperature.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Unlock.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\unnamed.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\UpSharp.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\UpUpSharp.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Warning.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Wind.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
 
   <ItemGroup>

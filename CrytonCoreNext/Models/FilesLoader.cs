@@ -26,9 +26,13 @@ namespace CrytonCoreNext.Models
 
         private File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)
         {
+            if (byteArray.Length == 0)
+            {
+                return default!;
+            }
             var fileInfo = new FileInfo(path);
             var fileExtension = fileInfo.Extension.Contains('.') ? fileInfo.Extension.Substring(1) : "N/A";
-            return new File(name: Path.GetFileNameWithoutExtension(fileInfo.FullName), nameWithExtension: fileInfo.Name, path: path, size: GetSizeString(fileInfo.Length), date: fileInfo.CreationTimeUtc, extension: fileExtension, id: currentFilesCount, bytes: byteArray);
+            return new File(name: Path.GetFileNameWithoutExtension(fileInfo.FullName), path: path, size: GetSizeString(fileInfo.Length), date: fileInfo.CreationTimeUtc, extension: fileExtension, id: currentFilesCount, bytes: byteArray);
         }
 
         private static string GetSizeString(long bytesCount)

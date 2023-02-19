@@ -1,9 +1,7 @@
-﻿using CrytonCoreNext.Abstract;
+﻿using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
-using CrytonCoreNext.CryptingOptionsViewModels;
 using CrytonCoreNext.Dictionaries;
-using CrytonCoreNext.Interfaces;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -19,22 +17,22 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         private readonly AESHelper _aesHelper;
 
-        public string Name => nameof(AES);
+        public EMethod Method => EMethod.AES;
 
-        public int ProgressCount => 2;
+        public string DescriptionName => $"{Method} - Symmetric algorithm";
 
-        public ViewModelBase ViewModel { get; init; }
+        public int ProgressCount => 1;
 
-        public AES(IJsonSerializer jsonSerializer)
+        public AES()
         {
             _aes = new();
             _aesHelper = new AESHelper(_aes, _paddingMode);
-            ViewModel = new AESViewModel(jsonSerializer, _aesHelper, Name);
         }
 
-        public ViewModelBase GetViewModel() => ViewModel;
-
-        public string GetName() => Name;
+        public object GetHelper()
+        {
+            return _aesHelper;
+        }
 
         public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {
@@ -60,11 +58,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
             }
             catch (Exception)
             {
-                progress.Report(Language.Post("Error"));
                 return Array.Empty<byte>();
             }
-
-            progress.Report(Language.Post("Success"));
             return ms.ToArray();
         }
     }

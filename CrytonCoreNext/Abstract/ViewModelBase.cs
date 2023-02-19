@@ -1,44 +1,24 @@
-﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.Logger;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CrytonCoreNext.Abstract
 {
-    public class ViewModelBase : NotificationBase
+    [ObservableObject]
+    public partial class ViewModelBase
     {
-        public string PageName { get; set; }
+        [ObservableProperty]
+        public string pageName;
 
-        public Log Logger { get; set; }
+        [ObservableProperty]
+        public bool isBusy;
 
-        public bool IsBusy;
-
-        public ViewModelBase(string pageName = "")
+        public ViewModelBase(string name = "")
         {
-            Logger = new Log();
-            PageName = pageName;
-            Logger.OnLoggerChanged += NotifyLoggerChanged;
-        }
-
-        public virtual Dictionary<string, object> GetObjects()
-        {
-            return new Dictionary<string, object>();
+            this.PageName = name;
         }
 
         public virtual bool CanExecute()
         {
             return !IsBusy;
-        }
-
-        public virtual void SendObject(object obj)
-        {
-
-        }
-
-        public void Log(ELogLevel level, string message)
-        {
-            Logger.Post(level, message).ContinueWith(OnAsyncFailed, TaskContinuationOptions.OnlyOnFaulted);
         }
 
         public virtual void Lock()
@@ -49,20 +29,6 @@ namespace CrytonCoreNext.Abstract
         public virtual void Unlock()
         {
             IsBusy = false;
-        }
-
-        private void NotifyLoggerChanged(object? o, EventArgs? e)
-        {
-            OnPropertyChanged(nameof(Logger));
-        }
-
-        private static void OnAsyncFailed(Task task)
-        {
-            if (task != null)
-            {
-                var ex = task.Exception;
-                Console.Write(ex?.Message);
-            }
         }
     }
 }

@@ -1,15 +1,23 @@
-﻿using System.Windows.Controls;
+﻿using CrytonCoreNext.PDF.ViewModels;
+using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.PDF.Views
 {
     /// <summary>
-    /// Interaction logic for PdfImageToPdfView.xaml
+    /// Interaction logic for PeopleView.xaml
     /// </summary>
-    public partial class PdfImageToPdfView : UserControl
+    public partial class PdfImageToPdfView : INavigableView<PdfImageToPdfViewModel>
     {
-        public PdfImageToPdfView()
+        public PdfImageToPdfViewModel ViewModel
         {
+            get;
+        }
+
+        public PdfImageToPdfView(PdfImageToPdfViewModel viewModel)
+        {
+            ViewModel = viewModel;
             InitializeComponent();
+            DataContext = ViewModel;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace CrytonCoreNext.Dictionaries
     {
         public static string Post(string key)
         {
-            var dictionary = Application.Current.Resources.MergedDictionaries[0];
+            var dictionary = Application.Current.Resources.MergedDictionaries[2];
             return dictionary.Contains(key) ? dictionary[key].ToString() ?? string.Empty : string.Empty;
         }
     }

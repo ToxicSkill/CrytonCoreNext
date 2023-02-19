@@ -6,7 +6,7 @@ namespace CrytonCoreNext.Models
     {
         public string Name { get; init; }
 
-        public string NameWithExtension { get; init; }
+        public string NameWithExtension { get => $"{Name}.{Extension}"; }
 
         public string Path { get; init; }
 
@@ -22,10 +22,9 @@ namespace CrytonCoreNext.Models
 
         public Guid Guid { get; init; } = Guid.NewGuid();
 
-        public File(string name, string nameWithExtension, string path, string size, DateTime date, string extension, int id, byte[] bytes)
+        public File(string name, string path, string size, DateTime date, string extension, int id, byte[] bytes)
         {
             Name = name;
-            NameWithExtension = nameWithExtension;
             Path = path;
             Size = size;
             Date = date;
@@ -37,7 +36,6 @@ namespace CrytonCoreNext.Models
         public File(File file, string name, byte[] bytes, int id)
         {
             Name = name;
-            NameWithExtension = name + '.' + file.Extension;
             Path = file.Path;
             Size = file.Size;
             Date = file.Date;
@@ -49,7 +47,6 @@ namespace CrytonCoreNext.Models
         public File(File file)
         {
             Name = file.Name;
-            NameWithExtension = file.NameWithExtension;
             Path = file.Path;
             Size = file.Size;
             Date = file.Date;

@@ -3,9 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:fa="http://schemas.fontawesome.io/icons/"
       mc:Ignorable="d" 
       d:DesignHeight="900"
       d:DesignWidth="300">
@@ -149,85 +146,45 @@
                 </Grid.RowDefinitions>
                 <Button Grid.Row="0" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
                         ToolTip="{DynamicResource SetAsFirst}" Cursor="Hand">
-
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding SetFileAsFirstCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <materialDesign:PackIcon Kind="ArrowCollapseUp" Height="25" Width="25" Margin="10, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource SetAsFirst}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Row="1" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
                         ToolTip="{DynamicResource MoveUp}" Cursor="Hand">
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding MoveFileUpCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <materialDesign:PackIcon Kind="ArrowUp" Height="25" Width="25" Margin="10, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource MoveUp}"  Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Row="2" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
                         ToolTip="{DynamicResource MoveDown}" Cursor="Hand">
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding MoveFileDownCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
 
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <materialDesign:PackIcon Kind="ArrowDown" Height="25" Width="25" Margin="10, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource MoveDown}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Row="3" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
                         ToolTip="{DynamicResource SetAsLast}" Cursor="Hand">
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding SetFileAsLastCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
 
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <materialDesign:PackIcon Kind="ArrowCollapseDown" Height="25" Width="25" Margin="10, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource SetAsLast}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Row="4" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
                         ToolTip="{DynamicResource RemoveSelected}" Cursor="Hand">
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding DeleteCurrentFileCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
 
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <materialDesign:PackIcon Kind="Delete" Height="25" Width="25" Margin="10, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource RemoveSelected}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>
                 <Button Grid.Row="5" Style="{StaticResource TransparentButton}" Template="{DynamicResource TransparnetButtonControlTemplate}"
                         ToolTip="{DynamicResource RemoveAll}" Cursor="Hand">
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding ClearFilesCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-
                     <StackPanel Orientation="Horizontal" Width="230">
-                        <materialDesign:PackIcon Kind="DeleteAlert" Height="25" Width="25" Margin="12, 0, 0, 0"/>
                         <TextBlock Text="{DynamicResource RemoveAll}" Style="{StaticResource TextBlockFilesView}"/>
                     </StackPanel>
                 </Button>

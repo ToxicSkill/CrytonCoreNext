@@ -1,28 +1,20 @@
 ﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.PDF.Abstarct;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.ViewModels;
-using System;
 
 namespace CrytonCoreNext.PDF.ViewModels
 {
-    public class PdfImageToPdfViewModel : PdfBase
+    public class PdfImageToPdfViewModel : ViewModelBase
     {
-        public ViewModelBase FilesSelectorModel { get; set; }
+        private readonly IPDFService _pdfService;
 
-        public PdfImageToPdfViewModel(InteractiveViewBase pdfManagerViewModel, ViewModelBase filesSelectorModel, IPDFService pdfService) : base(pdfManagerViewModel, pdfService)
+        private readonly FilesSelectorViewViewModel _filesSelectorViewViewModel;
+
+        public PdfImageToPdfViewModel(IPDFService pdfService, FilesSelectorViewViewModel filesSelectorViewViewModel)
         {
-            FilesSelectorModel = filesSelectorModel;
-            OnUpdate += HandleUpdate;
+            _pdfService = pdfService;
+            _filesSelectorViewViewModel = filesSelectorViewViewModel;
+            PageName = "Image to pdf";
         }
-
-        private void HandleUpdate(object? sender, EventArgs e)
-        {
-            foreach (var file in Files)
-            {
-                (FilesSelectorModel as FilesSelectorViewViewModel).InProgressItemListingViewModel.AddItem(file);
-            }
-        }
-
     }
 }

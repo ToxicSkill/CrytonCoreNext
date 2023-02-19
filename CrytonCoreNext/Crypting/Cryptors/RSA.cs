@@ -1,9 +1,7 @@
-﻿using CrytonCoreNext.Abstract;
+﻿using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
-using CrytonCoreNext.CryptingOptionsViewModels;
 using CrytonCoreNext.Dictionaries;
-using CrytonCoreNext.Interfaces;
 using System;
 using System.Threading.Tasks;
 
@@ -15,21 +13,21 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         private bool _useOAEP = false;
 
-        public string Name => nameof(RSA);
+        public EMethod Method => EMethod.RSA;
+
+        public string DescriptionName => $"{Method} - Asymmetric alorithm";
 
         public int ProgressCount => 3;
 
-        public ViewModelBase ViewModel { get; init; }
-
-        public RSA(IJsonSerializer jsonSerializer, IXmlSerializer xmlSerializer, IProgressView progressView)
+        public RSA()
         {
             _rsaHelper = new(_useOAEP);
-            ViewModel = new RSAViewModel(jsonSerializer, xmlSerializer, progressView, _rsaHelper, Name);
         }
 
-        public ViewModelBase GetViewModel() => ViewModel;
-
-        public string GetName() => Name;
+        public object GetHelper()
+        {
+            return _rsaHelper;
+        }
 
         public async Task<byte[]> Decrypt(byte[] data, IProgress<string> progress)
         {
@@ -44,13 +42,14 @@ namespace CrytonCoreNext.Crypting.Cryptors
         private byte[] PerformCryptography(byte[] data, IProgress<string> progress, bool encryption)
         {
             var emptyArray = Array.Empty<byte>();
+            progress.Report(Language.Post("GeneratingKeys"));
+            if (encryption)
+            {
+                _rsaHelper.GenerateKey();
+            }
+
             progress.Report(Language.Post("CollectingKeys"));
 
-            if (ViewModel.IsBusy)
-            {
-                progress.Report(Language.Post("Busy"));
-                return emptyArray;
-            }
 
             var rsaCryptoService = _rsaHelper.GetRSACryptoServiceProvider();
 
@@ -70,11 +69,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
             }
             catch (Exception)
             {
-                progress.Report(Language.Post("Error"));
                 return emptyArray;
             }
-
-            progress.Report(Language.Post("Success"));
             return result;
         }
     }

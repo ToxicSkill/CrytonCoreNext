@@ -1,52 +1,32 @@
 ﻿using CrytonCoreNext.Dictionaries;
-using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
-using CrytonCoreNext.Static;
-using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using System.Windows.Media;
+using Wpf.Ui.Common;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Abstract
 {
     public abstract class InteractiveViewBase : ViewModelBase, IDisposable
     {
-        protected readonly IDialogService _dialogService;
+        private readonly ISnackbarService _snackbarService;
 
-        protected readonly IFileService _fileService;
+        private readonly Interfaces.IDialogService _dialogService;
 
-        public InformationPopupViewModel PopupViewModel { get; private set; }
+        private readonly IFileService _fileService;
 
-        public IProgressView ProgressViewModel { get; init; }
-
-        public IFilesView FilesViewModel { get; init; }
-
-        public Visibility FileInformationVisibility { get; private set; } = Visibility.Hidden;
-
-        public InteractiveViewBase(IFileService fileService, IDialogService dialogService, IFilesView filesView, IProgressView progressView)
+        public InteractiveViewBase(IFileService fileService, Interfaces.IDialogService dialogService, ISnackbarService snackbarService)
         {
             _fileService = fileService;
             _dialogService = dialogService;
-            ProgressViewModel = progressView;
-            FilesViewModel = filesView;
-            PopupViewModel = new();
-            FilesViewModel.CurrentFileChanged += HandleCurrentFileChanged;
+            _snackbarService = snackbarService;
         }
 
-        protected void PostPopup(string informationString, int seconds, Color color = default)
+        protected void PostSnackbar(string title, string text, SymbolRegular icon, ControlAppearance type)
         {
-            PopupViewModel = new(informationString, color);
-            ShowInformationBar(true);
-            OnPropertyChanged(nameof(PopupViewModel));
-            ActionTimer.InitializeTimerWithAction(CollapsePopup, seconds);
-        }
-
-        protected void PostPopup(string message, Color status, int seconds = 2)
-        {
-            PostPopup(Language.Post(message), seconds, status);
+            _snackbarService.Show(title, text, icon, type);
         }
 
         protected async IAsyncEnumerable<File> LoadFiles()
@@ -59,24 +39,32 @@ namespace CrytonCoreNext.Abstract
 
         protected async IAsyncEnumerable<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
-            var filesCount = FilesViewModel.GetFilesCount();
             var filesPaths = _dialogService.GetFilesNamesToOpen(filters, Language.Post("OpenFiles"), true);
-            await foreach (var file in _fileService.LoadFiles(filesPaths, filesCount))
+            var loadedFilesCounter = 0;
+            await foreach (var file in _fileService.LoadFiles(filesPaths))
             {
-                yield return file;
+                if (file != null)
+                {
+                    loadedFilesCounter++;
+                    yield return file;
+                }
             }
-        }
-
-        protected List<Guid> GetFilesOrder()
-        {
-            var guids = new List<Guid>();
-
-            foreach (var fileGuid in FilesViewModel.GetFilesGuids())
+            if ((filesPaths.Count - loadedFilesCounter) > 0 && loadedFilesCounter > 0)
             {
-                guids.Add(fileGuid);
+                PostSnackbar("Warning", $"{Language.Post("NotAllFilesLoadedWarning")} ({filesPaths.Count - loadedFilesCounter})", SymbolRegular.Warning20, ControlAppearance.Caution);
             }
-
-            return guids;
+            else if (loadedFilesCounter == 1)
+            {
+                PostSnackbar("Information", Language.Post("FileLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+            }
+            else if (loadedFilesCounter > 1)
+            {
+                PostSnackbar("Information", Language.Post("FilesLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+            }
+            else if (loadedFilesCounter == 0 && filesPaths.Any())
+            {
+                PostSnackbar("Error", Language.Post("FilesLoadingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+            }
         }
 
         protected void SaveFile(File? file)
@@ -94,32 +82,12 @@ namespace CrytonCoreNext.Abstract
             var result = _fileService.SaveFile(filePath.First(), file);
             if (result)
             {
-                PostPopup(Language.Post("FilesSaved"), 2, ColorStatus.Blue);
+                PostSnackbar("Information", Language.Post("FilesSaved"), SymbolRegular.Checkmark20, ControlAppearance.Success);
             }
             if (!result)
             {
-                PostPopup(Language.Post("FilesError"), 2, ColorStatus.Red);
+                PostSnackbar("Error", Language.Post("FilesSavingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
             }
-        }
-
-        private void HandleCurrentFileChanged(object? obj = null, EventArgs? a = null)
-        {
-            FileInformationVisibility =
-                FilesViewModel.GetSelectedFileIndex() != -1 && FilesViewModel != null ?
-                Visibility.Visible :
-                Visibility.Hidden;
-            OnPropertyChanged(nameof(FileInformationVisibility));
-        }
-
-        private void ShowInformationBar(bool show)
-        {
-            PopupViewModel.ShowPopup = show;
-            OnPropertyChanged(nameof(PopupViewModel.ShowPopup));
-        }
-
-        private void CollapsePopup(object sender, EventArgs e)
-        {
-            ShowInformationBar(false);
         }
 
         public virtual void Dispose() { }

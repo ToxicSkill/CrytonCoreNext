@@ -1,5 +1,5 @@
-﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
+﻿using CommunityToolkit.Mvvm.Input;
+using CrytonCoreNext.Abstract;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using System;
@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace CrytonCoreNext.PDF.Abstarct
 {
-    public abstract class PdfBase : ViewModelBase
+    public abstract partial class PdfBase : ViewModelBase
     {
         private int _currentPage = 0;
 
@@ -70,41 +70,39 @@ namespace CrytonCoreNext.PDF.Abstarct
 
             PdfService = pdfService;
             PdfManagerViewModel = pdfManagerViewModel;
-
-            PreviousCommand = new Command(MovePreviousPage, CanExecute);
-            NextCommand = new Command(MoveNextPage, CanExecute);
         }
 
-        public override void SendObject(object obj)
-        {
-            if (obj is bool)
-            {
-                Files.Clear();
-                CurrentFile = null;
-            }
-            if (obj is PDFFile file)
-            {
-                CurrentFile = file;
-                OnPropertyChanged(nameof(MaxPageDisplay));
-            }
-            if (obj is List<PDFImage> images)
-            {
-                _images = images;
-                //ImageViewerViewModel.PostImages(_images.Where(x => x.Guid == CurrentFile.Guid).First());
-                UpdateImages();
-            }
-            if (obj is List<PDFFile> pdfFiles)
-            {
-                Files = pdfFiles;
-            }
-            UpdateContent();
-        }
+        //public override void SendObject(object obj)
+        //{
+        //    if (obj is bool)
+        //    {
+        //        Files.Clear();
+        //        CurrentFile = null;
+        //    }
+        //    if (obj is PDFFile file)
+        //    {
+        //        CurrentFile = file;
+        //        OnPropertyChanged(nameof(MaxPageDisplay));
+        //    }
+        //    if (obj is List<PDFImage> images)
+        //    {
+        //        _images = images;
+        //        //ImageViewerViewModel.PostImages(_images.Where(x => x.Guid == CurrentFile.Guid).First());
+        //        UpdateImages();
+        //    }
+        //    if (obj is List<PDFFile> pdfFiles)
+        //    {
+        //        Files = pdfFiles;
+        //    }
+        //    UpdateContent();
+        //}
 
         protected void ResetCurrentPage()
         {
             CurrentPage = 0;
         }
 
+        [RelayCommand]
         private void MovePreviousPage()
         {
             var pageNumber = CurrentFile?.LastPage ?? 0;
@@ -112,6 +110,7 @@ namespace CrytonCoreNext.PDF.Abstarct
             UpdateImages();
         }
 
+        [RelayCommand]
         private void MoveNextPage()
         {
             var pageNumber = CurrentFile.LastPage;

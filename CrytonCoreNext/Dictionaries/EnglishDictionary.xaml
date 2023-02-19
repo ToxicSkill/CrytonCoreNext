@@ -18,6 +18,11 @@
     <system:String x:Key="AddFile">Add file</system:String>
     
     
+    <system:String x:Key="Warning">Warning</system:String>
+    <system:String x:Key="Information">Information</system:String>
+    <system:String x:Key="Success">Success</system:String> 
+    
+    
     <system:String x:Key="SetAsFirst">Set as first</system:String>
     <system:String x:Key="MoveUp">Move up</system:String>
     <system:String x:Key="MoveDown">Move down</system:String>
@@ -25,6 +30,7 @@
     <system:String x:Key="RemoveSelected">Remove selcted</system:String>
     <system:String x:Key="RemoveAll">Remove all</system:String>
     <system:String x:Key="FilesView">Files panel</system:String>
+    <system:String x:Key="NotAllFilesLoadedWarning">Not all files were loaded</system:String>
     
     <!--Crypting-->
     <system:String x:Key="Decrypting">Decrypting</system:String>
@@ -38,8 +44,8 @@
     <system:String x:Key="IncorrectSizes">Incorrect size, loaded deafult</system:String>
     <system:String x:Key="IncorrectFile">Incorrect file. New keys generated</system:String>
     <system:String x:Key="Busy">Wait for task complete</system:String>
-    <system:String x:Key="Error">Process failed (wrong keys)</system:String>
-    <system:String x:Key="Success">Process successed</system:String>
+    <system:String x:Key="CryptingError">Process failed</system:String>
+    <system:String x:Key="ProcessSuccess">Process successed</system:String>
     <system:String x:Key="ExportKeys">Export keys</system:String>
     <system:String x:Key="ImportKeys">Import keys</system:String>
     
@@ -70,12 +76,15 @@
     <system:String x:Key="TooBigFile">File is too big</system:String>
     <system:String x:Key="ExportPublicKey">Export public key</system:String>
     <system:String x:Key="ExportPrivateKey">Export private key</system:String>
+    <system:String x:Key="GeneratingKeys">Generating keys</system:String>
     
     
     <!--Files-->
-    <system:String x:Key="FilesLoaded">File(s) where loaded successfuly</system:String>
+    <system:String x:Key="FilesLoaded">Files were loaded successfuly</system:String>
+    <system:String x:Key="FileLoaded">File was loaded successfuly</system:String>
     <system:String x:Key="FilesSaved">File has been saved successfuly</system:String>
-    <system:String x:Key="FilesError">Error when saving file</system:String>
+    <system:String x:Key="FilesSavingError">Error whe n saving file</system:String>
+    <system:String x:Key="FilesLoadingError">Error when loading file</system:String>
     <system:String x:Key="OpenFiles">Open files</system:String>
     
     

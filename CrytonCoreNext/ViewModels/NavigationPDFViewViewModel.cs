@@ -1,78 +1,56 @@
-﻿using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Commands;
-using CrytonCoreNext.Dictionaries;
-using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Services;
-using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CrytonCoreNext.Abstract;
+using CrytonCoreNext.PDF.Models;
+using CrytonCoreNext.PDF.Views;
+using System;
+using System.Collections.ObjectModel;
+using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.ViewModels
 {
-    public class NavigationPDFViewViewModel : ViewModelBase
+    public partial class NavigationPDFViewViewModel : ViewModelBase
     {
-        private readonly ICommand _navigatePdfManagerCommand;
+        private readonly INavigationService _navigationService;
 
-        private readonly INavigate _navigator;
+        [ObservableProperty]
+        public ObservableCollection<PDFPageItem> navigationItems;
 
-        private readonly InteractiveViewBase _pdfManagerViewModel;
+        [ObservableProperty]
+        public INavigableView<ViewModelBase> currentView;
 
-        private readonly ViewModelBase _pdfMergeViewModel;
-
-        private readonly ViewModelBase _pdfSplitViewModel;
-
-        private readonly ViewModelBase _pdfImageToPdfViewModel;
-
-        public ICommand NavigatePdfMergeCommand { get; }
-
-        public ICommand NavigatePdfSplitCommand { get; }
-
-        public ICommand NavigateImageToPdfCommand { get; }
-
-        public NavigationPDFViewViewModel(INavigate navigator, InteractiveViewBase pdfManagerViewModel, ViewModelBase pdfMergeViewModel, ViewModelBase pdfSplitViewModel, ViewModelBase pdfImageToPdfViewModel)
+        public NavigationPDFViewViewModel(INavigationService navigationService, PdfMergeView pdfMergeViewModel, PdfSplitView pdfSplitViewModel, PdfImageToPdfView pdfImageToPdfViewModel)
         {
-            _navigator = navigator;
-            _pdfMergeViewModel = pdfMergeViewModel;
-            _pdfSplitViewModel = pdfSplitViewModel;
-            _pdfManagerViewModel = pdfManagerViewModel;
-            _pdfImageToPdfViewModel = pdfImageToPdfViewModel;
-
-            _navigatePdfManagerCommand = new NavigateService(_navigator, NavigatePDFManagerPage());
-
-            NavigatePdfMergeCommand = new Command(NavigatePdfMerge, CanExecute);
-            NavigatePdfSplitCommand = new Command(NavigatePdfSplit, CanExecute);
-            NavigateImageToPdfCommand = new Command(NavigateImageToPdf, CanExecute);
+            _navigationService = navigationService;
+            NavigationItems = new ObservableCollection<PDFPageItem>()
+            {
+                new PDFPageItem(Navigate)
+                {
+                    Icon = Wpf.Ui.Common.SymbolRegular.Merge20,
+                    Type = typeof(PdfMergeView),
+                    Description = "Merge pdf",
+                    ShortDescription = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
+                },
+                new PDFPageItem(Navigate)
+                {
+                    Icon = Wpf.Ui.Common.SymbolRegular.ArrowSplit20,
+                    Type = typeof(PdfSplitView),
+                    Description = "Split pdf",
+                    ShortDescription = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
+                },
+                new PDFPageItem(Navigate)
+                {
+                    Icon = Wpf.Ui.Common.SymbolRegular.ImageArrowBack20,
+                    Type = typeof(PdfImageToPdfView),
+                    Description = "Convert pdf",
+                    ShortDescription = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna"
+                },
+            };
         }
 
-        private void NavigatePdfSplit()
+        private void Navigate(Type type)
         {
-            _pdfManagerViewModel.SendObject(_pdfSplitViewModel);
-            _pdfManagerViewModel.SendObject(Language.Post("Split"));
-            _navigatePdfManagerCommand.Execute(null);
+            _navigationService.Navigate(type);
         }
-
-        private void NavigatePdfMerge()
-        {
-            _pdfManagerViewModel.SendObject(_pdfMergeViewModel);
-            _pdfManagerViewModel.SendObject(Language.Post("Merge"));
-            _navigatePdfManagerCommand.Execute(null);
-        }
-
-        private void NavigateImageToPdf()
-        {
-            _pdfManagerViewModel.SendObject(_pdfImageToPdfViewModel);
-            _pdfManagerViewModel.SendObject(Language.Post("ImageToPdf"));
-            _navigatePdfManagerCommand.Execute(null);
-        }
-
-        private ViewModelBase NavigatePDFManagerPage()
-        {
-            return _pdfManagerViewModel;
-        }
-
-        //private ViewModelBase NavigatePDFConvertPage()
-        //{
-        //    _pdfManagerViewModel.SendObject(_pdfConvertViewModel);
-        //    _pdfManagerViewModel.SendObject(Language.Post("Convert"));
-        //    return _pdfManagerViewModel;
-        //}
     }
 }
