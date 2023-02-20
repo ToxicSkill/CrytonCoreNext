@@ -60,22 +60,30 @@
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <ui:SymbolIcon Symbol="DocumentBulletListMultiple20" FontSize="62" Filled="True" FontWeight="Thin" Foreground="{DynamicResource SystemAccentBrush}"/>
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" Margin="10, 0 ,0 ,20" Text="Loaded files list" FontWeight="Thin"/>
-                        <DockPanel  HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="Add20" FontSize="18" Margin="20, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="upload files" FontWeight="Light"/>
-                        </DockPanel>
-                        <DockPanel HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="Save20" FontSize="18" Margin="20, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="save selected file" FontWeight="Light"/>
-                        </DockPanel>
-                        <DockPanel HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="Delete20" FontSize="18" Margin="20, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="delete selected file" FontWeight="Light"/>
-                        </DockPanel>
-                        <DockPanel HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="TextIndentIncreaseLtr20" FontSize="18" Margin="20, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="select crypting method" FontWeight="Light"/>
-                        </DockPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <ui:SymbolIcon Grid.Row="0" Grid.Column="0" Symbol="Add20" FontSize="18" Margin="10,0"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Text="upload files" FontWeight="Light"/>
+                            
+                            <ui:SymbolIcon Grid.Row="1" Grid.Column="0" Symbol="Save20" FontSize="18"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Text="save selected file" FontWeight="Light"/>
+                            
+                            <ui:SymbolIcon Grid.Row="2" Grid.Column="0" Symbol="Delete20" FontSize="18"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Text="delete selected file" FontWeight="Light"/>
+
+                            <ui:SymbolIcon Grid.Row="3" Grid.Column="0" Symbol="TextIndentIncreaseLtr20" FontSize="18" />
+                            <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Text="select crypting method" FontWeight="Light"/>
+                           
+                        </Grid>
                     </StackPanel>
                 </Grid>
                 <ScrollViewer Grid.Row="2" CanContentScroll="True" VerticalScrollBarVisibility="Auto">
