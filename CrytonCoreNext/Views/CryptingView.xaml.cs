@@ -1,4 +1,7 @@
-﻿using CrytonCoreNext.ViewModels;
+﻿using CrytonCoreNext.Extensions;
+using CrytonCoreNext.ViewModels;
+using System.Linq;
+using System.Windows.Shapes;
 using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.Views
@@ -18,6 +21,18 @@ namespace CrytonCoreNext.Views
             ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;
+            RegisterAnimations();
+        }
+
+        private void RegisterAnimations()
+        {
+            var pathAnimations = this.PathsAnimations.FindVisualChildren<Path>().ToList();
+            ViewModel.RegisterAnimations(pathAnimations);
+        }
+
+        private void UiPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ViewModel.SetRandomPathAnimation();
         }
     }
 }

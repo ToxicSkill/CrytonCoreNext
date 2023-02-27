@@ -9,6 +9,7 @@
     xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels" 
     d:DataContext="{d:DesignInstance Type=viewmodels:CryptingViewModel}"
     xmlns:c="clr-namespace:CrytonCoreNext.Converters"
+    Loaded="UiPage_Loaded"
     MinWidth="900"
     d:DesignHeight="850"
     d:DesignWidth="1400"
@@ -24,7 +25,17 @@
     </ui:UiPage.Resources>
 
     <Grid>
-        <Grid Margin="10, 0 ,0 ,0">
+        <StackPanel Margin="10">
+            <TextBlock Grid.Row="0" Text="Crypting" FontSize="72" FontWeight="Light" />
+            <TextBlock Grid.Row="0" Text="Click anywhere to add file" FontSize="30" FontWeight="UltraLight" />
+        </StackPanel>
+        <Grid x:Name="PathsAnimations">
+            <Path Visibility="Hidden" Margin="0, 100, 0, 75" Style="{StaticResource G_PathAnimatedStyle}" HorizontalAlignment="Stretch" StrokeThickness="2" Stretch="Fill" Data="M 0 0 C 6 10 39 -26 51 2 Q 64 33 81 2 Q 103 -41 113 -4"/>
+            <Path Visibility="Hidden" Margin="0, 100, 0, 75" Style="{StaticResource G_PathAnimatedStyle}" HorizontalAlignment="Stretch" StrokeThickness="2" Stretch="Fill" Data="M 0 0 L 15 -15 L 8 -8 L 17 1 L 25 -7 L 23 -9 L 32 0 L 31 -1 L 27 3 L 26 2 L 31 7 L 32 8 L 31 7 L 44 -6 L 42 -8 L 51 1 L 49 -1 L 60 -10 L 55 -15 L 70 0"/>
+            <Path Visibility="Hidden" Margin="0, 100, 0, 75" Style="{StaticResource G_PathAnimatedStyle}" HorizontalAlignment="Stretch" StrokeThickness="2" Stretch="Fill" Data="M 0 0 L 5 0 L 5 -5 L 5 11 L 5 7 L 10 7 L 15 7 L 15 5 L 15 15 L 15 13 L 25 13 L 25 14 L 25 0 L 25 5 L 35 5 L 35 9 L 35 -2 L 35 1 L 45 1 L 45 -3 L 45 13 L 45 10 L 55 10 L 55 16 L 55 2 L 55 5 L 65 5 L 65 9 L 65 -7 L 65 -3 L 75 -3 L 75 1 L 75 -8 L 75 -10"/>
+        </Grid>
+        <ui:SymbolIcon Symbol="QuestionCircle20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20" FontSize="32"/>
+        <Grid Margin="10, 0 ,0 ,0" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>

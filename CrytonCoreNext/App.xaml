@@ -7,6 +7,31 @@
              LoadCompleted="OnLoaded">
     <Application.Resources>
         <ResourceDictionary>
+            <Style x:Key="G_PathAnimatedStyle" TargetType="{x:Type Path}">
+                <Setter Property="Stroke">
+                    <Setter.Value>
+                        <LinearGradientBrush>
+                            <GradientStop Color="{DynamicResource SystemAccentColorPrimary}" Offset="1.0" />
+                            <GradientStop Color="Transparent" Offset="0.5" />
+                            <GradientStop Color="{DynamicResource SystemAccentColorPrimary}" Offset="0.0" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneTime}" Value="true">
+                        <DataTrigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                                    Storyboard.TargetProperty="Stroke.(GradientBrush.GradientStops)[1].(GradientStop.Offset)"
+                                                    From="0" To="1" Duration="0:0:7"
+                                                    AutoReverse="True" RepeatBehavior="Forever"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </DataTrigger.EnterActions>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
