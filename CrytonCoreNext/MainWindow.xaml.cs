@@ -25,6 +25,7 @@ namespace CrytonCoreNext
             navigationService.SetNavigationControl(RootNavigation);
             snackbarService.SetSnackbarControl(RootSnackbar);
         }
+
         public Frame GetFrame()
             => RootFrame;
 

@@ -19,6 +19,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Pictures\1.jpg" />
+    <None Remove="Pictures\2.jpg" />
+    <None Remove="Pictures\3.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pictures\1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pictures\3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
     <PackageReference Include="Docnet.Core" Version="2.3.1" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />

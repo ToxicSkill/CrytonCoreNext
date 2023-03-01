@@ -7,11 +7,9 @@ using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Shapes;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
@@ -23,10 +21,6 @@ namespace CrytonCoreNext.ViewModels
         private readonly ICryptingService _cryptingService;
 
         private readonly IFileService _fileService;
-
-        private int _lastPathIndex = 0;
-
-        private List<Path> _paths;
 
         [ObservableProperty]
         public IProgressService progressService;
@@ -62,24 +56,6 @@ namespace CrytonCoreNext.ViewModels
             UpdateCryptingViews();
             SelectedCryptingView = CryptingViewsItemSource.First();
             _cryptingService.RegisterFileChangedEvent(ref OnFileChanged!);
-        }
-
-        public void SetRandomPathAnimation()
-        {
-            if (_paths.Any())
-            {
-                foreach (var path in _paths)
-                {
-                    path.Visibility = System.Windows.Visibility.Hidden;
-                }
-                var randomIndex = _lastPathIndex;
-                while (randomIndex == _lastPathIndex)
-                {
-                    randomIndex = new Random().Next(0, _paths.Count);
-                }
-                _paths[randomIndex].Visibility = System.Windows.Visibility.Visible;
-                _lastPathIndex = randomIndex;
-            }
         }
 
         private void UpdateCryptingViews()
@@ -190,12 +166,6 @@ namespace CrytonCoreNext.ViewModels
             SelectedFile = temp;
             OnPropertyChanged(nameof(Files));
             OnPropertyChanged(nameof(SelectedFile));
-        }
-
-        internal void RegisterAnimations(List<Path> pathAnimations)
-        {
-            _paths = pathAnimations;
-            SetRandomPathAnimation();
         }
     }
 }

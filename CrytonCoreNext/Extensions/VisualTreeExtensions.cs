@@ -45,5 +45,44 @@ namespace CrytonCoreNext.Extensions
                 }
             }
         }
+
+        public static void Hide(this IEnumerable<FrameworkElement> elements)
+        {
+            foreach (var element in elements)
+            {
+                element.Hide();
+            }
+        }
+
+        public static void Hide(this FrameworkElement element)
+        {
+            element.Visibility = Visibility.Hidden;
+        }
+
+        public static void Collapse(this IEnumerable<FrameworkElement> elements)
+        {
+            foreach (var element in elements)
+            {
+                element.Collapse();
+            }
+        }
+
+        public static void Collapse(this FrameworkElement element)
+        {
+            element.Visibility = Visibility.Collapsed;
+        }
+
+        public static void Show(this IEnumerable<FrameworkElement> elements)
+        {
+            foreach (var element in elements)
+            {
+                element.Show();
+            }
+        }
+
+        public static void Show(this FrameworkElement element)
+        {
+            element.Visibility = Visibility.Visible;
+        }
     }
 }
