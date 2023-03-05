@@ -178,9 +178,10 @@
                 Height="160" Opacity="0.8"
                 CornerRadius="8">
                 <Border.Background>
-                    <ImageBrush
+                    <SolidColorBrush Color="#151515"/>
+                    <!--<ImageBrush
                         RenderOptions.BitmapScalingMode="HighQuality"
-                        Stretch="UniformToFill" ImageSource="/Views/3.jpg" />
+                        Stretch="UniformToFill" ImageSource="pack://application:,,,/CrytonCoreNext;component/Pictures/3.jpg"/>-->
                 </Border.Background>
             </Border>
             <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60, 40" FontSize="54" Text="Crypting" FontWeight="Thin"/>
