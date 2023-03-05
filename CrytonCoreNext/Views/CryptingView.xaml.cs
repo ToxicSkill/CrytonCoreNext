@@ -18,18 +18,6 @@ namespace CrytonCoreNext.Views
             ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;
-            //RegisterAnimations();
         }
-
-        //private void RegisterAnimations()
-        //{
-        //    var pathAnimations = this.PathsAnimations.FindVisualChildren<Path>().ToList();
-        //    ViewModel.RegisterAnimations(pathAnimations);
-        //}
-
-        //private void UiPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    ViewModel.SetRandomPathAnimation();
-        //}
     }
 }

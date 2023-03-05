@@ -38,7 +38,7 @@
             <ui:NavigationStore
                 x:Name="RootNavigation"
                 Grid.Column="0"
-                Margin="6,0,6,0"
+                Margin="6,10,6,0"
                 Frame="{Binding ElementName=RootFrame}"
                 Precache="False"
                 SelectedPageIndex="-1"
@@ -84,18 +84,6 @@
             </Border>
         </Grid>
 
-
-        <ui:TitleBar
-            Title="Cryton Core Next"
-            Grid.Row="0"
-            ForceShutdown="False"
-            MinimizeToTray="False"
-            ShowHelp="False"
-            ShowClose="True"
-            ShowMaximize="True"
-            ShowMinimize="True"
-            UseSnapLayout="True">
-        </ui:TitleBar>
         <ui:Snackbar
                         x:Name="RootSnackbar"
                         Grid.Row="1"
