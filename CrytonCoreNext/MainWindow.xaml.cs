@@ -2,6 +2,7 @@
 using CrytonCoreNext.ViewModels;
 using System;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 
@@ -43,5 +44,13 @@ namespace CrytonCoreNext
 
         public void CloseWindow()
             => Close();
+
+        private void SymbolIcon_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
     }
 }

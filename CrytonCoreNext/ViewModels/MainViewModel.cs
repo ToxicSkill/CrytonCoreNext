@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.PDF.Views;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Controls.Interfaces;
@@ -91,6 +93,30 @@ namespace CrytonCoreNext.ViewModels
                 }
                 OnPropertyChanged(nameof(MenuItems));
             }
+        }
+
+        [RelayCommand]
+        private void Exit()
+        {
+            App.Current.Shutdown();
+        }
+
+        [RelayCommand]
+        private void Maximize()
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Maximized;
+        }
+
+        [RelayCommand]
+        private void Minimize()
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Minimized;
+        }
+
+        [RelayCommand]
+        private void Normal()
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Normal;
         }
     }
 }
