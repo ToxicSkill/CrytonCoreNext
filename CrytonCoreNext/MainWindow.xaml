@@ -73,7 +73,7 @@
                 Frame="{Binding ElementName=RootFrame}"
                 Precache="False"
                 SelectedPageIndex="-1"
-                TransitionDuration="200"
+                TransitionDuration="600"
                 Items="{Binding MenuItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 Footer="{Binding FooterItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 TransitionType="FadeInWithSlide">
