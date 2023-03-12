@@ -77,35 +77,6 @@
                 Items="{Binding MenuItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 Footer="{Binding FooterItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 TransitionType="FadeInWithSlide">
-                <!--<ui:NavigationStore.Items>
-                    <ui:NavigationItem
-                        Cache="True"
-                        Content="Home"
-                        Icon="Home24"
-                        PageTag="home" 
-                        PageType="{x:Type pages:Dashboard}"/>
-                    <ui:NavigationSeparator />
-                    <ui:NavigationItem
-                        Cache="True"
-                        Content="Crypting"
-                        Icon="Fingerprint48"
-                        PageTag="crypting" 
-                        PageType="{x:Type pages:CryptingView}"/>
-                    <ui:NavigationItem
-                        Cache="True"
-                        Content="Pdf"
-                        Icon="Layer20"  
-                        PageTag="pdf" 
-                        PageType="{x:Type pages:NavigationPDFView}"/>
-                </ui:NavigationStore.Items>
-                <ui:NavigationStore.Footer>
-                    <ui:NavigationItem
-                        Cache="True"
-                        Content="Settings"
-                        Icon="Settings48"
-                        PageTag="settings" 
-                        PageType="{x:Type pages:SettingsView}"/>
-                </ui:NavigationStore.Footer>-->
             </ui:NavigationStore>
 
             <Border
@@ -115,13 +86,7 @@
             </Border>
         </Grid>
 
-        <ui:Snackbar
-                        x:Name="RootSnackbar"
-                        MaxWidth="600"
-                        Appearance="Secondary"
-                        CloseButtonEnabled="True"
-                        Icon="PuzzlePiece24"
-                        Timeout="5000" />
+        <ui:Snackbar x:Name="RootSnackbar" MaxWidth="600" CloseButtonEnabled="True" Timeout="5000" />
         <ui:SymbolIcon Symbol="GridDots20" HorizontalAlignment="Right"
                        VerticalAlignment="Top" Margin="10" 
                        ContextMenu="{StaticResource contextMenu}"
