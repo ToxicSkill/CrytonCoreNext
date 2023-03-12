@@ -215,7 +215,7 @@
                 </Path>
             </Grid>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
-                <TextBlock Grid.Column="1" FontSize="84" Text="Crypting" FontWeight="Medium"/>
+                <TextBlock Grid.Column="1" FontSize="84" Text="Crypting" />
                 <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="22" Text="Make your data safe" FontWeight="UltraLight"/>
             </StackPanel>
 

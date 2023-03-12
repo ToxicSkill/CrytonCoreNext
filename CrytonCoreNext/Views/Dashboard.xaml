@@ -13,7 +13,7 @@
     <Grid>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel >
-                <Frame x:Name="LogoFrame" Width="150" Height="150"/>
+                <Frame x:Name="LogoFrame" Width="110" Height="110"/>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock Text="C R Y T " FontSize="{StaticResource G_LogoTitleFontSize}" FontWeight="Light"/>
                     <TextBlock Text="O N" FontSize="{StaticResource G_LogoTitleFontSize}" Foreground="{DynamicResource SystemAccentBrush}"/>
