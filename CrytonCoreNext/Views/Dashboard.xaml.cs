@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.ViewModels;
+﻿using CrytonCoreNext.Logo;
+using CrytonCoreNext.ViewModels;
 using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.Views
@@ -17,6 +18,7 @@ namespace CrytonCoreNext.Views
         {
             ViewModel = viewModel;
             InitializeComponent();
+            LogoFrame.Content = new Signet();
         }
     }
 }

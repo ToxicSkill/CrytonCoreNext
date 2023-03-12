@@ -6,19 +6,18 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
             xmlns:viewModels="CrytonCoreNext.ViewModels"
-            xmlns:sys="clr-namespace:System;assembly=mscorlib"
-            Title="Dashboard"
+                xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                Title="Dashboard"
             mc:Ignorable="d" 
             d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="500" Height="120">
-            <StackPanel Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal">
-                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 0, 20, 15">
-                    <Path StrokeThickness="1" Fill="{DynamicResource SystemAccentBrush}" Stroke="{DynamicResource SystemAccentBrush}" Data="M 9 7 C -15 6 -34 21 -35 25 C -36 29 -29 47 -18 65 C -7 82 6 92 10 93 C 14 94 36 79 37 47 C 34 76 13 89 10 88 C 7 87 -4 79 -14 64 C -24 47 -31 29 -30 26 C -29 23 -14 8 9 7"/>
-                    <Path StrokeThickness="1" Opacity="0.8" Fill="{DynamicResource SystemAccentBrush}" Stroke="{DynamicResource SystemAccentBrush}" Data="M 9 80 C 14 78 18 75 25 64 C 33 51 32 38 37 38 C 42 38 44 52 48 61 C 51 69 56 92 65 92 C 75 92 81 29 80 26 C 80 34 70 87 65 87 C 60 87 55 68 52 61 C 48 52 42 34 37 34 C 32 34 31 46 25 61 C 22 67 17 76 9 80"/>
-                </Grid>
-                <TextBlock Text="CRYT" TextOptions.TextFormattingMode="Ideal"  FontSize="54" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBlock Text="ON" Foreground="{DynamicResource SystemAccentBrush}" Margin="0, 0, 0, 18" TextOptions.TextFormattingMode="Ideal"  FontSize="74" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel >
+                <Frame x:Name="LogoFrame" Width="150" Height="150"/>
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="C R Y T " FontSize="{StaticResource G_LogoTitleFontSize}" FontWeight="Light"/>
+                    <TextBlock Text="O N" FontSize="{StaticResource G_LogoTitleFontSize}" Foreground="{DynamicResource SystemAccentBrush}"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
     <Grid>

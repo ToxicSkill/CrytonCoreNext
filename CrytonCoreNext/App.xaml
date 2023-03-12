@@ -1,12 +1,19 @@
 ﻿<Application x:Class="CrytonCoreNext.App"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              Exit="OnExit"
              Startup="OnStartup"
              LoadCompleted="OnLoaded">
+    
     <Application.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+            
             <Style x:Key="G_PathAnimatedStyle" TargetType="{x:Type Path}">
                 <Setter Property="Stroke">
                     <Setter.Value>
@@ -32,10 +39,9 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-            <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Dark" />
-                <ui:ControlsDictionary />
-            </ResourceDictionary.MergedDictionaries>
+
+            <sys:Double x:Key="G_LogoTitleFontSize">54</sys:Double>
+            
         </ResourceDictionary>
     </Application.Resources>    
 </Application>
