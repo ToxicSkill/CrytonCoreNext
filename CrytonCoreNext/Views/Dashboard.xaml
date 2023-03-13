@@ -34,23 +34,15 @@
             <Path.Fill>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="{DynamicResource SystemAccentColorPrimary}"/>
-                    <GradientStop Color="#66FD1010" Offset="0.994"/>
+                    <GradientStop Color="#66FD100E" Offset="0.994"/>
                 </LinearGradientBrush>
             </Path.Fill>
         </Path>
         <Path Grid.Row="2" Grid.Column="1" StrokeThickness="2"  Stretch="Fill" Data="M 0 0 C 3 -2 7 -2 9 -1 C 11 0 13 -2 15 -4 C 17 -6 19 -8 23 -7 L 23 0 L 0 0">
             <Path.Fill>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <LinearGradientBrush.Transform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="0"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </LinearGradientBrush.Transform>
-                    <GradientStop Color="#7FC50629"/>
-                    <GradientStop Color="Transparent" Offset="1"/>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#7FC50629"/>
+                    <GradientStop Color="#00000000" Offset="1"/>
                 </LinearGradientBrush>
             </Path.Fill>
         </Path>
@@ -67,7 +59,7 @@
             <Path.Fill>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#7FC50629" Offset="1"/>
-                    <GradientStop Color="Transparent"/>
+                    <GradientStop Color="#00000000"/>
                 </LinearGradientBrush>
             </Path.Fill>
         </Path>
