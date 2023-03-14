@@ -4,6 +4,8 @@ namespace CrytonCoreNext.Dictionaries
 {
     public static class Language
     {
+        private static int DictionaryIndex = 2;
+
         public static string Post(string key)
         {
             var app = Application.Current;
@@ -11,17 +13,7 @@ namespace CrytonCoreNext.Dictionaries
             {
                 return string.Empty;
             }
-            var resources = Application.Current.Resources;
-            if (resources == null)
-            {
-                return string.Empty;
-            }
-            var mergedDictionaries = resources.MergedDictionaries;
-            if (mergedDictionaries.Count != 3)
-            {
-                return string.Empty;
-            }
-            var dictionary = Application.Current.Resources.MergedDictionaries[2];
+            var dictionary = Application.Current.Resources.MergedDictionaries[DictionaryIndex];
             return dictionary.Contains(key) ? dictionary[key].ToString() ?? string.Empty : string.Empty;
         }
     }
