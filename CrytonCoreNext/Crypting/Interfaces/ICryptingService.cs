@@ -12,20 +12,16 @@ namespace CrytonCoreNext.Crypting.Interfaces
 {
     public interface ICryptingService
     {
-        Task<byte[]> RunCrypting(ICryptingView<CryptingMethodViewModel> cryptingView, CryptFile file, IProgress<string> progress);
+        Task<byte[]> RunCrypting(ICrypting crypting, CryptFile file, IProgress<string> progress);
 
         void ModifyFile(CryptFile file, byte[] bytes, Status status, EMethod method);
 
         void AddRecognitionBytes(CryptFile file);
-
-        List<ICryptingView<CryptingMethodViewModel>> GetCryptingViews();
 
         bool IsCorrectMethod(CryptFile file, ICryptingView<CryptingMethodViewModel> cryptingView);
 
         Status GetOpositeStatus(Status currentStatus);
 
         CryptFile ReadCryptFile(File file);
-
-        void RegisterFileChangedEvent(ref CryptingViewModel.HandleFileChanged? onFileChanged);
     }
 }

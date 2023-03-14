@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Windows.Media.Animation;
 
 namespace CrytonCoreNext.Crypting.Helpers
 {
@@ -25,6 +26,7 @@ namespace CrytonCoreNext.Crypting.Helpers
             _useOAEP = useOAEP;
             _keySize = DefaultKeySize;
             _rsaCryptoServiceProvider = new(_keySize);
+            MaxFileSize = GetMaxNumberOfBytes(2048);
             ParseLegalKeys();
         }
 

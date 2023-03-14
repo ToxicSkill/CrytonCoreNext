@@ -215,16 +215,16 @@ namespace CrytonCoreNext
             var cryptingService = provider.GetRequiredService<ICryptingService>();
             var filesView = provider.GetRequiredService<IFilesView>();
             var snackbar = provider.GetRequiredService<ISnackbarService>();
+            var cryptors = provider.GetServices<ICryptingView<CryptingMethodViewModel>>();
 
-            return new(fileService, dialogService, cryptingService, filesView, snackbar);
+            return new(fileService, dialogService, cryptingService, filesView, snackbar, cryptors.ToList());
         }
 
         public static ICryptingService CreateCryptingService(IServiceProvider provider)
         {
             var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
             var cryptingReader = provider.GetRequiredService<ICryptingReader>();
-            var cryptors = provider.GetServices<ICryptingView<CryptingMethodViewModel>>();
-            return new CryptingService(cryptingRecognition, cryptingReader, cryptors.ToList());
+            return new CryptingService(cryptingRecognition, cryptingReader);
         }
 
         private static ICryptingView<CryptingMethodViewModel> CreateAESView(IServiceProvider provider)

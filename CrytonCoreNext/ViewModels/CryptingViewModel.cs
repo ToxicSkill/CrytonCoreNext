@@ -7,6 +7,7 @@ using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +22,8 @@ namespace CrytonCoreNext.ViewModels
         private readonly ICryptingService _cryptingService;
 
         private readonly IFileService _fileService;
+
+        private readonly List<ICryptingView<CryptingMethodViewModel>> _cryptingViews;
 
         [ObservableProperty]
         public IProgressService progressService;
@@ -46,21 +49,35 @@ namespace CrytonCoreNext.ViewModels
             IDialogService dialogService,
             ICryptingService cryptingService,
             IFilesView filesView,
-            ISnackbarService snackbarService)
+            ISnackbarService snackbarService,
+            List<ICryptingView<CryptingMethodViewModel>> cryptingViews)
             : base(fileService, dialogService, snackbarService)
         {
             ProgressService = new ProgressService();
+
             _fileService = fileService;
             _cryptingService = cryptingService;
+            _cryptingViews = cryptingViews;
+
             files = new();
-            UpdateCryptingViews();
+
+            UpdateCryptingViews(); 
+            RegisterFileChangedEvent();
+
             SelectedCryptingView = CryptingViewsItemSource.First();
-            _cryptingService.RegisterFileChangedEvent(ref OnFileChanged!);
+        }
+
+        private void RegisterFileChangedEvent()
+        {
+            foreach (var view in _cryptingViews)
+            {
+                OnFileChanged += view.ViewModel.HandleFileChanged;
+            }
         }
 
         private void UpdateCryptingViews()
         {
-            CryptingViewsItemSource = new(_cryptingService.GetCryptingViews());
+            CryptingViewsItemSource = new(_cryptingViews);
         }
 
         partial void OnSelectedFileChanged(CryptFile value)
@@ -142,7 +159,7 @@ namespace CrytonCoreNext.ViewModels
             }
 
             var progressReport = ProgressService.SetProgress<string>(SelectedCryptingView.ViewModel.Crypting.ProgressCount);
-            var result = await _cryptingService.RunCrypting(SelectedCryptingView, SelectedFile, progressReport);
+            var result = await _cryptingService.RunCrypting(SelectedCryptingView.ViewModel.Crypting, SelectedFile, progressReport);
 
             if (!result.Equals(Array.Empty<byte>()) && Files.Any())
             {

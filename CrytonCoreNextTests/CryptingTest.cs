@@ -1,10 +1,16 @@
 ﻿using CrytonCoreNext.Crypting.Cryptors;
+using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.Services;
+using CrytonCoreNext.Crypting.ViewModels;
+using CrytonCoreNext.Crypting.Views;
 using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Views;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Wpf.Ui.Mvvm.Contracts;
 using Xunit;
@@ -19,64 +25,50 @@ namespace CrytonCoreNextTests
 
         private readonly ICryptingReader _cryptingReader = new Mock<ICryptingReader>().Object;
 
-
-        private readonly ICrypting _aes = new AES(new Mock<ISnackbarService>().Object, new Mock<IJsonSerializer>().Object);
-
-        private readonly ICrypting _rsa = new RSA(new Mock<ISnackbarService>().Object, new Mock<IJsonSerializer>().Object, new Mock<IXmlSerializer>().Object);
-
         private readonly IProgress<string> _progress = new Mock<Progress<string>>().Object;
 
         public CryptingTest()
         {
-            _cryptingService = new CryptingService(_cryptingRecognition, _cryptingReader, new List<ICrypting>() { _aes, _rsa });
+            _cryptingService = new CryptingService(_cryptingRecognition, _cryptingReader);
         }
 
-        [Fact]
-        public void TestNamesOfCryptorsShoudEqualTwo()
-        {
-            var cryptors = _cryptingService.GetCryptors();
-            var expected = 2;
-            Assert.Equal(cryptors.Count, expected);
-        }
 
         [Fact]
-        public void TestCurrentCrypiingShouldBeAES()
+        public async void TestCryptingAESShouldWork()
         {
-            var currentCrypting = _cryptingService.GetCurrentCrypting();
-            var expected = _aes;
-            Assert.Equal(currentCrypting, expected);
-        }
-
-        [Fact]
-        public void TestCryptingNamesShouldBeCorrect()
-        {
-            var currentCryptingNames = _cryptingService.GetCryptors();
-            var expected = new List<ICrypting>() { _aes, _rsa };
-            Assert.Equal(currentCryptingNames, expected);
-        }
-
-        [Fact]
-        public void TestCryptingAESShouldWork()
-        {
-            var cryptors = _cryptingService.GetCryptors();
+            ICrypting aes = new AES();
             var stringByte = "abcd1234!@#$";
             var bytes = Encoding.ASCII.GetBytes(stringByte);
-            var encryption = cryptors[0].Encrypt(bytes, _progress);
-            var decryption = cryptors[0].Decrypt(encryption.Result, _progress);
-            Assert.Equal(bytes, decryption.Result);
-            Assert.NotEqual(bytes, encryption.Result);
+            var cryptFile = new CryptFile(
+                new CrytonCoreNext.Models.File("test", "", bytes.Length.ToString(), DateTime.Now, "", 0, bytes), 
+                CrytonCoreNext.Static.CryptingStatus.Status.Decrypted, 
+                EMethod.AES, 
+                Guid.NewGuid());
+            var enrypted = await _cryptingService.RunCrypting(aes, cryptFile, _progress);
+            cryptFile.Bytes = enrypted;
+            cryptFile.Status = CrytonCoreNext.Static.CryptingStatus.Status.Encrypted;
+            var decrypted = await _cryptingService.RunCrypting(aes, cryptFile, _progress);
+            Assert.Equal(bytes, decrypted);
+            Assert.NotEqual(enrypted, decrypted);
         }
 
         [Fact]
-        public void TestCryptingRSAShouldWork()
+        public async void TestCryptingRSAShouldWork()
         {
-            var cryptors = _cryptingService.GetCryptors();
+            ICrypting rsa = new RSA();
             var stringByte = "abcd1234!@#$";
             var bytes = Encoding.ASCII.GetBytes(stringByte);
-            var encryption = cryptors[1].Encrypt(bytes, _progress);
-            var decryption = cryptors[1].Decrypt(encryption.Result, _progress);
-            Assert.Equal(bytes, decryption.Result);
-            Assert.NotEqual(bytes, encryption.Result);
+            var cryptFile = new CryptFile(
+                new CrytonCoreNext.Models.File("test", "", bytes.Length.ToString(), DateTime.Now, "", 0, bytes),
+                CrytonCoreNext.Static.CryptingStatus.Status.Decrypted,
+                EMethod.RSA,
+                Guid.NewGuid());
+            var enrypted = await _cryptingService.RunCrypting(rsa, cryptFile, _progress);
+            cryptFile.Bytes = enrypted;
+            cryptFile.Status = CrytonCoreNext.Static.CryptingStatus.Status.Encrypted;
+            var decrypted = await _cryptingService.RunCrypting(rsa, cryptFile, _progress);
+            Assert.Equal(bytes, decrypted);
+            Assert.NotEqual(enrypted, decrypted);
         }
     }
 }
