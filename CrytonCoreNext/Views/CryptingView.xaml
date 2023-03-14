@@ -214,10 +214,14 @@
                     </Path.Fill>
                 </Path>
             </Grid>
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
-                <TextBlock Grid.Column="1" FontSize="84" Text="Crypting" />
-                <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="22" Text="Make your data safe" FontWeight="UltraLight"/>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Grid.Column="1" FontSize="84" Text="Crypting"  FontFamily="Candara Light"/>
+                <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="22" Text="Make your data safe" FontWeight="UltraLight" FontFamily="Candara Light"/>
             </StackPanel>
+
+            <ui:Button VerticalAlignment="Center" HorizontalAlignment="Center" Margin="400,20,0,0" Cursor="Hand"
+                       Width="80" Height="80" Icon="Add20" FontSize="54" ToolTip="Load files"
+                       Command="{Binding LoadCryptFilesCommand}"/>
 
             <!--<ui:Button Grid.Row="1" Icon="Add20" 
                        Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 

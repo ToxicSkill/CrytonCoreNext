@@ -135,7 +135,7 @@ namespace CrytonCoreNext.ViewModels
         private async void PerformCrypting()
         {
             Lock();
-            if (!_fileService.HasBytes(SelectedFile) || _cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
+            if (!_fileService.HasBytes(SelectedFile) || !_cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
             {
                 PostSnackbar("Error", Language.Post("WrongMethod"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
                 return;
@@ -146,7 +146,7 @@ namespace CrytonCoreNext.ViewModels
 
             if (!result.Equals(Array.Empty<byte>()) && Files.Any())
             {
-                _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedFile.Name);
+                _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedCryptingView.ViewModel.Crypting.Method);
                 UpdateStateOfSelectedFile();
                 PostSnackbar("Success", Language.Post("Success"), SymbolRegular.Checkmark20, ControlAppearance.Success);
             }

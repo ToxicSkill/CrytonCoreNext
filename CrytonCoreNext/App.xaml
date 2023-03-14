@@ -41,6 +41,7 @@
             </Style>
 
             <sys:Double x:Key="G_LogoTitleFontSize">54</sys:Double>
+            <sys:Double x:Key="G_LogoSubtitleFontSize">16</sys:Double>
             
         </ResourceDictionary>
     </Application.Resources>    

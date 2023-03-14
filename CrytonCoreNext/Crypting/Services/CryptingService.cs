@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Crypting.Interfaces;
+﻿using CrytonCoreNext.Crypting.Enums;
+using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
@@ -50,11 +51,11 @@ namespace CrytonCoreNext.Crypting.Services
             }
         }
 
-        public void ModifyFile(CryptFile file, byte[] bytes, Status status, string methodName)
+        public void ModifyFile(CryptFile file, byte[] bytes, Status status, EMethod methodName)
         {
             file.Bytes = bytes;
             file.Status = status;
-            file.Method = methodName ?? string.Empty;
+            file.Method = methodName;
             GC.Collect();
         }
 
@@ -80,15 +81,22 @@ namespace CrytonCoreNext.Crypting.Services
 
         public bool IsCorrectMethod(CryptFile file, ICryptingView<CryptingMethodViewModel> cryptingView)
         {
-            return file.Status == CryptingStatus.Status.Encrypted &&
-                cryptingView.ViewModel.PageName != file.Method;
+            if (file.Status == Status.Encrypted)
+            {
+                return cryptingView.ViewModel.Crypting.Method == file.Method;
+            }
+            else if (file.Status == Status.Decrypted)
+            {
+                return true;
+            }
+            return false;
         }
 
-        public CryptingStatus.Status GetOpositeStatus(CryptingStatus.Status currentStatus)
+        public Status GetOpositeStatus(Status currentStatus)
         {
-            return currentStatus.Equals(CryptingStatus.Status.Decrypted) ?
-                CryptingStatus.Status.Encrypted :
-                CryptingStatus.Status.Decrypted;
+            return currentStatus.Equals(Status.Decrypted) ?
+                Status.Encrypted :
+                Status.Decrypted;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Crypting.Interfaces;
+﻿using CrytonCoreNext.Crypting.Enums;
+using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace CrytonCoreNext.Crypting.Models
             };
         }
 
-        public (bool succes, (string method, string extension)) RecognizeBytes(byte[] bytes)
+        public (bool succes, (EMethod method, string extension)) RecognizeBytes(byte[] bytes)
         {
             var maxSize = 0;
             foreach (var value in EXCFheader.Values)
@@ -45,7 +46,7 @@ namespace CrytonCoreNext.Crypting.Models
 
             if (maxSize > bytes.Length)
             {
-                return new(false, new(string.Empty, string.Empty));
+                return new(false, new(EMethod.AES, string.Empty));
             }
 
             var recognizeByteArray = new byte[maxSize];
@@ -66,17 +67,18 @@ namespace CrytonCoreNext.Crypting.Models
 
             if (hashedArray.SequenceEqual(checkSum) && unique.SequenceEqual(EXCFheader[nameof(_recognitionValues.Unique)].value))
             {
-                return new(true, new(GetStringFromByteArray(method), GetStringFromByteArray(extension)));
+                return new(true, new(StringToMethodEnum(GetStringFromByteArray(method)), GetStringFromByteArray(extension)));
             }
 
-            return new(false, new(string.Empty, string.Empty));
+            return new(false, new(EMethod.AES, string.Empty));
         }
 
-        public byte[] PrepareRerecognizableBytes(string method, string extension)
+        public byte[] PrepareRerecognizableBytes(EMethod method, string extension)
         {
-            if (method.Length > EXCFheader[nameof(_recognitionValues.Method)].size)
+            var methodString = method.ToString();
+            if (methodString.Length > EXCFheader[nameof(_recognitionValues.Method)].size)
             {
-                method = method[..EXCFheader[nameof(_recognitionValues.Method)].size];
+                methodString = methodString[..EXCFheader[nameof(_recognitionValues.Method)].size];
             }
 
             if (extension.Length > EXCFheader[nameof(_recognitionValues.Extension)].size)
@@ -88,7 +90,7 @@ namespace CrytonCoreNext.Crypting.Models
             byte[] recognizableArray = new byte[EXCFheader.Sum(x => x.Value.size)];
             byte[] checkSum = new byte[EXCFheader[nameof(_recognitionValues.CheckSum)].size];
 
-            EXCFheader[nameof(_recognitionValues.Method)] = new(EXCFheader[nameof(_recognitionValues.Method)].size, Encoding.ASCII.GetBytes(method));
+            EXCFheader[nameof(_recognitionValues.Method)] = new(EXCFheader[nameof(_recognitionValues.Method)].size, Encoding.ASCII.GetBytes(methodString));
             EXCFheader[nameof(_recognitionValues.Extension)] = new(EXCFheader[nameof(_recognitionValues.Extension)].size, Encoding.ASCII.GetBytes(extension));
 
             if (!SanityCheck())
@@ -117,6 +119,19 @@ namespace CrytonCoreNext.Crypting.Models
             var str = Encoding.Default.GetString(array);
             var indexToCut = str.IndexOf('\0');
             return str[..indexToCut];
+        }
+
+        private EMethod StringToMethodEnum(string methodString)
+        {
+            if (methodString.Equals(string.Empty))
+            {
+                return EMethod.AES;
+            }
+            if (Enum.TryParse(methodString, out EMethod enumMethod))
+            {
+                return enumMethod;
+            }
+            return EMethod.AES;
         }
 
         private bool SanityCheck()

@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Crypting.Models;
+﻿using CrytonCoreNext.Crypting.Enums;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
 using CrytonCoreNext.ViewModels;
@@ -13,7 +14,7 @@ namespace CrytonCoreNext.Crypting.Interfaces
     {
         Task<byte[]> RunCrypting(ICryptingView<CryptingMethodViewModel> cryptingView, CryptFile file, IProgress<string> progress);
 
-        void ModifyFile(CryptFile file, byte[] bytes, Status status, string methodName);
+        void ModifyFile(CryptFile file, byte[] bytes, Status status, EMethod method);
 
         void AddRecognitionBytes(CryptFile file);
 
@@ -21,7 +22,7 @@ namespace CrytonCoreNext.Crypting.Interfaces
 
         bool IsCorrectMethod(CryptFile file, ICryptingView<CryptingMethodViewModel> cryptingView);
 
-        CryptingStatus.Status GetOpositeStatus(CryptingStatus.Status currentStatus);
+        Status GetOpositeStatus(Status currentStatus);
 
         CryptFile ReadCryptFile(File file);
 

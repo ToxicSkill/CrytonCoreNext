@@ -52,7 +52,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
         public string maxBytesMessage;
 
         [ObservableProperty]
-        public System.Windows.Media.Brush fileTooBigCautionColor = new SolidColorBrush(Colors.White);
+        public Brush fileTooBigCautionColor = new SolidColorBrush(Colors.White);
 
         public RSAViewModel(ICrypting crypting,
             ISnackbarService snackbarService,

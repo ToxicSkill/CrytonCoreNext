@@ -45,7 +45,7 @@ namespace CrytonCoreNext
         public void CloseWindow()
             => Close();
 
-        private void SymbolIcon_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void SymbolIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {
