@@ -18,7 +18,7 @@
                     <TextBlock Text="C R Y T " FontSize="{StaticResource G_LogoTitleFontSize}" VerticalAlignment="Center" FontWeight="Light" FontFamily="Candara Light"/>
                     <TextBlock Text="O N" FontSize="{StaticResource G_LogoTitleFontSize}" Foreground="{DynamicResource SystemAccentBrush}" VerticalAlignment="Center" FontFamily="Candara Light" FontWeight="Bold"/>
                 </StackPanel>
-                <TextBlock Text="F O R  Y O U R  N E E D S" HorizontalAlignment="Center" FontSize="{StaticResource G_LogoSubtitleFontSize}" FontFamily="Candara Light"/>
+                <TextBlock Text="F O R   Y O U R   N E E D S" HorizontalAlignment="Center" FontSize="{StaticResource G_LogoSubtitleFontSize}" FontFamily="Candara Light"/>
             </StackPanel>
         </Grid>
     <Grid>
