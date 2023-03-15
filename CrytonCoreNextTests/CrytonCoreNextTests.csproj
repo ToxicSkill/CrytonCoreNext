@@ -11,7 +11,14 @@
     <None Remove="TestingFiles\2.pdf" />
     <None Remove="TestingFiles\3.pdf" />
     <None Remove="TestingFiles\test.pdf" />
+    <None Remove="TestingFiles\test.txt" />
     <None Remove="TestingFiles\testPDF.pdf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestingFiles\test.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -40,12 +47,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="TestingFiles\testPDF.pdf" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="TestingFiles\test.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
