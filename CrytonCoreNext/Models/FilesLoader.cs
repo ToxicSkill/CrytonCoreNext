@@ -1,4 +1,4 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces.Files;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;

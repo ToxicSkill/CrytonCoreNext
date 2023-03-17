@@ -1,4 +1,4 @@
-﻿namespace CrytonCoreNext.Interfaces
+﻿namespace CrytonCoreNext.Interfaces.Files
 {
     public interface IFileService : IFilesLoader, IFilesSaver, IFilesManager
     {

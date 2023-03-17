@@ -1,4 +1,4 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
 using System;

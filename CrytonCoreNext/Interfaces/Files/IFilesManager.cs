@@ -2,7 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace CrytonCoreNext.Interfaces
+namespace CrytonCoreNext.Interfaces.Files
 {
     public interface IFilesManager
     {

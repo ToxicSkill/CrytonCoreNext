@@ -1,7 +1,7 @@
 ﻿using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.Services;
-using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
 using Moq;

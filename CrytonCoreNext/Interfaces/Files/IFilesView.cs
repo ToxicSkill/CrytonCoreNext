@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CrytonCoreNext.Interfaces
+namespace CrytonCoreNext.Interfaces.Files
 {
     public interface IFilesView
     {

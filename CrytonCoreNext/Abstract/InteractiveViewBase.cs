@@ -1,7 +1,6 @@
 ﻿using CrytonCoreNext.Dictionaries;
-using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Wpf.Ui.Common;
@@ -9,7 +8,7 @@ using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Abstract
 {
-    public abstract class InteractiveViewBase : ViewModelBase, IDisposable
+    public abstract class InteractiveViewBase : ViewModelBase
     {
         private readonly ISnackbarService _snackbarService;
 
@@ -89,7 +88,5 @@ namespace CrytonCoreNext.Abstract
                 PostSnackbar("Error", Language.Post("FilesSavingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
             }
         }
-
-        public virtual void Dispose() { }
     }
 }

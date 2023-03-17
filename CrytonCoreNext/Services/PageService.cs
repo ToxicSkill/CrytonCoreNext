@@ -36,7 +36,6 @@ public class PageService : ICustomPageService
     {
         if (!typeof(FrameworkElement).IsAssignableFrom(pageType))
             Trace.WriteLine("Form is inassingable");
-        OnPageNavigate.Invoke(null, pageType.Name);
         return _serviceProvider.GetService(pageType) as FrameworkElement;
     }
 }

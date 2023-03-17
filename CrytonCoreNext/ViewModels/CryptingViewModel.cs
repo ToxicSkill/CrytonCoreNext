@@ -5,6 +5,7 @@ using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Services;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,6 @@ namespace CrytonCoreNext.ViewModels
         public CryptingViewModel(IFileService fileService,
             IDialogService dialogService,
             ICryptingService cryptingService,
-            IFilesView filesView,
             ISnackbarService snackbarService,
             List<ICryptingView<CryptingMethodViewModel>> cryptingViews)
             : base(fileService, dialogService, snackbarService)
@@ -61,7 +61,7 @@ namespace CrytonCoreNext.ViewModels
 
             files = new();
 
-            UpdateCryptingViews(); 
+            UpdateCryptingViews();
             RegisterFileChangedEvent();
 
             SelectedCryptingView = CryptingViewsItemSource.First();

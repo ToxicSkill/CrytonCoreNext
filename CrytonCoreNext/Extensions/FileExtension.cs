@@ -1,5 +1,4 @@
-﻿using CrytonCoreNext.ViewModels;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace CrytonCoreNext.Extensions
 {
@@ -16,20 +15,6 @@ namespace CrytonCoreNext.Extensions
             return newFile;
         }
 
-        public static bool IsNullOrEmpty(this FilesViewViewModel filesView)
-        {
-            if (filesView != null)
-            {
-                if (filesView.FilesCollection != null)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-
-            return true;
-        }
 
         public static bool IsCollectionEmpty(this ObservableCollection<Models.File> files)
         {

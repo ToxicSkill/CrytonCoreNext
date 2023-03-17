@@ -1,15 +1,14 @@
 ﻿using Newtonsoft.Json;
-using System.Net;
-using System.Text;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
-using CrytonCoreNext.Interfaces;
 
 namespace CrytonCoreNext.InformationsServices
 {
-    public class Weather : IService
+    public class Weather
     {
         public WeatherInfo WholeForecast { get; set; }
         public SingleWeather ActualWeather { get; set; }
@@ -117,9 +116,9 @@ namespace CrytonCoreNext.InformationsServices
             var cloundIndex = int.Parse(ActualWeather.Cloudcover);
             var liftedIndex = int.Parse(ActualWeather.LiftedIndex);
             bool night = false;
-            var (currentTimeHour, currentTimeMinutes)  = (int.Parse(DateTime.Now.ToString("HH")), int.Parse(DateTime.Now.ToString("mm")));
+            var (currentTimeHour, currentTimeMinutes) = (int.Parse(DateTime.Now.ToString("HH")), int.Parse(DateTime.Now.ToString("mm")));
             string sunset = String.Empty
-                ,sunrise = String.Empty;
+                , sunrise = String.Empty;
             try
             {
                 sunset = GetCurrentSunset().PadLeft(5, '0');
@@ -175,7 +174,7 @@ namespace CrytonCoreNext.InformationsServices
         public string GetActualWeatherIcon() => ActualWeatherIcon;
 
         public string GetActualTemperature() => ActualWeather?.Temp.ToString() + "ºC";
-        
+
         public string GetActualWind() => ActualWeather?.Wind10m.Direction.ToString();
 
         public string GetActualHumidity() => ActualWeather?.Rh2m.ToString();

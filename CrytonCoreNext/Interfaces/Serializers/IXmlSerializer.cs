@@ -1,4 +1,4 @@
-﻿namespace CrytonCoreNext.Interfaces
+﻿namespace CrytonCoreNext.Interfaces.Serializers
 {
     public interface IXmlSerializer
     {

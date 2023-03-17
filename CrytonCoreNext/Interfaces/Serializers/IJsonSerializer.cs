@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CrytonCoreNext.Interfaces
+namespace CrytonCoreNext.Interfaces.Serializers
 {
     public interface IJsonSerializer
     {

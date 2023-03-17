@@ -1,4 +1,4 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces.Extras;
 using System;
 using System.Net;
 using System.Net.NetworkInformation;

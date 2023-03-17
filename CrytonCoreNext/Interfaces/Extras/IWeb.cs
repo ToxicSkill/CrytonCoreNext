@@ -1,4 +1,4 @@
-﻿namespace CrytonCoreNext.Interfaces;
+﻿namespace CrytonCoreNext.Interfaces.Extras;
 
 public interface IWeb
 {
