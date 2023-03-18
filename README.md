@@ -33,19 +33,15 @@ Support touch & windows MICA maetrial.
         <img src="./Pictures/CryptingPage.jpg"/>
     </a>
 </div>
-
+<div align="center">
+    <a href="./">
+        <img src="./Pictures/CryptingPage2.jpg"/>
+    </a>
+</div>
 ## Settings page
 
 <div align="center">
     <a href="./">
         <img src="./Pictures/SettingsPage.jpg"/>
-    </a>
-</div>
-
-## Pdf page
-
-<div align="center">
-    <a href="./">
-        <img src="./Pictures/PdfPage.jpg"/>
     </a>
 </div>
