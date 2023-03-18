@@ -12,6 +12,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
+                <ResourceDictionary Source="pack://application:,,,/CrytonCoreNext;component/Styles/TabControl.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             
             <Style x:Key="G_PathAnimatedStyle" TargetType="{x:Type Path}">
@@ -42,6 +43,7 @@
 
             <sys:Double x:Key="G_LogoTitleFontSize">54</sys:Double>
             <sys:Double x:Key="G_LogoSubtitleFontSize">16</sys:Double>
+            <sys:Double x:Key="G_NormalFontSize">22</sys:Double>
             
         </ResourceDictionary>
     </Application.Resources>    

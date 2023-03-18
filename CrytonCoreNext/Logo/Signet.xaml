@@ -2,16 +2,29 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:CrytonCoreNext.Logo"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Signet">
 
     <Grid>
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-10,0,10,0">
-            <Path StrokeThickness="1" Stretch="Fill" Margin="-33,0,33,0" Fill="{DynamicResource SystemAccentBrush}" Stroke="{DynamicResource SystemAccentBrush}" Data="M 9 7 C -15 6 -34 21 -35 25 C -36 29 -29 47 -18 65 C -7 82 6 92 10 93 C 14 94 36 79 37 47 C 34 76 13 89 10 88 C 7 87 -4 79 -14 64 C -24 47 -31 29 -30 26 C -29 23 -14 8 9 7"/>
-            <Path StrokeThickness="1" Stretch="Fill" Margin="33,0,-33,0" Opacity="0.8" Fill="{DynamicResource SystemAccentBrush}" Stroke="{DynamicResource SystemAccentBrush}" Data="M 9 80 C 14 78 18 75 25 64 C 33 51 32 38 37 38 C 42 38 44 52 48 61 C 51 69 56 92 65 92 C 75 92 81 29 80 26 C 80 34 70 87 65 87 C 60 87 55 68 52 61 C 48 52 42 34 37 34 C 32 34 31 46 25 61 C 22 67 17 76 9 80"/>
+            <Path StrokeThickness="1" Stretch="Fill" Stroke="Transparent" Margin="-33,0,33,0" Data="M 9 7 C -15 6 -34 21 -35 25 C -36 29 -29 47 -18 65 C -7 82 6 92 10 93 C 14 94 36 79 37 47 C 34 76 13 89 10 88 C 7 87 -4 79 -14 64 C -24 47 -31 29 -30 26 C -29 23 -14 8 9 7">
+                <Path.Fill>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="{DynamicResource SystemAccentColorPrimary}"/>
+                        <GradientStop Color="#7FC50629" Offset="1"/>
+                    </LinearGradientBrush>
+                </Path.Fill>
+            </Path>
+            <Path StrokeThickness="1" Stretch="Fill" Margin="33,0,-33,0" Opacity="0.8" Stroke="Transparent" Data="M 9 80 C 14 78 18 75 25 64 C 33 51 32 38 37 38 C 42 38 44 52 48 61 C 51 69 56 92 65 92 C 75 92 81 29 80 26 C 80 34 70 87 65 87 C 60 87 55 68 52 61 C 48 52 42 34 37 34 C 32 34 31 46 25 61 C 22 67 17 76 9 80">
+                <Path.Fill>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="{DynamicResource SystemAccentColorPrimary}" Offset="1"/>
+                        <GradientStop Color="#7FC50629"/>
+                    </LinearGradientBrush>
+                </Path.Fill>
+            </Path>
         </Grid>
     </Grid>
 </Page>

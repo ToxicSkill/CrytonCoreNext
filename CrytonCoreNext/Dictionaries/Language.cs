@@ -4,7 +4,7 @@ namespace CrytonCoreNext.Dictionaries
 {
     public static class Language
     {
-        private static int DictionaryIndex = 2;
+        private static int DictionaryIndex = 3;
 
         public static string Post(string key)
         {

@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Models;
+﻿using CrytonCoreNext.Enums;
+using CrytonCoreNext.Models;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
 using System;
@@ -10,6 +11,8 @@ namespace CrytonCoreNext.PDF.Models
         public PdfVersion Version { get; set; }
 
         public IDocReader Reader { get; set; }
+
+        public EFileStatus Status { get; set; }
 
         public string Password { get; set; }
 

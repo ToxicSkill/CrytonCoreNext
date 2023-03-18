@@ -4,21 +4,90 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:viewmodels="clr-namespace:CrytonCoreNext.PDF.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:PdfViewModel}"
              d:DesignHeight="890"
              d:DesignWidth="1400"
              mc:Ignorable="d"
              Background="Transparent">
 
     <Grid>
-        <TabControl>
-            <TabItem Header="Merge" Content="Merge">
+        <TabControl Margin="0, 20, 0, 0">
+            <TabItem >
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Margin="0,0,6,0" Symbol="Library20" FontSize="{StaticResource G_NormalFontSize}"/>
+                        <TextBlock Text="Manage" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <ui:Button Height="50" Content="Add" Command="{Binding LoadFilesCommand}" VerticalAlignment="Top"/>
+                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
+                        <ListView ItemsSource="{Binding Files, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFile}">
+                            <ListView.Template>
+                                <ControlTemplate TargetType="ListBox">
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
+                                        <ItemsPresenter/>
+                                    </Border>
+                                </ControlTemplate>
+                            </ListView.Template>
+                            <ListView.ItemTemplate>
+                                <DataTemplate DataType="models:CryptFile">
+                                    <Grid Height="40">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
+                                                FontSize="13"
+                                                FontWeight="Medium"
+                                                TextWrapping="WrapWithOverflow"
+                                                Text="{Binding NameWithExtension}"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left"
+                                                FontSize="12"
+                                                Text="{Binding Date}"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Text="{Binding Size}"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Text="{Binding Status,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem Content="Merge">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Margin="0,0,6,0" Symbol="Merge20" FontSize="{StaticResource G_NormalFontSize}"/>
+                        <TextBlock Text="Merge" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
+                    </StackPanel>
+                </TabItem.Header>
 
             </TabItem>
-            <TabItem Header="Split" Content="Split">
+            <TabItem Content="Split">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Margin="0,0,6,0" Symbol="ArrowSplit20" FontSize="{StaticResource G_NormalFontSize}" />
+                        <TextBlock Text="Split" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
+                    </StackPanel>
+                </TabItem.Header>
 
             </TabItem>
-            <TabItem Header="Convert" Content="Convert">
+            <TabItem Content="Convert">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Margin="0,0,6,0" Symbol="ArrowSync20" FontSize="{StaticResource G_NormalFontSize}" />
+                        <TextBlock Text="Convert" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
+                    </StackPanel>
+                </TabItem.Header>
 
             </TabItem>
         </TabControl>

@@ -215,7 +215,7 @@
                 </Path>
             </Grid>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Grid.Column="1" FontSize="84" Text="Crypting"  FontFamily="Candara Light"/>
+                <TextBlock Grid.Column="1" FontSize="84" Text="Crypting" FontFamily="Candara Light"/>
                 <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="22" Text="Make your data safe" FontWeight="UltraLight" FontFamily="Candara Light"/>
             </StackPanel>
 
@@ -229,7 +229,7 @@
                        Appearance="Primary" HorizontalAlignment="Stretch" Cursor="Hand" />-->
             <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20">
                 <TextBlock
-                    FontSize="22"
+                    FontSize="{StaticResource G_NormalFontSize}"
                     FontWeight="UltraLight"
                     Text="Learn more" />
                 <ui:Hyperlink
