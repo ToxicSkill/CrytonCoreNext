@@ -1,10 +1,7 @@
 ﻿using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Models;
-using CrytonCoreNext.Static;
-using CrytonCoreNext.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using static CrytonCoreNext.Static.CryptingStatus;
 

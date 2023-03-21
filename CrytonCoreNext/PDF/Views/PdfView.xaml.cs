@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.PDF.ViewModels;
+﻿using CrytonCoreNext.BackgroundUI;
+using CrytonCoreNext.PDF.ViewModels;
 using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.PDF.Views
@@ -18,6 +19,7 @@ namespace CrytonCoreNext.PDF.Views
             ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;
+            Background.Content = new FluentWaves();
         }
     }
 }

@@ -5,13 +5,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:CrytonCoreNext.PDF.ViewModels" 
+             xmlns:c="clr-namespace:CrytonCoreNext.Converters"
              d:DataContext="{d:DesignInstance Type=viewmodels:PdfViewModel}"
              d:DesignHeight="890"
              d:DesignWidth="1400"
              mc:Ignorable="d"
              Background="Transparent">
 
+
+    <ui:UiPage.Resources>
+        <ResourceDictionary>
+            <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
+        </ResourceDictionary>
+    </ui:UiPage.Resources>
+
     <Grid>
+        <Frame x:Name="Background" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TabControl Margin="0, 20, 0, 0">
             <TabItem >
                 <TabItem.Header>

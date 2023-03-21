@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.ViewModels;
+﻿using CrytonCoreNext.BackgroundUI;
+using CrytonCoreNext.ViewModels;
 using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.Views
@@ -18,6 +19,7 @@ namespace CrytonCoreNext.Views
             ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;
+            Background.Content = new FluentWaves();
         }
     }
 }

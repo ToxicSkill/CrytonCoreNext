@@ -2,8 +2,6 @@
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Models;
-using CrytonCoreNext.Static;
-using CrytonCoreNext.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
