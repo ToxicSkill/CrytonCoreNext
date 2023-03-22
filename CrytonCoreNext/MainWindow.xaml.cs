@@ -15,7 +15,10 @@ namespace CrytonCoreNext
             get;
         }
 
-        public MainWindow(MainViewModel viewModel, INavigationService navigationService, ICustomPageService pageService, ISnackbarService snackbarService)
+        public MainWindow(MainViewModel viewModel,
+            INavigationService navigationService,
+            ICustomPageService pageService,
+            ISnackbarService snackbarService)
         {
             Wpf.Ui.Appearance.Watcher.Watch(this);
             ViewModel = viewModel;

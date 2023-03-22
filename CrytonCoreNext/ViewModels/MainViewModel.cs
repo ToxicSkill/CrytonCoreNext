@@ -23,46 +23,59 @@ namespace CrytonCoreNext.ViewModels
 
         public MainViewModel()
         {
+            MenuItems = new ObservableCollection<INavigationControl>();
+            FooterItems = new ObservableCollection<INavigationControl>();
             InitializeMenu();
         }
 
         private void InitializeMenu()
         {
-            MenuItems = new ObservableCollection<INavigationControl>()
+            MenuItems.Add(new NavigationItem()
             {
-                new NavigationItem(){ Icon = SymbolRegular.Home20,  PageTag="home", Cache=true, Content="Home", PageType=typeof(Dashboard) },
-                new NavigationSeparator(),
-                new NavigationItem(){ Icon = SymbolRegular.Fingerprint48,  PageTag="crypting", Cache=true, Content="Crypting", PageType=typeof(CryptingView) },
-                new NavigationItem(){ Icon = SymbolRegular.Layer20,  PageTag="pdf", Cache=true, Content="Pdf", PageType=typeof(PdfView) }
-            };
-            FooterItems = new ObservableCollection<INavigationControl>()
+                Icon = SymbolRegular.Home20,
+                PageTag = "home",
+                Cache = true,
+                Content = "Home",
+                PageType = typeof(Dashboard)
+            });
+            MenuItems.Add(new NavigationSeparator());
+            MenuItems.Add(new NavigationItem()
             {
-                new NavigationItem(){ Icon = SymbolRegular.Settings20,  PageTag="settings", Cache=true, Content="Settings", PageType=typeof(SettingsView) }
-            };
+                Icon = SymbolRegular.Fingerprint48,
+                PageTag = "crypting",
+                Cache = true,
+                Content = "Crypting",
+                PageType = typeof(CryptingView)
+            });
+            MenuItems.Add(new NavigationItem()
+            {
+                Icon = SymbolRegular.Layer20,
+                PageTag = "pdf",
+                Cache = true,
+                Content = "Pdf",
+                PageType = typeof(PdfView)
+            });
+
+            FooterItems.Add(new NavigationItem()
+            {
+                Icon = SymbolRegular.Settings20,
+                PageTag = "settings",
+                Cache = true,
+                Content = "Settings",
+                PageType = typeof(SettingsView)
+            });
         }
 
         [RelayCommand]
-        private void Exit()
-        {
-            App.Current.Shutdown();
-        }
+        private static void Exit() => App.Current.Shutdown();
 
         [RelayCommand]
-        private void Maximize()
-        {
-            Application.Current.MainWindow.WindowState = WindowState.Maximized;
-        }
+        private static void Maximize() => Application.Current.MainWindow.WindowState = WindowState.Maximized;
 
         [RelayCommand]
-        private void Minimize()
-        {
-            Application.Current.MainWindow.WindowState = WindowState.Minimized;
-        }
+        private static void Minimize() => Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
         [RelayCommand]
-        private void Normal()
-        {
-            Application.Current.MainWindow.WindowState = WindowState.Normal;
-        }
+        private static void Normal() => Application.Current.MainWindow.WindowState = WindowState.Normal;
     }
 }
