@@ -1,7 +1,10 @@
 ﻿using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.PDF.Interfaces;
 using Docnet.Core;
+using Docnet.Core.Exceptions;
 using Docnet.Core.Models;
+using Docnet.Core.Readers;
 
 namespace CrytonCoreNext.PDF.Models
 {
@@ -9,33 +12,49 @@ namespace CrytonCoreNext.PDF.Models
     {
         private readonly double _dimensions = 1.0d;
 
-        public PDFFile? ReadPdf(File file, string password = "")
+        public PDFFile ReadPdf(File file, string password = "")
         {
+            using IDocLib pdfLibrary = DocLib.Instance;
+            IDocReader? reader = null;
+            var status = EPdfStatus.Opened;
+
             if (file.Path.Equals(string.Empty))
             {
-                return null;
+                return CreateNewPdfFile(file, reader, status);
             }
 
-            using (IDocLib pdfLibrary = DocLib.Instance)
+            var dimensions = _dimensions;
+            try
             {
-                var dimensions = _dimensions;
-                var reader = password.Equals(string.Empty, default) ?
+                reader = password.Equals(string.Empty, default) ?
                     pdfLibrary.GetDocReader(file.Bytes, new PageDimensions(dimensions)) :
                     pdfLibrary.GetDocReader(file.Bytes, password, new PageDimensions(dimensions));
 
-                return new PDFFile(
-                    file: file,
-                    version: reader.GetPdfVersion(),
-                    reader: reader,
-                    password: string.Empty,
-                    dimensions: _dimensions,
-                    owner: string.Empty,
-                    numberOfPages: reader.GetPageCount() - 1,
-                    lastPage: 0,
-                    isProtectedByPassword: false,
-                    format: "A4",
-                    file.Guid);
             }
+            catch (DocnetLoadDocumentException)
+            {
+                status = EPdfStatus.Protected;
+            }
+            catch (DocnetException)
+            {
+                status = EPdfStatus.Damaged;
+            }
+
+            return CreateNewPdfFile(file, reader, status);
+        }
+
+        private PDFFile CreateNewPdfFile(File file, IDocReader? reader, EPdfStatus status)
+        {
+            return reader == null
+                ? new PDFFile(file, status)
+                : new PDFFile(
+                file: file,
+                version: reader.GetPdfVersion(),
+                reader: reader,
+                pdfStatus: status,
+                password: string.Empty,
+                dimensions: _dimensions,
+                numberOfPages: reader.GetPageCount());
         }
     }
 }

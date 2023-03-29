@@ -110,8 +110,6 @@ namespace CrytonCoreNext.PDF.Models
                 return;
             }
             Array.Clear(array, 0, array.Length);
-            array = null;
-            GC.Collect();
         }
 
         private static byte[] RearrangeBytesToRGBA(byte[] BGRABytes)

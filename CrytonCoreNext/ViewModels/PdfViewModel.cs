@@ -4,6 +4,8 @@ using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.PDF.Models;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +18,12 @@ namespace CrytonCoreNext.ViewModels
     {
         private readonly IFileService _fileService;
 
+        private readonly ISnackbarService _snackbarService;
+
         private readonly IPDFService _pdfService;
 
         [ObservableProperty]
-        public ObservableCollection<File> files;
+        public ObservableCollection<PDFFile> files;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Files))]
@@ -30,22 +34,41 @@ namespace CrytonCoreNext.ViewModels
             IDialogService dialogService,
             ISnackbarService snackbarService) : base(fileService, dialogService, snackbarService)
         {
+            _snackbarService = snackbarService;
             _pdfService = pdfService;
             files = new();
         }
 
         [RelayCommand]
-        private async Task LoadFiles()
+        private new async Task LoadFiles()
         {
             Lock();
-            await foreach (var file in base.LoadFiles())
+            var protectedFile = new List<File>();
+            await foreach (var file in base.LoadFiles(Static.Extensions.DialogFilters.Pdf))
             {
-                Files.Add(file);
+                var pdfFile = _pdfService.ReadPdf(file);
+                if (pdfFile != null)
+                {
+                    Files.Add(pdfFile);
+                }
+                else
+                {
+                    protectedFile.Add(file);
+                }
                 SelectedFile = Files.Last();
             }
             if (SelectedFile == null && Files.Any())
             {
                 SelectedFile = Files.First();
+            }
+            if (protectedFile.Any())
+            {
+                _snackbarService.Show("Warning",
+                    (protectedFile.Count > 1 ?
+                    $"{protectedFile.Count} of {protectedFile.Count + files.Count} loaded files":
+                    "One file")+ " require password",
+                    Wpf.Ui.Common.SymbolRegular.Warning20,
+                    Wpf.Ui.Common.ControlAppearance.Caution);
             }
             Unlock();
         }

@@ -12,7 +12,6 @@
              mc:Ignorable="d"
              Background="Transparent">
 
-
     <ui:UiPage.Resources>
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
@@ -56,15 +55,16 @@
                                                 FontWeight="Medium"
                                                 TextWrapping="WrapWithOverflow"
                                                 Text="{Binding NameWithExtension}"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left"
-                                                FontSize="12"
-                                                Text="{Binding Date}"/>
+                                        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                            <TextBlock  FontSize="12" Text="Pages: "/>
+                                            <TextBlock  FontSize="12" Text="{Binding NumberOfPages}"/>
+                                        </StackPanel>
                                         <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
                                                 FontSize="12"
                                                 Text="{Binding Size}"/>
                                         <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right"
                                                 FontSize="12"
-                                                Text="{Binding Status,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                                Text="{Binding PdfStatus,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
