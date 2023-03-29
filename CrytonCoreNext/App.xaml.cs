@@ -11,8 +11,6 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using CrytonCoreNext.PDF.Services;
-using CrytonCoreNext.PDF.ViewModels;
-using CrytonCoreNext.PDF.Views;
 using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;

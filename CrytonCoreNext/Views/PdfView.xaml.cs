@@ -1,12 +1,9 @@
 ﻿using CrytonCoreNext.BackgroundUI;
-using CrytonCoreNext.PDF.ViewModels;
+using CrytonCoreNext.ViewModels;
 using Wpf.Ui.Common.Interfaces;
 
-namespace CrytonCoreNext.PDF.Views
+namespace CrytonCoreNext.Views
 {
-    /// <summary>
-    /// Interaction logic for PeopleView.xaml
-    /// </summary>
     public partial class PdfView : INavigableView<PdfViewModel>
     {
         public PdfViewModel ViewModel

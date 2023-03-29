@@ -10,11 +10,10 @@ using System.Threading.Tasks;
 using Wpf.Ui.Mvvm.Contracts;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
 
-namespace CrytonCoreNext.PDF.ViewModels
+namespace CrytonCoreNext.ViewModels
 {
     public partial class PdfViewModel : InteractiveViewBase
     {
-
         private readonly IFileService _fileService;
 
         private readonly IPDFService _pdfService;

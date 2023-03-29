@@ -10,9 +10,6 @@ using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.Views
 {
-    /// <summary>
-    /// Interaction logic for Dashboard.xaml
-    /// </summary>
     public partial class SettingsView : INavigableView<SettingsViewModel>
     {
         private double _firstHeaderHeight = 0d;
