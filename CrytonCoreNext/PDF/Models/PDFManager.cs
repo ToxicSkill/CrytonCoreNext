@@ -5,6 +5,7 @@ using Docnet.Core.Readers;
 using ImageMagick;
 using MethodTimer;
 using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,26 +18,26 @@ namespace CrytonCoreNext.PDF.Models
 {
     public class PDFManager : IPDFManager
     {
-        public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
-        {
-            using IDocLib pdfLibrary = DocLib.Instance;
-            var dimensions = pdfFile.Dimensions;
-            var reader = pdfFile.Password.Equals(string.Empty) ?
-                pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
-                pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
-            using var docReader = reader;
-            for (int i = 0; i <= pdfFile.NumberOfPages; i++)
-            {
-                yield return await Task.Run(() =>
-                {
-                    using var pageReader = docReader.GetPageReader(i);
-                    return GetImage(pageReader);
-                });
-            }
-        }
+        //public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
+        //{
+        //    using IDocLib pdfLibrary = DocLib.Instance;
+        //    var dimensions = pdfFile.Dimensions;
+        //    var reader = pdfFile.Password.Equals(string.Empty) ?
+        //        pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
+        //        pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
+        //    using var docReader = reader;
+        //    for (int i = 0; i <= pdfFile.NumberOfPages; i++)
+        //    {
+        //        yield return await Task.Run(() =>
+        //        {
+        //            using var pageReader = docReader.GetPageReader(i);
+        //            return GetImage(pageReader);
+        //        });
+        //    }
+        //}
 
         [Time]
-        public BitmapImage LoadImage(PDFFile pdfFile)
+        public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
             var dimensions = pdfFile.Dimensions;
@@ -89,85 +90,24 @@ namespace CrytonCoreNext.PDF.Models
             return stringBuilder.ToString();
         }
 
-        private static BitmapImage GetImage(IPageReader pageReader)
+        private static WriteableBitmap GetImage(IPageReader pageReader)
         {
-            var memoryStream = new MemoryStream();
-            var bitmap = new BitmapImage();
-            var bgrBytes = pageReader.GetImage(RenderFlags.LimitImageCacheSize); // Returns image bytes as B-G-R-A ordered list.
+            var bgrBytes = pageReader.GetImage(RenderFlags.LimitImageCacheSize);
             var width = pageReader.GetPageWidth();
             var height = pageReader.GetPageHeight();
-            var mat8UC = new Mat(height, width, MatType.CV_8UC4, bgrBytes);
 
-            var nativeSplitted = Cv2.Split(mat8UC);
-            var matOut = new Mat();
+            using var bgraMat = new Mat(height, width, MatType.CV_8UC4, bgrBytes);
+            using var matOut = new Mat();
+
+            var nativeSplitted = Cv2.Split(bgraMat);
             Cv2.Merge(new[] { nativeSplitted[3] }, matOut);
-            Mat inversed = new Scalar(255) - matOut;
+            using Mat inversed = new Scalar(255) - matOut;
 
-            var bgr = new Mat();
-            var add = new Mat();
-            Cv2.CvtColor(mat8UC, bgr, ColorConversionCodes.BGRA2BGR);
+            using var add = new Mat();
+            Cv2.CvtColor(bgraMat, bgraMat, ColorConversionCodes.BGRA2BGR);
             Cv2.CvtColor(inversed, inversed, ColorConversionCodes.GRAY2BGR);
-            Cv2.Add(bgr, inversed, add);
-            Cv2.ImWrite("C:\\Users\\Adam Poler\\Desktop\\PDFTEST\\ADD.png", add);
-
-
-            var rgbaBytes = RearrangeBytesToRGBA(bgrBytes);
-            ClearArray(bgrBytes);
-            var pixelReadSettings = new PixelReadSettings(width, height, StorageType.Char, PixelMapping.RGBA);
-            using var imgOverlay = new MagickImage(rgbaBytes, pixelReadSettings);
-            ClearArray(rgbaBytes);
-            using var imgBackdrop = new MagickImage(MagickColors.White, width, height);
-            imgBackdrop.Composite(imgOverlay, CompositeOperator.Over);
-            imgBackdrop.Write(memoryStream, MagickFormat.Bmp);
-            imgBackdrop.Dispose();
-            imgOverlay.Dispose();
-
-            bitmap.BeginInit();
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            memoryStream.Seek(0, SeekOrigin.Begin);
-            bitmap.StreamSource = memoryStream;
-            bitmap.EndInit();
-            bitmap.Freeze();
-            memoryStream.Dispose();
-            memoryStream = null;
-            return bitmap;
-        }
-
-        private static void ClearArray(byte[]? array)
-        {
-            if (array == null)
-            {
-                return;
-            }
-            Array.Clear(array, 0, array.Length);
-        }
-
-        private static byte[] RearrangeBytesToRGBA(byte[] BGRABytes)
-        {
-            var max = BGRABytes.Length;
-            var RGBABytes = new byte[max];
-            var idx = 0;
-            byte r;
-            byte g;
-            byte b;
-            byte a;
-            while (idx < max)
-            {
-                // get colors in original order: B G R A
-                b = BGRABytes[idx];
-                g = BGRABytes[idx + 1];
-                r = BGRABytes[idx + 2];
-                a = BGRABytes[idx + 3];
-
-                // re-arrange to be in new order: R G B A
-                RGBABytes[idx] = r;
-                RGBABytes[idx + 1] = g;
-                RGBABytes[idx + 2] = b;
-                RGBABytes[idx + 3] = a;
-
-                idx += 4;
-            }
-            return RGBABytes;
+            Cv2.Add(bgraMat, inversed, add);
+            return add.ToWriteableBitmap();
         }
     }
 }

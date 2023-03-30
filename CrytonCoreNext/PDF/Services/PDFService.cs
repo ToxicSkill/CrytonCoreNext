@@ -19,15 +19,15 @@ namespace CrytonCoreNext.PDF.Services
             _pdfReader = pdfReader;
         }
 
-        public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
-        {
-            await foreach (var image in _pdfManager.LoadAllPDFImages(pdfFile))
-            {
-                yield return image;
-            }
-        }
+        //public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
+        //{
+        //    await foreach (var image in _pdfManager.LoadAllPDFImages(pdfFile))
+        //    {
+        //        yield return image;
+        //    }
+        //}
 
-        public BitmapImage LoadImage(PDFFile pdfFile)
+        public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
             return _pdfManager.LoadImage(pdfFile);
         }

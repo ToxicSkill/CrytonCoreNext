@@ -42,7 +42,7 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnSelectedFileChanged(PDFFile value)
         {
-            value.PageImage = new WriteableBitmap(_pdfService.LoadImage(value));
+            value.PageImage = _pdfService.LoadImage(value);
         }
 
         [RelayCommand]
