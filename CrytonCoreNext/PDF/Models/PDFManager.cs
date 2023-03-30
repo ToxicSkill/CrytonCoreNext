@@ -97,25 +97,20 @@ namespace CrytonCoreNext.PDF.Models
             var width = pageReader.GetPageWidth();
             var height = pageReader.GetPageHeight();
             var mat8UC = new Mat(height, width, MatType.CV_8UC4, bgrBytes);
-            //Cv2.CvtColor(mat8UC, mat8UC, ColorConversionCodes.BGRA2RGBA);
-            Mat whiteBackground = new Mat(new Size(width, height), MatType.CV_8UC4, Scalar.White);
 
-            // Create a new Mat object for the output image
-            Mat outputImage = new Mat();
+            var nativeSplitted = Cv2.Split(mat8UC);
+            var matOut = new Mat();
+            Cv2.Merge(new[] { nativeSplitted[3] }, matOut);
+            Mat inversed = new Scalar(255) - matOut;
 
-            // Set the opacity of the overlay image (between 0 and 1)
-            double opacity = 0.5;
-
-            // Split the overlay image into separate channels
             var bgr = new Mat();
-            var rgb = new Mat();
-            var bgra = new Mat();
+            var add = new Mat();
             Cv2.CvtColor(mat8UC, bgr, ColorConversionCodes.BGRA2BGR);
-            Cv2.CvtColor(mat8UC, rgb, ColorConversionCodes.BGRA2RGB);
-            Cv2.CvtColor(bgr, bgra, ColorConversionCodes.BGR2BGRA);
-            Cv2.ImWrite("C:\\Users\\gizmo\\OneDrive\\Pulpit\\Stuff\\Test\\BGR.png", bgr);
-            Cv2.ImWrite("C:\\Users\\gizmo\\OneDrive\\Pulpit\\Stuff\\Test\\RGB.png", rgb);
-            Cv2.ImWrite("C:\\Users\\gizmo\\OneDrive\\Pulpit\\Stuff\\Test\\BGRA.png", bgra);
+            Cv2.CvtColor(inversed, inversed, ColorConversionCodes.GRAY2BGR);
+            Cv2.Add(bgr, inversed, add);
+            Cv2.ImWrite("C:\\Users\\Adam Poler\\Desktop\\PDFTEST\\ADD.png", add);
+
+
             var rgbaBytes = RearrangeBytesToRGBA(bgrBytes);
             ClearArray(bgrBytes);
             var pixelReadSettings = new PixelReadSettings(width, height, StorageType.Char, PixelMapping.RGBA);
