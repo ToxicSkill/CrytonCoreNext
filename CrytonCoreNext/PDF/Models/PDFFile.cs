@@ -3,10 +3,9 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Enums;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
-using System;
-using System.Reflection.Emit;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.PDF.Models
 {
@@ -15,6 +14,10 @@ namespace CrytonCoreNext.PDF.Models
         private byte[] _password;
 
         private byte[] _entropy;
+
+        private WriteableBitmap _image;
+
+        public WriteableBitmap PageImage { get => _image; set { _image = value; NotifyPropertyChanged(); } }
 
         public PdfVersion Version { get; set; }
 
@@ -38,12 +41,12 @@ namespace CrytonCoreNext.PDF.Models
             PdfStatus = pdfStatus;
         }
 
-        public PDFFile(File file, 
-            PdfVersion version, 
-            IDocReader reader, 
+        public PDFFile(File file,
+            PdfVersion version,
+            IDocReader reader,
             EPdfStatus pdfStatus,
-            string password, 
-            double dimensions, 
+            string password,
+            double dimensions,
             int numberOfPages) : base(file)
         {
             Version = version;

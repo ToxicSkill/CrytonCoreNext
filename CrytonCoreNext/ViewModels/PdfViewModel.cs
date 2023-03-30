@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Wpf.Ui.Mvvm.Contracts;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
 
@@ -27,7 +28,7 @@ namespace CrytonCoreNext.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Files))]
-        public File selectedFile;
+        public PDFFile selectedFile;
 
         public PdfViewModel(IPDFService pdfService,
             IFileService fileService,
@@ -37,6 +38,11 @@ namespace CrytonCoreNext.ViewModels
             _snackbarService = snackbarService;
             _pdfService = pdfService;
             files = new();
+        }
+
+        partial void OnSelectedFileChanged(PDFFile value)
+        {
+            value.PageImage = new WriteableBitmap(_pdfService.LoadImage(value));
         }
 
         [RelayCommand]
@@ -65,8 +71,8 @@ namespace CrytonCoreNext.ViewModels
             {
                 _snackbarService.Show("Warning",
                     (protectedFile.Count > 1 ?
-                    $"{protectedFile.Count} of {protectedFile.Count + files.Count} loaded files":
-                    "One file")+ " require password",
+                    $"{protectedFile.Count} of {protectedFile.Count + files.Count} loaded files" :
+                    "One file") + " require password",
                     Wpf.Ui.Common.SymbolRegular.Warning20,
                     Wpf.Ui.Common.ControlAppearance.Caution);
             }

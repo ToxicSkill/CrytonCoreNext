@@ -3,6 +3,8 @@ using Docnet.Core;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
 using ImageMagick;
+using MethodTimer;
+using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,6 +33,19 @@ namespace CrytonCoreNext.PDF.Models
                     return GetImage(pageReader);
                 });
             }
+        }
+
+        [Time]
+        public BitmapImage LoadImage(PDFFile pdfFile)
+        {
+            using IDocLib pdfLibrary = DocLib.Instance;
+            var dimensions = pdfFile.Dimensions;
+            var reader = pdfFile.Password.Equals(string.Empty) ?
+                pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
+                pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
+            using var docReader = reader;
+            using var pageReader = docReader.GetPageReader(pdfFile.LastPage);
+            return GetImage(pageReader);
         }
 
         public async Task<CrytonCoreNext.Models.File> Merge(List<PDFFile> pdfFiles)
@@ -79,10 +94,30 @@ namespace CrytonCoreNext.PDF.Models
             var memoryStream = new MemoryStream();
             var bitmap = new BitmapImage();
             var bgrBytes = pageReader.GetImage(RenderFlags.LimitImageCacheSize); // Returns image bytes as B-G-R-A ordered list.
-            var rgbaBytes = RearrangeBytesToRGBA(bgrBytes);
-            ClearArray(bgrBytes);
             var width = pageReader.GetPageWidth();
             var height = pageReader.GetPageHeight();
+            var mat8UC = new Mat(height, width, MatType.CV_8UC4, bgrBytes);
+            //Cv2.CvtColor(mat8UC, mat8UC, ColorConversionCodes.BGRA2RGBA);
+            Mat whiteBackground = new Mat(new Size(width, height), MatType.CV_8UC4, Scalar.White);
+
+            // Create a new Mat object for the output image
+            Mat outputImage = new Mat();
+
+            // Set the opacity of the overlay image (between 0 and 1)
+            double opacity = 0.5;
+
+            // Split the overlay image into separate channels
+            var bgr = new Mat();
+            var rgb = new Mat();
+            var bgra = new Mat();
+            Cv2.CvtColor(mat8UC, bgr, ColorConversionCodes.BGRA2BGR);
+            Cv2.CvtColor(mat8UC, rgb, ColorConversionCodes.BGRA2RGB);
+            Cv2.CvtColor(bgr, bgra, ColorConversionCodes.BGR2BGRA);
+            Cv2.ImWrite("C:\\Users\\gizmo\\OneDrive\\Pulpit\\Stuff\\Test\\BGR.png", bgr);
+            Cv2.ImWrite("C:\\Users\\gizmo\\OneDrive\\Pulpit\\Stuff\\Test\\RGB.png", rgb);
+            Cv2.ImWrite("C:\\Users\\gizmo\\OneDrive\\Pulpit\\Stuff\\Test\\BGRA.png", bgra);
+            var rgbaBytes = RearrangeBytesToRGBA(bgrBytes);
+            ClearArray(bgrBytes);
             var pixelReadSettings = new PixelReadSettings(width, height, StorageType.Char, PixelMapping.RGBA);
             using var imgOverlay = new MagickImage(rgbaBytes, pixelReadSettings);
             ClearArray(rgbaBytes);

@@ -10,6 +10,8 @@ namespace CrytonCoreNext.PDF.Interfaces
     {
         IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile);
 
+        BitmapImage LoadImage(PDFFile pdfFile);
+
         Task<File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId);
 
         Task<File> Merge(List<PDFFile> pdfFiles);

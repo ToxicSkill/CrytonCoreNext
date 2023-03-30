@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace CrytonCoreNext.Models
 {
-    public class File
+    public class File : INotifyPropertyChanged
     {
         public string Name { get; init; }
 
@@ -21,6 +23,8 @@ namespace CrytonCoreNext.Models
         public byte[] Bytes { get; set; }
 
         public Guid Guid { get; init; } = Guid.NewGuid();
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public File(string name, string path, string size, DateTime date, string extension, int id, byte[] bytes)
         {
@@ -53,6 +57,11 @@ namespace CrytonCoreNext.Models
             Extension = file.Extension;
             Id = file.Id;
             Bytes = file.Bytes;
+        }
+
+        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

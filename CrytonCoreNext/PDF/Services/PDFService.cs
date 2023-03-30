@@ -27,6 +27,11 @@ namespace CrytonCoreNext.PDF.Services
             }
         }
 
+        public BitmapImage LoadImage(PDFFile pdfFile)
+        {
+            return _pdfManager.LoadImage(pdfFile);
+        }
+
         public async Task<File> Merge(List<PDFFile> pdfFiles)
         {
             return await _pdfManager.Merge(pdfFiles);
