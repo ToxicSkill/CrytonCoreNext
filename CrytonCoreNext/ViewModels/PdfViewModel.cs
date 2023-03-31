@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 using Wpf.Ui.Mvvm.Contracts;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
 
@@ -27,8 +26,15 @@ namespace CrytonCoreNext.ViewModels
         public ObservableCollection<PDFFile> files;
 
         [ObservableProperty]
+        public ObservableCollection<ImageFile> imageFiles;
+
+        [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Files))]
-        public PDFFile selectedFile;
+        public PDFFile selectedPdfFile;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ImageFiles))]
+        public ImageFile selectedImageFile;
 
         public PdfViewModel(IPDFService pdfService,
             IFileService fileService,
@@ -38,15 +44,16 @@ namespace CrytonCoreNext.ViewModels
             _snackbarService = snackbarService;
             _pdfService = pdfService;
             files = new();
+            imageFiles = new();
         }
 
-        partial void OnSelectedFileChanged(PDFFile value)
+        partial void OnSelectedPdfFileChanged(PDFFile value)
         {
             value.PageImage = _pdfService.LoadImage(value);
         }
 
         [RelayCommand]
-        private new async Task LoadFiles()
+        private new async Task LoadPdfFiles()
         {
             Lock();
             var protectedFile = new List<File>();
@@ -61,11 +68,11 @@ namespace CrytonCoreNext.ViewModels
                 {
                     protectedFile.Add(file);
                 }
-                SelectedFile = Files.Last();
+                SelectedPdfFile = Files.Last();
             }
-            if (SelectedFile == null && Files.Any())
+            if (SelectedPdfFile == null && Files.Any())
             {
-                SelectedFile = Files.First();
+                SelectedPdfFile = Files.First();
             }
             if (protectedFile.Any())
             {
@@ -75,6 +82,23 @@ namespace CrytonCoreNext.ViewModels
                     "One file") + " require password",
                     Wpf.Ui.Common.SymbolRegular.Warning20,
                     Wpf.Ui.Common.ControlAppearance.Caution);
+            }
+            Unlock();
+        }
+
+
+        [RelayCommand]
+        private new async Task LoadImageFiles()
+        {
+            Lock();
+            await foreach (var imageFile in base.LoadFiles(Static.Extensions.DialogFilters.Images))
+            {
+                ImageFiles.Add(new ImageFile(imageFile));
+                SelectedImageFile = ImageFiles.Last();
+            }
+            if (SelectedImageFile == null && ImageFiles.Any())
+            {
+                SelectedImageFile = ImageFiles.First();
             }
             Unlock();
         }

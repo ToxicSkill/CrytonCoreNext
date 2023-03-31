@@ -29,14 +29,14 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    <ui:Button Height="50" Content="Add" Command="{Binding LoadFilesCommand}" VerticalAlignment="Top"/>
+                    <ui:Button Height="50" Content="Add" Command="{Binding LoadPdfFilesCommand}" VerticalAlignment="Top"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
-                            <ListView ItemsSource="{Binding Files, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFile}">
+                            <ListView ItemsSource="{Binding Files, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPdfFile}">
                                 <ListView.Template>
                                     <ControlTemplate TargetType="ListBox">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -75,7 +75,7 @@
                                 </ListView.ItemTemplate>
                             </ListView>
                         </ScrollViewer>
-                        <Image Grid.Column="1" Source="{Binding SelectedFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Image Grid.Column="1" Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </Grid>
             </TabItem>
@@ -97,13 +97,60 @@
                 </TabItem.Header>
 
             </TabItem>
-            <TabItem Content="Convert">
+            <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Margin="0,0,6,0" Symbol="ArrowSync20" FontSize="{StaticResource G_NormalFontSize}" />
                         <TextBlock Text="Convert" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
                     </StackPanel>
                 </TabItem.Header>
+                <Grid>
+                    <ui:Button Height="50" Content="Load images" Command="{Binding LoadImageFilesCommand}" VerticalAlignment="Top"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
+                            <ListView ItemsSource="{Binding ImageFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedImageFile}">
+                                <ListView.Template>
+                                    <ControlTemplate TargetType="ListBox">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
+                                            <ItemsPresenter/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ListView.Template>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate DataType="models:CryptFile">
+                                        <Grid Height="40">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="20"/>
+                                                <RowDefinition Height="20"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
+                                                FontSize="13"
+                                                FontWeight="Medium"
+                                                TextWrapping="WrapWithOverflow"
+                                                Text="{Binding NameWithExtension}"/>
+                                            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <TextBlock  FontSize="12" Text="Pages: "/>
+                                                <TextBlock  FontSize="12" Text="{Binding Date}"/>
+                                            </StackPanel>
+                                            <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Text="{Binding Size}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                        <Image Grid.Column="1" Margin="10" Source="{Binding SelectedImageFile.Bitmap}"/>
+                    </Grid>
+                </Grid>
 
             </TabItem>
         </TabControl>

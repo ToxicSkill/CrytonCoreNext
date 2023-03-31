@@ -63,6 +63,15 @@ namespace CrytonCoreNext.ViewModels
                 Content = "Settings",
                 PageType = typeof(SettingsView)
             });
+
+            FooterItems.Add(new NavigationItem()
+            {
+                Icon = SymbolRegular.ArrowExit20,
+                PageTag = "exit",
+                Cache = false,
+                Content = "Quit",
+                Command = ExitCommand
+            });
         }
 
         [RelayCommand]

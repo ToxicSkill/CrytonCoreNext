@@ -2,13 +2,10 @@
 using Docnet.Core;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
-using ImageMagick;
 using MethodTimer;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +38,7 @@ namespace CrytonCoreNext.PDF.Models
         {
             using IDocLib pdfLibrary = DocLib.Instance;
             var dimensions = pdfFile.Dimensions;
-            var reader = pdfFile.Password.Equals(string.Empty) ?
+            using var reader = pdfFile.Password.Equals(string.Empty) ?
                 pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
                 pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
             using var docReader = reader;
