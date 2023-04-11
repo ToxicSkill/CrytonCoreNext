@@ -15,12 +15,12 @@
     <ui:UiPage.Resources>
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
+            <c:ReverseCollectionToVisibilityConverter x:Key="ReverseCollectionToVisibilityConverter"/>
         </ResourceDictionary>
     </ui:UiPage.Resources>
 
     <Grid>
-        <Frame x:Name="Background" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TabControl Margin="0, 20, 0, 0">
+        <TabControl Margin="0, 20, 0, 0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <TabItem >
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -29,7 +29,6 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    <ui:Button Height="50" Content="Add" Command="{Binding LoadPdfFilesCommand}" VerticalAlignment="Top"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -154,5 +153,41 @@
 
             </TabItem>
         </TabControl>
+        <Grid Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <Frame x:Name="Background" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Grid.Column="1" FontSize="84" Text="PDF Manager" FontFamily="Candara Light"/>
+                <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="22" Text="Simple document manager" FontWeight="UltraLight" FontFamily="Candara Light"/>
+            </StackPanel>
+
+            <ui:Button VerticalAlignment="Center" HorizontalAlignment="Center" Margin="600,20,0,0" Cursor="Hand"
+                       Width="80" Height="80" Icon="Add20" FontSize="54" ToolTip="Load files"
+                       Command="{Binding LoadPdfFilesCommand}"/>
+
+            <!--<ui:Button Grid.Row="1" Icon="Add20" 
+                       Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                       Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" 
+                       Appearance="Primary" HorizontalAlignment="Stretch" Cursor="Hand" />-->
+            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20">
+                <TextBlock
+                    FontSize="{StaticResource G_NormalFontSize}"
+                    FontWeight="UltraLight"
+                    Text="Learn more" />
+                <ui:Hyperlink
+                    Margin="8,8,0,0"
+                    Padding="4"
+                    Content="GitHub"
+                    Icon="Empty"
+                    NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
+                    ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
+                <ui:Hyperlink
+                    Margin="8,0,0,0"
+                    Padding="4"
+                    Content="Portable Document Format (PDF)"
+                    Icon="Empty"
+                    NavigateUri="https://en.wikipedia.org/wiki/PDF"
+                    ToolTip="https://en.wikipedia.org/wiki/PDF" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </ui:UiPage>

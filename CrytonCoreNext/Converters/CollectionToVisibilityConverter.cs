@@ -10,8 +10,7 @@ namespace CrytonCoreNext.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var files = value as ICollection;
-            if (files == null)
+            if (value is not ICollection files)
             {
                 return Visibility.Collapsed;
             }
