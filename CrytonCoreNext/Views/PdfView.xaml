@@ -29,6 +29,7 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
+                    <ui:Button Height="50" Content="Add" Command="{Binding LoadPdfFilesCommand}" VerticalAlignment="Top"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
