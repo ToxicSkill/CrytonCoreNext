@@ -28,8 +28,12 @@
                         <TextBlock Text="Manage" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
                     </StackPanel>
                 </TabItem.Header>
-                <Grid>
-                    <ui:Button Height="50" Content="Add" Command="{Binding LoadPdfFilesCommand}" VerticalAlignment="Top"/>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Add20" Command="{Binding LoadPdfFilesCommand}" Content="Add" Margin="3,3" Appearance="Secondary" HorizontalAlignment="Stretch" />
+                        <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Save20" Command="{Binding SaveCryptFileCommand}" Content="Save" Margin="3,3" Appearance="Secondary" HorizontalAlignment="Right" />
+                        <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Delete20" Command="{Binding DeleteFileCommand}" Content="Delete" Margin="3,3" Appearance="Secondary" HorizontalAlignment="Right" />
+                    </StackPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -77,7 +81,7 @@
                         </ScrollViewer>
                         <Image Grid.Column="1" Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
-                </Grid>
+                </StackPanel>
             </TabItem>
             <TabItem Content="Merge">
                 <TabItem.Header>

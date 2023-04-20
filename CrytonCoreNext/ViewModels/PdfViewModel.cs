@@ -55,6 +55,17 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
+        private void DeleteFile()
+        {
+            var oldIndex = Files.IndexOf(SelectedPdfFile);
+            Files.Remove(SelectedPdfFile);
+            if (Files.Any())
+            {
+                SelectedPdfFile = Files.ElementAt(oldIndex > 0 ? --oldIndex : oldIndex);
+            }
+        }
+
+        [RelayCommand]
         private new async Task LoadPdfFiles()
         {
             Lock();
