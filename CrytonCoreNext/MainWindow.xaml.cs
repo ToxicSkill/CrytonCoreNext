@@ -55,5 +55,18 @@ namespace CrytonCoreNext
                 this.DragMove();
             }
         }
+
+        private void SymbolIcon_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var actualState = WindowState;
+            if (actualState == System.Windows.WindowState.Maximized)
+            {
+                this.WindowState = System.Windows.WindowState.Normal;
+            }
+            else if (actualState == System.Windows.WindowState.Normal)
+            {
+                this.WindowState = System.Windows.WindowState.Maximized;
+            }
+        }
     }
 }

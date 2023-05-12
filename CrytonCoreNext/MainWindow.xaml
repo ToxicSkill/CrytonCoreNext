@@ -90,6 +90,7 @@
         <ui:SymbolIcon Symbol="GridDots20" HorizontalAlignment="Right"
                        VerticalAlignment="Top" Margin="10" 
                        ContextMenu="{StaticResource contextMenu}"
-                       MouseDown="SymbolIcon_MouseDown"/>
+                       MouseDown="SymbolIcon_MouseDown"
+                       MouseDoubleClick="SymbolIcon_MouseDoubleClick"/>
     </Grid>
 </ui:UiWindow>
