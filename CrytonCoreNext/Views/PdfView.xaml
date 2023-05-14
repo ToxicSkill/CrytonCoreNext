@@ -28,13 +28,17 @@
                         <TextBlock Text="Manage" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
                     </StackPanel>
                 </TabItem.Header>
-                <StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
                         <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Add20" Command="{Binding LoadPdfFilesCommand}" Content="Add" Margin="3,3" Appearance="Secondary" HorizontalAlignment="Stretch" />
                         <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Save20" Command="{Binding SaveCryptFileCommand}" Content="Save" Margin="3,3" Appearance="Secondary" HorizontalAlignment="Right" />
                         <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Delete20" Command="{Binding DeleteFileCommand}" Content="Delete" Margin="3,3" Appearance="Secondary" HorizontalAlignment="Right" />
                     </StackPanel>
-                    <Grid>
+                    <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="2*"/>
@@ -79,9 +83,10 @@
                                 </ListView.ItemTemplate>
                             </ListView>
                         </ScrollViewer>
-                        <Image Grid.Column="1" Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Image Grid.Column="1" Margin="10" Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                               Stretch="Uniform"/>
                     </Grid>
-                </StackPanel>
+                </Grid>
             </TabItem>
             <TabItem Content="Merge">
                 <TabItem.Header>
