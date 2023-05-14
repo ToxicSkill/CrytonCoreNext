@@ -24,13 +24,13 @@ namespace CrytonCoreNext.ViewModels
         public string pdfPassword;
 
         [ObservableProperty]
-        public ObservableCollection<PDFFile> files;
+        public ObservableCollection<PDFFile> pdfFiles;
 
         [ObservableProperty]
         public ObservableCollection<ImageFile> imageFiles;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Files))]
+        [NotifyPropertyChangedFor(nameof(PdfFiles))]
         public PDFFile selectedPdfFile;
 
         [ObservableProperty]
@@ -43,7 +43,7 @@ namespace CrytonCoreNext.ViewModels
             ISnackbarService snackbarService) : base(fileService, dialogService, snackbarService)
         {
             _pdfService = pdfService;
-            files = new();
+            pdfFiles = new();
             imageFiles = new();
         }
 
@@ -58,11 +58,11 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void DeleteFile()
         {
-            var oldIndex = Files.IndexOf(SelectedPdfFile);
-            Files.Remove(SelectedPdfFile);
-            if (Files.Any())
+            var oldIndex = PdfFiles.IndexOf(SelectedPdfFile);
+            PdfFiles.Remove(SelectedPdfFile);
+            if (PdfFiles.Any())
             {
-                SelectedPdfFile = Files.ElementAt(oldIndex > 0 ? --oldIndex : oldIndex);
+                SelectedPdfFile = PdfFiles.ElementAt(oldIndex > 0 ? --oldIndex : oldIndex);
             }
         }
 
@@ -103,7 +103,7 @@ namespace CrytonCoreNext.ViewModels
                 var pdfFile = _pdfService.ReadPdf(file);
                 if (pdfFile != null)
                 {
-                    Files.Add(pdfFile);
+                    PdfFiles.Add(pdfFile);
                 }
                 if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected)
                 {
@@ -113,17 +113,17 @@ namespace CrytonCoreNext.ViewModels
                 {
                     damagedFilesCount++;
                 }
-                SelectedPdfFile = Files.Last();
+                SelectedPdfFile = PdfFiles.Last();
             }
-            if (SelectedPdfFile == null && Files.Any())
+            if (SelectedPdfFile == null && PdfFiles.Any())
             {
-                SelectedPdfFile = Files.First();
+                SelectedPdfFile = PdfFiles.First();
             }
             if (protectedFilesCount > 0 && damagedFilesCount == 0)
             {
                 PostSnackbar("Warning",
                     (protectedFilesCount > 1 ?
-                    $"{protectedFilesCount} of {protectedFilesCount + files.Count} loaded files" :
+                    $"{protectedFilesCount} of {protectedFilesCount + pdfFiles.Count} loaded files" :
                     "One file") + " requires password",
                     Wpf.Ui.Common.SymbolRegular.Warning20,
                     Wpf.Ui.Common.ControlAppearance.Caution);
@@ -132,7 +132,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 PostSnackbar("Warning",
                     (protectedFilesCount > 1 ?
-                    $"{protectedFilesCount} of {protectedFilesCount + files.Count} loaded files" :
+                    $"{protectedFilesCount} of {protectedFilesCount + pdfFiles.Count} loaded files" :
                     "One file") + " is damaged",
                     Wpf.Ui.Common.SymbolRegular.Warning20,
                     Wpf.Ui.Common.ControlAppearance.Caution);
@@ -196,9 +196,9 @@ namespace CrytonCoreNext.ViewModels
         private void RefreshCollection()
         {
             var oldFile = SelectedPdfFile;
-            var oldIndex = Files.IndexOf(SelectedPdfFile);
-            Files.Remove(SelectedPdfFile);
-            Files.Insert(oldIndex, oldFile);
+            var oldIndex = PdfFiles.IndexOf(SelectedPdfFile);
+            PdfFiles.Remove(SelectedPdfFile);
+            PdfFiles.Insert(oldIndex, oldFile);
             SelectedPdfFile = oldFile;
         }
 

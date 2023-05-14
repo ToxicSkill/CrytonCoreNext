@@ -22,7 +22,7 @@
 
     <Grid>
         <TabControl Margin="0, 20, 0, 0" SelectionChanged="TabControl_SelectionChanged"
-                    Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -46,22 +46,22 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
-                            <ui:Button Grid.Column="0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <ui:Button Grid.Column="0" Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                        Icon="Add20" Command="{Binding LoadPdfFilesCommand}" 
                                        Content="Add" Margin="3,3" 
                                        Appearance="Secondary" 
                                        HorizontalAlignment="Left" />
-                            <ui:Button Grid.Column="1" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <ui:Button Grid.Column="1" Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                        Icon="Save20" Command="{Binding SaveCryptFileCommand}" 
                                        Content="Save" Margin="3,3" 
                                        Appearance="Secondary" HorizontalAlignment="Left" />
-                            <ui:Button Grid.Column="2" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <ui:Button Grid.Column="2" Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                        Icon="Delete20" Command="{Binding DeleteFileCommand}" 
                                        Content="Delete" Margin="3,3" 
                                        Appearance="Secondary" HorizontalAlignment="Right" />
                         </Grid>
                         <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
-                            <ListView ItemsSource="{Binding Files, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPdfFile}" SelectionChanged="ListView_SelectionChanged">
+                            <ListView ItemsSource="{Binding PdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPdfFile}" SelectionChanged="ListView_SelectionChanged">
                                 <ListView.Template>
                                     <ControlTemplate TargetType="ListBox">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -134,7 +134,7 @@
                     </StackPanel>
                 </TabItem.Header>
                 <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
-                    <ListView ItemsSource="{Binding Files, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPdfFile}" SelectionChanged="ListView_SelectionChanged">
+                    <ListView ItemsSource="{Binding PdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPdfFile}" SelectionChanged="ListView_SelectionChanged">
                         <ListView.Template>
                             <ControlTemplate TargetType="ListBox">
                                 <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -239,8 +239,8 @@
 
             </TabItem>
         </TabControl>
-        <Grid Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-            <Frame x:Name="Background" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Grid Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <Frame x:Name="Background" Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Grid.Column="1" FontSize="84" Text="PDF Manager" FontFamily="Candara Light"/>
                 <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="22" Text="Simple document manager" FontWeight="UltraLight" FontFamily="Candara Light"/>
@@ -251,7 +251,7 @@
                        Command="{Binding LoadPdfFilesCommand}"/>
 
             <!--<ui:Button Grid.Row="1" Icon="Add20" 
-                       Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                       Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                        Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" 
                        Appearance="Primary" HorizontalAlignment="Stretch" Cursor="Hand" />-->
             <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20">
