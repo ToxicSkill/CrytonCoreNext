@@ -35,6 +35,8 @@ namespace CrytonCoreNext.PDF.Models
 
         public int LastPage { get; set; } = 0;
 
+        public bool IsOpened { get; set; }
+
         public PDFFile(File file,
             EPdfStatus pdfStatus) : base(file)
         {
@@ -55,6 +57,7 @@ namespace CrytonCoreNext.PDF.Models
             Password = password;
             Dimensions = dimensions;
             NumberOfPages = numberOfPages;
+            IsOpened = PdfStatus == EPdfStatus.Opened;
         }
 
         private void Protect(string password)

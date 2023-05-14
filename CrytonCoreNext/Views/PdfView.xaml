@@ -16,12 +16,14 @@
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
             <c:ReverseCollectionToVisibilityConverter x:Key="ReverseCollectionToVisibilityConverter"/>
+            <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter"/>
         </ResourceDictionary>
     </ui:UiPage.Resources>
 
     <Grid>
-        <TabControl Margin="0, 20, 0, 0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-            <TabItem >
+        <TabControl Margin="0, 20, 0, 0" SelectionChanged="TabControl_SelectionChanged"
+                    Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Margin="0,0,6,0" Symbol="Library20" FontSize="{StaticResource G_NormalFontSize}"/>
@@ -102,7 +104,8 @@
 
                     <StackPanel Grid.Column="1" Margin="0,-100,0,0"
                                 VerticalAlignment="Center" 
-                                HorizontalAlignment="Center">
+                                HorizontalAlignment="Center"
+                                Visibility="{Binding SelectedPdfFile.IsOpened, Converter={StaticResource BoolToVisibilityInversionConverter}}">
                         <Grid>
                             <ui:SymbolIcon Filled="False" FontSize="114" Symbol="Incognito20"/>
                             <ui:SymbolIcon Name="LeftEyeIcon" Filled="True" FontSize="16" 
@@ -121,17 +124,55 @@
                     </StackPanel>
                     <Image Grid.Column="1" Margin="10" Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                Stretch="Uniform"/>
-                    
                 </Grid>
             </TabItem>
-            <TabItem Content="Merge">
+            <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Margin="0,0,6,0" Symbol="Merge20" FontSize="{StaticResource G_NormalFontSize}"/>
                         <TextBlock Text="Merge" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
                     </StackPanel>
                 </TabItem.Header>
-
+                <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
+                    <ListView ItemsSource="{Binding Files, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPdfFile}" SelectionChanged="ListView_SelectionChanged">
+                        <ListView.Template>
+                            <ControlTemplate TargetType="ListBox">
+                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
+                                    <ItemsPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="models:CryptFile">
+                                <Grid Height="40">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="20"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
+                                                FontSize="13"
+                                                FontWeight="Medium"
+                                                TextWrapping="WrapWithOverflow"
+                                                Text="{Binding NameWithExtension}"/>
+                                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                        <TextBlock  FontSize="12" Text="Pages: "/>
+                                        <TextBlock  FontSize="12" Text="{Binding NumberOfPages}"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Text="{Binding Size}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Text="{Binding PdfStatus,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
             </TabItem>
             <TabItem Content="Split">
                 <TabItem.Header>
@@ -140,7 +181,6 @@
                         <TextBlock Text="Split" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
                     </StackPanel>
                 </TabItem.Header>
-
             </TabItem>
             <TabItem>
                 <TabItem.Header>

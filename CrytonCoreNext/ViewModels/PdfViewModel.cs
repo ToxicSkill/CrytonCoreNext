@@ -177,6 +177,7 @@ namespace CrytonCoreNext.ViewModels
             if (SelectedPdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected ||
                 SelectedPdfFile.PdfStatus == PDF.Enums.EPdfStatus.Damaged)
             {
+                SelectedPdfFile.Password = string.Empty;
                 PostSnackbar("Caution",
                     "Incorrect password",
                     Wpf.Ui.Common.SymbolRegular.ErrorCircle20,
@@ -203,22 +204,22 @@ namespace CrytonCoreNext.ViewModels
 
         private static string GetValueFromMetadata(string metadata, string propertyName)
         {
-            int index = metadata.IndexOf(propertyName, StringComparison.Ordinal);
+            var index = metadata.IndexOf(propertyName, StringComparison.Ordinal);
 
             if (index < 0)
             {
                 return string.Empty;
             }
 
-            int startIndex = index + propertyName.Length + 1;
-            int endIndex = metadata.IndexOf('\n', startIndex);
+            var startIndex = index + propertyName.Length + 1;
+            var endIndex = metadata.IndexOf('\n', startIndex);
 
             if (endIndex < 0)
             {
                 endIndex = metadata.Length;
             }
 
-            return metadata.Substring(startIndex, endIndex - startIndex).Trim();
+            return metadata[startIndex..endIndex].Trim();
         }
     }
 }

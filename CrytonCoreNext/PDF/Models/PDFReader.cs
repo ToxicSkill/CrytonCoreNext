@@ -66,6 +66,7 @@ namespace CrytonCoreNext.PDF.Models
 
             pdfFile.Version = reader.GetPdfVersion();
             pdfFile.NumberOfPages = reader.GetPageCount();
+            pdfFile.IsOpened = true;
         }
 
         private PDFFile CreateNewPdfFile(File file, IDocReader? reader, EPdfStatus status)
