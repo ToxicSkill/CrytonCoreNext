@@ -100,10 +100,16 @@
                         </ScrollViewer>
                     </Grid>
 
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <ui:SymbolIcon Filled="False" FontSize="154" Symbol="DocumentPdf20"/>
-                        <ui:PasswordBox Name="PdfPasswordBox" Icon="LockOpen20" 
-                                        PasswordChar="*" PlaceholderText="Password"/>
+                    <StackPanel Grid.Column="1" Margin="0,-100,0,0"
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center">
+                        <Grid>
+                            <ui:SymbolIcon Filled="False" FontSize="114" Symbol="Incognito20"/>
+                            <ui:SymbolIcon Name="LeftEyeIcon" Filled="True" FontSize="16" Symbol="Circle12" HorizontalAlignment="Center" Margin="-51,50,0,0"/>
+                            <ui:SymbolIcon Name="RightEyeIcon" Filled="True" FontSize="16" Symbol="Circle12" HorizontalAlignment="Center" Margin="51,50,0,0"/>
+                        </Grid>
+                        <ui:PasswordBox Name="PdfPasswordBox" Icon="LockOpen20"
+                                        PlaceholderText="Password" PreviewMouseUp="PdfPasswordBox_PreviewMouseUp"/>
                         <ui:Button HorizontalAlignment="Stretch" Content="OK" Margin="0,2" 
                                    Command="{Binding ConfirmPasswordCommand}" Click="Button_Click"/>
                     </StackPanel>
