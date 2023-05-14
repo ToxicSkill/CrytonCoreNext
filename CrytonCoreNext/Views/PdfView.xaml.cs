@@ -17,6 +17,16 @@ namespace CrytonCoreNext.Views
             InitializeComponent();
             DataContext = ViewModel;
             Background.Content = new FluentWaves();
+            PdfPasswordBox.KeyDown += PdfPasswordBox_KeyDown;
+        }
+
+        private void PdfPasswordBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                UpdatePasswordBox();
+                ViewModel.ConfirmPasswordCommand.Execute(null);
+            }
         }
 
         private void UpdatePasswordBox()

@@ -105,8 +105,14 @@
                                 HorizontalAlignment="Center">
                         <Grid>
                             <ui:SymbolIcon Filled="False" FontSize="114" Symbol="Incognito20"/>
-                            <ui:SymbolIcon Name="LeftEyeIcon" Filled="True" FontSize="16" Symbol="Circle12" HorizontalAlignment="Center" Margin="-51,50,0,0"/>
-                            <ui:SymbolIcon Name="RightEyeIcon" Filled="True" FontSize="16" Symbol="Circle12" HorizontalAlignment="Center" Margin="51,50,0,0"/>
+                            <ui:SymbolIcon Name="LeftEyeIcon" Filled="True" FontSize="16" 
+                                           Symbol="Circle12" HorizontalAlignment="Center" Margin="-51,50,0,0"/>
+                            <ui:SymbolIcon Name="RightEyeIcon" Filled="True" FontSize="16" 
+                                           Symbol="Circle12" HorizontalAlignment="Center" Margin="51,50,0,0"/>
+                            <ui:SymbolIcon Filled="True" FontSize="7" 
+                                           Symbol="Circle12" HorizontalAlignment="Center" Margin="-51,55,0,0"/>
+                            <ui:SymbolIcon Filled="True" FontSize="7" 
+                                           Symbol="Circle12" HorizontalAlignment="Center" Margin="51,55,0,0"/>
                         </Grid>
                         <ui:PasswordBox Name="PdfPasswordBox" Icon="LockOpen20"
                                         PlaceholderText="Password" PreviewMouseUp="PdfPasswordBox_PreviewMouseUp"/>

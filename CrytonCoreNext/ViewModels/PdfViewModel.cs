@@ -70,7 +70,8 @@ namespace CrytonCoreNext.ViewModels
         private new async Task LoadPdfFiles()
         {
             Lock();
-            var protectedFile = new List<File>();
+            var protectedFilesCount = 0;
+            var damagedFilesCount = 0;
             await foreach (var file in base.LoadFiles(Static.Extensions.DialogFilters.Pdf))
             {
                 using (var fileStream = System.IO.File.Open(file.Path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
@@ -104,9 +105,13 @@ namespace CrytonCoreNext.ViewModels
                 {
                     Files.Add(pdfFile);
                 }
-                else
+                if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected)
                 {
-                    protectedFile.Add(file);
+                    protectedFilesCount++;
+                }
+                if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Damaged)
+                {
+                    damagedFilesCount++;
                 }
                 SelectedPdfFile = Files.Last();
             }
@@ -114,12 +119,28 @@ namespace CrytonCoreNext.ViewModels
             {
                 SelectedPdfFile = Files.First();
             }
-            if (protectedFile.Any())
+            if (protectedFilesCount > 0 && damagedFilesCount == 0)
             {
                 PostSnackbar("Warning",
-                    (protectedFile.Count > 1 ?
-                    $"{protectedFile.Count} of {protectedFile.Count + files.Count} loaded files" :
-                    "One file") + " require password",
+                    (protectedFilesCount > 1 ?
+                    $"{protectedFilesCount} of {protectedFilesCount + files.Count} loaded files" :
+                    "One file") + " requires password",
+                    Wpf.Ui.Common.SymbolRegular.Warning20,
+                    Wpf.Ui.Common.ControlAppearance.Caution);
+            }
+            else if (damagedFilesCount > 0 && protectedFilesCount == 0)
+            {
+                PostSnackbar("Warning",
+                    (protectedFilesCount > 1 ?
+                    $"{protectedFilesCount} of {protectedFilesCount + files.Count} loaded files" :
+                    "One file") + " is damaged",
+                    Wpf.Ui.Common.SymbolRegular.Warning20,
+                    Wpf.Ui.Common.ControlAppearance.Caution);
+            }
+            else if (damagedFilesCount > 0 && protectedFilesCount > 0)
+            {
+                PostSnackbar("Warning",
+                    "At least one file is protected by password and at least one file is damaged",
                     Wpf.Ui.Common.SymbolRegular.Warning20,
                     Wpf.Ui.Common.ControlAppearance.Caution);
             }
