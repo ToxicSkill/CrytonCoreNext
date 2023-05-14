@@ -27,6 +27,9 @@ namespace CrytonCoreNext.ViewModels
         public ObservableCollection<PDFFile> pdfFiles;
 
         [ObservableProperty]
+        public ObservableCollection<PDFFile> openedPdfFiles;
+
+        [ObservableProperty]
         public ObservableCollection<ImageFile> imageFiles;
 
         [ObservableProperty]
@@ -37,6 +40,9 @@ namespace CrytonCoreNext.ViewModels
         [NotifyPropertyChangedFor(nameof(ImageFiles))]
         public ImageFile selectedImageFile;
 
+        [ObservableProperty]
+        public int selectedTabIndex;
+
         public PdfViewModel(IPDFService pdfService,
             IFileService fileService,
             IDialogService dialogService,
@@ -45,6 +51,23 @@ namespace CrytonCoreNext.ViewModels
             _pdfService = pdfService;
             pdfFiles = new();
             imageFiles = new();
+            openedPdfFiles = new();
+        }
+
+
+        partial void OnSelectedTabIndexChanged(int value)
+        {
+            if (SelectedTabIndex == 1)
+            {
+                OpenedPdfFiles.Clear();
+                foreach (var file in PdfFiles)
+                {
+                    if (file.IsOpened)
+                    {
+                        OpenedPdfFiles.Add(file);
+                    }
+                }
+            }
         }
 
         partial void OnSelectedPdfFileChanged(PDFFile value)

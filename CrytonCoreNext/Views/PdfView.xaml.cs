@@ -50,10 +50,5 @@ namespace CrytonCoreNext.Views
             LeftEyeIcon.Filled = value;
             RightEyeIcon.Filled = value;
         }
-
-        private void TabControl_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

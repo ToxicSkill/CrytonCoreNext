@@ -17,11 +17,12 @@
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
             <c:ReverseCollectionToVisibilityConverter x:Key="ReverseCollectionToVisibilityConverter"/>
             <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter"/>
+            <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         </ResourceDictionary>
     </ui:UiPage.Resources>
 
     <Grid>
-        <TabControl Margin="0, 20, 0, 0" SelectionChanged="TabControl_SelectionChanged"
+        <TabControl Margin="0, 20, 0, 0" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <TabItem>
                 <TabItem.Header>
@@ -134,7 +135,7 @@
                     </StackPanel>
                 </TabItem.Header>
                 <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
-                    <ListView ItemsSource="{Binding PdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPdfFile}" SelectionChanged="ListView_SelectionChanged">
+                    <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}">
                         <ListView.Template>
                             <ControlTemplate TargetType="ListBox">
                                 <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
