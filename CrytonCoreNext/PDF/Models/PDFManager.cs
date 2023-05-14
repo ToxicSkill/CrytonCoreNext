@@ -36,6 +36,10 @@ namespace CrytonCoreNext.PDF.Models
         [Time]
         public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
+            if (pdfFile.PdfStatus == Enums.EPdfStatus.Protected && string.IsNullOrEmpty(pdfFile.Password))
+            {
+                return default;
+            }
             using IDocLib pdfLibrary = DocLib.Instance;
             var dimensions = pdfFile.Dimensions;
             using var reader = pdfFile.Password.Equals(string.Empty) ?

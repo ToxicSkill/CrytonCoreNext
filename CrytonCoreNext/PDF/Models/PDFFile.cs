@@ -70,6 +70,10 @@ namespace CrytonCoreNext.PDF.Models
 
         private string Unprotect()
         {
+            if (_password == null || _entropy == null)
+            {
+                return string.Empty;
+            }
             var bytes = ProtectedData.Unprotect(_password, _entropy, DataProtectionScope.CurrentUser);
             return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
         }

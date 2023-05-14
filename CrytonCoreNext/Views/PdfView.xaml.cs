@@ -18,5 +18,20 @@ namespace CrytonCoreNext.Views
             DataContext = ViewModel;
             Background.Content = new FluentWaves();
         }
+
+        private void UpdatePasswordBox()
+        {
+            ViewModel.PdfPassword = PdfPasswordBox.Password;
+        }
+
+        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            UpdatePasswordBox();
+        }
+
+        private void ListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            PdfPasswordBox.Password = string.Empty;
+        }
     }
 }

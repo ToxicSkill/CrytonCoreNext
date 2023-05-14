@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels" 
+             xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
              xmlns:c="clr-namespace:CrytonCoreNext.Converters"
              d:DataContext="{d:DesignInstance Type=viewmodels:PdfViewModel}"
              d:DesignHeight="890"
@@ -29,22 +29,37 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Add20" Command="{Binding LoadPdfFilesCommand}" Content="Add" Margin="3,3" Appearance="Secondary" HorizontalAlignment="Stretch" />
-                        <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Save20" Command="{Binding SaveCryptFileCommand}" Content="Save" Margin="3,3" Appearance="Secondary" HorizontalAlignment="Right" />
-                        <ui:Button Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Icon="Delete20" Command="{Binding DeleteFileCommand}" Content="Delete" Margin="3,3" Appearance="Secondary" HorizontalAlignment="Right" />
-                    </StackPanel>
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
-                            <ListView ItemsSource="{Binding Files, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPdfFile}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Margin="0,10,0,-40">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ui:Button Grid.Column="0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                       Icon="Add20" Command="{Binding LoadPdfFilesCommand}" 
+                                       Content="Add" Margin="3,3" 
+                                       Appearance="Secondary" 
+                                       HorizontalAlignment="Left" />
+                            <ui:Button Grid.Column="1" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                       Icon="Save20" Command="{Binding SaveCryptFileCommand}" 
+                                       Content="Save" Margin="3,3" 
+                                       Appearance="Secondary" HorizontalAlignment="Left" />
+                            <ui:Button Grid.Column="2" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                       Icon="Delete20" Command="{Binding DeleteFileCommand}" 
+                                       Content="Delete" Margin="3,3" 
+                                       Appearance="Secondary" HorizontalAlignment="Right" />
+                        </Grid>
+                        <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
+                            <ListView ItemsSource="{Binding Files, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPdfFile}" SelectionChanged="ListView_SelectionChanged">
                                 <ListView.Template>
                                     <ControlTemplate TargetType="ListBox">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -83,9 +98,18 @@
                                 </ListView.ItemTemplate>
                             </ListView>
                         </ScrollViewer>
-                        <Image Grid.Column="1" Margin="10" Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                               Stretch="Uniform"/>
                     </Grid>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <ui:SymbolIcon Filled="False" FontSize="154" Symbol="DocumentPdf20"/>
+                        <ui:PasswordBox Name="PdfPasswordBox" Icon="LockOpen20" 
+                                        PasswordChar="*" PlaceholderText="Password"/>
+                        <ui:Button HorizontalAlignment="Stretch" Content="OK" Margin="0,2" 
+                                   Command="{Binding ConfirmPasswordCommand}" Click="Button_Click"/>
+                    </StackPanel>
+                    <Image Grid.Column="1" Margin="10" Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                               Stretch="Uniform"/>
+                    
                 </Grid>
             </TabItem>
             <TabItem Content="Merge">

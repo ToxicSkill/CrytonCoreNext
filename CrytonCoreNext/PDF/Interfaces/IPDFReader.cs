@@ -6,5 +6,7 @@ namespace CrytonCoreNext.PDF.Interfaces
     public interface IPDFReader
     {
         PDFFile ReadPdf(File file, string password = "");
+
+        void UpdatePdfFileInformations(ref PDFFile pdfFile);
     }
 }

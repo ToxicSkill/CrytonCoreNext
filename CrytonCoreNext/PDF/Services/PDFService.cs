@@ -46,5 +46,10 @@ namespace CrytonCoreNext.PDF.Services
         {
             return await _pdfManager.Split(pdfFile, fromPage, toPage, newId);
         }
+
+        public void UpdatePdfFileInformations(ref PDFFile pdfFile)
+        {
+            _pdfReader.UpdatePdfFileInformations(ref pdfFile);
+        }
     }
 }

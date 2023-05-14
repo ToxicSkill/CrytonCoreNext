@@ -17,19 +17,18 @@ namespace CrytonCoreNext.PDF.Models
             using IDocLib pdfLibrary = DocLib.Instance;
             IDocReader? reader = null;
             var status = EPdfStatus.Opened;
+            var dimensions = _dimensions;
 
             if (file.Path.Equals(string.Empty))
             {
                 return CreateNewPdfFile(file, reader, status);
             }
 
-            var dimensions = _dimensions;
             try
             {
                 reader = password.Equals(string.Empty, default) ?
                     pdfLibrary.GetDocReader(file.Bytes, new PageDimensions(dimensions)) :
                     pdfLibrary.GetDocReader(file.Bytes, password, new PageDimensions(dimensions));
-
             }
             catch (DocnetLoadDocumentException)
             {
@@ -41,6 +40,32 @@ namespace CrytonCoreNext.PDF.Models
             }
 
             return CreateNewPdfFile(file, reader, status);
+        }
+
+        public void UpdatePdfFileInformations(ref PDFFile pdfFile)
+        {
+            using IDocLib pdfLibrary = DocLib.Instance;
+            IDocReader? reader = null;
+            pdfFile.Dimensions = _dimensions;
+            try
+            {
+                reader = pdfFile.Password.Equals(string.Empty, default) ?
+                    pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(pdfFile.Dimensions)) :
+                    pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(pdfFile.Dimensions));
+            }
+            catch (DocnetLoadDocumentException)
+            {
+                pdfFile.PdfStatus = EPdfStatus.Protected;
+                return;
+            }
+            catch (DocnetException)
+            {
+                pdfFile.PdfStatus = EPdfStatus.Damaged;
+                return;
+            }
+
+            pdfFile.Version = reader.GetPdfVersion();
+            pdfFile.NumberOfPages = reader.GetPageCount();
         }
 
         private PDFFile CreateNewPdfFile(File file, IDocReader? reader, EPdfStatus status)

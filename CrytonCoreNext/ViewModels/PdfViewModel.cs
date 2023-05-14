@@ -18,11 +18,10 @@ namespace CrytonCoreNext.ViewModels
 {
     public partial class PdfViewModel : InteractiveViewBase
     {
-        private readonly IFileService _fileService;
-
-        private readonly ISnackbarService _snackbarService;
-
         private readonly IPDFService _pdfService;
+
+        [ObservableProperty]
+        public string pdfPassword;
 
         [ObservableProperty]
         public ObservableCollection<PDFFile> files;
@@ -43,7 +42,6 @@ namespace CrytonCoreNext.ViewModels
             IDialogService dialogService,
             ISnackbarService snackbarService) : base(fileService, dialogService, snackbarService)
         {
-            _snackbarService = snackbarService;
             _pdfService = pdfService;
             files = new();
             imageFiles = new();
@@ -51,7 +49,10 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnSelectedPdfFileChanged(PDFFile value)
         {
-            value.PageImage = _pdfService.LoadImage(value);
+            if (value != null)
+            {
+                value.PageImage = _pdfService.LoadImage(value);
+            }
         }
 
         [RelayCommand]
@@ -72,10 +73,6 @@ namespace CrytonCoreNext.ViewModels
             var protectedFile = new List<File>();
             await foreach (var file in base.LoadFiles(Static.Extensions.DialogFilters.Pdf))
             {
-
-
-
-
                 using (var fileStream = System.IO.File.Open(file.Path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
                 {
                     // Read the PDF file into a byte array
@@ -102,8 +99,6 @@ namespace CrytonCoreNext.ViewModels
 
 
 
-
-
                 var pdfFile = _pdfService.ReadPdf(file);
                 if (pdfFile != null)
                 {
@@ -121,7 +116,7 @@ namespace CrytonCoreNext.ViewModels
             }
             if (protectedFile.Any())
             {
-                _snackbarService.Show("Warning",
+                PostSnackbar("Warning",
                     (protectedFile.Count > 1 ?
                     $"{protectedFile.Count} of {protectedFile.Count + files.Count} loaded files" :
                     "One file") + " require password",
@@ -130,7 +125,6 @@ namespace CrytonCoreNext.ViewModels
             }
             Unlock();
         }
-
 
         [RelayCommand]
         private new async Task LoadImageFiles()
@@ -146,6 +140,44 @@ namespace CrytonCoreNext.ViewModels
                 SelectedImageFile = ImageFiles.First();
             }
             Unlock();
+        }
+
+        [RelayCommand]
+        private void ConfirmPassword()
+        {
+            SelectedPdfFile.Password = PdfPassword;
+            UpdateProtectedPdf();
+        }
+
+        private void UpdateProtectedPdf()
+        {
+            SelectedPdfFile.PdfStatus = PDF.Enums.EPdfStatus.Opened;
+            _pdfService.UpdatePdfFileInformations(ref selectedPdfFile);
+            if (SelectedPdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected ||
+                SelectedPdfFile.PdfStatus == PDF.Enums.EPdfStatus.Damaged)
+            {
+                PostSnackbar("Caution",
+                    "Incorrect password",
+                    Wpf.Ui.Common.SymbolRegular.ErrorCircle20,
+                    Wpf.Ui.Common.ControlAppearance.Danger);
+            }
+            else
+            {
+                PostSnackbar("Success",
+                    "Pdf document has been open successfully",
+                    Wpf.Ui.Common.SymbolRegular.Checkmark20,
+                    Wpf.Ui.Common.ControlAppearance.Success);
+                RefreshCollection();
+            }
+        }
+
+        private void RefreshCollection()
+        {
+            var oldFile = SelectedPdfFile;
+            var oldIndex = Files.IndexOf(SelectedPdfFile);
+            Files.Remove(SelectedPdfFile);
+            Files.Insert(oldIndex, oldFile);
+            SelectedPdfFile = oldFile;
         }
 
         private static string GetValueFromMetadata(string metadata, string propertyName)
