@@ -8,6 +8,7 @@ using CrytonCoreNext.PDF.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -97,32 +98,6 @@ namespace CrytonCoreNext.ViewModels
             var damagedFilesCount = 0;
             await foreach (var file in base.LoadFiles(Static.Extensions.DialogFilters.Pdf))
             {
-                using (var fileStream = System.IO.File.Open(file.Path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-                {
-                    // Read the PDF file into a byte array
-                    byte[] buffer = new byte[fileStream.Length];
-                    fileStream.Read(buffer, 0, (int)fileStream.Length);
-
-                    // Search for the start and end of the metadata block
-                    int start = Encoding.ASCII.GetString(buffer).IndexOf("%PDF-", StringComparison.Ordinal);
-                    int end = Encoding.ASCII.GetString(buffer).LastIndexOf("%%EOF", StringComparison.Ordinal);
-
-                    // Extract the metadata block as a string
-                    string metadata = Encoding.ASCII.GetString(buffer, start, end - start);
-
-                    // Search for the metadata properties and extract their values
-                    string author = GetValueFromMetadata(metadata, "/Author");
-                    string title = GetValueFromMetadata(metadata, "/Title");
-                    string subject = GetValueFromMetadata(metadata, "/Subject");
-
-                    // Output the metadata to the console
-                    Console.WriteLine("Author: " + author);
-                    Console.WriteLine("Title: " + title);
-                    Console.WriteLine("Subject: " + subject);
-                }
-
-
-
                 var pdfFile = _pdfService.ReadPdf(file);
                 if (pdfFile != null)
                 {

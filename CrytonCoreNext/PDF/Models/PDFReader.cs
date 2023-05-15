@@ -5,6 +5,13 @@ using Docnet.Core;
 using Docnet.Core.Exceptions;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
+using System.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using iText.Kernel.Pdf;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace CrytonCoreNext.PDF.Models
 {
@@ -39,7 +46,12 @@ namespace CrytonCoreNext.PDF.Models
                 status = EPdfStatus.Damaged;
             }
 
-            return CreateNewPdfFile(file, reader, status);
+            var pdfFile = CreateNewPdfFile(file, reader, status);
+            if (pdfFile.PdfStatus == EPdfStatus.Opened)
+            {
+                GetMetaInfo(ref pdfFile);
+            }
+            return pdfFile;
         }
 
         public void UpdatePdfFileInformations(ref PDFFile pdfFile)
@@ -67,6 +79,46 @@ namespace CrytonCoreNext.PDF.Models
             pdfFile.Version = reader.GetPdfVersion();
             pdfFile.NumberOfPages = reader.GetPageCount();
             pdfFile.IsOpened = true;
+            GetMetaInfo(ref pdfFile);
+        }
+
+        private void GetMetaInfo(ref PDFFile pdfFile)
+        {
+            try
+            {
+                var metaInfoDict = new Dictionary<string, string>();
+                using (var pdfReader = new PdfReader(pdfFile.Path, new ReaderProperties().SetPassword(Encoding.Default.GetBytes(pdfFile.Password))))
+                using (var pdfDocument = new PdfDocument(pdfReader))
+                {
+                    metaInfoDict["PDF.PageCount"] = $"{pdfDocument.GetNumberOfPages():D}";
+                    metaInfoDict["PDF.Version"] = $"{pdfDocument.GetPdfVersion()}";
+
+                    var pdfTrailer = pdfDocument.GetTrailer();
+                    var pdfDictInfo = pdfTrailer.GetAsDictionary(PdfName.Info);
+                    foreach (var pdfEntryPair in pdfDictInfo.EntrySet())
+                    {
+                        var key = "PDF." + pdfEntryPair.Key.ToString().Substring(1);
+                        string value;
+                        switch (pdfEntryPair.Value)
+                        {
+                            case PdfString pdfString:
+                                value = pdfString.ToUnicodeString();
+                                break;
+                            default:
+                                value = pdfEntryPair.Value.ToString();
+                                break;
+                        }
+                        metaInfoDict[key] = value;
+                    }
+                    pdfFile.Metadata = metaInfoDict;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Debugger.IsAttached) Debugger.Break();
+                pdfFile.Metadata = new Dictionary<string, string>()
+                { {"Error", ex.Message} };
+            }
         }
 
         private PDFFile CreateNewPdfFile(File file, IDocReader? reader, EPdfStatus status)

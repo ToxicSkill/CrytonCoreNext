@@ -3,6 +3,7 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Enums;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Media.Imaging;
@@ -34,6 +35,8 @@ namespace CrytonCoreNext.PDF.Models
         public int NumberOfPages { get; set; }
 
         public int LastPage { get; set; } = 0;
+
+        public Dictionary<string, string> Metadata { get; set; }
 
         public bool IsOpened { get; set; }
 
