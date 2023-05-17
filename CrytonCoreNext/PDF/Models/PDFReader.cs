@@ -12,12 +12,29 @@ using System.Threading.Tasks;
 using iText.Kernel.Pdf;
 using System.Runtime.InteropServices;
 using System.Text;
+using Wpf.Ui.Controls;
+using System.Linq;
 
 namespace CrytonCoreNext.PDF.Models
 {
     public class PDFReader : IPDFReader
     {
+        private readonly Dictionary<string, SymbolIcon> _symbolByPDFKey;
+
         private readonly double _dimensions = 1.0d;
+
+        public PDFReader()
+        {
+            _symbolByPDFKey = new Dictionary<string, SymbolIcon>()
+            {
+                { "PDF.Author", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20  } },
+                { "PDF.Creator", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },
+                { "PDF.CreationDate", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20  } },
+                { "PDF.ModDate", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20, Filled=true  } },
+                { "PDF.PageCount", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.DocumentMultiple20  } },
+                { "PDF.Version", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Box20  } }
+            };
+        }
 
         public PDFFile ReadPdf(File file, string password = "")
         {
@@ -110,14 +127,22 @@ namespace CrytonCoreNext.PDF.Models
                         }
                         metaInfoDict[key] = value;
                     }
-                    pdfFile.Metadata = metaInfoDict;
+                    pdfFile.Metadata = new Dictionary<SymbolIcon, string>();
+                    foreach (var key in metaInfoDict.Keys)
+                    {
+                        if (_symbolByPDFKey.ContainsKey(key))
+                        {
+                            pdfFile.Metadata.Add(_symbolByPDFKey[key], metaInfoDict[key]);
+                        }
+                    }
+                    pdfFile.Metadata = pdfFile.Metadata.OrderBy(p => p.Key).ToDictionary(x => x.Key, x => x.Value);
                 }
             }
             catch (Exception ex)
             {
                 if (Debugger.IsAttached) Debugger.Break();
-                pdfFile.Metadata = new Dictionary<string, string>()
-                { {"Error", ex.Message} };
+                pdfFile.Metadata = new ()
+                { { new Wpf.Ui.Controls.SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.ErrorCircle20 }, ex.Message} };
             }
         }
 

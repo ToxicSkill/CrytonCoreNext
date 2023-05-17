@@ -62,7 +62,10 @@
                                        Appearance="Secondary" HorizontalAlignment="Right" />
                         </Grid>
                         <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
-                            <ListView ItemsSource="{Binding PdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedPdfFile}" SelectionChanged="ListView_SelectionChanged">
+                            <ListView ItemsSource="{Binding PdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
+                                      SelectedItem="{Binding SelectedPdfFile}" 
+                                      SelectionChanged="ListView_SelectionChanged"
+                                      ScrollViewer.CanContentScroll="True">
                                 <ListView.Template>
                                     <ControlTemplate TargetType="ListBox">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -100,7 +103,24 @@
                                                 Text="{Binding PdfStatus,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                                 </Grid>
                                             </ui:CardExpander.Header>
-                                            <TextBlock Text="{Binding Metadata}"/>
+                                            <StackPanel>
+                                                <ListView 
+                                                        ItemsSource="{Binding Metadata}" >
+                                                    <ListView.Template>
+                                                        <ControlTemplate>
+                                                            <ItemsPresenter></ItemsPresenter>
+                                                        </ControlTemplate>
+                                                    </ListView.Template>
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <ui:SymbolIcon Symbol="{Binding Key.Symbol}" Filled="{Binding Key.Filled}" Margin="5,0" />
+                                                                <TextBlock Text="{Binding Value}" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+                                            </StackPanel>
                                         </ui:CardExpander>
                                         
                                     </DataTemplate>

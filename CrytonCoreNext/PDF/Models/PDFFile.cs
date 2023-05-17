@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Media.Imaging;
+using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.PDF.Models
 {
@@ -36,7 +37,7 @@ namespace CrytonCoreNext.PDF.Models
 
         public int LastPage { get; set; } = 0;
 
-        public Dictionary<string, string> Metadata { get; set; }
+        public Dictionary<SymbolIcon, string> Metadata { get; set; }
 
         public bool IsOpened { get; set; }
 
