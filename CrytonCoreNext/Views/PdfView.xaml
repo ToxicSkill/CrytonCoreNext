@@ -113,7 +113,7 @@
                                                     </ListView.Template>
                                                     <ListView.ItemTemplate>
                                                         <DataTemplate>
-                                                            <StackPanel Orientation="Horizontal">
+                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" ToolTip="{Binding Key.ToolTip}">
                                                                 <ui:SymbolIcon Symbol="{Binding Key.Symbol}" Filled="{Binding Key.Filled}" Margin="5,0" />
                                                                 <TextBlock Text="{Binding Value}" />
                                                             </StackPanel>

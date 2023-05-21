@@ -14,25 +14,27 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Wpf.Ui.Controls;
 using System.Linq;
+using CrytonCoreNext.Extensions;
+using System.Globalization;
 
 namespace CrytonCoreNext.PDF.Models
 {
     public class PDFReader : IPDFReader
     {
-        private readonly Dictionary<string, SymbolIcon> _symbolByPDFKey;
+        private readonly Dictionary<EPdfMetainfo, SymbolIcon> _symbolByPDFKey;
 
         private readonly double _dimensions = 1.0d;
 
         public PDFReader()
         {
-            _symbolByPDFKey = new Dictionary<string, SymbolIcon>()
+            _symbolByPDFKey = new Dictionary<EPdfMetainfo, SymbolIcon>()
             {
-                { "PDF.Author", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20  } },
-                { "PDF.Creator", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },
-                { "PDF.CreationDate", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20  } },
-                { "PDF.ModDate", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20, Filled=true  } },
-                { "PDF.PageCount", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.DocumentMultiple20  } },
-                { "PDF.Version", new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Box20  } }
+                { EPdfMetainfo.Author, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20 } },
+                { EPdfMetainfo.Creator, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },
+                { EPdfMetainfo.CreationDate, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20  } },
+                { EPdfMetainfo.ModDate, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20, Filled=true  } },
+                { EPdfMetainfo.PageCount, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.DocumentMultiple20  } },
+                { EPdfMetainfo.Version, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Box20  } }
             };
         }
 
@@ -127,15 +129,37 @@ namespace CrytonCoreNext.PDF.Models
                         }
                         metaInfoDict[key] = value;
                     }
+                    var indirectDict = new Dictionary<EPdfMetainfo, string>();
+                    foreach (var metaEnum in Enum.GetValues(typeof(EPdfMetainfo)).Cast<EPdfMetainfo>())
+                    {
+                        var metaKey = metaEnum.ToString(true);
+                        if (metaInfoDict.ContainsKey(metaKey))
+                        {
+                            indirectDict.Add(metaEnum, metaInfoDict[metaKey]);
+                        }
+                    }
                     pdfFile.Metadata = new Dictionary<SymbolIcon, string>();
-                    foreach (var key in metaInfoDict.Keys)
+                    foreach (var key in indirectDict.Keys)
                     {
                         if (_symbolByPDFKey.ContainsKey(key))
                         {
-                            pdfFile.Metadata.Add(_symbolByPDFKey[key], metaInfoDict[key]);
+                            var symbol = _symbolByPDFKey[key];
+                            var text = indirectDict[key];
+                            if (key == EPdfMetainfo.CreationDate ||
+                                key == EPdfMetainfo.ModDate)
+                            {
+                                text = text[2..16];
+                                DateTime dt;
+                                DateTime.TryParseExact(text, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt);
+                                if (dt != DateTime.MinValue)
+                                {
+                                    text = dt.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                }
+                            }
+                            symbol.ToolTip = key.ToString(false);
+                            pdfFile.Metadata.Add(symbol, text);
                         }
                     }
-                    pdfFile.Metadata = pdfFile.Metadata.OrderBy(p => p.Key).ToDictionary(x => x.Key, x => x.Value);
                 }
             }
             catch (Exception ex)
