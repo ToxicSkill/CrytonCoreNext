@@ -149,8 +149,20 @@
                         <ui:Button HorizontalAlignment="Stretch" Content="OK" Margin="0,2" 
                                    Command="{Binding ConfirmPasswordCommand}" Click="Button_Click"/>
                     </StackPanel>
-                    <Image Grid.Column="1" Margin="10" Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                               Stretch="Uniform"/>
+                    <Image Grid.Column="1" Margin="10" Stretch="Uniform" 
+                           Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <ui:Button Grid.Column="1" HorizontalAlignment="Left" Icon="ArrowLeft20" IconFilled="True"
+                               Command="{Binding GoPreviousPageCommand}" Height="80" Margin="20,0"
+                               Visibility="{Binding SelectedPdfFile.IsOnFirstPage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <ui:Button Grid.Column="1" HorizontalAlignment="Right" Icon="ArrowRight20" IconFilled="True"
+                               Command="{Binding GoNextPageCommand}" Height="80" Margin="20,0"
+                               Visibility="{Binding SelectedPdfFile.IsOnLastPage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <ui:Button Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" IconFilled="True"
+                               Content="{Binding SelectedPdfFile.PageCountStatus, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                               Width="100" Margin="0, 10" Background="#805D5D5D" 
+                               Visibility="{Binding SelectedPdfFile.HasMoreThanOnePage,Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </TabItem>
             <TabItem>

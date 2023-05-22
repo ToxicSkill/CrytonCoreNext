@@ -149,11 +149,10 @@ namespace CrytonCoreNext.PDF.Models
                                 key == EPdfMetainfo.ModDate)
                             {
                                 text = text[2..16];
-                                DateTime dt;
-                                DateTime.TryParseExact(text, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dt);
-                                if (dt != DateTime.MinValue)
+                                DateTime.TryParseExact(text, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+                                if (dateTime != DateTime.MinValue)
                                 {
-                                    text = dt.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                    text = dateTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
                                 }
                             }
                             symbol.ToolTip = key.ToString(false);

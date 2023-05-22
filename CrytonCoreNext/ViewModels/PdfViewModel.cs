@@ -168,6 +168,36 @@ namespace CrytonCoreNext.ViewModels
             UpdateProtectedPdf();
         }
 
+        [RelayCommand]
+        private void GoPreviousPage()
+        {
+            if (SelectedPdfFile == null)
+            {
+                return;
+            }
+            if (SelectedPdfFile.NumberOfPages > 0 && SelectedPdfFile.LastPage > 0)
+            {
+                SelectedPdfFile.LastPage -= 1;
+            }
+            SelectedPdfFile.PageImage = _pdfService.LoadImage(SelectedPdfFile);
+            OnPropertyChanged(nameof(SelectedPdfFile));
+        }
+
+        [RelayCommand]
+        private void GoNextPage()
+        {
+            if (SelectedPdfFile == null)
+            {
+                return;
+            }
+            if (SelectedPdfFile.NumberOfPages > 0 && SelectedPdfFile.LastPage < SelectedPdfFile.NumberOfPages - 1)
+            {
+                SelectedPdfFile.LastPage += 1;
+            }
+            SelectedPdfFile.PageImage = _pdfService.LoadImage(SelectedPdfFile);
+            OnPropertyChanged(nameof(SelectedPdfFile));
+        }
+
         private void UpdateProtectedPdf()
         {
             SelectedPdfFile.PdfStatus = PDF.Enums.EPdfStatus.Opened;

@@ -37,6 +37,20 @@ namespace CrytonCoreNext.PDF.Models
 
         public int LastPage { get; set; } = 0;
 
+        public bool HasMoreThanOnePage => NumberOfPages > 0;
+
+        public bool IsOnFirstPage => LastPage == 0;
+
+        public bool IsOnLastPage => PdfStatus != EPdfStatus.Opened ? true : LastPage == NumberOfPages - 1;
+
+        public string PageCountStatus 
+        { 
+            get
+            {
+                return $"{LastPage + 1} / {NumberOfPages}";
+            } 
+        }
+
         public Dictionary<SymbolIcon, string> Metadata { get; set; }
 
         public bool IsOpened { get; set; }
