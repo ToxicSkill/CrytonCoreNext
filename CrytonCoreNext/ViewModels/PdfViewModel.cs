@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Wpf.Ui.Mvvm.Contracts;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
 
@@ -21,6 +22,16 @@ namespace CrytonCoreNext.ViewModels
     {
         private readonly IPDFService _pdfService;
 
+        private List<(int pdfIndex, int pdfPage)> _pdfMergeImageRules;
+
+        private int _currentPdfToMergeImageIndex = 0;
+
+        [ObservableProperty]
+        public string pageMergeCountStatus;
+
+        [ObservableProperty]
+        public bool hasMoreThanOnePageToMerge;
+        
         [ObservableProperty]
         public string pdfPassword;
 
@@ -31,6 +42,9 @@ namespace CrytonCoreNext.ViewModels
         public ObservableCollection<PDFFile> openedPdfFiles;
 
         [ObservableProperty]
+        public ObservableCollection<PDFFile> selectedPdfFilesToMerge;
+
+        [ObservableProperty] 
         public ObservableCollection<ImageFile> imageFiles;
 
         [ObservableProperty]
@@ -40,9 +54,24 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ImageFiles))]
         public ImageFile selectedImageFile;
+        
+        [ObservableProperty]
+        public PDFFile selectedPdfFileToMerge;
+
+        [ObservableProperty]
+        public PDFFile openedPdfSelectedFile;
+
+        [ObservableProperty]
+        public WriteableBitmap pdfToMergeImage;
 
         [ObservableProperty]
         public int selectedTabIndex;
+
+        [ObservableProperty]
+        public bool isOnLastMergePage = true;
+
+        [ObservableProperty]
+        public bool isOnFirstMergePage = true;
 
         public PdfViewModel(IPDFService pdfService,
             IFileService fileService,
@@ -50,11 +79,13 @@ namespace CrytonCoreNext.ViewModels
             ISnackbarService snackbarService) : base(fileService, dialogService, snackbarService)
         {
             _pdfService = pdfService;
+            _pdfMergeImageRules = new();
+
             pdfFiles = new();
             imageFiles = new();
-            openedPdfFiles = new();
+            openedPdfFiles = new(); 
+            selectedPdfFilesToMerge = new();
         }
-
 
         partial void OnSelectedTabIndexChanged(int value)
         {
@@ -69,6 +100,62 @@ namespace CrytonCoreNext.ViewModels
                     }
                 }
             }
+        }
+
+        [RelayCommand]
+        private void AddFileToMergeList()
+        {
+            if (!SelectedPdfFilesToMerge.Contains(OpenedPdfSelectedFile))
+            {
+                SelectedPdfFilesToMerge.Add(OpenedPdfSelectedFile);
+                UpdatePdfToMergeImage();
+            }
+        }
+
+        [RelayCommand]
+        private void RemoveFileFromMergeList()
+        {
+            if (SelectedPdfFilesToMerge.Contains(SelectedPdfFileToMerge))
+            {
+                SelectedPdfFilesToMerge.Remove(SelectedPdfFileToMerge);
+                UpdatePdfToMergeImage();
+            }
+        }
+
+        private void UpdatePdfToMergeImage()
+        {
+            _pdfMergeImageRules.Clear();
+            var pdfIndex = 0;
+            foreach (var mergeFile in SelectedPdfFilesToMerge)
+            {
+                foreach (var pageIndex in Enumerable.Range(0, mergeFile.NumberOfPages))
+                {
+                    _pdfMergeImageRules.Add((pdfIndex, pageIndex));
+                }
+                pdfIndex++;
+            }
+            if (_currentPdfToMergeImageIndex >= _pdfMergeImageRules.Count)
+            {
+                _currentPdfToMergeImageIndex = _pdfMergeImageRules.Count - 1;
+                if (_currentPdfToMergeImageIndex < 0)
+                {
+                    _currentPdfToMergeImageIndex = 0;
+                }
+            }
+            if (!_pdfMergeImageRules.Any())
+            {
+                PdfToMergeImage = null;
+            }
+            else
+            {
+                var pdfFile = SelectedPdfFilesToMerge[_pdfMergeImageRules[_currentPdfToMergeImageIndex].pdfIndex];
+                pdfFile.LastPage = _pdfMergeImageRules[_currentPdfToMergeImageIndex].pdfPage;
+                PdfToMergeImage = _pdfService.LoadImage(pdfFile);
+            }
+            IsOnFirstMergePage = !_pdfMergeImageRules.Any() ? true : _currentPdfToMergeImageIndex == 0;
+            IsOnLastMergePage = !_pdfMergeImageRules.Any() ? true : _currentPdfToMergeImageIndex == _pdfMergeImageRules.Count - 1;
+            HasMoreThanOnePageToMerge = _pdfMergeImageRules.Any();
+            PageMergeCountStatus = $"{_currentPdfToMergeImageIndex + 1} / {_pdfMergeImageRules.Count}";
         }
 
         partial void OnSelectedPdfFileChanged(PDFFile value)
@@ -196,6 +283,28 @@ namespace CrytonCoreNext.ViewModels
             }
             SelectedPdfFile.PageImage = _pdfService.LoadImage(SelectedPdfFile);
             OnPropertyChanged(nameof(SelectedPdfFile));
+        }
+
+        [RelayCommand]
+        private void GoNextPagePdfToMergeIndex()
+        {
+            if(_currentPdfToMergeImageIndex < _pdfMergeImageRules.Count - 1)
+            {
+                _currentPdfToMergeImageIndex++;
+            }
+            UpdatePdfToMergeImage();
+            OnPropertyChanged(nameof(PdfToMergeImage));
+        }
+
+        [RelayCommand]
+        private void GoPreviousPagePdfToMergeIndex()
+        {
+            if (_currentPdfToMergeImageIndex > 0)
+            {
+                _currentPdfToMergeImageIndex--;
+            }
+            UpdatePdfToMergeImage();
+            OnPropertyChanged(nameof(PdfToMergeImage));
         }
 
         private void UpdateProtectedPdf()

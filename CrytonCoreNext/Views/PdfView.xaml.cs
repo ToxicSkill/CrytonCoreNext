@@ -50,5 +50,39 @@ namespace CrytonCoreNext.Views
             LeftEyeIcon.Filled = value;
             RightEyeIcon.Filled = value;
         }
+
+        private void Image_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                ViewModel.GoNextPageCommand.Execute(null);
+            }
+            else if (e.Delta < 0)
+            {
+                ViewModel.GoPreviousPageCommand.Execute(null);
+            }
+        }
+
+        private void ListView_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ViewModel.AddFileToMergeListCommand.Execute(null);
+        }
+
+        private void ListView_PreviewMouseDoubleClick_Merge(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ViewModel.RemoveFileFromMergeListCommand.Execute(null);
+        }
+
+        private void Image_PreviewMouseWheel_Merge(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                ViewModel.GoNextPagePdfToMergeIndexCommand.Execute(null);
+            }
+            else if (e.Delta < 0)
+            {
+                ViewModel.GoPreviousPagePdfToMergeIndexCommand.Execute(null);
+            }
+        }
     }
 }

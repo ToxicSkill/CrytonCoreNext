@@ -75,7 +75,7 @@
                                 </ListView.Template>
                                 <ListView.ItemTemplate>
                                     <DataTemplate DataType="models:CryptFile">
-                                        <ui:CardExpander>                     
+                                        <ui:CardExpander>
                                             <ui:CardExpander.Header>
                                                 <Grid Height="40">
                                                     <Grid.ColumnDefinitions>
@@ -122,7 +122,7 @@
                                                 </ListView>
                                             </StackPanel>
                                         </ui:CardExpander>
-                                        
+
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
@@ -149,7 +149,7 @@
                         <ui:Button HorizontalAlignment="Stretch" Content="OK" Margin="0,2" 
                                    Command="{Binding ConfirmPasswordCommand}" Click="Button_Click"/>
                     </StackPanel>
-                    <Image Grid.Column="1" Margin="10" Stretch="Uniform" 
+                    <Image Grid.Column="1" Margin="10" Stretch="Uniform" PreviewMouseWheel="Image_PreviewMouseWheel"
                            Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <ui:Button Grid.Column="1" HorizontalAlignment="Left" Icon="ArrowLeft20" IconFilled="True"
                                Command="{Binding GoPreviousPageCommand}" Height="80" Margin="20,0"
@@ -172,8 +172,16 @@
                         <TextBlock Text="Merge" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
                     </StackPanel>
                 </TabItem.Header>
-                <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
-                    <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ListView Grid.Column="0" ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
+                                  SelectedItem="{Binding OpenedPdfSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick">
                         <ListView.Template>
                             <ControlTemplate TargetType="ListBox">
                                 <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -211,7 +219,64 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                </ScrollViewer>
+
+                    <ListView Grid.Column="1" ItemsSource="{Binding SelectedPdfFilesToMerge, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedItem="{Binding SelectedPdfFileToMerge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Merge">
+                        <ListView.Template>
+                            <ControlTemplate TargetType="ListBox">
+                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
+                                    <ItemsPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="models:CryptFile">
+                                <Grid Height="40">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="20"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
+                                                FontSize="13"
+                                                FontWeight="Medium"
+                                                TextWrapping="WrapWithOverflow"
+                                                Text="{Binding NameWithExtension}"/>
+                                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                        <TextBlock  FontSize="12" Text="Pages: "/>
+                                        <TextBlock  FontSize="12" Text="{Binding NumberOfPages}"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Text="{Binding Size}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Text="{Binding PdfStatus,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <Image Grid.Column="2" Margin="10" Stretch="Uniform" PreviewMouseWheel="Image_PreviewMouseWheel_Merge"
+                           Source="{Binding PdfToMergeImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <ui:Button Grid.Column="2" HorizontalAlignment="Left" Icon="ArrowLeft20" IconFilled="True"
+                               Command="{Binding GoPreviousPagePdfToMergeIndexCommand}" Height="80" Margin="20,0"
+                               Visibility="{Binding IsOnFirstMergePage ,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <ui:Button Grid.Column="2" HorizontalAlignment="Right" Icon="ArrowRight20" IconFilled="True"
+                               Command="{Binding GoNextPagePdfToMergeIndexCommand}" Height="80" Margin="20,0"
+                               Visibility="{Binding IsOnLastMergePage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <ui:Button Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" IconFilled="True"
+                               Content="{Binding PageMergeCountStatus, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                               Width="100" Margin="0, 10" Background="#805D5D5D" 
+                               Visibility="{Binding HasMoreThanOnePageToMerge, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                </Grid>
             </TabItem>
             <TabItem Content="Split">
                 <TabItem.Header>
