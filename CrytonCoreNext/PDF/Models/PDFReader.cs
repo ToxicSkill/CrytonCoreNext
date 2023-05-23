@@ -112,51 +112,25 @@ namespace CrytonCoreNext.PDF.Models
 
                     var pdfTrailer = pdfDocument.GetTrailer();
                     var pdfDictInfo = pdfTrailer.GetAsDictionary(PdfName.Info);
-                    foreach (var pdfEntryPair in pdfDictInfo.EntrySet())
+                    if (pdfTrailer != null && pdfDictInfo != null)
                     {
-                        var key = "PDF." + pdfEntryPair.Key.ToString().Substring(1);
-                        string value;
-                        switch (pdfEntryPair.Value)
+                        foreach (var pdfEntryPair in pdfDictInfo.EntrySet())
                         {
-                            case PdfString pdfString:
-                                value = pdfString.ToUnicodeString();
-                                break;
-                            default:
-                                value = pdfEntryPair.Value.ToString();
-                                break;
-                        }
-                        metaInfoDict[key] = value;
-                    }
-                    var indirectDict = new Dictionary<EPdfMetainfo, string>();
-                    foreach (var metaEnum in Enum.GetValues(typeof(EPdfMetainfo)).Cast<EPdfMetainfo>())
-                    {
-                        var metaKey = metaEnum.ToString(true);
-                        if (metaInfoDict.ContainsKey(metaKey))
-                        {
-                            indirectDict.Add(metaEnum, metaInfoDict[metaKey]);
-                        }
-                    }
-                    pdfFile.Metadata = new Dictionary<SymbolIcon, string>();
-                    foreach (var key in indirectDict.Keys)
-                    {
-                        if (_symbolByPDFKey.ContainsKey(key))
-                        {
-                            var symbol = _symbolByPDFKey[key];
-                            var text = indirectDict[key];
-                            if (key == EPdfMetainfo.CreationDate ||
-                                key == EPdfMetainfo.ModDate)
+                            var key = "PDF." + pdfEntryPair.Key.ToString().Substring(1);
+                            string value;
+                            switch (pdfEntryPair.Value)
                             {
-                                text = text[2..16];
-                                DateTime.TryParseExact(text, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
-                                if (dateTime != DateTime.MinValue)
-                                {
-                                    text = dateTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
-                                }
+                                case PdfString pdfString:
+                                    value = pdfString.ToUnicodeString();
+                                    break;
+                                default:
+                                    value = pdfEntryPair.Value.ToString();
+                                    break;
                             }
-                            symbol.ToolTip = key.ToString(false);
-                            pdfFile.Metadata.Add(symbol, text);
+                            metaInfoDict[key] = value;
                         }
                     }
+                    ParseNativeMetainfo(pdfFile, metaInfoDict);
                 }
             }
             catch (Exception ex)
@@ -164,6 +138,40 @@ namespace CrytonCoreNext.PDF.Models
                 if (Debugger.IsAttached) Debugger.Break();
                 pdfFile.Metadata = new ()
                 { { new Wpf.Ui.Controls.SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.ErrorCircle20 }, ex.Message} };
+            }
+        }
+
+        private void ParseNativeMetainfo(PDFFile pdfFile, Dictionary<string, string> metaInfoDict)
+        {
+            var indirectDict = new Dictionary<EPdfMetainfo, string>();
+            foreach (var metaEnum in Enum.GetValues(typeof(EPdfMetainfo)).Cast<EPdfMetainfo>())
+            {
+                var metaKey = metaEnum.ToString(true);
+                if (metaInfoDict.ContainsKey(metaKey))
+                {
+                    indirectDict.Add(metaEnum, metaInfoDict[metaKey]);
+                }
+            }
+            pdfFile.Metadata = new Dictionary<SymbolIcon, string>();
+            foreach (var key in indirectDict.Keys)
+            {
+                if (_symbolByPDFKey.ContainsKey(key))
+                {
+                    var symbol = _symbolByPDFKey[key];
+                    var text = indirectDict[key];
+                    if (key == EPdfMetainfo.CreationDate ||
+                        key == EPdfMetainfo.ModDate)
+                    {
+                        text = text[2..16];
+                        DateTime.TryParseExact(text, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+                        if (dateTime != DateTime.MinValue)
+                        {
+                            text = dateTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        }
+                    }
+                    symbol.ToolTip = key.ToString(false);
+                    pdfFile.Metadata.Add(symbol, text);
+                }
             }
         }
 

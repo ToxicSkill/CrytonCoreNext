@@ -410,25 +410,5 @@ namespace CrytonCoreNext.ViewModels
             PdfFiles.Insert(oldIndex, oldFile);
             SelectedPdfFile = oldFile;
         }
-
-        private static string GetValueFromMetadata(string metadata, string propertyName)
-        {
-            var index = metadata.IndexOf(propertyName, StringComparison.Ordinal);
-
-            if (index < 0)
-            {
-                return string.Empty;
-            }
-
-            var startIndex = index + propertyName.Length + 1;
-            var endIndex = metadata.IndexOf('\n', startIndex);
-
-            if (endIndex < 0)
-            {
-                endIndex = metadata.Length;
-            }
-
-            return metadata[startIndex..endIndex].Trim();
-        }
     }
 }
