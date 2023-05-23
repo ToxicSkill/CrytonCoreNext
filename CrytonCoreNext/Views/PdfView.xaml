@@ -15,6 +15,7 @@
     <ui:UiPage.Resources>
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
+            <c:CollectionToVisibilityInversionConverter x:Key="CollectionToVisibilityInversionConverter"/>
             <c:ReverseCollectionToVisibilityConverter x:Key="ReverseCollectionToVisibilityConverter"/>
             <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter"/>
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -263,6 +264,11 @@
 
                     <Image Grid.Column="2" Margin="10" Stretch="Uniform" PreviewMouseWheel="Image_PreviewMouseWheel_Merge"
                            Source="{Binding PdfToMergeImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <ui:Button Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10" Background="#805D5D5D"
+                               Content="{Binding SelectedPdfFileToMerge.Name, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                               Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
                     <ui:Button Grid.Column="2" HorizontalAlignment="Left" Icon="ArrowLeft20" IconFilled="True"
                                Command="{Binding GoPreviousPagePdfToMergeIndexCommand}" Height="80" Margin="20,0"
                                Visibility="{Binding IsOnFirstMergePage ,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -273,14 +279,14 @@
 
 
                     <StackPanel Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <ui:Button  IconFilled="True"
+                        <ui:Button IconFilled="True"
                                Content="{Binding PageMergeCountStatus, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
                                Width="100" Margin="0, 10" Background="#805D5D5D" 
                                Visibility="{Binding HasMoreThanOnePageToMerge, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <ui:Button  IconFilled="False" Icon="TrayItemRemove20"
+                        <ui:Button IconFilled="False" Icon="TrayItemRemove20"
                                ToolTip="Exclude this page"
-                                    Margin="0, 10" Background="#805D5D5D" Content="Remove"
-                                    Command="{Binding EraseCurrentMergePageCommand}"
+                               Margin="0, 10" Background="#805D5D5D" Content="Remove"
+                               Command="{Binding EraseCurrentMergePageCommand}"
                                Visibility="{Binding HasMoreThanOnePageToMerge, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                     </StackPanel>

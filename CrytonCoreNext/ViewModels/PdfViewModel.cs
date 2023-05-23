@@ -76,6 +76,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public bool isOnFirstMergePage = true;
 
+        [ObservableProperty]
+        public string selectedPdfToMergeFileName;
+
         public PdfViewModel(IPDFService pdfService,
             IFileService fileService,
             IDialogService dialogService,
@@ -182,12 +185,14 @@ namespace CrytonCoreNext.ViewModels
             if (!_pdfToMergePagesIndexes.Any())
             {
                 PdfToMergeImage = null;
+                SelectedPdfToMergeFileName = "";
             }
             else
             {
                 var pdfFile = SelectedPdfFilesToMerge[_pdfToMergePagesIndexes[_currentPdfToMergeImageIndex].pdfIndex];
                 pdfFile.LastPage = _pdfToMergePagesIndexes[_currentPdfToMergeImageIndex].pdfPage;
                 PdfToMergeImage = _pdfService.LoadImage(pdfFile);
+                SelectedPdfFileToMerge = pdfFile;
             }
             IsOnFirstMergePage = !_pdfToMergePagesIndexes.Any() || _currentPdfToMergeImageIndex == 0;
             IsOnLastMergePage = !_pdfToMergePagesIndexes.Any() || _currentPdfToMergeImageIndex == _pdfToMergePagesIndexes.Count - 1;
@@ -196,7 +201,9 @@ namespace CrytonCoreNext.ViewModels
             if (removedByExclusion != null)
             {
                 RemoveFileFromMergeList(removedByExclusion, false);
+                UpdatePdfToMergeImage();
             }
+            OnPropertyChanged(nameof(SelectedPdfFilesToMerge));
         }
 
         partial void OnSelectedPdfFileChanged(PDFFile value)
@@ -205,6 +212,30 @@ namespace CrytonCoreNext.ViewModels
             {
                 value.PageImage = _pdfService.LoadImage(value);
             }
+        }
+
+        partial void OnSelectedPdfFileToMergeChanged(PDFFile value)
+        {
+            if (value != null)
+            {
+                _currentPdfToMergeImageIndex = FindSectedFileIndex();
+                UpdatePdfToMergeImage();
+            }
+        }
+
+        private int FindSectedFileIndex()
+        {
+            var selectedPdfIndex = SelectedPdfFilesToMerge.IndexOf(SelectedPdfFileToMerge);
+            var index = 0;
+            foreach (var fileMerge in _pdfToMergePagesIndexes)
+            {
+                if (fileMerge.pdfIndex == selectedPdfIndex)
+                {
+                    return index;
+                }
+                index++;
+            }
+            return 0;
         }
 
         [RelayCommand]
