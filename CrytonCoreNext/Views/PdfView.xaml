@@ -271,11 +271,19 @@
                                Command="{Binding GoNextPagePdfToMergeIndexCommand}" Height="80" Margin="20,0"
                                Visibility="{Binding IsOnLastMergePage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <ui:Button Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" IconFilled="True"
+
+                    <StackPanel Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
+                        <ui:Button  IconFilled="True"
                                Content="{Binding PageMergeCountStatus, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
                                Width="100" Margin="0, 10" Background="#805D5D5D" 
                                Visibility="{Binding HasMoreThanOnePageToMerge, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ui:Button  IconFilled="False" Icon="TrayItemRemove20"
+                               ToolTip="Exclude this page"
+                                    Margin="0, 10" Background="#805D5D5D" Content="Remove"
+                                    Command="{Binding EraseCurrentMergePageCommand}"
+                               Visibility="{Binding HasMoreThanOnePageToMerge, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
+                    </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem Content="Split">

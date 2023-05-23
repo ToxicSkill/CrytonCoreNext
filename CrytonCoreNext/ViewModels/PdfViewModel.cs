@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Castle.DynamicProxy.Generators;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Interfaces.Files;
@@ -22,7 +23,9 @@ namespace CrytonCoreNext.ViewModels
     {
         private readonly IPDFService _pdfService;
 
-        private List<(int pdfIndex, int pdfPage)> _pdfMergeImageRules;
+        private List<(int pdfIndex, int pdfPage)> _pdfToMergePagesIndexes;
+
+        private List<(int pdfIndex, int pdfPage)> _pdfExcludedMergeIndexes;
 
         private int _currentPdfToMergeImageIndex = 0;
 
@@ -79,12 +82,13 @@ namespace CrytonCoreNext.ViewModels
             ISnackbarService snackbarService) : base(fileService, dialogService, snackbarService)
         {
             _pdfService = pdfService;
-            _pdfMergeImageRules = new();
+            _pdfToMergePagesIndexes = new();
 
             pdfFiles = new();
             imageFiles = new();
             openedPdfFiles = new(); 
             selectedPdfFilesToMerge = new();
+            _pdfExcludedMergeIndexes = new();
         }
 
         partial void OnSelectedTabIndexChanged(int value)
@@ -115,47 +119,84 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void RemoveFileFromMergeList()
         {
-            if (SelectedPdfFilesToMerge.Contains(SelectedPdfFileToMerge))
+            RemoveFileFromMergeList(null, true);
+        }
+
+        private void RemoveFileFromMergeList(PDFFile? file = null, bool updateEachStep = true)
+        {
+            if (file == null)
             {
-                SelectedPdfFilesToMerge.Remove(SelectedPdfFileToMerge);
-                UpdatePdfToMergeImage();
+                file = SelectedPdfFileToMerge;
+            }
+            if (SelectedPdfFilesToMerge.Contains(file))
+            {
+                var toRemoveExcluded = new List<(int pdfIndex, int pdfPage)>();
+                var indexOfSelectedPdf = SelectedPdfFilesToMerge.IndexOf(file);
+                foreach (var excludedIndex in _pdfExcludedMergeIndexes)
+                {
+                    if (excludedIndex.pdfIndex == indexOfSelectedPdf)
+                    {
+                        toRemoveExcluded.Add(excludedIndex);
+                    }
+                }
+                _pdfExcludedMergeIndexes = _pdfExcludedMergeIndexes.Except(toRemoveExcluded).ToList();
+                SelectedPdfFilesToMerge.Remove(file);
+                if (updateEachStep)
+                {
+                    UpdatePdfToMergeImage();
+                }
             }
         }
 
         private void UpdatePdfToMergeImage()
         {
-            _pdfMergeImageRules.Clear();
+            _pdfToMergePagesIndexes.Clear();
+            PDFFile removedByExclusion = default;
             var pdfIndex = 0;
             foreach (var mergeFile in SelectedPdfFilesToMerge)
             {
+                var removed = true;
                 foreach (var pageIndex in Enumerable.Range(0, mergeFile.NumberOfPages))
                 {
-                    _pdfMergeImageRules.Add((pdfIndex, pageIndex));
+                    var tupleToAdd = (pdfIndex, pageIndex);
+                    if (!_pdfExcludedMergeIndexes.Contains(tupleToAdd))
+                    {
+                        removed = false;
+                        _pdfToMergePagesIndexes.Add((pdfIndex, pageIndex));
+                    }
+                }
+                if (removed)
+                {
+                    removedByExclusion = mergeFile;
                 }
                 pdfIndex++;
             }
-            if (_currentPdfToMergeImageIndex >= _pdfMergeImageRules.Count)
+            if (_currentPdfToMergeImageIndex >= _pdfToMergePagesIndexes.Count)
             {
-                _currentPdfToMergeImageIndex = _pdfMergeImageRules.Count - 1;
+                _currentPdfToMergeImageIndex = _pdfToMergePagesIndexes.Count - 1;
                 if (_currentPdfToMergeImageIndex < 0)
                 {
                     _currentPdfToMergeImageIndex = 0;
                 }
             }
-            if (!_pdfMergeImageRules.Any())
+            if (!_pdfToMergePagesIndexes.Any())
             {
                 PdfToMergeImage = null;
             }
             else
             {
-                var pdfFile = SelectedPdfFilesToMerge[_pdfMergeImageRules[_currentPdfToMergeImageIndex].pdfIndex];
-                pdfFile.LastPage = _pdfMergeImageRules[_currentPdfToMergeImageIndex].pdfPage;
+                var pdfFile = SelectedPdfFilesToMerge[_pdfToMergePagesIndexes[_currentPdfToMergeImageIndex].pdfIndex];
+                pdfFile.LastPage = _pdfToMergePagesIndexes[_currentPdfToMergeImageIndex].pdfPage;
                 PdfToMergeImage = _pdfService.LoadImage(pdfFile);
             }
-            IsOnFirstMergePage = !_pdfMergeImageRules.Any() ? true : _currentPdfToMergeImageIndex == 0;
-            IsOnLastMergePage = !_pdfMergeImageRules.Any() ? true : _currentPdfToMergeImageIndex == _pdfMergeImageRules.Count - 1;
-            HasMoreThanOnePageToMerge = _pdfMergeImageRules.Any();
-            PageMergeCountStatus = $"{_currentPdfToMergeImageIndex + 1} / {_pdfMergeImageRules.Count}";
+            IsOnFirstMergePage = !_pdfToMergePagesIndexes.Any() || _currentPdfToMergeImageIndex == 0;
+            IsOnLastMergePage = !_pdfToMergePagesIndexes.Any() || _currentPdfToMergeImageIndex == _pdfToMergePagesIndexes.Count - 1;
+            HasMoreThanOnePageToMerge = _pdfToMergePagesIndexes.Any();
+            PageMergeCountStatus = $"{_currentPdfToMergeImageIndex + 1} / {_pdfToMergePagesIndexes.Count}";
+            if (removedByExclusion != null)
+            {
+                RemoveFileFromMergeList(removedByExclusion, false);
+            }
         }
 
         partial void OnSelectedPdfFileChanged(PDFFile value)
@@ -178,7 +219,7 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
-        private new async Task LoadPdfFiles()
+        private async Task LoadPdfFiles()
         {
             Lock();
             var protectedFilesCount = 0;
@@ -233,7 +274,7 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
-        private new async Task LoadImageFiles()
+        private async Task LoadImageFiles()
         {
             Lock();
             await foreach (var imageFile in base.LoadFiles(Static.Extensions.DialogFilters.Images))
@@ -288,7 +329,7 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void GoNextPagePdfToMergeIndex()
         {
-            if(_currentPdfToMergeImageIndex < _pdfMergeImageRules.Count - 1)
+            if(_currentPdfToMergeImageIndex < _pdfToMergePagesIndexes.Count - 1)
             {
                 _currentPdfToMergeImageIndex++;
             }
@@ -305,6 +346,13 @@ namespace CrytonCoreNext.ViewModels
             }
             UpdatePdfToMergeImage();
             OnPropertyChanged(nameof(PdfToMergeImage));
+        }
+
+        [RelayCommand]
+        private void EraseCurrentMergePage()
+        {
+            _pdfExcludedMergeIndexes.Add(_pdfToMergePagesIndexes[_currentPdfToMergeImageIndex]);
+            UpdatePdfToMergeImage();
         }
 
         private void UpdateProtectedPdf()
