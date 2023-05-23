@@ -1,5 +1,4 @@
-﻿using Castle.DynamicProxy.Generators;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Interfaces.Files;
@@ -9,9 +8,7 @@ using CrytonCoreNext.PDF.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Wpf.Ui.Mvvm.Contracts;
@@ -75,9 +72,6 @@ namespace CrytonCoreNext.ViewModels
 
         [ObservableProperty]
         public bool isOnFirstMergePage = true;
-
-        [ObservableProperty]
-        public string selectedPdfToMergeFileName;
 
         public PdfViewModel(IPDFService pdfService,
             IFileService fileService,
@@ -185,7 +179,6 @@ namespace CrytonCoreNext.ViewModels
             if (!_pdfToMergePagesIndexes.Any())
             {
                 PdfToMergeImage = null;
-                SelectedPdfToMergeFileName = "";
             }
             else
             {
