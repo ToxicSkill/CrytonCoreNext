@@ -14,6 +14,21 @@ namespace CrytonCoreNext.Converters
             {
                 return Visibility.Collapsed;
             }
+            else if (parameter is string countThreshold)
+            {
+                var count = 0;
+                if (!Int32.TryParse(countThreshold, out count))
+                {
+                    return Visibility.Collapsed;
+                }
+                else
+                {
+                    if (count > 0)
+                    {
+                        return files.Count >= count ? Visibility.Collapsed : Visibility.Visible;
+                    }
+                }
+            }
             return files.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
         }
 

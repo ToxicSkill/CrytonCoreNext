@@ -181,7 +181,12 @@
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
 
-                    <ScrollViewer Grid.Column="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
+                    <ui:CardControl Grid.Column="0" Height="50" VerticalAlignment="Top" Padding="5" Margin="0,15,5,0" Icon="SelectAllOff20" >
+                        <ui:CardControl.Header>
+                            <TextBlock Text="Available files to merge (double click to chose)"/>
+                        </ui:CardControl.Header>
+                    </ui:CardControl>
+                    <ScrollViewer Grid.Column="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,5,0">
                         <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
                                   SelectedItem="{Binding OpenedPdfSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick">
@@ -224,7 +229,13 @@
                         </ListView>
                     </ScrollViewer>
 
-                    <ScrollViewer Grid.Column="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
+                    <ui:CardControl Grid.Column="1" Height="50" VerticalAlignment="Top" Padding="5" Margin="0,15" Icon="SelectAllOn24" >
+                        <ui:CardControl.Header>
+                            <TextBlock Text="Selected files to merge"/>
+                        </ui:CardControl.Header>
+                        <ui:Button Content="Merge" Appearance="Primary" Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </ui:CardControl>
+                    <ScrollViewer Grid.Column="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
                         <ListView ItemsSource="{Binding SelectedPdfFilesToMerge, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
                                   SelectedItem="{Binding SelectedPdfFileToMerge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Merge">
