@@ -55,6 +55,7 @@ namespace CrytonCoreNext.ViewModels
                 PageType = typeof(PdfView)
             });
 
+            FooterItems.Add(new NavigationSeparator());
             FooterItems.Add(new NavigationItem()
             {
                 Icon = SymbolRegular.Settings20,
