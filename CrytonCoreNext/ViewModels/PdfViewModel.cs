@@ -5,7 +5,6 @@ using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

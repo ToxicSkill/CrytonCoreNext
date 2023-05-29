@@ -10,6 +10,8 @@
   <ItemGroup>
     <None Remove="TestingFiles\2.pdf" />
     <None Remove="TestingFiles\3.pdf" />
+    <None Remove="TestingFiles\PDF NOT SECURED.pdf" />
+    <None Remove="TestingFiles\SECURED PDF 123456.pdf" />
     <None Remove="TestingFiles\test.pdf" />
     <None Remove="TestingFiles\test.txt" />
     <None Remove="TestingFiles\testPDF.pdf" />
@@ -42,14 +44,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="TestingFiles\2.pdf" />
-    <Resource Include="TestingFiles\3.pdf">
+    <Resource Include="TestingFiles\PDF NOT SECURED.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="TestingFiles\test.pdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Resource Include="TestingFiles\SECURED PDF 123456.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="TestingFiles\testPDF.pdf" />
   </ItemGroup>
 
 </Project>

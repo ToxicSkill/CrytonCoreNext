@@ -51,6 +51,7 @@ namespace CrytonCoreNextTests
             }
         }
     }
+
     public class CrytonFileTest : IClassFixture<Files>
     {
 
