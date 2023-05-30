@@ -65,8 +65,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!--  This is the main navigation of the application.  -->
-            <ui:NavigationStore
+            <Grid Grid.Column="0" Background="#02000000"/>
+
+            <ui:NavigationStore Style="{StaticResource ColoredNavigationStore}"
                 x:Name="RootNavigation"
                 Grid.Column="0"
                 Margin="6,10,6,0"

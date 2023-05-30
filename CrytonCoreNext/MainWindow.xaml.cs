@@ -3,6 +3,7 @@ using CrytonCoreNext.ViewModels;
 using System;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
 
@@ -20,7 +21,7 @@ namespace CrytonCoreNext
             ICustomPageService pageService,
             ISnackbarService snackbarService)
         {
-            Wpf.Ui.Appearance.Watcher.Watch(this);
+            Watcher.Watch(this);
             ViewModel = viewModel;
             DataContext = ViewModel;
             InitializeComponent();
@@ -28,6 +29,13 @@ namespace CrytonCoreNext
             SetPageService(pageService);
             navigationService.SetNavigationControl(RootNavigation);
             snackbarService.SetSnackbarControl(RootSnackbar);
+
+            SetTheme();
+        }
+
+        private void SetTheme()
+        {
+            Theme.Apply(Theme.GetSystemTheme().ToString().ToLower() == ThemeType.Dark.ToString().ToLower() ? ThemeType.Dark : ThemeType.Light, BackgroundType.Mica, true, true);
         }
 
         public Frame GetFrame()
