@@ -5,6 +5,7 @@ using CrytonCoreNext.Views;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Controls.Interfaces;
@@ -20,11 +21,20 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public ICollection<INavigationControl> footerItems;
 
+        public delegate void OnThemeStyleChanged(BackgroundType value);
+
+        public event OnThemeStyleChanged ThemeStyleChanged;
+
         public MainViewModel()
         {
             MenuItems = new ObservableCollection<INavigationControl>();
             FooterItems = new ObservableCollection<INavigationControl>();
             InitializeMenu();
+        }
+
+        public void InvokeThemeChanged(BackgroundType value)
+        {
+            ThemeStyleChanged?.Invoke(value);
         }
 
         private void InitializeMenu()

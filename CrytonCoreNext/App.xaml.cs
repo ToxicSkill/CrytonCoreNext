@@ -127,6 +127,7 @@ namespace CrytonCoreNext
                 new ResourceDictionary() { Source = new Uri("..\\Dictionaries\\EnglishDictionary.xaml", UriKind.Relative) }
             };
         }
+
         public static T GetService<T>()
         where T : class
         {
@@ -136,6 +137,12 @@ namespace CrytonCoreNext
         private async void OnStartup(object sender, StartupEventArgs e)
         {
             await _host.StartAsync();
+            var mw = _host.Services.GetService<MainViewModel>();
+            var sw = _host.Services.GetService<SettingsViewModel>();
+            if (sw != null && mw != null)
+            {
+                sw.ThemeStyleChanged += mw.InvokeThemeChanged;
+            }
         }
 
         private void OnLoaded(object sender, System.Windows.Navigation.NavigationEventArgs e)

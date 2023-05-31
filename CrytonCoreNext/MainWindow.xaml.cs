@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls.Interfaces;
+using Wpf.Ui.Extensions;
 using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext
@@ -30,12 +31,13 @@ namespace CrytonCoreNext
             navigationService.SetNavigationControl(RootNavigation);
             snackbarService.SetSnackbarControl(RootSnackbar);
 
-            SetTheme();
+            SetSystemTheme();
+            ViewModel.ThemeStyleChanged += SetTheme;
         }
 
-        private void SetTheme()
+        public void SetTheme(BackgroundType value = BackgroundType.Mica)
         {
-            Theme.Apply(Theme.GetSystemTheme().ToString().ToLower() == ThemeType.Dark.ToString().ToLower() ? ThemeType.Dark : ThemeType.Light, BackgroundType.Mica, true, true);
+            this.WindowBackdropType = value;
         }
 
         public Frame GetFrame()
@@ -62,6 +64,11 @@ namespace CrytonCoreNext
             {
                 this.DragMove();
             }
+        }
+
+        private void SetSystemTheme()
+        {
+            Theme.Apply(Theme.GetSystemTheme().ToString().ToLower() == ThemeType.Dark.ToString().ToLower() ? ThemeType.Dark : ThemeType.Light, BackgroundType.Mica, true, true);
         }
 
         private void SymbolIcon_MouseDoubleClick(object sender, MouseButtonEventArgs e)

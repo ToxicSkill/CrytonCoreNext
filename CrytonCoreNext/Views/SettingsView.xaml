@@ -64,6 +64,15 @@
                             </ui:SymbolIcon>
                         </Grid>
                     </ui:CardControl>
+                    <ui:CardControl Margin="15,8,15,0" Icon="StyleGuide20" IconFilled="True">
+                        <ui:CardControl.Header>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock FontSize="13" FontWeight="Medium" Text="Theme style"/>
+                                <TextBlock FontSize="12" Text="Set style type."/>
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <ComboBox ItemsSource="{Binding ThemeStylesItemsSource}" SelectedItem="{Binding SelectedThemeStyle}"/>
+                    </ui:CardControl>
                     <ui:CardControl Margin="15,8,15,0" Icon="Color20">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">

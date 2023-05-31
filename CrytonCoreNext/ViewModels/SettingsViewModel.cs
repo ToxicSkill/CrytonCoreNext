@@ -11,6 +11,7 @@ using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui.Mvvm.Services;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -27,6 +28,16 @@ namespace CrytonCoreNext.ViewModels
         private delegate void _verticalOffsetScrollUpdateDelegate(double offset);
 
         private _verticalOffsetScrollUpdateDelegate VerticalOffsetScrollUpdate;
+
+        public delegate void OnThemeStyleChanged(BackgroundType value);
+
+        public event OnThemeStyleChanged ThemeStyleChanged;
+
+        [ObservableProperty]
+        public ObservableCollection<BackgroundType> themeStylesItemsSource;
+
+        [ObservableProperty]
+        public BackgroundType selectedThemeStyle;
 
         [ObservableProperty]
         public ObservableCollection<TreeViewItemModel> treeViewItemSource;
@@ -45,6 +56,12 @@ namespace CrytonCoreNext.ViewModels
             _elements = new();
             _cardByTreeViewItem = new();
             TreeViewItemSource = new();
+            InitializeThemes();
+        }
+
+        partial void OnSelectedThemeStyleChanged(BackgroundType value)
+        {
+            ThemeStyleChanged?.Invoke(value);
         }
 
         public void UpdateSelectedTreeViewItem(CardControl card)
@@ -98,6 +115,19 @@ namespace CrytonCoreNext.ViewModels
                 offset += 8;
             }
             return offset;
+        }
+
+        private void InitializeThemes()
+        {
+            ThemeStylesItemsSource = new ObservableCollection<BackgroundType>
+                (new List<BackgroundType>()
+                    {
+                        BackgroundType.Acrylic,
+                        BackgroundType.Mica,
+                        BackgroundType.Tabbed
+                    }
+                );
+            SelectedThemeStyle = BackgroundType.Mica;
         }
 
         private void UpdateTreeView(TreeViewItemModel selectedTreeViewItem)
