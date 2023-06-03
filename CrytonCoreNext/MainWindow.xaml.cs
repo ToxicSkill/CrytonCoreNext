@@ -14,8 +14,6 @@ namespace CrytonCoreNext
 {
     public partial class MainWindow : INavigationWindow
     {
-        private const int MinimalWindowsBuildNumber = 22523;
-
         public MainViewModel ViewModel
         {
             get;
@@ -41,16 +39,13 @@ namespace CrytonCoreNext
 
         public void SetTheme(BackgroundType value = BackgroundType.Mica)
         {
-            if (WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber)
+            try
             {
-                try
-                {
-                    this.WindowBackdropType = value;
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine(e.Message);
-                }
+                this.WindowBackdropType = value;
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.Message);
             }
         }
 

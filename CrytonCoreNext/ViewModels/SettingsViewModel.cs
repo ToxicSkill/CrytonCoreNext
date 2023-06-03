@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +18,8 @@ namespace CrytonCoreNext.ViewModels
 {
     public partial class SettingsViewModel : ViewModelBase
     {
+        private const int MinimalWindowsBuildNumber = 22523;
+
         private readonly IThemeService _themeService;
 
         private List<UiViewElement<CardControl>> _elements;
@@ -47,6 +50,9 @@ namespace CrytonCoreNext.ViewModels
 
         [ObservableProperty]
         public bool isThemeSwitchChecked = true;
+
+        [ObservableProperty]
+        public bool isThemeStyleAvailable;
 
         public bool MembersInitialized { get => TreeViewItemSource.Any(); }
 
@@ -128,6 +134,7 @@ namespace CrytonCoreNext.ViewModels
                     }
                 );
             SelectedThemeStyle = BackgroundType.Mica;
+            IsThemeStyleAvailable = WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber;
         }
 
         private void UpdateTreeView(TreeViewItemModel selectedTreeViewItem)
