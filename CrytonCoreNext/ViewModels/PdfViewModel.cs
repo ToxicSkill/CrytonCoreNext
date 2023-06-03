@@ -43,6 +43,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public ObservableCollection<PDFFile> selectedPdfFilesToMerge;
 
+        [ObservableProperty]
+        public ObservableCollection<PDFFile> selectedPdfFilesToSplit;
+
         [ObservableProperty] 
         public ObservableCollection<ImageFile> imageFiles;
 
@@ -56,6 +59,9 @@ namespace CrytonCoreNext.ViewModels
         
         [ObservableProperty]
         public PDFFile selectedPdfFileToMerge;
+
+        [ObservableProperty]
+        public PDFFile selectedPdfFileToSplit;
 
         [ObservableProperty]
         public PDFFile openedPdfSelectedFile;
@@ -84,12 +90,13 @@ namespace CrytonCoreNext.ViewModels
             imageFiles = new();
             openedPdfFiles = new(); 
             selectedPdfFilesToMerge = new();
+            selectedPdfFilesToSplit = new();
             _pdfExcludedMergeIndexes = new();
         }
 
         partial void OnSelectedTabIndexChanged(int value)
         {
-            if (SelectedTabIndex == 1)
+            if (SelectedTabIndex == 1 || SelectedTabIndex == 2)
             {
                 OpenedPdfFiles.Clear();
                 foreach (var file in PdfFiles)
@@ -113,9 +120,28 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
+        private void AddFileToSplitList()
+        {
+            if (!SelectedPdfFilesToSplit.Any() && OpenedPdfSelectedFile.NumberOfPages > 1)
+            {
+                SelectedPdfFilesToSplit.Add(OpenedPdfSelectedFile);
+                UpdatePdfToSplitImage();
+            }
+        }
+
+        [RelayCommand]
         private void RemoveFileFromMergeList()
         {
             RemoveFileFromMergeList(null, true);
+        }
+
+        [RelayCommand]
+        private void RemoveFileFromSplitList()
+        {
+            if (SelectedPdfFilesToSplit.Any())
+            {
+                SelectedPdfFilesToSplit.Clear();
+            }
         }
 
         private void RemoveFileFromMergeList(PDFFile? file = null, bool updateEachStep = true)
@@ -142,6 +168,12 @@ namespace CrytonCoreNext.ViewModels
                     UpdatePdfToMergeImage();
                 }
             }
+        }
+
+
+        private void UpdatePdfToSplitImage()
+        {
+
         }
 
         private void UpdatePdfToMergeImage()

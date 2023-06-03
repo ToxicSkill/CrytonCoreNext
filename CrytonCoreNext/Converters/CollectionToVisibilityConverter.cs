@@ -16,8 +16,7 @@ namespace CrytonCoreNext.Converters
             }
             else if (parameter is string countThreshold)
             {
-                var count = 0;
-                if (!Int32.TryParse(countThreshold, out count))
+                if (!Int32.TryParse(countThreshold, out int count))
                 {
                     return Visibility.Collapsed;
                 }

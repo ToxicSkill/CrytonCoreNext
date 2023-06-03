@@ -63,15 +63,26 @@ namespace CrytonCoreNext.Views
             }
         }
 
-        private void ListView_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ListViewMerge_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             ViewModel.AddFileToMergeListCommand.Execute(null);
+        }
+
+        private void ListViewSplit_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ViewModel.AddFileToSplitListCommand.Execute(null);
         }
 
         private void ListView_PreviewMouseDoubleClick_Merge(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             ViewModel.RemoveFileFromMergeListCommand.Execute(null);
         }
+
+        private void ListView_PreviewMouseDoubleClick_Split(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ViewModel.RemoveFileFromSplitListCommand.Execute(null);
+        }
+        
 
         private void Image_PreviewMouseWheel_Merge(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {

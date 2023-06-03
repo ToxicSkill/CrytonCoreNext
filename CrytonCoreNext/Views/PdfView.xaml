@@ -181,15 +181,19 @@
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
 
-                    <ui:CardControl Grid.Column="0" Height="50" VerticalAlignment="Top" Padding="5" Margin="0,15,5,0" Icon="SelectAllOff20" >
+                    <ui:CardControl Grid.Column="0" Height="50" 
+                                    VerticalAlignment="Top" Padding="5" Margin="0,15,5,0" Icon="SelectAllOff20" >
                         <ui:CardControl.Header>
                             <TextBlock Text="Available files to merge (double click to chose)"/>
                         </ui:CardControl.Header>
                     </ui:CardControl>
+                  <ui:Flyout >
+                    <!--IMPLEMENT FLYOUT WITH INFOMRATION ABOUT 1 > PAGES FOR SPLIT-->
+                  </ui:Flyout>
                     <ScrollViewer Grid.Column="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,5,0">
                         <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
                                   SelectedItem="{Binding OpenedPdfSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick">
+                                  PreviewMouseDoubleClick="ListViewMerge_PreviewMouseDoubleClick">
                             <ListView.Template>
                                 <ControlTemplate TargetType="ListBox">
                                     <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -229,7 +233,8 @@
                         </ListView>
                     </ScrollViewer>
 
-                    <ui:CardControl Grid.Column="1" Height="50" VerticalAlignment="Top" Padding="5" Margin="0,15" Icon="SelectAllOn24" >
+                    <ui:CardControl Grid.Column="1" Height="50" 
+                                    VerticalAlignment="Top" Padding="5" Margin="0,15" Icon="SelectAllOn20" >
                         <ui:CardControl.Header>
                             <TextBlock Text="Selected files to merge"/>
                         </ui:CardControl.Header>
@@ -308,14 +313,199 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Content="Split">
+            <TabItem >
                 <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Margin="0,0,6,0" Symbol="ArrowSplit20" FontSize="{StaticResource G_NormalFontSize}" />
-                        <TextBlock Text="Split" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
-                    </StackPanel>
+                  <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Margin="0,0,6,0" Symbol="ArrowSplit20" FontSize="{StaticResource G_NormalFontSize}" />
+                    <TextBlock Text="Split" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
+                  </StackPanel>
                 </TabItem.Header>
+                <Grid>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height ="*"/>
+                    <RowDefinition Height ="*"/>
+                  </Grid.RowDefinitions>
+                  <Grid Grid.Row="0">
+
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*"/>
+                      <ColumnDefinition Width="*"/>
+                      <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ui:CardControl Grid.Column="0" Height="50"
+                                    VerticalAlignment="Top" Padding="5" Margin="0,15,0,0" Icon="SelectAllOff20" >
+                      <ui:CardControl.Header>
+                        <TextBlock Text="Available files to split (double click to chose)"/>
+                      </ui:CardControl.Header>
+                    </ui:CardControl>
+                    <ScrollViewer Grid.Column="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,5,0">
+                      <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedItem="{Binding OpenedPdfSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                PreviewMouseDoubleClick="ListViewSplit_PreviewMouseDoubleClick">
+                        <ListView.Template>
+                          <ControlTemplate TargetType="ListBox">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
+                              <ItemsPresenter/>
+                            </Border>
+                          </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                          <DataTemplate DataType="models:CryptFile">
+                            <Grid Height="40">
+                              <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                              </Grid.ColumnDefinitions>
+                              <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="20"/>
+                              </Grid.RowDefinitions>
+                              <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
+                                      FontSize="13"
+                                      FontWeight="Medium"
+                                      TextWrapping="WrapWithOverflow"
+                                      Text="{Binding NameWithExtension}"/>
+                              <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock  FontSize="12" Text="Pages: "/>
+                                <TextBlock  FontSize="12" Text="{Binding NumberOfPages}"/>
+                              </StackPanel>
+                              <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
+                                      FontSize="12"
+                                      Text="{Binding Size}"/>
+                              <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right"
+                                      FontSize="12"
+                                      Text="{Binding PdfStatus,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                          </DataTemplate>
+                        </ListView.ItemTemplate>
+                      </ListView>
+                    </ScrollViewer>
+                    <ui:CardControl Grid.Column="1" Height="50"
+                                    VerticalAlignment="Top" Padding="5" Margin="3,15" Icon="SelectAllOn20" >
+                      <ui:CardControl.Header>
+                        <TextBlock Text="Selected single file to split"/>
+                      </ui:CardControl.Header>
+                      <ui:Button Content="Merge" Appearance="Primary" Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </ui:CardControl>
+                    <ScrollViewer Grid.Column="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
+                      <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedItem="{Binding SelectedPdfFileToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Split">
+                        <ListView.Template>
+                          <ControlTemplate TargetType="ListBox">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
+                              <ItemsPresenter/>
+                            </Border>
+                          </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                          <DataTemplate DataType="models:CryptFile">
+                            <Grid Height="40">
+                              <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                              </Grid.ColumnDefinitions>
+                              <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="20"/>
+                              </Grid.RowDefinitions>
+                              <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
+                                      FontSize="13"
+                                      FontWeight="Medium"
+                                      TextWrapping="WrapWithOverflow"
+                                      Text="{Binding NameWithExtension}"/>
+                              <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock  FontSize="12" Text="Pages: "/>
+                                <TextBlock  FontSize="12" Text="{Binding NumberOfPages}"/>
+                              </StackPanel>
+                              <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
+                                      FontSize="12"
+                                      Text="{Binding Size}"/>
+                              <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right"
+                                      FontSize="12"
+                                      Text="{Binding PdfStatus,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                          </DataTemplate>
+                        </ListView.ItemTemplate>
+                      </ListView>
+                    </ScrollViewer>
+                    <ui:CardControl Grid.Column="2" Height="50"
+                                    VerticalAlignment="Top" Padding="5" Margin="0,15" Icon="SelectAllOn20" >
+                      <ui:CardControl.Header>
+                        <TextBlock Text="Outcome files from split"/>
+                      </ui:CardControl.Header>
+                      <ui:Button Content="Merge" Appearance="Primary" Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </ui:CardControl>
+                    <ScrollViewer Grid.Column="2" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
+                      <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedItem="{Binding SelectedPdfFileToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Split">
+                        <ListView.Template>
+                          <ControlTemplate TargetType="ListBox">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
+                              <ItemsPresenter/>
+                            </Border>
+                          </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemTemplate>
+                          <DataTemplate DataType="models:CryptFile">
+                            <Grid Height="40">
+                              <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                              </Grid.ColumnDefinitions>
+                              <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="20"/>
+                              </Grid.RowDefinitions>
+                              <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
+                                      FontSize="13"
+                                      FontWeight="Medium"
+                                      TextWrapping="WrapWithOverflow"
+                                      Text="{Binding NameWithExtension}"/>
+                              <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                <TextBlock  FontSize="12" Text="Pages: "/>
+                                <TextBlock  FontSize="12" Text="{Binding NumberOfPages}"/>
+                              </StackPanel>
+                              <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
+                                      FontSize="12"
+                                      Text="{Binding Size}"/>
+                              <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right"
+                                      FontSize="12"
+                                      Text="{Binding PdfStatus,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                          </DataTemplate>
+                        </ListView.ItemTemplate>
+                      </ListView>
+                    </ScrollViewer>
+                  </Grid>
+                  <ListBox Grid.Row="1" HorizontalAlignment="Center" >
+                    <ListBox.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                      </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBoxItem>listbox item 1</ListBoxItem>
+                    <ListBoxItem>listbox item 2</ListBoxItem>
+                    <ListBoxItem>listbox item 3</ListBoxItem>
+                    <ListBoxItem>listbox item 4</ListBoxItem>
+                    <ListBoxItem>listbox item 5</ListBoxItem>
+                    <ListBoxItem>listbox item 6</ListBoxItem>
+                    <ListBoxItem>listbox item 7</ListBoxItem>
+                    <ListBoxItem>listbox item 8</ListBoxItem>
+                    <ListBoxItem>listbox item 9</ListBoxItem>
+                    <ListBoxItem>listbox item 10</ListBoxItem>
+                    <ListBoxItem>listbox item 11</ListBoxItem>
+                    <ListBoxItem>listbox item 12</ListBoxItem>
+                    <ListBoxItem>listbox item 13</ListBoxItem>
+                    <ListBoxItem>listbox item 14</ListBoxItem>
+                    <ListBoxItem>listbox item 15</ListBoxItem>
+                  </ListBox>
+                </Grid>
             </TabItem>
+          
+          
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
