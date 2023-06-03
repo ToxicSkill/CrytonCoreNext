@@ -1,6 +1,8 @@
 ﻿using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
 using System;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Wpf.Ui.Appearance;
@@ -12,6 +14,8 @@ namespace CrytonCoreNext
 {
     public partial class MainWindow : INavigationWindow
     {
+        private const int MinimalWindowsBuildNumber = 22523;
+
         public MainViewModel ViewModel
         {
             get;
@@ -31,13 +35,23 @@ namespace CrytonCoreNext
             navigationService.SetNavigationControl(RootNavigation);
             snackbarService.SetSnackbarControl(RootSnackbar);
 
-            SetSystemTheme();
+            //SetSystemTheme();
             ViewModel.ThemeStyleChanged += SetTheme;
         }
 
         public void SetTheme(BackgroundType value = BackgroundType.Mica)
         {
-            this.WindowBackdropType = value;
+            if (WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber)
+            {
+                try
+                {
+                    this.WindowBackdropType = value;
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e.Message);
+                }
+            }
         }
 
         public Frame GetFrame()
