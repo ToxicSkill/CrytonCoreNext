@@ -1,10 +1,19 @@
-﻿using CrytonCoreNext.PDF.Interfaces;
+﻿using CrytonCoreNext.Extensions;
+using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Interfaces;
 using Docnet.Core;
+using Docnet.Core.Editors;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
+using iText.IO.Image;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 using MethodTimer;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,20 +59,39 @@ namespace CrytonCoreNext.PDF.Models
             return GetImage(pageReader);
         }
 
-        public async Task<CrytonCoreNext.Models.File> Merge(List<PDFFile> pdfFiles)
+        public async Task<File> Merge(List<PDFFile> pdfFiles)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
             var bytes = pdfFiles.Select(x => x.Bytes).ToArray();
             var mergedFileBytes = await Task.Run(() => pdfLibrary.Merge(bytes));
             var templateFile = pdfFiles.First();
-            return new CrytonCoreNext.Models.File(pdfFiles.First(), PrepareFileNameForMerge(pdfFiles), mergedFileBytes, pdfFiles.Count() + 1);
+            return new File(pdfFiles.First(), PrepareFileNameForMerge(pdfFiles), mergedFileBytes, pdfFiles.Count() + 1);
         }
 
-        public async Task<CrytonCoreNext.Models.File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
+        public async Task<File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
             var splittedFileBytes = await Task.Run(() => pdfLibrary.Split(pdfFile.Bytes, fromPage, toPage));
-            return new CrytonCoreNext.Models.File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), splittedFileBytes, newId);
+            return new File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), splittedFileBytes, newId);
+        }
+
+        public PDFFile ImageToPdf(ImageFile image, int newId)
+        {
+            //using IDocLib pdfLibrary = DocLib.Instance;
+            //pdfLibrary.JpegToPdf(new() { new Docnet.Core.Editors.JpegImage() });
+            //var newFile = new CrytonCoreNext.Models.File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), splittedFileBytes, newId);
+            //return new PDFFile(new CrytonCoreNext.Models.File(), Enums.EPdfStatus.Opened);
+            using IDocLib pdfLibrary = DocLib.Instance;
+            var jpegImage = new JpegImage
+            {
+                Bytes = System.IO.File.ReadAllBytes(image.Path),
+                Width = (int)image.Width,
+                Height = (int)image.Height
+            };
+
+            var bytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
+            var file = new File($"{image.Name}_Converted", string.Empty, bytes.GetSizeString(), DateTime.Now, "pdf", newId, bytes);
+            return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 
         private static string PrepareFileNameForMerge(List<PDFFile> pdfFiles)

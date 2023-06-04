@@ -20,12 +20,15 @@ namespace CrytonCoreNext.Static
 
         public static string Json { get => nameof(Json).ToLower(); }
 
+        public static string Jpegs { get => nameof(Jpegs).ToLower(); }
+
         public enum DialogFilters
         {
             Json = 0,
             Txt,
             Images,
             Pdf,
+            Jpegs,
             All
         }
 
@@ -51,6 +54,10 @@ namespace CrytonCoreNext.Static
                 case DialogFilters.Txt:
                     return nameof(DialogFilters.Txt) + " file(s) |*." +
                        Txt + ";";
+                case DialogFilters.Jpegs:
+                    return nameof(DialogFilters.Jpegs) + " file(s) |*." +
+                       Jpg + ";*." +
+                       Jpegs + ";";
                 default:
                     return string.Empty;
             }

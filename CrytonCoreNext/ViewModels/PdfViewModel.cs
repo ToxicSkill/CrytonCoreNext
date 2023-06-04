@@ -5,6 +5,7 @@ using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
+using OpenCvSharp;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -173,7 +174,6 @@ namespace CrytonCoreNext.ViewModels
 
         private void UpdatePdfToSplitImage()
         {
-
         }
 
         private void UpdatePdfToMergeImage()
@@ -332,7 +332,7 @@ namespace CrytonCoreNext.ViewModels
         private async Task LoadImageFiles()
         {
             Lock();
-            await foreach (var imageFile in base.LoadFiles(Static.Extensions.DialogFilters.Images))
+            await foreach (var imageFile in base.LoadFiles(Static.Extensions.DialogFilters.Jpegs))
             {
                 ImageFiles.Add(new ImageFile(imageFile));
                 SelectedImageFile = ImageFiles.Last();
@@ -408,6 +408,14 @@ namespace CrytonCoreNext.ViewModels
         {
             _pdfExcludedMergeIndexes.Add(_pdfToMergePagesIndexes[_currentPdfToMergeImageIndex]);
             UpdatePdfToMergeImage();
+        }
+
+        [RelayCommand]
+        private void ConvertSelectedImageToPdf()
+        {
+            var convertedPdf = _pdfService.ImageToPdf(SelectedImageFile, PdfFiles.Max(x => x.Id) + 1);
+            _pdfService.UpdatePdfFileInformations(ref convertedPdf);
+            PdfFiles.Add(convertedPdf);
         }
 
         private void UpdateProtectedPdf()

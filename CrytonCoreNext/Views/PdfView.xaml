@@ -386,7 +386,7 @@
                       <ui:CardControl.Header>
                         <TextBlock Text="Selected single file to split"/>
                       </ui:CardControl.Header>
-                      <ui:Button Content="Merge" Appearance="Primary" Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ui:Button Content="Split" Appearance="Primary" Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </ui:CardControl>
                     <ScrollViewer Grid.Column="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
                       <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
@@ -431,11 +431,10 @@
                       </ListView>
                     </ScrollViewer>
                     <ui:CardControl Grid.Column="2" Height="50"
-                                    VerticalAlignment="Top" Padding="5" Margin="0,15" Icon="SelectAllOn20" >
+                                    VerticalAlignment="Top" Padding="5" Margin="0,15" Icon="SplitVertical20" >
                       <ui:CardControl.Header>
                         <TextBlock Text="Outcome files from split"/>
                       </ui:CardControl.Header>
-                      <ui:Button Content="Merge" Appearance="Primary" Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </ui:CardControl>
                     <ScrollViewer Grid.Column="2" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
                       <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
@@ -514,12 +513,23 @@
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
-                    <ui:Button Height="50" Content="Load images" Command="{Binding LoadImageFilesCommand}" VerticalAlignment="Top"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
+                        <ui:Button 
+                            Icon="Add20" Command="{Binding LoadImageFilesCommand}" 
+                            Content="Load images" Margin="3,3" 
+                            Appearance="Secondary" 
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Left" />
+                        <ui:Button Visibility="{Binding ImageFiles, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            Icon="ConvertRange20" Command="{Binding ConvertSelectedImageToPdfCommand}" 
+                            Content="Convert to PDF" Margin="3,3" 
+                            Appearance="Primary" 
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right" />
                         <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
                             <ListView ItemsSource="{Binding ImageFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedImageFile}">
                                 <ListView.Template>

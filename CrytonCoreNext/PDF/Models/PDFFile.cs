@@ -59,6 +59,7 @@ namespace CrytonCoreNext.PDF.Models
             EPdfStatus pdfStatus) : base(file)
         {
             PdfStatus = pdfStatus;
+            Dimensions = 1.0;
         }
 
         public PDFFile(File file,

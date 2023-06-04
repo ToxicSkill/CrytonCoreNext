@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
+using OpenCvSharp;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -45,6 +46,11 @@ namespace CrytonCoreNext.PDF.Services
         public async Task<File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
         {
             return await _pdfManager.Split(pdfFile, fromPage, toPage, newId);
+        }
+
+        public PDFFile ImageToPdf(ImageFile image, int newId)
+        {
+           return _pdfManager.ImageToPdf(image, newId);
         }
 
         public void UpdatePdfFileInformations(ref PDFFile pdfFile)

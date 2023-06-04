@@ -137,7 +137,7 @@ namespace CrytonCoreNext.PDF.Models
             {
                 if (Debugger.IsAttached) Debugger.Break();
                 pdfFile.Metadata = new ()
-                { { new Wpf.Ui.Controls.SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.ErrorCircle20 }, ex.Message} };
+                { { new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.ErrorCircle20 }, ex.Message} };
             }
         }
 
