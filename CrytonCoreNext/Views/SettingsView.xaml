@@ -65,7 +65,7 @@
                         </Grid>
                     </ui:CardControl>
                     <ui:CardControl Margin="15,8,15,0" Icon="StyleGuide20" 
-                                    Visibility="{Binding IsThemeSwitchChecked, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Visibility="{Binding IsThemeStyleAvailable, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     IconFilled="True">
                         <ui:CardControl.Header>
                             <StackPanel VerticalAlignment="Center">
