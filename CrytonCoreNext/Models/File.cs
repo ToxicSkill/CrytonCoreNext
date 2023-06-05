@@ -6,7 +6,7 @@ namespace CrytonCoreNext.Models
 {
     public class File : INotifyPropertyChanged
     {
-        public string Name { get; init; }
+        public string Name { get; private set; }
 
         public string NameWithExtension { get => $"{Name}.{Extension}"; }
 
@@ -57,6 +57,14 @@ namespace CrytonCoreNext.Models
             Extension = file.Extension;
             Id = file.Id;
             Bytes = file.Bytes;
+        }
+
+        public void Rename(string newName)
+        {
+            if (!string.IsNullOrEmpty(newName))
+            {
+                this.Name = newName;
+            }
         }
 
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)

@@ -29,16 +29,27 @@
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
             <TreeView Grid.Column="0" BorderThickness="0" Margin="0, 20, 0,0 "
-                                         ItemsSource="{Binding TreeViewItemSource}" >
+                      ItemsSource="{Binding TreeViewItemSource}" >
                 <e:Interaction.Behaviors>
                     <extensions:BindableSelectedItemBehavior SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </e:Interaction.Behaviors>
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                    </Style>
+                </TreeView.ItemContainerStyle>
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate DataType="models:TreeViewItemModel" ItemsSource="{Binding Childs}">
                         <Grid>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <ui:SymbolIcon Symbol="{Binding Symbol}"/>
-                                <TextBlock Text="{Binding Title}" Margin="5,0,0,0"/>
+                                <Border Width="2" CornerRadius="2" Margin="0,2"
+                                        Visibility="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="{DynamicResource SystemAccentColor}"/>
+                                    </Border.Background>
+                                </Border>
+                                <ui:SymbolIcon Symbol="{Binding Symbol}" Margin="10,0"/>
+                                <TextBlock Text="{Binding Title}" />
                             </StackPanel>
                         </Grid>
                     </HierarchicalDataTemplate>                    

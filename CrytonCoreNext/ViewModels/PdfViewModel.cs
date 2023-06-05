@@ -6,6 +6,7 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using OpenCvSharp;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -415,7 +416,18 @@ namespace CrytonCoreNext.ViewModels
         {
             var convertedPdf = _pdfService.ImageToPdf(SelectedImageFile, PdfFiles.Max(x => x.Id) + 1);
             _pdfService.UpdatePdfFileInformations(ref convertedPdf);
+            CheckNameConflicts(convertedPdf);
             PdfFiles.Add(convertedPdf);
+        }
+
+        private void CheckNameConflicts(File file)
+        {
+            var index = 1;
+            while (PdfFiles.Any(x => x.Name == file.Name))
+            {
+                file.Rename(file.Name+$"_{index}");
+                index++;
+            }                
         }
 
         private void UpdateProtectedPdf()
