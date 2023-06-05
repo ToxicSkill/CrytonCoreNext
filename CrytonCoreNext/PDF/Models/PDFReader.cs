@@ -68,6 +68,10 @@ namespace CrytonCoreNext.PDF.Models
             {
                 GetMetaInfo(ref pdfFile);
             }
+            else if (pdfFile.PdfStatus == EPdfStatus.Protected)
+            {
+                pdfFile.HasPassword = true;
+            }
             return pdfFile;
         }
 

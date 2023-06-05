@@ -65,7 +65,7 @@
                         <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
                             <ListView ItemsSource="{Binding PdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
                                       SelectedItem="{Binding SelectedPdfFile}" 
-                                      SelectionChanged="ListView_SelectionChanged"
+                                      SelectionChanged="ListView_SelectionChanged" SelectionMode="Single"
                                       ScrollViewer.CanContentScroll="True">
                                 <ListView.Template>
                                     <ControlTemplate TargetType="ListBox">
@@ -87,11 +87,15 @@
                                                         <RowDefinition Height="20"/>
                                                         <RowDefinition Height="20"/>
                                                     </Grid.RowDefinitions>
-                                                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
-                                                FontSize="13"
-                                                FontWeight="Medium"
-                                                TextWrapping="WrapWithOverflow"
-                                                Text="{Binding NameWithExtension}"/>
+                                                    <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
+                                                        <ui:SymbolIcon Symbol="LockClosed20" Margin="0,0,5,0" Foreground="DarkOrange" ToolTip="Protected with password"
+                                                                       Visibility="{Binding HasPassword, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                                        <TextBlock
+                                                            FontSize="13"
+                                                            FontWeight="Medium"
+                                                            TextWrapping="WrapWithOverflow"
+                                                            Text="{Binding NameWithExtension}"/>
+                                                    </StackPanel>  
                                                     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
                                                         <TextBlock  FontSize="12" Text="Pages: "/>
                                                         <TextBlock  FontSize="12" Text="{Binding NumberOfPages}"/>
@@ -193,7 +197,7 @@
                     <ScrollViewer Grid.Column="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,5,0">
                         <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
                                   SelectedItem="{Binding OpenedPdfSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  PreviewMouseDoubleClick="ListViewMerge_PreviewMouseDoubleClick">
+                                  PreviewMouseDoubleClick="ListViewMerge_PreviewMouseDoubleClick" SelectionMode="Single">
                             <ListView.Template>
                                 <ControlTemplate TargetType="ListBox">
                                     <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -243,7 +247,7 @@
                     <ScrollViewer Grid.Column="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
                         <ListView ItemsSource="{Binding SelectedPdfFilesToMerge, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
                                   SelectedItem="{Binding SelectedPdfFileToMerge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Merge">
+                                  PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Merge" SelectionMode="Single">
                             <ListView.Template>
                                 <ControlTemplate TargetType="ListBox">
                                     <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -342,7 +346,7 @@
                     <ScrollViewer Grid.Column="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,5,0">
                       <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedItem="{Binding OpenedPdfSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                PreviewMouseDoubleClick="ListViewSplit_PreviewMouseDoubleClick">
+                                PreviewMouseDoubleClick="ListViewSplit_PreviewMouseDoubleClick" SelectionMode="Single">
                         <ListView.Template>
                           <ControlTemplate TargetType="ListBox">
                             <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -391,7 +395,7 @@
                     <ScrollViewer Grid.Column="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
                       <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedItem="{Binding SelectedPdfFileToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Split">
+                                PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Split" SelectionMode="Single">
                         <ListView.Template>
                           <ControlTemplate TargetType="ListBox">
                             <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -439,7 +443,7 @@
                     <ScrollViewer Grid.Column="2" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
                       <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedItem="{Binding SelectedPdfFileToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Split">
+                                PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Split" SelectionMode="Single">
                         <ListView.Template>
                           <ControlTemplate TargetType="ListBox">
                             <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -531,7 +535,8 @@
                             VerticalAlignment="Top"
                             HorizontalAlignment="Right" />
                         <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
-                            <ListView ItemsSource="{Binding ImageFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedImageFile}">
+                            <ListView ItemsSource="{Binding ImageFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
+                                      SelectedItem="{Binding SelectedImageFile}" SelectionMode="Single">
                                 <ListView.Template>
                                     <ControlTemplate TargetType="ListBox">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
