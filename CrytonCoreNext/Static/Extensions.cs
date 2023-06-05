@@ -22,13 +22,14 @@ namespace CrytonCoreNext.Static
 
         public static string Jpegs { get => nameof(Jpegs).ToLower(); }
 
+        public static string Bmp { get => nameof(Bmp).ToLower(); }
+
         public enum DialogFilters
         {
             Json = 0,
             Txt,
             Images,
             Pdf,
-            Jpegs,
             All
         }
 
@@ -44,6 +45,7 @@ namespace CrytonCoreNext.Static
                        Jpeg + ";*." +
                        Png + ";*." +
                        Tiff + ";*." +
+                       Bmp + ";*." +
                        Gif + ";";
                 case DialogFilters.Pdf:
                     return nameof(DialogFilters.Pdf) + " file(s) |*." +
@@ -54,10 +56,6 @@ namespace CrytonCoreNext.Static
                 case DialogFilters.Txt:
                     return nameof(DialogFilters.Txt) + " file(s) |*." +
                        Txt + ";";
-                case DialogFilters.Jpegs:
-                    return nameof(DialogFilters.Jpegs) + " file(s) |*." +
-                       Jpg + ";*." +
-                       Jpegs + ";";
                 default:
                     return string.Empty;
             }

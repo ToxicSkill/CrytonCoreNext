@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
 using System;
 using System.Diagnostics;
@@ -7,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls.Interfaces;
-using Wpf.Ui.Extensions;
 using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext

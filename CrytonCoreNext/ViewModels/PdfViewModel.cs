@@ -5,8 +5,6 @@ using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
-using OpenCvSharp;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -333,7 +331,7 @@ namespace CrytonCoreNext.ViewModels
         private async Task LoadImageFiles()
         {
             Lock();
-            await foreach (var imageFile in base.LoadFiles(Static.Extensions.DialogFilters.Jpegs))
+            await foreach (var imageFile in base.LoadFiles(Static.Extensions.DialogFilters.Images))
             {
                 ImageFiles.Add(new ImageFile(imageFile));
                 SelectedImageFile = ImageFiles.Last();
@@ -343,6 +341,16 @@ namespace CrytonCoreNext.ViewModels
                 SelectedImageFile = ImageFiles.First();
             }
             Unlock();
+        }
+
+        [RelayCommand]
+        private void SavePdfFile()
+        {
+            if (SelectedPdfFile == null)
+            {
+                return;
+            }
+            base.SaveFile(SelectedPdfFile);
         }
 
         [RelayCommand]

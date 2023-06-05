@@ -1,6 +1,5 @@
 ﻿using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Models;
-using OpenCvSharp;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;

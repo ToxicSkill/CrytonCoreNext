@@ -54,7 +54,7 @@
                                        Appearance="Secondary" 
                                        HorizontalAlignment="Left" />
                             <ui:Button Grid.Column="1" Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                                       Icon="Save20" Command="{Binding SaveCryptFileCommand}" 
+                                       Icon="Save20" Command="{Binding SavePdfFileCommand}" 
                                        Content="Save" Margin="3,3" 
                                        Appearance="Secondary" HorizontalAlignment="Left" />
                             <ui:Button Grid.Column="2" Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 

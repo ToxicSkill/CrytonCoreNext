@@ -1,5 +1,9 @@
-﻿using OpenCvSharp;
+﻿using CrytonCoreNext.Enums;
+using CrytonCoreNext.Services;
+using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
+using System;
+using System.Diagnostics;
 using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.Models
@@ -28,8 +32,24 @@ namespace CrytonCoreNext.Models
 
         private void LoadImage()
         {
-            using var mat = new Mat(Path);
-            Bitmap = mat.ToWriteableBitmap();
+            try
+            {
+                if (Extension.ToLowerInvariant() == Enum.GetName(typeof(EImageExtensions), EImageExtensions.gif))
+                {
+                    var converter = new ImageConverterService();
+                    Bitmap = converter.ConvertGifToMat(this).ToWriteableBitmap();
+                }
+                else
+                {
+                    using var mat = new Mat(Path);
+                    Bitmap = mat.ToWriteableBitmap();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Trace.WriteLine(ex.Message);
+                Bitmap = null;
+            }
         }
     }
 }

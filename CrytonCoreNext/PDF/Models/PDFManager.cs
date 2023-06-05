@@ -1,15 +1,13 @@
-﻿using CrytonCoreNext.Extensions;
+﻿using CrytonCoreNext.Enums;
+using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.Services;
 using Docnet.Core;
 using Docnet.Core.Editors;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
-using iText.IO.Image;
-using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
 using iText.Layout;
-using iText.Layout.Element;
 using MethodTimer;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
@@ -77,20 +75,29 @@ namespace CrytonCoreNext.PDF.Models
 
         public PDFFile ImageToPdf(ImageFile image, int newId)
         {
-            //using IDocLib pdfLibrary = DocLib.Instance;
-            //pdfLibrary.JpegToPdf(new() { new Docnet.Core.Editors.JpegImage() });
-            //var newFile = new CrytonCoreNext.Models.File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), splittedFileBytes, newId);
-            //return new PDFFile(new CrytonCoreNext.Models.File(), Enums.EPdfStatus.Opened);
-            using IDocLib pdfLibrary = DocLib.Instance;
+            var converter = new ImageConverterService();
+            byte[] bytes = default;
+            var extension = image.Extension.ToLowerInvariant();
+            if (extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.png) || 
+                extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.gif) ||
+                extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.bmp))
+            {
+                bytes = converter.ConvertImageToJpeg(image);
+            }
+            else
+            {
+                bytes = image.Bytes;
+            }
             var jpegImage = new JpegImage
             {
-                Bytes = System.IO.File.ReadAllBytes(image.Path),
+                Bytes = bytes,
                 Width = (int)image.Width,
                 Height = (int)image.Height
             };
 
-            var bytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
-            var file = new File($"{image.Name}_Converted", string.Empty, bytes.GetSizeString(), DateTime.Now, "pdf", newId, bytes);
+            using IDocLib pdfLibrary = DocLib.Instance;
+            var pdfBbytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
+            var file = new File($"{image.Name}_Converted", string.Empty, bytes.GetSizeString(), DateTime.Now, "pdf", newId, pdfBbytes);
             return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 
