@@ -112,40 +112,14 @@ namespace CrytonCoreNext.PDF.Models
             using var memStream = new MemoryStream();
             using var writer = new PdfWriter(memStream);
             using var document = new PdfDocument(writer);
-            using var doc = new Document(document, PageSize.A4.Rotate());
-            var index = 0;
+            using var doc = new Document(document, PageSize.A4);
             var size = document.GetDefaultPageSize();
             foreach (var imageFile in images)
             {
-                var posWidth = 0f;
-                var posHeight = 0f;
-                switch (index % 4)
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        posHeight = size.GetHeight() / 2;
-                        break;
-                    case 2:
-                        posWidth = size.GetWidth() / 2;
-                        break;
-                    case 3:
-                        posHeight = size.GetHeight() / 2;
-                        posWidth = size.GetWidth() / 2;
-                        break;
-                    default:
-                        break;
-                }
                 ImageData imageData = ImageDataFactory.Create(imageFile.Bytes);
-                Image image = new Image(imageData).
-                    ScaleAbsolute(size.GetWidth() / 2, size.GetHeight() / 2).
-                    SetFixedPosition(posWidth, posHeight);
+                Image image = new Image(imageData);
                 doc.Add(image);
-                index++;
-                if (index % 4 == 0)
-                {
-                    doc.Add(new AreaBreak(iText.Layout.Properties.AreaBreakType.NEXT_PAGE));
-                }
+                doc.Add(new AreaBreak(iText.Layout.Properties.AreaBreakType.NEXT_PAGE));
             }
             document.Close();
             var bytes = memStream.ToArray();
