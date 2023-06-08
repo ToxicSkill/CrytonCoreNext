@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Models;
+using MethodTimer;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System.Drawing;
@@ -31,6 +32,7 @@ namespace CrytonCoreNext.Services
             }
         }
 
+        [Time]
         public Mat ConvertGifToMat(ImageFile file)
         {
             using var s = new MemoryStream(file.Bytes);

@@ -24,7 +24,7 @@
 
     <Grid>
         <TabControl Margin="0, 20, 0, 0" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -48,16 +48,16 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
-                            <ui:Button Grid.Column="0" Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                                       Icon="Add20" Command="{Binding LoadPdfFilesCommand}" 
+                            <ui:Button Grid.Column="0" Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                       Icon="Add20" Command="{Binding LoadPdfAndImageFilesCommand}" CommandParameter="false" 
                                        Content="Add" Margin="3,3" 
                                        Appearance="Secondary" 
                                        HorizontalAlignment="Left" />
-                            <ui:Button Grid.Column="1" Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <ui:Button Grid.Column="1" Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                        Icon="Save20" Command="{Binding SavePdfFileCommand}" 
                                        Content="Save" Margin="3,3" 
                                        Appearance="Secondary" HorizontalAlignment="Left" />
-                            <ui:Button Grid.Column="2" Visibility="{Binding PdfFiles, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <ui:Button Grid.Column="2" Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                        Icon="Delete20" Command="{Binding DeleteFileCommand}" 
                                        Content="Delete" Margin="3,3" 
                                        Appearance="Secondary" HorizontalAlignment="Right" />
@@ -534,6 +534,11 @@
                             Appearance="Primary" 
                             VerticalAlignment="Top"
                             HorizontalAlignment="Right" />
+                        <ui:Button Visibility="{Binding ImageFiles, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            Icon="ConvertRange20" Command="{Binding InsertPdfCommand}" 
+                            Content="Insert PDF" Margin="3,3" 
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center" />
                         <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
                             <ListView ItemsSource="{Binding ImageFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
                                       SelectedItem="{Binding SelectedImageFile}" SelectionMode="Single">
@@ -578,8 +583,8 @@
 
             </TabItem>
         </TabControl>
-        <Grid Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-            <Frame x:Name="Background" Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Grid Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <Frame x:Name="Background" Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Grid.Column="1" FontSize="84" Text="PDF Manager" FontFamily="Candara Light"/>
                 <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="22" Text="Simple document manager" FontWeight="UltraLight" FontFamily="Candara Light"/>
@@ -587,10 +592,10 @@
 
             <ui:Button VerticalAlignment="Center" HorizontalAlignment="Center" Margin="600,20,0,0" Cursor="Hand"
                        Width="80" Height="80" Icon="Add20" FontSize="54" ToolTip="Load files"
-                       Command="{Binding LoadPdfFilesCommand}"/>
+                       Command="{Binding LoadPdfAndImageFilesCommand}"/>
 
             <!--<ui:Button Grid.Row="1" Icon="Add20" 
-                       Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                       Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                        Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" 
                        Appearance="Primary" HorizontalAlignment="Stretch" Cursor="Hand" />-->
             <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20">

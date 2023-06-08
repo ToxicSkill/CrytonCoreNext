@@ -16,6 +16,8 @@ namespace CrytonCoreNext.Static
 
         public static string Pdf { get => nameof(Pdf).ToLower(); }
 
+        public static string PdfAndImages { get => nameof(PdfAndImages).ToLower(); }
+
         public static string Txt { get => nameof(Txt).ToLower(); }
 
         public static string Json { get => nameof(Json).ToLower(); }
@@ -30,6 +32,7 @@ namespace CrytonCoreNext.Static
             Txt,
             Images,
             Pdf,
+            PdfAndImages,
             All
         }
 
@@ -50,6 +53,16 @@ namespace CrytonCoreNext.Static
                 case DialogFilters.Pdf:
                     return nameof(DialogFilters.Pdf) + " file(s) |*." +
                        Pdf + ";";
+                case DialogFilters.PdfAndImages:
+                    return nameof(DialogFilters.Images) + "and" + nameof(DialogFilters.Pdf) +
+                        " file(s) |*." +
+                       Pdf + ";" +
+                       Jpg + ";*." +
+                       Jpeg + ";*." +
+                       Png + ";*." +
+                       Tiff + ";*." +
+                       Bmp + ";*." +
+                       Gif + ";";
                 case DialogFilters.Json:
                     return nameof(DialogFilters.Json) + " file(s) |*." +
                        Json + ";";

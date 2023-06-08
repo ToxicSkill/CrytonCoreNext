@@ -1,16 +1,25 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
+using iText.IO.Image;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Wpf.Ui.Mvvm.Contracts;
+using File = CrytonCoreNext.Models.File;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
 
 namespace CrytonCoreNext.ViewModels
@@ -24,6 +33,9 @@ namespace CrytonCoreNext.ViewModels
         private List<(int pdfIndex, int pdfPage)> _pdfExcludedMergeIndexes;
 
         private int _currentPdfToMergeImageIndex = 0;
+
+        [ObservableProperty]
+        public bool anyLoadedFile;
 
         [ObservableProperty]
         public string pageMergeCountStatus;
@@ -133,6 +145,15 @@ namespace CrytonCoreNext.ViewModels
         private void RemoveFileFromMergeList()
         {
             RemoveFileFromMergeList(null, true);
+        }
+
+        [RelayCommand]
+        private void InsertPdf()
+        {
+            var mergedImagesPdf = _pdfService.MergeAllImagesToPDF(ImageFiles.ToList(), ImageFiles.Max(x => x.Id) + 1);
+            _pdfService.UpdatePdfFileInformations(ref mergedImagesPdf);
+            CheckNameConflicts(mergedImagesPdf);
+            PdfFiles.Add(mergedImagesPdf);
         }
 
         [RelayCommand]
@@ -270,30 +291,25 @@ namespace CrytonCoreNext.ViewModels
             {
                 SelectedPdfFile = PdfFiles.ElementAt(oldIndex > 0 ? --oldIndex : oldIndex);
             }
+            CheckAnyFileLoaded();
         }
 
         [RelayCommand]
-        private async Task LoadPdfFiles()
+        private async Task LoadPdfAndImageFiles(string? andImages = null)
         {
             Lock();
             var protectedFilesCount = 0;
             var damagedFilesCount = 0;
-            await foreach (var file in base.LoadFiles(Static.Extensions.DialogFilters.Pdf))
+            await foreach (var file in base.LoadFiles(andImages == null ? Static.Extensions.DialogFilters.PdfAndImages : Static.Extensions.DialogFilters.Pdf))
             {
-                var pdfFile = _pdfService.ReadPdf(file);
-                if (pdfFile != null)
+                if (file.Extension.ToLower().Contains("pdf"))
                 {
-                    PdfFiles.Add(pdfFile);
+                    LoadPdfFile(ref protectedFilesCount, ref damagedFilesCount, file);
                 }
-                if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected)
+                else
                 {
-                    protectedFilesCount++;
+                    LoadImageFile(file);
                 }
-                if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Damaged)
-                {
-                    damagedFilesCount++;
-                }
-                SelectedPdfFile = PdfFiles.Last();
             }
             if (SelectedPdfFile == null && PdfFiles.Any())
             {
@@ -324,7 +340,39 @@ namespace CrytonCoreNext.ViewModels
                     Wpf.Ui.Common.SymbolRegular.Warning20,
                     Wpf.Ui.Common.ControlAppearance.Caution);
             }
+            CheckAnyFileLoaded();
             Unlock();
+        }
+
+        private void CheckAnyFileLoaded()
+        {
+            if (PdfFiles.Any() && !ImageFiles.Any())
+            {
+                SelectedTabIndex = 0;
+            }
+            else if (!PdfFiles.Any() && ImageFiles.Any())
+            {
+                SelectedTabIndex = 3;
+            }
+            AnyLoadedFile = PdfFiles.Any() || ImageFiles.Any();
+        }
+
+        private void LoadPdfFile(ref int protectedFilesCount, ref int damagedFilesCount, File file)
+        {
+            var pdfFile = _pdfService.ReadPdf(file);
+            if (pdfFile != null)
+            {
+                PdfFiles.Add(pdfFile);
+            }
+            if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected)
+            {
+                protectedFilesCount++;
+            }
+            if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Damaged)
+            {
+                damagedFilesCount++;
+            }
+            SelectedPdfFile = PdfFiles.Last();
         }
 
         [RelayCommand]
@@ -333,14 +381,15 @@ namespace CrytonCoreNext.ViewModels
             Lock();
             await foreach (var imageFile in base.LoadFiles(Static.Extensions.DialogFilters.Images))
             {
-                ImageFiles.Add(new ImageFile(imageFile));
-                SelectedImageFile = ImageFiles.Last();
-            }
-            if (SelectedImageFile == null && ImageFiles.Any())
-            {
-                SelectedImageFile = ImageFiles.First();
+                LoadImageFile(imageFile);
             }
             Unlock();
+        }
+
+        private void LoadImageFile(File imageFile)
+        {
+            ImageFiles.Add(new ImageFile(imageFile));
+            SelectedImageFile = ImageFiles.Last();
         }
 
         [RelayCommand]
@@ -428,7 +477,7 @@ namespace CrytonCoreNext.ViewModels
             PdfFiles.Add(convertedPdf);
         }
 
-        private void CheckNameConflicts(File file)
+        private void CheckNameConflicts(Models.File file)
         {
             var index = 1;
             while (PdfFiles.Any(x => x.Name == file.Name))
@@ -468,6 +517,7 @@ namespace CrytonCoreNext.ViewModels
             PdfFiles.Remove(SelectedPdfFile);
             PdfFiles.Insert(oldIndex, oldFile);
             SelectedPdfFile = oldFile;
+            CheckAnyFileLoaded();
         }
     }
 }

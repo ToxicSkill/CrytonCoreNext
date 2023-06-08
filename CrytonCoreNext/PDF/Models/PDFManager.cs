@@ -7,16 +7,22 @@ using Docnet.Core;
 using Docnet.Core.Editors;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
+using iText.IO.Image;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 using iText.Layout;
+using iText.Layout.Element;
 using MethodTimer;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using File = CrytonCoreNext.Models.File;
 
 namespace CrytonCoreNext.PDF.Models
 {
@@ -99,6 +105,66 @@ namespace CrytonCoreNext.PDF.Models
             var pdfBbytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
             var file = new File($"{image.Name}_Converted", string.Empty, bytes.GetSizeString(), DateTime.Now, "pdf", newId, pdfBbytes);
             return new PDFFile(file, Enums.EPdfStatus.Opened);
+        }
+
+        public PDFFile MergeAllImagesToPDF(List<ImageFile> images, int newId)
+        {
+            using var memStream = new MemoryStream();
+            using var writer = new PdfWriter(memStream);
+            using var document = new PdfDocument(writer);
+            using var doc = new Document(document, PageSize.A4.Rotate());
+            var index = 0;
+            var size = document.GetDefaultPageSize();
+            foreach (var imageFile in images)
+            {
+                var posWidth = 0f;
+                var posHeight = 0f;
+                switch (index % 4)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        posHeight = size.GetHeight() / 2;
+                        break;
+                    case 2:
+                        posWidth = size.GetWidth() / 2;
+                        break;
+                    case 3:
+                        posHeight = size.GetHeight() / 2;
+                        posWidth = size.GetWidth() / 2;
+                        break;
+                    default:
+                        break;
+                }
+                ImageData imageData = ImageDataFactory.Create(imageFile.Bytes);
+                Image image = new Image(imageData).
+                    ScaleAbsolute(size.GetWidth() / 2, size.GetHeight() / 2).
+                    SetFixedPosition(posWidth, posHeight);
+                doc.Add(image);
+                index++;
+                if (index % 4 == 0)
+                {
+                    doc.Add(new AreaBreak(iText.Layout.Properties.AreaBreakType.NEXT_PAGE));
+                }
+            }
+            document.Close();
+            var bytes = memStream.ToArray();
+            var file = new File("MergedImages", string.Empty, bytes.GetSizeString(), DateTime.Now, "pdf", newId, bytes);
+            return new PDFFile(file, Enums.EPdfStatus.Opened);
+        }
+
+        private static byte[] ReadFully(Stream input)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (var ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
         }
 
         private static string PrepareFileNameForMerge(List<PDFFile> pdfFiles)
