@@ -11,6 +11,19 @@ using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.PDF.Models
 {
+    public struct PdfImageContainer
+    {
+        public int PageNumber { get; init; }
+
+        public WriteableBitmap Image { get; init; }
+
+        public PdfImageContainer(int pageNumber, WriteableBitmap writeableBitmap)
+        {
+            PageNumber = pageNumber;
+            Image = writeableBitmap;
+        }
+    }
+
     public class PDFFile : File
     {
         private byte[] _password;

@@ -37,7 +37,7 @@ namespace CrytonCoreNext.PDF.Services
             return await _pdfManager.Merge(pdfFiles);
         }
 
-        public PDFFile? ReadPdf(File file, string password = "")
+        public PDFFile ReadPdf(File file, string password = "")
         {
             return _pdfReader.ReadPdf(file, password);
         }

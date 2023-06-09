@@ -1,5 +1,9 @@
 ﻿using CrytonCoreNext.BackgroundUI;
+using CrytonCoreNext.Extensions;
 using CrytonCoreNext.ViewModels;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.Views
@@ -94,6 +98,20 @@ namespace CrytonCoreNext.Views
             {
                 ViewModel.GoPreviousPagePdfToMergeIndexCommand.Execute(null);
             }
+        }
+
+        private void ListView_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            ScrollViewer scrollViewer = ((DependencyObject)sender).GetChildOfType<ScrollViewer>();
+            if (e.Delta < 0)
+            {
+                scrollViewer.LineRight();
+            }
+            else
+            {
+                scrollViewer.LineLeft();
+            }
+            e.Handled = true;
         }
     }
 }

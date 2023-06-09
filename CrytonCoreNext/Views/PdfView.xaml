@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
+             xmlns:models="clr-namespace:CrytonCoreNext.PDF.Models"
              xmlns:c="clr-namespace:CrytonCoreNext.Converters"
              d:DataContext="{d:DesignInstance Type=viewmodels:PdfViewModel}"
              d:DesignHeight="890"
@@ -19,6 +20,80 @@
             <c:ReverseCollectionToVisibilityConverter x:Key="ReverseCollectionToVisibilityConverter"/>
             <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter"/>
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <Style x:Key="Lststyle" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border Name="Border" Background="Transparent" Padding="5" SnapsToDevicePixels="True">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="5*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Image Grid.Row="1" Margin="10" Stretch="Uniform" Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding PageNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="ListBox.AlternationIndex" Value="0">
+                                    <Setter TargetName="Border"  Property="Background" Value="Transparent"/>
+                                </Trigger>
+                                <Trigger Property="ListBox.AlternationIndex" Value="1">
+                                    <Setter TargetName="Border"  Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource SystemAccentColor}"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="ListBoxItem.IsSelected" Value="true">
+                                    <Setter TargetName="Border"  Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource SystemAccentColor}"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ListViewStyle" TargetType="ListView" BasedOn="{StaticResource {x:Type ListView}}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border Name="Border" Background="Transparent" Padding="5" SnapsToDevicePixels="True">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="5*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Image Grid.Row="1" Margin="10" Stretch="Uniform" Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock HorizontalAlignment="Center" Text="{Binding PageNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="ListBox.AlternationIndex" Value="0">
+                                    <Setter TargetName="Border"  Property="Background" Value="Transparent"/>
+                                </Trigger>
+                                <Trigger Property="ListBox.AlternationIndex" Value="1">
+                                    <Setter TargetName="Border"  Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource SystemAccentColor}"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <Trigger Property="ListBoxItem.IsSelected" Value="true">
+                                    <Setter TargetName="Border"  Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource SystemAccentColor}"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </ui:UiPage.Resources>
 
@@ -483,28 +558,37 @@
                       </ListView>
                     </ScrollViewer>
                   </Grid>
-                  <ListBox Grid.Row="1" HorizontalAlignment="Center" >
-                    <ListBox.ItemsPanel>
-                      <ItemsPanelTemplate>
-                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
-                      </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBoxItem>listbox item 1</ListBoxItem>
-                    <ListBoxItem>listbox item 2</ListBoxItem>
-                    <ListBoxItem>listbox item 3</ListBoxItem>
-                    <ListBoxItem>listbox item 4</ListBoxItem>
-                    <ListBoxItem>listbox item 5</ListBoxItem>
-                    <ListBoxItem>listbox item 6</ListBoxItem>
-                    <ListBoxItem>listbox item 7</ListBoxItem>
-                    <ListBoxItem>listbox item 8</ListBoxItem>
-                    <ListBoxItem>listbox item 9</ListBoxItem>
-                    <ListBoxItem>listbox item 10</ListBoxItem>
-                    <ListBoxItem>listbox item 11</ListBoxItem>
-                    <ListBoxItem>listbox item 12</ListBoxItem>
-                    <ListBoxItem>listbox item 13</ListBoxItem>
-                    <ListBoxItem>listbox item 14</ListBoxItem>
-                    <ListBoxItem>listbox item 15</ListBoxItem>
-                  </ListBox>
+                    <ListView Grid.Row="1" ItemsSource="{Binding PdfToSplitImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                              PreviewMouseWheel="ListView_PreviewMouseWheel">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate >
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="12*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PageNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Image Grid.Row="1"  Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <!--<ListBox Grid.Row="1" HorizontalAlignment="Center"
+                             ItemsSource="{Binding PdfToSplitImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource Lststyle}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel  IsItemsHost="True" Orientation="Horizontal" FlowDirection="LeftToRight" VirtualizingStackPanel.IsVirtualizing="false" >
+                                </VirtualizingStackPanel>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>-->
                 </Grid>
             </TabItem>
           

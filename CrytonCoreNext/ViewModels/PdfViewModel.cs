@@ -58,6 +58,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public ObservableCollection<PDFFile> selectedPdfFilesToSplit;
 
+        [ObservableProperty]
+        public ObservableCollection<PdfImageContainer> pdfToSplitImages;
+
         [ObservableProperty] 
         public ObservableCollection<ImageFile> imageFiles;
 
@@ -104,6 +107,7 @@ namespace CrytonCoreNext.ViewModels
             selectedPdfFilesToMerge = new();
             selectedPdfFilesToSplit = new();
             _pdfExcludedMergeIndexes = new();
+            pdfToSplitImages = new();
         }
 
         partial void OnSelectedTabIndexChanged(int value)
@@ -256,6 +260,26 @@ namespace CrytonCoreNext.ViewModels
             {
                 value.PageImage = _pdfService.LoadImage(value);
             }
+        }
+
+        partial void OnSelectedPdfFileToSplitChanged(PDFFile value)
+        {
+            if (value == null)
+            {
+                PdfToSplitImages.Clear();
+                return;
+            }
+            if (PdfToSplitImages.Any())
+            {
+                return;
+            }
+            var images = new List<PdfImageContainer>();
+            for (var i = 0; i < value.NumberOfPages; i++)
+            {
+                value.LastPage = i;
+                images.Add(new PdfImageContainer(i+1, _pdfService.LoadImage(value)));
+            }
+            PdfToSplitImages = new ObservableCollection<PdfImageContainer>(images);
         }
 
         partial void OnSelectedPdfFileToMergeChanged(PDFFile value)
