@@ -169,7 +169,7 @@
                                                             FontSize="13"
                                                             FontWeight="Medium"
                                                             TextWrapping="WrapWithOverflow"
-                                                            Text="{Binding NameWithExtension}"/>
+                                                            Text="{Binding NameWithExtension}" ToolTip="{Binding NameWithExtension}" ToolTipService.InitialShowDelay="5" ToolTipService.BetweenShowDelay="2"/>
                                                     </StackPanel>  
                                                     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
                                                         <TextBlock  FontSize="12" Text="Pages: "/>
@@ -465,7 +465,9 @@
                       <ui:CardControl.Header>
                         <TextBlock Text="Selected single file to split"/>
                       </ui:CardControl.Header>
-                        <ui:Button Content="Split" Appearance="Primary" Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ui:Button Content="Split" Appearance="Primary" 
+                                   Command="{Binding SplitCommand}"
+                                   Visibility="{Binding PdfToSplitImages, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </ui:CardControl>
                     <ScrollViewer Grid.Column="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
                       <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"

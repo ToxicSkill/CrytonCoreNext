@@ -63,20 +63,22 @@ namespace CrytonCoreNext.PDF.Models
             return GetImage(pageReader);
         }
 
-        public async Task<File> Merge(List<PDFFile> pdfFiles)
+        public async Task<PDFFile> Merge(List<PDFFile> pdfFiles)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
             var bytes = pdfFiles.Select(x => x.Bytes).ToArray();
             var mergedFileBytes = await Task.Run(() => pdfLibrary.Merge(bytes));
             var templateFile = pdfFiles.First();
-            return new File(pdfFiles.First(), PrepareFileNameForMerge(pdfFiles), mergedFileBytes, pdfFiles.Count() + 1);
+            var file = new File(pdfFiles.First(), PrepareFileNameForMerge(pdfFiles), mergedFileBytes, pdfFiles.Count() + 1);
+            return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 
-        public async Task<File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
+        public async Task<PDFFile> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
             var splittedFileBytes = await Task.Run(() => pdfLibrary.Split(pdfFile.Bytes, fromPage, toPage));
-            return new File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), splittedFileBytes, newId);
+            var file = new File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), splittedFileBytes, newId);
+            return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 
         public PDFFile ImageToPdf(ImageFile image, int newId)

@@ -152,12 +152,17 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
+        private async Task Split()
+        {
+            var pdfFile = await _pdfService.Split(SelectedPdfFileToSplit, 0, 0, OpenedPdfFiles.Max(x => x.Id) + 1);
+            AddPdfToPdfList(pdfFile);
+        }
+
+        [RelayCommand]
         private void InsertPdf()
         {
             var mergedImagesPdf = _pdfService.MergeAllImagesToPDF(ImageFiles.ToList(), ImageFiles.Max(x => x.Id) + 1);
-            _pdfService.UpdatePdfFileInformations(ref mergedImagesPdf);
-            CheckNameConflicts(mergedImagesPdf);
-            PdfFiles.Add(mergedImagesPdf);
+            AddPdfToPdfList(mergedImagesPdf);
         }
 
         [RelayCommand]
@@ -167,6 +172,13 @@ namespace CrytonCoreNext.ViewModels
             {
                 SelectedPdfFilesToSplit.Clear();
             }
+        }
+
+        private void AddPdfToPdfList(PDFFile pdfFile)
+        {
+            _pdfService.UpdatePdfFileInformations(ref pdfFile);
+            CheckNameConflicts(pdfFile);
+            PdfFiles.Add(pdfFile);
         }
 
         private void RemoveFileFromMergeList(PDFFile? file = null, bool updateEachStep = true)
@@ -495,7 +507,7 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void ConvertSelectedImageToPdf()
         {
-            var convertedPdf = _pdfService.ImageToPdf(SelectedImageFile, PdfFiles.Max(x => x.Id) + 1);
+            var convertedPdf = _pdfService.ImageToPdf(SelectedImageFile, ImageFiles.Max(x => x.Id) + 1);
             _pdfService.UpdatePdfFileInformations(ref convertedPdf);
             CheckNameConflicts(convertedPdf);
             PdfFiles.Add(convertedPdf);

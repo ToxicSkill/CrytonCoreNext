@@ -32,7 +32,7 @@ namespace CrytonCoreNext.PDF.Services
             return _pdfManager.LoadImage(pdfFile);
         }
 
-        public async Task<File> Merge(List<PDFFile> pdfFiles)
+        public async Task<PDFFile> Merge(List<PDFFile> pdfFiles)
         {
             return await _pdfManager.Merge(pdfFiles);
         }
@@ -42,7 +42,7 @@ namespace CrytonCoreNext.PDF.Services
             return _pdfReader.ReadPdf(file, password);
         }
 
-        public async Task<File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
+        public async Task<PDFFile> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
         {
             return await _pdfManager.Split(pdfFile, fromPage, toPage, newId);
         }
