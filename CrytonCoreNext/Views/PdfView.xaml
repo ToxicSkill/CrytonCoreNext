@@ -317,7 +317,9 @@
                         <ui:CardControl.Header>
                             <TextBlock Text="Selected files to merge"/>
                         </ui:CardControl.Header>
-                        <ui:Button Content="Merge" Appearance="Primary" Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ui:Button Content="Merge" Appearance="Primary" 
+                                   Command="{Binding MergeCommand}"
+                                   Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </ui:CardControl>
                     <ScrollViewer Grid.Column="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
                         <ListView ItemsSource="{Binding SelectedPdfFilesToMerge, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"

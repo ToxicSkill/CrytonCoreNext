@@ -159,6 +159,13 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
+        private async Task Merge()
+        {
+            var pdfFile = await _pdfService.Merge(SelectedPdfFilesToMerge.ToList());
+            AddPdfToPdfList(pdfFile);
+        }
+
+        [RelayCommand]
         private void InsertPdf()
         {
             var mergedImagesPdf = _pdfService.MergeAllImagesToPDF(ImageFiles.ToList(), ImageFiles.Max(x => x.Id) + 1);
