@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
@@ -61,8 +62,11 @@ namespace CrytonCoreNext.ViewModels
         public ObservableCollection<PDFFile> selectedPdfFilesToSplit;
 
         [ObservableProperty]
-        public ObservableCollection<PdfImageContainer> pdfToSplitImages;
+        public ObservableCollection<PDFFile> outcomeFilesFromSplit;
 
+        [ObservableProperty]
+        public ObservableCollection<PdfImageContainer> pdfToSplitImages;
+        
         [ObservableProperty]
         public PdfImageContainer? selectedPdfToSplitImage;
 
@@ -120,6 +124,7 @@ namespace CrytonCoreNext.ViewModels
             openedPdfFiles = new(); 
             selectedPdfFilesToMerge = new();
             selectedPdfFilesToSplit = new();
+            outcomeFilesFromSplit = new ();
             _pdfExcludedMergeIndexes = new();
             pdfToSplitImages = new();
         }
@@ -155,47 +160,22 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void DeleteSplit()
         {
-            DrawSplitLine(true, true);
+            DrawSplitLine(EDirection.Both, true);
+            UpdateSplitOutcomeFiles();
         }
 
         [RelayCommand]
         private void SplitSelectedPdfImageLeft()
         {
-            DrawSplitLine(true);
+            DrawSplitLine(EDirection.Left);
+            UpdateSplitOutcomeFiles();
         }
 
         [RelayCommand]
         private void SplitSelectedPdfImageRight()
         {
-            DrawSplitLine(false);
-        }
-
-        private void DrawSplitLine(bool leftDirection, bool delete = false)
-        {
-            if (SelectedPdfToSplitImage == null)
-            {
-                return;
-            }
-            var selectedImageIndex = PdfToSplitImages.IndexOf((PdfImageContainer)SelectedPdfToSplitImage);
-            var image = PdfToSplitImages[selectedImageIndex];
-            PdfToSplitImages.RemoveAt(selectedImageIndex);
-            if (delete)
-            {
-                image.IsVerticalSplitLineLeftVisible = false;
-                image.IsVerticalSplitLineRightVisible = false;
-            }
-            else
-            {
-                if (leftDirection)
-                {
-                    image.IsVerticalSplitLineLeftVisible = true;
-                }
-                else
-                {
-                    image.IsVerticalSplitLineRightVisible = true;
-                }
-            }
-            PdfToSplitImages.Insert(selectedImageIndex, image);
+            DrawSplitLine(EDirection.Right);
+            UpdateSplitOutcomeFiles();
         }
 
         [RelayCommand]
@@ -599,6 +579,95 @@ namespace CrytonCoreNext.ViewModels
                 damagedFilesCount++;
             }
             SelectedPdfFile = PdfFiles.Last();
+        }
+
+        private void DrawSplitLine(EDirection direction, bool delete = false)
+        {
+            if (SelectedPdfToSplitImage == null)
+            {
+                return;
+            }
+            var selectedImageIndex = PdfToSplitImages.IndexOf((PdfImageContainer)SelectedPdfToSplitImage);
+            var originSplitDirection = PdfToSplitImages[selectedImageIndex].SplitDirection;
+            UpdateImageOnGivenIndex(direction, delete, selectedImageIndex);
+
+            if (delete)
+            {
+                if (originSplitDirection == EDirection.Left || originSplitDirection == EDirection.Both)
+                {
+                    UpdateImageOnGivenIndex(EDirection.Right, delete, selectedImageIndex - 1);
+                }
+                if (originSplitDirection == EDirection.Right || originSplitDirection == EDirection.Both)
+                {
+                    UpdateImageOnGivenIndex(EDirection.Left, delete, selectedImageIndex + 1);
+                }
+            }
+            else
+            {
+                var adjacentImageIndex = direction == EDirection.Left ? selectedImageIndex - 1 : selectedImageIndex + 1;
+                UpdateImageOnGivenIndex(direction.Opposite(), delete, adjacentImageIndex);
+            }
+        }
+
+        private void UpdateImageOnGivenIndex(EDirection direction, bool delete, int index)
+        {
+            if (index >= 0 && index < PdfToSplitImages.Count)
+            {
+                var image = PdfToSplitImages[index];
+                PdfToSplitImages.RemoveAt(index);
+                image = ChangeSplitVisibility(direction, delete, image);
+                PdfToSplitImages.Insert(index, image);
+            }
+        }
+
+        private static PdfImageContainer ChangeSplitVisibility(EDirection direction, bool delete, PdfImageContainer image)
+        {
+            if (delete)
+            {
+                switch (direction)
+                {
+                    case EDirection.Left:
+                        image.IsVerticalSplitLineLeftVisible = false;
+                        break;
+                    case EDirection.Right:
+                        image.IsVerticalSplitLineRightVisible = false;
+                        break;
+                    case EDirection.Both:
+                        image.IsVerticalSplitLineLeftVisible = false;
+                        image.IsVerticalSplitLineRightVisible = false;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                switch (direction)
+                {
+                    case EDirection.Left:
+                        image.IsVerticalSplitLineLeftVisible = true;
+                        image.SplitDirection = EDirection.Left;
+                        break;
+                    case EDirection.Right:
+                        image.IsVerticalSplitLineRightVisible = true;
+                        image.SplitDirection = EDirection.Right;
+                        break;
+                    case EDirection.Both:
+                        image.IsVerticalSplitLineLeftVisible = true;
+                        image.IsVerticalSplitLineRightVisible = true;
+                        image.SplitDirection = EDirection.Both;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return image;
+        }
+
+        private void UpdateSplitOutcomeFiles()
+        {
+            return;
         }
 
         private void LoadImageFile(File imageFile)

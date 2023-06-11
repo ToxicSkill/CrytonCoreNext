@@ -472,9 +472,7 @@
                                    Visibility="{Binding PdfToSplitImages, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </ui:CardControl>
                     <ScrollViewer Grid.Column="2" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
-                      <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
-                                SelectedItem="{Binding SelectedPdfFileToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Split" SelectionMode="Single">
+                      <ListView ItemsSource="{Binding OutcomeFilesFromSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}">
                         <ListView.Template>
                           <ControlTemplate TargetType="ListBox">
                             <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
@@ -529,9 +527,9 @@
                             <DataTemplate >
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="5"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="5"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid Grid.Column="1">
 
@@ -543,7 +541,7 @@
                                         <Image Grid.Column="1" Grid.Row="1"  Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Grid>
                                     
-                                    <Rectangle Grid.Column="0" VerticalAlignment="Stretch" Width="110" HorizontalAlignment="Left" Fill="Red"
+                                    <Rectangle Grid.Column="0" VerticalAlignment="Stretch" Width="10" HorizontalAlignment="Left" Fill="Red"
                                                Visibility="{Binding IsVerticalSplitLineLeftVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     <Rectangle Grid.Column="2" VerticalAlignment="Stretch" Width="10" HorizontalAlignment="Right" Fill="Red"
                                                Visibility="{Binding IsVerticalSplitLineRightVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>

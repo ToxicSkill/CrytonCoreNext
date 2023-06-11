@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.PDF.Enums;
+﻿using CrytonCoreNext.Enums;
+using CrytonCoreNext.PDF.Enums;
 
 namespace CrytonCoreNext.Extensions
 {
@@ -13,6 +14,19 @@ namespace CrytonCoreNext.Extensions
         public static string ToString(this EPdfMetainfo metainfo, bool pdf)
         {
             return pdf ? $"PDF.{metainfo}" : metainfo.ToString().ToSentenceCase();            
+        }
+
+        public static EDirection Opposite(this EDirection direction)
+        {
+            if (direction == EDirection.Left)
+            {
+                return EDirection.Right;
+            }
+            else if (direction == EDirection.Right)
+            {
+                return EDirection.Left;
+            }
+            return direction;
         }
     }
 }

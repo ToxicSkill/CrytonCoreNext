@@ -13,6 +13,8 @@ namespace CrytonCoreNext.PDF.Models
 {
     public struct PdfImageContainer
     {
+        public EDirection SplitDirection { get; set; }
+
         public bool IsVerticalSplitLineLeftVisible { get; set;}
 
         public bool IsVerticalSplitLineRightVisible { get; set; }
@@ -27,6 +29,7 @@ namespace CrytonCoreNext.PDF.Models
             Image = writeableBitmap; 
             IsVerticalSplitLineLeftVisible = false;
             IsVerticalSplitLineRightVisible = false;
+            SplitDirection = EDirection.None;
         }
     }
 
