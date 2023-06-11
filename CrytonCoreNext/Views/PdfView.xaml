@@ -469,7 +469,7 @@
                       </ui:CardControl.Header>
                         <ui:Button Content="Split" Appearance="Primary" 
                                    Command="{Binding SplitCommand}"
-                                   Visibility="{Binding PdfToSplitImages, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                   Visibility="{Binding PdfToSplitImages, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </ui:CardControl>
                     <ScrollViewer Grid.Column="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
                       <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
@@ -563,7 +563,7 @@
                     </ScrollViewer>
                   </Grid>
                     <ListView Grid.Row="1" ItemsSource="{Binding PdfToSplitImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                              ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled"  HorizontalAlignment="Center"
                               PreviewMouseWheel="ListView_PreviewMouseWheel">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
