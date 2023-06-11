@@ -13,6 +13,10 @@ namespace CrytonCoreNext.PDF.Models
 {
     public struct PdfImageContainer
     {
+        public bool IsVerticalSplitLineLeftVisible { get; set;}
+
+        public bool IsVerticalSplitLineRightVisible { get; set; }
+
         public int PageNumber { get; init; }
 
         public WriteableBitmap Image { get; init; }
@@ -20,7 +24,9 @@ namespace CrytonCoreNext.PDF.Models
         public PdfImageContainer(int pageNumber, WriteableBitmap writeableBitmap)
         {
             PageNumber = pageNumber;
-            Image = writeableBitmap;
+            Image = writeableBitmap; 
+            IsVerticalSplitLineLeftVisible = false;
+            IsVerticalSplitLineRightVisible = false;
         }
     }
 

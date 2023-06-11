@@ -11,6 +11,8 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -61,6 +63,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public ObservableCollection<PdfImageContainer> pdfToSplitImages;
 
+        [ObservableProperty]
+        public PdfImageContainer? selectedPdfToSplitImage;
+
         [ObservableProperty] 
         public ObservableCollection<ImageFile> imageFiles;
 
@@ -86,6 +91,15 @@ namespace CrytonCoreNext.ViewModels
 
         [ObservableProperty]
         public int selectedTabIndex;
+
+        [ObservableProperty]
+        public bool isSplitImageFirst;
+
+        [ObservableProperty]
+        public bool isSplitImageLast;
+
+        [ObservableProperty]
+        public bool hasSplit;
 
         [ObservableProperty]
         public bool isOnLastMergePage = true;
@@ -137,6 +151,53 @@ namespace CrytonCoreNext.ViewModels
             RemoveFileFromMergeList(null, true);
         }
 
+
+        [RelayCommand]
+        private void DeleteSplit()
+        {
+            DrawSplitLine(true, true);
+        }
+
+        [RelayCommand]
+        private void SplitSelectedPdfImageLeft()
+        {
+            DrawSplitLine(true);
+        }
+
+        [RelayCommand]
+        private void SplitSelectedPdfImageRight()
+        {
+            DrawSplitLine(false);
+        }
+
+        private void DrawSplitLine(bool leftDirection, bool delete = false)
+        {
+            if (SelectedPdfToSplitImage == null)
+            {
+                return;
+            }
+            var selectedImageIndex = PdfToSplitImages.IndexOf((PdfImageContainer)SelectedPdfToSplitImage);
+            var image = PdfToSplitImages[selectedImageIndex];
+            PdfToSplitImages.RemoveAt(selectedImageIndex);
+            if (delete)
+            {
+                image.IsVerticalSplitLineLeftVisible = false;
+                image.IsVerticalSplitLineRightVisible = false;
+            }
+            else
+            {
+                if (leftDirection)
+                {
+                    image.IsVerticalSplitLineLeftVisible = true;
+                }
+                else
+                {
+                    image.IsVerticalSplitLineRightVisible = true;
+                }
+            }
+            PdfToSplitImages.Insert(selectedImageIndex, image);
+        }
+
         [RelayCommand]
         private void RemoveFileFromSplitList()
         {
@@ -145,6 +206,7 @@ namespace CrytonCoreNext.ViewModels
                 SelectedPdfFilesToSplit.Clear();
                 PdfToSplitImages.Clear();
                 PdfToSplitImages = new ();
+                SelectedPdfToSplitImage = null;
             }
         }
 
@@ -455,6 +517,18 @@ namespace CrytonCoreNext.ViewModels
                 images.Add(new PdfImageContainer(i+1, _pdfService.LoadImage(value)));
             }
             PdfToSplitImages = new ObservableCollection<PdfImageContainer>(images);
+            SelectedPdfToSplitImage = PdfToSplitImages.First();
+        }
+
+        partial void OnSelectedPdfToSplitImageChanged(PdfImageContainer? value)
+        {
+            if (value != null)
+            {
+                var notNullableValue = (PdfImageContainer)value;
+                IsSplitImageLast = notNullableValue.PageNumber == SelectedPdfFileToSplit.NumberOfPages;
+                IsSplitImageFirst = notNullableValue.PageNumber == 1;
+                HasSplit = notNullableValue.IsVerticalSplitLineLeftVisible || notNullableValue.IsVerticalSplitLineRightVisible;
+            }
         }
 
         partial void OnSelectedPdfFileToMergeChanged(PDFFile value)
