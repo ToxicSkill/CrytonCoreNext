@@ -661,6 +661,10 @@ namespace CrytonCoreNext.ViewModels
                         break;
                 }
             }
+            if (image.IsVerticalSplitLineLeftVisible &&  image.IsVerticalSplitLineRightVisible)
+            {
+                image.SplitDirection = EDirection.Both;
+            }
 
             return image;
         }

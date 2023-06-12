@@ -527,9 +527,9 @@
                             <DataTemplate >
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition Width="7"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition Width="7"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid Grid.Column="1">
 
@@ -540,10 +540,13 @@
                                         <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PageNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                         <Image Grid.Column="1" Grid.Row="1"  Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Grid>
-                                    
-                                    <Rectangle Grid.Column="0" VerticalAlignment="Stretch" Width="10" HorizontalAlignment="Left" Fill="Red"
-                                               Visibility="{Binding IsVerticalSplitLineLeftVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Rectangle Grid.Column="2" VerticalAlignment="Stretch" Width="10" HorizontalAlignment="Right" Fill="Red"
+                                    <Path Grid.Column="0" StrokeThickness="2" Stretch="Fill" Stroke="Red" Fill="Transparent" HorizontalAlignment="Left" 
+                                          Data="M 0 0 L 25 25 L 0 50 L 25 75 L 0 100 L 25 125 L 0 150 L 25 175 L 0 200 L 25 225 L 0 250 L 25 275 L 0 300 L 25 325 L 0 350 L 25 375 L 0 400"       
+                                          Visibility="{Binding IsVerticalSplitLineLeftVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                                    <Path Grid.Column="2" StrokeThickness="2" Stretch="Fill" Stroke="Red"  Fill="Transparent" HorizontalAlignment="Right" 
+                                          Data="M 0 0 L -25 -25 L -0 -50 L -25 -75 L -0 -100 L -25 -125 L -0 -150 L -25 -175 L -0 -200 L -25 -225 L -0 -250 L -25 -275 L -0 -300 L -25 -325 L -0 -350 L -25 -375 L -0 -400"
                                                Visibility="{Binding IsVerticalSplitLineRightVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 </Grid>
                             </DataTemplate>
