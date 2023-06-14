@@ -11,6 +11,25 @@ using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.PDF.Models
 {
+
+    public struct PdfRangeFile
+    {
+        public int From { get; set; }
+
+        public int To { get; set; }
+
+        public string Name { get; set; }
+
+        public string Description => $"From {From} to {To}";
+        
+        public PdfRangeFile(int from, int to, string name)
+        {
+            From = from;
+            To = to;
+            Name = name;
+        }
+    }
+
     public struct PdfImageContainer
     {
         public EDirection SplitDirection { get; set; }

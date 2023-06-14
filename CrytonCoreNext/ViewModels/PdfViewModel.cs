@@ -66,7 +66,10 @@ namespace CrytonCoreNext.ViewModels
 
         [ObservableProperty]
         public ObservableCollection<PdfImageContainer> pdfToSplitImages;
-        
+
+        [ObservableProperty]
+        public ObservableCollection<PdfRangeFile> pdfSplitRangeFiles;
+
         [ObservableProperty]
         public PdfImageContainer? selectedPdfToSplitImage;
 
@@ -127,6 +130,7 @@ namespace CrytonCoreNext.ViewModels
             outcomeFilesFromSplit = new ();
             _pdfExcludedMergeIndexes = new();
             pdfToSplitImages = new();
+            pdfSplitRangeFiles = new();
         }
 
         [RelayCommand]
@@ -671,7 +675,38 @@ namespace CrytonCoreNext.ViewModels
 
         private void UpdateSplitOutcomeFiles()
         {
-            return;
+            var splitResultFiles = new List<PdfRangeFile>();
+            var indexes = new Dictionary<int, bool>() { { 0, true } };
+            var index = 0;
+            foreach (var imageFile in PdfToSplitImages)
+            {
+                if (imageFile.IsVerticalSplitLineLeftVisible)
+                {
+                    if (!indexes.ContainsKey(index - 1))
+                    {
+                        indexes.Add(index - 1, true);
+                    }
+                }
+                if (imageFile.IsVerticalSplitLineRightVisible)
+                {
+                    if (!indexes.ContainsKey(index + 1))
+                    {
+                        indexes.Add(index + 1, true);
+                    }
+                }
+                index++;
+            }
+            indexes.Add(PdfToSplitImages.Count() - 1, true);
+
+            var statusToggle = false;
+            index = 0;
+            foreach (var to in indexes.Skip(1))
+            {
+                var from = indexes.ElementAt(index);
+                splitResultFiles.Add(new PdfRangeFile(from.Key, to.Key, $"From{from.Key}_To{to.Key}.pdf"));
+                index++;
+            }
+            index = 0;
         }
 
         private void LoadImageFile(File imageFile)
