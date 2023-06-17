@@ -338,7 +338,7 @@
                     <TextBlock Text="Split" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
                   </StackPanel>
                 </TabItem.Header>
-                <Grid>
+                <Grid Margin="0,0,3,0">
                   <Grid.RowDefinitions>
                     <RowDefinition Height ="*"/>
                     <RowDefinition Height ="*"/>

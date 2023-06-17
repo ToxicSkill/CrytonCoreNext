@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrytonCoreNext.Extensions;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -26,11 +27,11 @@ namespace CrytonCoreNext.Models
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public File(string name, string path, string size, DateTime date, string extension, int id, byte[] bytes)
+        public File(string name, string path, DateTime date, string extension, int id, byte[] bytes)
         {
             Name = name;
             Path = path;
-            Size = size;
+            Size = bytes.GetSizeString();
             Date = date;
             Extension = extension;
             Id = id;
@@ -41,7 +42,7 @@ namespace CrytonCoreNext.Models
         {
             Name = name;
             Path = file.Path;
-            Size = file.Size;
+            Size = bytes.GetSizeString();
             Date = file.Date;
             Extension = file.Extension;
             Id = id;
@@ -52,7 +53,7 @@ namespace CrytonCoreNext.Models
         {
             Name = file.Name;
             Path = file.Path;
-            Size = file.Size;
+            Size = file.Bytes.GetSizeString();
             Date = file.Date;
             Extension = file.Extension;
             Id = file.Id;

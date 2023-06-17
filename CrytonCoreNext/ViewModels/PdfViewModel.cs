@@ -197,8 +197,13 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private async Task Split()
         {
-            var pdfFile = await _pdfService.Split(SelectedPdfFileToSplit, 0, 0, OpenedPdfFiles.Max(x => x.Id) + 1);
-            AddPdfToPdfList(pdfFile);
+            var idAdd = 1;
+            foreach (var subPdfFile in PdfSplitRangeFiles)
+            {
+                var pdfFile = await _pdfService.Split(SelectedPdfFileToSplit, subPdfFile.From, subPdfFile.To, OpenedPdfFiles.Max(x => x.Id) + idAdd);
+                AddPdfToPdfList(pdfFile);
+                idAdd++;
+            }
         }
 
         [RelayCommand]
@@ -676,30 +681,39 @@ namespace CrytonCoreNext.ViewModels
         private void UpdateSplitOutcomeFiles()
         {
             var splitResultFiles = new List<PdfRangeFile>();
-            var indexes = new Dictionary<int, bool>() { { 0, true } };
+            var indexes = new List<(int from, int to) >();
             var index = 0;
+            var tempList = new List<int>() { 0 };
             foreach (var imageFile in PdfToSplitImages)
             {
                 if (imageFile.IsVerticalSplitLineRightVisible)
                 {
-                    if (!indexes.ContainsKey(index))
-                    {
-                        indexes.Add(index, true);
-                    }
+                    tempList.Add(index);
+                }
+                if (tempList.Count == 2) 
+                {
+                    var lastItem = tempList[1] + 1;
+                    indexes.Add((tempList[0], tempList[1]));
+                    tempList.Clear();
+                    tempList.Add(lastItem);
                 }
                 index++;
             }
-            indexes.Add(PdfToSplitImages.Count() - 1, true);
-
-            var statusToggle = false;
-            index = 0;
-            foreach (var to in indexes.Skip(1))
+            if (tempList.Count == 1)
             {
-                var from = indexes.ElementAt(index);
-                splitResultFiles.Add(new PdfRangeFile(from.Key, to.Key, $"From{from.Key}_To{to.Key}.pdf"));
-                index++;
+                tempList.Add(PdfToSplitImages.Count - 1);
+                indexes.Add((tempList[0], tempList[1]));
+            }
+            foreach (var indx in indexes)
+            {
+                splitResultFiles.Add(new PdfRangeFile(indx.from, indx.to, GetSubPDFFileName(indx)));
             }
             PdfSplitRangeFiles = new(splitResultFiles);
+        }
+
+        private static string GetSubPDFFileName((int from, int to) indx)
+        {
+            return indx.from == indx.to ? $"Only{indx.from}" : $"From{indx.from}_To{indx.to}.pdf";
         }
 
         private void LoadImageFile(File imageFile)

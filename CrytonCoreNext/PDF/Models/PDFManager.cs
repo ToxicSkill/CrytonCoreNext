@@ -105,7 +105,7 @@ namespace CrytonCoreNext.PDF.Models
 
             using IDocLib pdfLibrary = DocLib.Instance;
             var pdfBbytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
-            var file = new File($"{image.Name}_Converted", string.Empty, bytes.GetSizeString(), DateTime.Now, "pdf", newId, pdfBbytes);
+            var file = new File($"{image.Name}_Converted", string.Empty, DateTime.Now, "pdf", newId, pdfBbytes);
             return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 
@@ -125,7 +125,7 @@ namespace CrytonCoreNext.PDF.Models
             }
             document.Close();
             var bytes = memStream.ToArray();
-            var file = new File("MergedImages", string.Empty, bytes.GetSizeString(), DateTime.Now, "pdf", newId, bytes);
+            var file = new File("MergedImages", string.Empty, DateTime.Now, "pdf", newId, bytes);
             return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 
