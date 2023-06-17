@@ -472,45 +472,23 @@
                                    Visibility="{Binding PdfToSplitImages, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </ui:CardControl>
                     <ScrollViewer Grid.Column="2" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
-                      <ListView ItemsSource="{Binding OutcomeFilesFromSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}">
-                        <ListView.Template>
-                          <ControlTemplate TargetType="ListBox">
-                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderBrush}">
-                              <ItemsPresenter/>
-                            </Border>
-                          </ControlTemplate>
-                        </ListView.Template>
-                        <ListView.ItemTemplate>
-                          <DataTemplate DataType="models:CryptFile">
-                            <Grid Height="40">
-                              <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                              </Grid.ColumnDefinitions>
-                              <Grid.RowDefinitions>
-                                <RowDefinition Height="20"/>
-                                <RowDefinition Height="20"/>
-                              </Grid.RowDefinitions>
-                              <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"
-                                      FontSize="13"
-                                      FontWeight="Medium"
-                                      TextWrapping="WrapWithOverflow"
-                                      Text="{Binding NameWithExtension}"/>
-                              <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
-                                <TextBlock  FontSize="12" Text="Pages: "/>
-                                <TextBlock  FontSize="12" Text="{Binding NumberOfPages}"/>
-                              </StackPanel>
-                              <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right"
-                                      FontSize="12"
-                                      Text="{Binding Size}"/>
-                              <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right"
-                                      FontSize="12"
-                                      Text="{Binding PdfStatus,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                            </Grid>
-                          </DataTemplate>
-                        </ListView.ItemTemplate>
-                      </ListView>
-                    </ScrollViewer>
+
+                            <ListView ItemsSource="{Binding PdfSplitRangeFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
                   </Grid>
                     <ListView Grid.Row="1" ItemsSource="{Binding PdfToSplitImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                               SelectedItem="{Binding SelectedPdfToSplitImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

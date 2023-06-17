@@ -680,18 +680,11 @@ namespace CrytonCoreNext.ViewModels
             var index = 0;
             foreach (var imageFile in PdfToSplitImages)
             {
-                if (imageFile.IsVerticalSplitLineLeftVisible)
-                {
-                    if (!indexes.ContainsKey(index - 1))
-                    {
-                        indexes.Add(index - 1, true);
-                    }
-                }
                 if (imageFile.IsVerticalSplitLineRightVisible)
                 {
-                    if (!indexes.ContainsKey(index + 1))
+                    if (!indexes.ContainsKey(index))
                     {
-                        indexes.Add(index + 1, true);
+                        indexes.Add(index, true);
                     }
                 }
                 index++;
@@ -706,7 +699,7 @@ namespace CrytonCoreNext.ViewModels
                 splitResultFiles.Add(new PdfRangeFile(from.Key, to.Key, $"From{from.Key}_To{to.Key}.pdf"));
                 index++;
             }
-            index = 0;
+            PdfSplitRangeFiles = new(splitResultFiles);
         }
 
         private void LoadImageFile(File imageFile)
