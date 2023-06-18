@@ -478,12 +478,22 @@
                                 <ListView.ItemTemplate>
                                     <DataTemplate >
                                         <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="*"/>
-                                                <RowDefinition Height="*"/>
-                                            </Grid.RowDefinitions>
-                                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                            <TextBlock Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="10*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                <TextBlock Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                            </Grid>
+                                            <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" 
+                                                      Margin="10,0" ToolTip="Select to split"
+                                                      IsChecked="{Binding IsSelectedToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>

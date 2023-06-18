@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Comparer;
 using CrytonCoreNext.Enums;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces.Files;
@@ -200,6 +201,10 @@ namespace CrytonCoreNext.ViewModels
             var idAdd = 1;
             foreach (var subPdfFile in PdfSplitRangeFiles)
             {
+                if (!subPdfFile.IsSelectedToSplit)
+                {
+                    continue;
+                }
                 var pdfFile = await _pdfService.Split(SelectedPdfFileToSplit, subPdfFile.From, subPdfFile.To, OpenedPdfFiles.Max(x => x.Id) + idAdd);
                 AddPdfToPdfList(pdfFile);
                 idAdd++;
@@ -706,7 +711,12 @@ namespace CrytonCoreNext.ViewModels
             }
             foreach (var indx in indexes)
             {
-                splitResultFiles.Add(new PdfRangeFile(indx.from, indx.to, GetSubPDFFileName(indx)));
+                var rangeFile = new PdfRangeFile(indx.from, indx.to, GetSubPDFFileName(indx));
+                if (PdfSplitRangeFiles.Contains(rangeFile, new PdfRangeFilesComparer()))
+                {
+                    rangeFile.IsSelectedToSplit = PdfSplitRangeFiles.Where(x => x.From == indx.from).First().IsSelectedToSplit;
+                }
+                splitResultFiles.Add(rangeFile);
             }
             PdfSplitRangeFiles = new(splitResultFiles);
         }

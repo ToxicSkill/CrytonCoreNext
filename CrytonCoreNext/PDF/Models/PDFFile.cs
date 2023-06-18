@@ -4,6 +4,8 @@ using CrytonCoreNext.PDF.Enums;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Media.Imaging;
@@ -12,13 +14,19 @@ using Wpf.Ui.Controls;
 namespace CrytonCoreNext.PDF.Models
 {
 
-    public struct PdfRangeFile
+    public class PdfRangeFile : INotifyPropertyChanged
     {
+        private bool _isSelectedToSplit;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public int From { get; set; }
 
         public int To { get; set; }
 
         public string Name { get; set; }
+
+        public bool IsSelectedToSplit { get => _isSelectedToSplit; set { _isSelectedToSplit = value; NotifyPropertyChanged(); } }
 
         public string Description => $"From {From} to {To}";
         
@@ -27,6 +35,12 @@ namespace CrytonCoreNext.PDF.Models
             From = from;
             To = to;
             Name = name;
+            IsSelectedToSplit = true;
+        }
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
