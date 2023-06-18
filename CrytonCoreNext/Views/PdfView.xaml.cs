@@ -3,7 +3,6 @@ using CrytonCoreNext.Extensions;
 using CrytonCoreNext.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using Wpf.Ui.Common.Interfaces;
 
 namespace CrytonCoreNext.Views
@@ -38,12 +37,12 @@ namespace CrytonCoreNext.Views
             ViewModel.PdfPassword = PdfPasswordBox.Password;
         }
 
-        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             UpdatePasswordBox();
         }
 
-        private void ListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PdfPasswordBox.Password = string.Empty;
         }

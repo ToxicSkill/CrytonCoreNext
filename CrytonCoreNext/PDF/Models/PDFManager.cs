@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.Services;

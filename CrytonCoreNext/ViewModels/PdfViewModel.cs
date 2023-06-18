@@ -8,17 +8,9 @@ using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
-using iText.IO.Image;
-using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
-using iText.Layout;
-using iText.Layout.Element;
-using OpenCvSharp;
-using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -247,48 +239,54 @@ namespace CrytonCoreNext.ViewModels
             Lock();
             var protectedFilesCount = 0;
             var damagedFilesCount = 0;
+            var nofNotLoadedFiles = 0;
             await foreach (var file in base.LoadFiles(andImages == null ? Static.Extensions.DialogFilters.PdfAndImages : Static.Extensions.DialogFilters.Pdf))
             {
                 if (file.Extension.ToLower().Contains("pdf"))
                 {
-                    LoadPdfFile(ref protectedFilesCount, ref damagedFilesCount, file);
+                    nofNotLoadedFiles += LoadPdfFile(ref protectedFilesCount, ref damagedFilesCount, file);
                 }
                 else
                 {
-                    LoadImageFile(file);
+                    nofNotLoadedFiles += LoadImageFile(file);
                 }
             }
             if (SelectedPdfFile == null && PdfFiles.Any())
             {
                 SelectedPdfFile = PdfFiles.First();
             }
-            if (protectedFilesCount > 0 && damagedFilesCount == 0)
-            {
-                PostSnackbar("Warning",
-                    (protectedFilesCount > 1 ?
-                    $"{protectedFilesCount} of {protectedFilesCount + pdfFiles.Count} loaded files" :
-                    "One file") + " requires password",
-                    Wpf.Ui.Common.SymbolRegular.Warning20,
-                    Wpf.Ui.Common.ControlAppearance.Caution);
-            }
-            else if (damagedFilesCount > 0 && protectedFilesCount == 0)
-            {
-                PostSnackbar("Warning",
-                    (protectedFilesCount > 1 ?
-                    $"{protectedFilesCount} of {protectedFilesCount + pdfFiles.Count} loaded files" :
-                    "One file") + " is damaged",
-                    Wpf.Ui.Common.SymbolRegular.Warning20,
-                    Wpf.Ui.Common.ControlAppearance.Caution);
-            }
-            else if (damagedFilesCount > 0 && protectedFilesCount > 0)
-            {
-                PostSnackbar("Warning",
-                    "At least one file is protected by password and at least one file is damaged",
-                    Wpf.Ui.Common.SymbolRegular.Warning20,
-                    Wpf.Ui.Common.ControlAppearance.Caution);
-            }
+            PostWarning(protectedFilesCount, damagedFilesCount, nofNotLoadedFiles);
             CheckAnyFileLoaded();
             Unlock();
+        }
+
+        private void PostWarning(int protectedFilesCount, int damagedFilesCount, int nofNotLoadedFiles)
+        {
+            var message = "";
+            if (protectedFilesCount > 0 )
+            {
+                message += (protectedFilesCount > 1 ?
+                    $"{protectedFilesCount} of {protectedFilesCount + PdfFiles.Count - nofNotLoadedFiles} loaded files. \n" :
+                    "One file") + " requires password. \n";
+            }
+            if (damagedFilesCount > 0)
+            {
+                message += (protectedFilesCount > 1 ?
+                    $"{protectedFilesCount} of {protectedFilesCount + PdfFiles.Count - nofNotLoadedFiles} loaded files. \n" :
+                    "One file") + " is damaged. \n";
+            }
+            if (nofNotLoadedFiles > 0)
+            {
+                message += nofNotLoadedFiles == 1 ?
+                 "One file is already loaded. \n" :
+                 $"At least {nofNotLoadedFiles} files are aleardy loaded or has same content. \n";
+            }
+            if (message != "")
+            {
+                PostSnackbar("Warning", message,
+                    Wpf.Ui.Common.SymbolRegular.Warning20,
+                    Wpf.Ui.Common.ControlAppearance.Caution);
+            }
         }
 
         [RelayCommand]
@@ -577,12 +575,19 @@ namespace CrytonCoreNext.ViewModels
             AnyLoadedFile = PdfFiles.Any() || ImageFiles.Any();
         }
 
-        private void LoadPdfFile(ref int protectedFilesCount, ref int damagedFilesCount, File file)
+        private int LoadPdfFile(ref int protectedFilesCount, ref int damagedFilesCount, File file)
         {
             var pdfFile = _pdfService.ReadPdf(file);
             if (pdfFile != null)
             {
-                PdfFiles.Add(pdfFile);
+                if (!PdfFiles.Contains(pdfFile, new FileComparer()))
+                {
+                    PdfFiles.Add(pdfFile);
+                }
+                else
+                {
+                    return 1;
+                }
             }
             if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected)
             {
@@ -593,6 +598,7 @@ namespace CrytonCoreNext.ViewModels
                 damagedFilesCount++;
             }
             SelectedPdfFile = PdfFiles.Last();
+            return 0;
         }
 
         private void DrawSplitLine(EDirection direction, bool delete = false)
@@ -726,13 +732,18 @@ namespace CrytonCoreNext.ViewModels
             return indx.from == indx.to ? $"Only{indx.from}" : $"From{indx.from}_To{indx.to}.pdf";
         }
 
-        private void LoadImageFile(File imageFile)
+        private int LoadImageFile(File imageFile)
         {
-            ImageFiles.Add(new ImageFile(imageFile));
-            SelectedImageFile = ImageFiles.Last();
+            if (ImageFiles.Contains(imageFile, new FileComparer()))
+            { 
+                ImageFiles.Add(new ImageFile(imageFile));
+                SelectedImageFile = ImageFiles.Last();
+                return 0;
+            }
+            return 1;
         }
 
-        private void CheckNameConflicts(Models.File file)
+        private void CheckNameConflicts(File file)
         {
             var index = 1;
             while (PdfFiles.Any(x => x.Name == file.Name))

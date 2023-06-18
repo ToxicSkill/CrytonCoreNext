@@ -45,7 +45,7 @@ namespace CrytonCoreNext.Models
                     Bitmap = mat.ToWriteableBitmap();
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
                 Bitmap = null;

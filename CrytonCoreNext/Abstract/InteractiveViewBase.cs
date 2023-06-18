@@ -48,22 +48,22 @@ namespace CrytonCoreNext.Abstract
                     yield return file;
                 }
             }
-            if ((filesPaths.Count - loadedFilesCounter) > 0 && loadedFilesCounter > 0)
-            {
-                PostSnackbar("Warning", $"{Language.Post("NotAllFilesLoadedWarning")} ({filesPaths.Count - loadedFilesCounter})", SymbolRegular.Warning20, ControlAppearance.Caution);
-            }
-            else if (loadedFilesCounter == 1)
-            {
-                PostSnackbar("Information", Language.Post("FileLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
-            }
-            else if (loadedFilesCounter > 1)
-            {
-                PostSnackbar("Information", Language.Post("FilesLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
-            }
-            else if (loadedFilesCounter == 0 && filesPaths.Any())
-            {
-                PostSnackbar("Error", Language.Post("FilesLoadingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
-            }
+            //if ((filesPaths.Count - loadedFilesCounter) > 0 && loadedFilesCounter > 0)
+            //{
+            //    PostSnackbar("Warning", $"{Language.Post("NotAllFilesLoadedWarning")} ({filesPaths.Count - loadedFilesCounter})", SymbolRegular.Warning20, ControlAppearance.Caution);
+            //}
+            //else if (loadedFilesCounter == 1)
+            //{
+            //    PostSnackbar("Information", Language.Post("FileLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+            //}
+            //else if (loadedFilesCounter > 1)
+            //{
+            //    PostSnackbar("Information", Language.Post("FilesLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+            //}
+            //else if (loadedFilesCounter == 0 && filesPaths.Any())
+            //{
+            //    PostSnackbar("Error", Language.Post("FilesLoadingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+            //}
         }
 
         protected void SaveFile(File? file)
