@@ -493,6 +493,7 @@
                                             </Grid>
                                             <CheckBox Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" 
                                                       Margin="10,0" ToolTip="Select to split"
+                                                      Visibility="{Binding PdfToSplitImages, Converter={StaticResource CollectionToVisibilityConverter}}"
                                                       IsChecked="{Binding IsSelectedToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                         </Grid>
                                     </DataTemplate>
