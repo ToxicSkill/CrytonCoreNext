@@ -61,7 +61,7 @@ namespace CrytonCoreNext.ViewModels
         public ObservableCollection<PdfImageContainer> pdfToSplitImages;
 
         [ObservableProperty]
-        public ObservableCollection<PdfRangeFile> pdfSplitRangeFiles;
+        public ObservableCollection<PdfRangeFile> pdfToSplitRangeFiles;
 
         [ObservableProperty]
         public PdfImageContainer? selectedPdfToSplitImage;
@@ -123,7 +123,7 @@ namespace CrytonCoreNext.ViewModels
             outcomeFilesFromSplit = new ();
             _pdfExcludedMergeIndexes = new();
             pdfToSplitImages = new();
-            pdfSplitRangeFiles = new();
+            pdfToSplitRangeFiles = new();
         }
 
         [RelayCommand]
@@ -191,7 +191,7 @@ namespace CrytonCoreNext.ViewModels
         private async Task Split()
         {
             var idAdd = 1;
-            foreach (var subPdfFile in PdfSplitRangeFiles)
+            foreach (var subPdfFile in PdfToSplitRangeFiles)
             {
                 if (!subPdfFile.IsSelectedToSplit)
                 {
@@ -481,6 +481,15 @@ namespace CrytonCoreNext.ViewModels
                     }
                 }
             }
+            if (SelectedTabIndex == 2)
+            {
+                if (SelectedPdfFileToSplit == null)
+                {
+                    PdfToSplitImages.Clear();
+                    PdfToSplitRangeFiles.Clear();
+                    PdfToSplitImages = new();
+                }
+            }
         }
 
         partial void OnSelectedPdfFileChanged(PDFFile value)
@@ -718,19 +727,19 @@ namespace CrytonCoreNext.ViewModels
             foreach (var indx in indexes)
             {
                 var rangeFile = new PdfRangeFile(indx.from, indx.to, GetSubPDFFileName(indx));
-                if (PdfSplitRangeFiles.Contains(rangeFile, new PdfRangeFilesComparer()))
+                if (PdfToSplitRangeFiles.Contains(rangeFile, new PdfRangeFilesComparer()))
                 {
-                    rangeFile.IsSelectedToSplit = PdfSplitRangeFiles.Where(x => x.From == indx.from).First().IsSelectedToSplit;
+                    rangeFile.IsSelectedToSplit = PdfToSplitRangeFiles.Where(x => x.From == indx.from).First().IsSelectedToSplit;
                 }
                 splitResultFiles.Add(rangeFile);
             }
             if (splitResultFiles.Count > 1)
             {
-                PdfSplitRangeFiles = new(splitResultFiles);
+                PdfToSplitRangeFiles = new(splitResultFiles);
             }
             else
             {
-                PdfSplitRangeFiles = new();
+                PdfToSplitRangeFiles = new();
             }
         }
 

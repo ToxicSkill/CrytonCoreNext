@@ -20,6 +20,7 @@
             <c:ReverseCollectionToVisibilityConverter x:Key="ReverseCollectionToVisibilityConverter"/>
             <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter"/>
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <c:ObjectToVisibility x:Key="ObjectToVisibility"/>
             <ContextMenu x:Key="SplitItemContextMenu">
                 <ui:MenuItem Header="Split left" SymbolIcon="ArrowLeft20" 
                              Command="{Binding SplitSelectedPdfImageLeftCommand}"
@@ -301,34 +302,37 @@
                         </ListView>
                     </ScrollViewer>
 
-                    <Image Grid.Column="2" Margin="10" Stretch="Uniform" PreviewMouseWheel="Image_PreviewMouseWheel_Merge"
-                           Source="{Binding PdfToMergeImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Grid Grid.Column="2" Visibility="{Binding SelectedPdfFileToMerge, Converter={StaticResource ObjectToVisibility}}">
+                        
+                        <Image  Margin="10" Stretch="Uniform" PreviewMouseWheel="Image_PreviewMouseWheel_Merge"
+                               Source="{Binding PdfToMergeImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <ui:Button Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10" Appearance="Primary" Opacity="0.7"
-                               Content="{Binding SelectedPdfFileToMerge.Name, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
-                               Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ui:Button HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10" Appearance="Primary" Opacity="0.7"
+                                   Content="{Binding SelectedPdfFileToMerge.Name, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                                   Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <ui:Button Grid.Column="2" HorizontalAlignment="Left" Icon="ArrowLeft20" IconFilled="True" Appearance="Primary" Opacity="0.7"
-                               Command="{Binding GoPreviousPagePdfToMergeIndexCommand}" Height="80" Margin="10,0"
-                               Visibility="{Binding IsOnFirstMergePage ,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ui:Button  HorizontalAlignment="Left" Icon="ArrowLeft20" IconFilled="True" Appearance="Primary" Opacity="0.7"
+                                   Command="{Binding GoPreviousPagePdfToMergeIndexCommand}" Height="80" Margin="10,0"
+                                   Visibility="{Binding IsOnFirstMergePage ,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <ui:Button Grid.Column="2" HorizontalAlignment="Right" Icon="ArrowRight20" IconFilled="True" Appearance="Primary" Opacity="0.7"
-                               Command="{Binding GoNextPagePdfToMergeIndexCommand}" Height="80" Margin="10,0"
-                               Visibility="{Binding IsOnLastMergePage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ui:Button HorizontalAlignment="Right" Icon="ArrowRight20" IconFilled="True" Appearance="Primary" Opacity="0.7"
+                                   Command="{Binding GoNextPagePdfToMergeIndexCommand}" Height="80" Margin="10,0"
+                                   Visibility="{Binding IsOnLastMergePage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
 
-                    <StackPanel Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <ui:Button IconFilled="True"
+                        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
+                            <ui:Button IconFilled="True"
                                Content="{Binding PageMergeCountStatus, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
                                Width="100" Margin="0, 10" Appearance="Primary" Opacity="0.7"
                                Visibility="{Binding HasMoreThanOnePageToMerge, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <ui:Button IconFilled="False" Icon="TrayItemRemove20"
+                            <ui:Button IconFilled="False" Icon="TrayItemRemove20"
                                ToolTip="Exclude this page"
                                Margin="0, 10"  Appearance="Primary" Opacity="0.7" Content="Remove"
                                Command="{Binding EraseCurrentMergePageCommand}"
                                Visibility="{Binding HasMoreThanOnePageToMerge, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    </StackPanel>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem >
@@ -469,11 +473,11 @@
                             </ui:CardControl.Header>
                             <ui:Button Content="Split" Appearance="Primary" 
                                    Command="{Binding SplitCommand}"
-                                   Visibility="{Binding PdfSplitRangeFiles, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                   Visibility="{Binding PdfToSplitRangeFiles, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </ui:CardControl>
                     <ScrollViewer Grid.Column="2" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
 
-                            <ListView ItemsSource="{Binding PdfSplitRangeFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ListView ItemsSource="{Binding PdfToSplitRangeFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                                 <ListView.ItemTemplate>
                                     <DataTemplate >
