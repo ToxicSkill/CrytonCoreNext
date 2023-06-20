@@ -469,7 +469,7 @@
                             </ui:CardControl.Header>
                             <ui:Button Content="Split" Appearance="Primary" 
                                    Command="{Binding SplitCommand}"
-                                   Visibility="{Binding PdfToSplitImages, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                   Visibility="{Binding PdfSplitRangeFiles, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </ui:CardControl>
                     <ScrollViewer Grid.Column="2" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
 

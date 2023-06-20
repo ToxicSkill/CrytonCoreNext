@@ -118,7 +118,7 @@ namespace CrytonCoreNext.PDF.Models
             foreach (var imageFile in images)
             {
                 ImageData imageData = ImageDataFactory.Create(imageFile.Bytes);
-                Image image = new Image(imageData);
+                var image = new Image(imageData);
                 doc.Add(image);
                 doc.Add(new AreaBreak(iText.Layout.Properties.AreaBreakType.NEXT_PAGE));
             }
@@ -130,16 +130,14 @@ namespace CrytonCoreNext.PDF.Models
 
         private static byte[] ReadFully(Stream input)
         {
-            byte[] buffer = new byte[16 * 1024];
-            using (var ms = new MemoryStream())
+            var buffer = new byte[16 * 1024];
+            using var ms = new MemoryStream();
+            int read;
+            while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
             {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
-                return ms.ToArray();
+                ms.Write(buffer, 0, read);
             }
+            return ms.ToArray();
         }
 
         private static string PrepareFileNameForMerge(List<PDFFile> pdfFiles)

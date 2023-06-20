@@ -536,9 +536,9 @@ namespace CrytonCoreNext.ViewModels
         {
             var selectedPdfIndex = SelectedPdfFilesToMerge.IndexOf(SelectedPdfFileToMerge);
             var index = 0;
-            foreach (var fileMerge in _pdfToMergePagesIndexes)
+            foreach (var (pdfIndex, pdfPage) in _pdfToMergePagesIndexes)
             {
-                if (fileMerge.pdfIndex == selectedPdfIndex)
+                if (pdfIndex == selectedPdfIndex)
                 {
                     return index;
                 }
@@ -724,7 +724,14 @@ namespace CrytonCoreNext.ViewModels
                 }
                 splitResultFiles.Add(rangeFile);
             }
-            PdfSplitRangeFiles = new(splitResultFiles);
+            if (splitResultFiles.Count > 1)
+            {
+                PdfSplitRangeFiles = new(splitResultFiles);
+            }
+            else
+            {
+                PdfSplitRangeFiles = new();
+            }
         }
 
         private static string GetSubPDFFileName((int from, int to) indx)
