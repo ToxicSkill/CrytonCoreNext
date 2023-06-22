@@ -211,9 +211,9 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
-        private void InsertPdf()
+        private async Task MergeAllImagesToPdf()
         {
-            var mergedImagesPdf = _pdfService.MergeAllImagesToPDF(ImageFiles.ToList(), ImageFiles.Max(x => x.Id) + 1);
+            var mergedImagesPdf = await _pdfService.MergeAllImagesToPDF(ImageFiles.ToList(), ImageFiles.Max(x => x.Id) + 1);
             AddPdfToPdfList(mergedImagesPdf);
         }
 
@@ -240,6 +240,7 @@ namespace CrytonCoreNext.ViewModels
             var protectedFilesCount = 0;
             var damagedFilesCount = 0;
             var nofNotLoadedFiles = 0;
+            var nofFilesBefore = PdfFiles.Count + ImageFiles.Count;
             await foreach (var file in base.LoadFiles(andImages == null ? Static.Extensions.DialogFilters.PdfAndImages : Static.Extensions.DialogFilters.Pdf))
             {
                 if (file.Extension.ToLower().Contains("pdf"))
@@ -255,24 +256,25 @@ namespace CrytonCoreNext.ViewModels
             {
                 SelectedPdfFile = PdfFiles.First();
             }
-            PostWarning(protectedFilesCount, damagedFilesCount, nofNotLoadedFiles);
+            var nofFilesAfter = PdfFiles.Count + ImageFiles.Count;
+            PostInformations(protectedFilesCount, damagedFilesCount, nofNotLoadedFiles, nofFilesAfter - nofFilesBefore);
             CheckAnyFileLoaded();
             Unlock();
         }
 
-        private void PostWarning(int protectedFilesCount, int damagedFilesCount, int nofNotLoadedFiles)
+        private void PostInformations(int protectedFilesCount, int damagedFilesCount, int nofNotLoadedFiles, int nofLoadedFiles)
         {
             var message = "";
             if (protectedFilesCount > 0 )
             {
                 message += (protectedFilesCount > 1 ?
-                    $"{protectedFilesCount} of {protectedFilesCount + PdfFiles.Count - nofNotLoadedFiles} loaded files. \n" :
+                    $"{protectedFilesCount} of {protectedFilesCount + PdfFiles.Count - nofNotLoadedFiles} loaded files. " :
                     "One file") + " requires password. \n";
             }
             if (damagedFilesCount > 0)
             {
                 message += (protectedFilesCount > 1 ?
-                    $"{protectedFilesCount} of {protectedFilesCount + PdfFiles.Count - nofNotLoadedFiles} loaded files. \n" :
+                    $"{protectedFilesCount} of {protectedFilesCount + PdfFiles.Count - nofNotLoadedFiles} loaded files. " :
                     "One file") + " is damaged. \n";
             }
             if (nofNotLoadedFiles > 0)
@@ -287,16 +289,25 @@ namespace CrytonCoreNext.ViewModels
                     Wpf.Ui.Common.SymbolRegular.Warning20,
                     Wpf.Ui.Common.ControlAppearance.Caution);
             }
+            else
+            {
+                PostSnackbar("Success", $"Successfully loaded {nofLoadedFiles} files",
+                    Wpf.Ui.Common.SymbolRegular.Checkmark20,
+                    Wpf.Ui.Common.ControlAppearance.Success);
+            }
         }
 
         [RelayCommand]
         private async Task LoadImageFiles()
         {
             Lock();
+            var nofNotLoadedFiles = 0;
+            var nofFilesBefore = ImageFiles.Count;
             await foreach (var imageFile in base.LoadFiles(Static.Extensions.DialogFilters.Images))
             {
-                LoadImageFile(imageFile);
+                nofNotLoadedFiles += LoadImageFile(imageFile);
             }
+            PostInformations(0, 0, nofNotLoadedFiles, ImageFiles.Count - nofFilesBefore);
             Unlock();
         }
 
@@ -750,7 +761,7 @@ namespace CrytonCoreNext.ViewModels
 
         private int LoadImageFile(File imageFile)
         {
-            if (ImageFiles.Contains(imageFile, new FileComparer()))
+            if (!ImageFiles.Contains(imageFile, new FileComparer()))
             { 
                 ImageFiles.Add(new ImageFile(imageFile));
                 SelectedImageFile = ImageFiles.Last();

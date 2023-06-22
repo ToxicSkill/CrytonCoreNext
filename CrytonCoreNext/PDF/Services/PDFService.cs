@@ -57,9 +57,9 @@ namespace CrytonCoreNext.PDF.Services
             _pdfReader.UpdatePdfFileInformations(ref pdfFile);
         }
 
-        public PDFFile MergeAllImagesToPDF(List<ImageFile> images, int newId)
+        public async Task<PDFFile> MergeAllImagesToPDF(List<ImageFile> images, int newId)
         {
-            return _pdfManager.MergeAllImagesToPDF(images, newId);
+            return await _pdfManager.MergeAllImagesToPDF(images, newId);
         }
     }
 }

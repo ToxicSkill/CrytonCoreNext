@@ -108,24 +108,31 @@ namespace CrytonCoreNext.PDF.Models
             return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 
-        public PDFFile MergeAllImagesToPDF(List<ImageFile> images, int newId)
+        public async Task<PDFFile> MergeAllImagesToPDF(List<ImageFile> images, int newId)
         {
-            using var memStream = new MemoryStream();
-            using var writer = new PdfWriter(memStream);
-            using var document = new PdfDocument(writer);
-            using var doc = new Document(document, PageSize.A4);
-            var size = document.GetDefaultPageSize();
+            var pdfFiles = new List<PDFFile>();
             foreach (var imageFile in images)
             {
-                ImageData imageData = ImageDataFactory.Create(imageFile.Bytes);
-                var image = new Image(imageData);
-                doc.Add(image);
-                doc.Add(new AreaBreak(iText.Layout.Properties.AreaBreakType.NEXT_PAGE));
+                pdfFiles.Add(ImageToPdf(imageFile, 0));
             }
-            document.Close();
-            var bytes = memStream.ToArray();
-            var file = new File("MergedImages", string.Empty, DateTime.Now, "pdf", newId, bytes);
-            return new PDFFile(file, Enums.EPdfStatus.Opened);
+            using IDocLib pdfLibrary = DocLib.Instance;
+            return await Merge(pdfFiles);
+            //using var memStream = new MemoryStream();
+            //using var writer = new PdfWriter(memStream);
+            //using var document = new PdfDocument(writer);
+            //using var doc = new Document(document, PageSize.A4);
+            //var size = document.GetDefaultPageSize();
+            //foreach (var imageFile in images)
+            //{
+            //    ImageData imageData = ImageDataFactory.Create(imageFile.Bytes);
+            //    var image = new Image(imageData);
+            //    doc.Add(image);
+            //    doc.Add(new AreaBreak(iText.Layout.Properties.AreaBreakType.NEXT_PAGE));
+            //}
+            //document.Close();
+            //var bytes = memStream.ToArray();
+            //var file = new File("MergedImages", string.Empty, DateTime.Now, "pdf", newId, bytes);
+            //return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 
         private static byte[] ReadFully(Stream input)

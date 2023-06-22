@@ -147,42 +147,45 @@
                         </ScrollViewer>
                     </Grid>
 
-                    <StackPanel Grid.Column="1" Margin="0,-100,0,0"
+                    <Grid Grid.Column="1" Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityInversionConverter}, UpdateSourceTrigger=PropertyChanged}">
+                        <StackPanel Margin="0,-100,0,0"
                                 VerticalAlignment="Center" 
                                 HorizontalAlignment="Center"
                                 Visibility="{Binding SelectedPdfFile.IsOpened, Converter={StaticResource BoolToVisibilityInversionConverter}}">
-                        <Grid>
-                            <ui:SymbolIcon Filled="False" FontSize="114" Symbol="Incognito20"/>
-                            <ui:SymbolIcon Name="LeftEyeIcon" Filled="True" FontSize="16" 
+                            <Grid>
+                                <ui:SymbolIcon Filled="False" FontSize="114" Symbol="Incognito20"/>
+                                <ui:SymbolIcon Name="LeftEyeIcon" Filled="True" FontSize="16" 
                                            Symbol="Circle12" HorizontalAlignment="Center" Margin="-51,50,0,0"/>
-                            <ui:SymbolIcon Name="RightEyeIcon" Filled="True" FontSize="16" 
+                                <ui:SymbolIcon Name="RightEyeIcon" Filled="True" FontSize="16" 
                                            Symbol="Circle12" HorizontalAlignment="Center" Margin="51,50,0,0"/>
-                            <ui:SymbolIcon Filled="True" FontSize="7" 
+                                <ui:SymbolIcon Filled="True" FontSize="7" 
                                            Symbol="Circle12" HorizontalAlignment="Center" Margin="-51,55,0,0"/>
-                            <ui:SymbolIcon Filled="True" FontSize="7" 
+                                <ui:SymbolIcon Filled="True" FontSize="7" 
                                            Symbol="Circle12" HorizontalAlignment="Center" Margin="51,55,0,0"/>
-                        </Grid>
-                        <ui:PasswordBox Name="PdfPasswordBox" Icon="LockOpen20"
+                            </Grid>
+                            <ui:PasswordBox Name="PdfPasswordBox" Icon="LockOpen20"
                                         PlaceholderText="Password" PreviewMouseUp="PdfPasswordBox_PreviewMouseUp"/>
-                        <ui:Button HorizontalAlignment="Stretch" Content="OK" Margin="0,2" 
+                            <ui:Button HorizontalAlignment="Stretch" Content="OK" Margin="0,2" 
                                    Command="{Binding ConfirmPasswordCommand}" Click="Button_Click"/>
-                    </StackPanel>
-                    <Image Grid.Column="1" Margin="10" Stretch="Uniform" PreviewMouseWheel="Image_PreviewMouseWheel"
+                        </StackPanel>
+                        <Image Margin="10" Stretch="Uniform" PreviewMouseWheel="Image_PreviewMouseWheel"
                            Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    
-                    <ui:Button Grid.Column="1" HorizontalAlignment="Left" Icon="ArrowLeft20" IconFilled="True"
+
+                        <ui:Button HorizontalAlignment="Left" Icon="ArrowLeft20" IconFilled="True"
                                Command="{Binding GoPreviousPageCommand}" Height="80" Margin="10,0" Appearance="Primary" Opacity="0.7"
                                Visibility="{Binding SelectedPdfFile.IsOnFirstPage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <ui:Button Grid.Column="1" HorizontalAlignment="Right" Icon="ArrowRight20" IconFilled="True"
+                        <ui:Button HorizontalAlignment="Right" Icon="ArrowRight20" IconFilled="True"
                                Command="{Binding GoNextPageCommand}" Height="80" Margin="10,0" Appearance="Primary" Opacity="0.7"
                                Visibility="{Binding SelectedPdfFile.IsOnLastPage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <ui:Button Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" IconFilled="True"
+                        <ui:Button HorizontalAlignment="Center" VerticalAlignment="Bottom" IconFilled="True"
                                Content="{Binding SelectedPdfFile.PageCountStatus, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
                                Width="100" Margin="0, 10" Appearance="Primary" Opacity="0.7"
                                Visibility="{Binding SelectedPdfFile.HasMoreThanOnePage,Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
+
+                    </Grid>
+             </Grid>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
@@ -458,10 +461,10 @@
                             </ScrollViewer>
 
                             <ui:CardControl Grid.Row="2" Height="50" IsEnabled="False" VerticalAlignment="Bottom"
-                                            Padding="5" Margin="0,15,0,0" Icon="ChevronDoubleDown20" 
+                                            Padding="10" Icon="ChevronDoubleDown20" 
                                             Visibility="{Binding PdfToSplitImages, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <ui:CardControl.Header>
-                                    <TextBlock Text="Right-click the selected pdf file to choose how to split it"/>
+                                    <TextBlock HorizontalAlignment="Center" Text="Right-click the selected pdf file to choose how to split it"/>
                                 </ui:CardControl.Header>
                             </ui:CardControl>
                         </Grid>
@@ -573,7 +576,7 @@
                             VerticalAlignment="Top"
                             HorizontalAlignment="Right" />
                         <ui:Button Visibility="{Binding ImageFiles, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                            Icon="ConvertRange20" Command="{Binding InsertPdfCommand}" 
+                            Icon="ConvertRange20" Command="{Binding MergeAllImagesToPdfCommand}" 
                             Content="Insert PDF" Margin="3,3" 
                             VerticalAlignment="Top"
                             HorizontalAlignment="Center" />

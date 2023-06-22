@@ -18,6 +18,6 @@ namespace CrytonCoreNext.PDF.Interfaces
 
         PDFFile ImageToPdf(ImageFile image, int newId);
 
-        PDFFile MergeAllImagesToPDF(List<ImageFile> images, int newId);
+        Task<PDFFile> MergeAllImagesToPDF(List<ImageFile> images, int newId);
     }
 }
