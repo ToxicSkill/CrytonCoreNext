@@ -1,6 +1,6 @@
 ﻿using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Extensions;
-using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Static;
 using System;
 using System.Collections.ObjectModel;

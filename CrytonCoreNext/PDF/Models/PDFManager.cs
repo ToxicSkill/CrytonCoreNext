@@ -1,8 +1,19 @@
-﻿using CrytonCoreNext.PDF.Interfaces;
+﻿using CrytonCoreNext.Enums;
+using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.Services;
 using Docnet.Core;
+using Docnet.Core.Editors;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
-using ImageMagick;
+using iText.IO.Image;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using MethodTimer;
+using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,43 +21,130 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using File = CrytonCoreNext.Models.File;
 
 namespace CrytonCoreNext.PDF.Models
 {
     public class PDFManager : IPDFManager
     {
-        public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
+        //public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
+        //{
+        //    using IDocLib pdfLibrary = DocLib.Instance;
+        //    var dimensions = pdfFile.Dimensions;
+        //    var reader = pdfFile.Password.Equals(string.Empty) ?
+        //        pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
+        //        pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
+        //    using var docReader = reader;
+        //    for (int i = 0; i <= pdfFile.NumberOfPages; i++)
+        //    {
+        //        yield return await Task.Run(() =>
+        //        {
+        //            using var pageReader = docReader.GetPageReader(i);
+        //            return GetImage(pageReader);
+        //        });
+        //    }
+        //}
+
+        [Time]
+        public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
+            if (pdfFile.PdfStatus == Enums.EPdfStatus.Protected && string.IsNullOrEmpty(pdfFile.Password))
+            {
+                return default;
+            }
             using IDocLib pdfLibrary = DocLib.Instance;
             var dimensions = pdfFile.Dimensions;
-            var reader = pdfFile.Password.Equals(string.Empty) ?
+            using var reader = pdfFile.Password.Equals(string.Empty) ?
                 pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
                 pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
             using var docReader = reader;
-            for (int i = 0; i <= pdfFile.NumberOfPages; i++)
-            {
-                yield return await Task.Run(() =>
-                {
-                    using var pageReader = docReader.GetPageReader(i);
-                    return GetImage(pageReader);
-                });
-            }
+            using var pageReader = docReader.GetPageReader(pdfFile.LastPage);
+            return GetImage(pageReader);
         }
 
-        public async Task<CrytonCoreNext.Models.File> Merge(List<PDFFile> pdfFiles)
+        public async Task<PDFFile> Merge(List<PDFFile> pdfFiles)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
             var bytes = pdfFiles.Select(x => x.Bytes).ToArray();
             var mergedFileBytes = await Task.Run(() => pdfLibrary.Merge(bytes));
             var templateFile = pdfFiles.First();
-            return new CrytonCoreNext.Models.File(pdfFiles.First(), PrepareFileNameForMerge(pdfFiles), mergedFileBytes, pdfFiles.Count() + 1);
+            var file = new File(pdfFiles.First(), PrepareFileNameForMerge(pdfFiles), mergedFileBytes, pdfFiles.Count() + 1);
+            return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 
-        public async Task<CrytonCoreNext.Models.File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
+        public async Task<PDFFile> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
             var splittedFileBytes = await Task.Run(() => pdfLibrary.Split(pdfFile.Bytes, fromPage, toPage));
-            return new CrytonCoreNext.Models.File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), splittedFileBytes, newId);
+            var file = new File(pdfFile, PrepareFileNameForSplit(pdfFile, fromPage, toPage), splittedFileBytes, newId);
+            return new PDFFile(file, Enums.EPdfStatus.Opened);
+        }
+
+        public PDFFile ImageToPdf(ImageFile image, int newId)
+        {
+            var converter = new ImageConverterService();
+            byte[] bytes = default;
+            var extension = image.Extension.ToLowerInvariant();
+            if (extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.png) || 
+                extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.gif) ||
+                extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.bmp))
+            {
+                bytes = converter.ConvertImageToJpeg(image);
+            }
+            else
+            {
+                bytes = image.Bytes;
+            }
+            var jpegImage = new JpegImage
+            {
+                Bytes = bytes,
+                Width = (int)image.Width,
+                Height = (int)image.Height
+            };
+
+            using IDocLib pdfLibrary = DocLib.Instance;
+            var pdfBbytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
+            var file = new File($"{image.Name}_Converted", string.Empty, DateTime.Now, "pdf", newId, pdfBbytes);
+            return new PDFFile(file, Enums.EPdfStatus.Opened);
+        }
+
+        public async Task<PDFFile> MergeAllImagesToPDF(List<ImageFile> images, int newId)
+        {
+            var pdfFiles = new List<PDFFile>();
+            foreach (var imageFile in images)
+            {
+                pdfFiles.Add(ImageToPdf(imageFile, 0));
+            }
+            using IDocLib pdfLibrary = DocLib.Instance;
+            return await Merge(pdfFiles);
+            //using var memStream = new MemoryStream();
+            //using var writer = new PdfWriter(memStream);
+            //using var document = new PdfDocument(writer);
+            //using var doc = new Document(document, PageSize.A4);
+            //var size = document.GetDefaultPageSize();
+            //foreach (var imageFile in images)
+            //{
+            //    ImageData imageData = ImageDataFactory.Create(imageFile.Bytes);
+            //    var image = new Image(imageData);
+            //    doc.Add(image);
+            //    doc.Add(new AreaBreak(iText.Layout.Properties.AreaBreakType.NEXT_PAGE));
+            //}
+            //document.Close();
+            //var bytes = memStream.ToArray();
+            //var file = new File("MergedImages", string.Empty, DateTime.Now, "pdf", newId, bytes);
+            //return new PDFFile(file, Enums.EPdfStatus.Opened);
+        }
+
+        private static byte[] ReadFully(Stream input)
+        {
+            var buffer = new byte[16 * 1024];
+            using var ms = new MemoryStream();
+            int read;
+            while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                ms.Write(buffer, 0, read);
+            }
+            return ms.ToArray();
         }
 
         private static string PrepareFileNameForMerge(List<PDFFile> pdfFiles)
@@ -74,72 +172,24 @@ namespace CrytonCoreNext.PDF.Models
             return stringBuilder.ToString();
         }
 
-        private static BitmapImage GetImage(IPageReader pageReader)
+        private static WriteableBitmap GetImage(IPageReader pageReader)
         {
-            var memoryStream = new MemoryStream();
-            var bitmap = new BitmapImage();
-            var bgrBytes = pageReader.GetImage(RenderFlags.LimitImageCacheSize); // Returns image bytes as B-G-R-A ordered list.
-            var rgbaBytes = RearrangeBytesToRGBA(bgrBytes);
-            ClearArray(bgrBytes);
+            var bgrBytes = pageReader.GetImage(RenderFlags.LimitImageCacheSize);
             var width = pageReader.GetPageWidth();
             var height = pageReader.GetPageHeight();
-            var pixelReadSettings = new PixelReadSettings(width, height, StorageType.Char, PixelMapping.RGBA);
-            using var imgOverlay = new MagickImage(rgbaBytes, pixelReadSettings);
-            ClearArray(rgbaBytes);
-            using var imgBackdrop = new MagickImage(MagickColors.White, width, height);
-            imgBackdrop.Composite(imgOverlay, CompositeOperator.Over);
-            imgBackdrop.Write(memoryStream, MagickFormat.Bmp);
-            imgBackdrop.Dispose();
-            imgOverlay.Dispose();
 
-            bitmap.BeginInit();
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            memoryStream.Seek(0, SeekOrigin.Begin);
-            bitmap.StreamSource = memoryStream;
-            bitmap.EndInit();
-            bitmap.Freeze();
-            memoryStream.Dispose();
-            memoryStream = null;
-            return bitmap;
-        }
+            using var bgraMat = new Mat(height, width, MatType.CV_8UC4, bgrBytes);
+            using var matOut = new Mat();
 
-        private static void ClearArray(byte[]? array)
-        {
-            if (array == null)
-            {
-                return;
-            }
-            Array.Clear(array, 0, array.Length);
-            array = null;
-            GC.Collect();
-        }
+            var nativeSplitted = Cv2.Split(bgraMat);
+            Cv2.Merge(new[] { nativeSplitted[3] }, matOut);
+            using Mat inversed = new Scalar(255) - matOut;
 
-        private static byte[] RearrangeBytesToRGBA(byte[] BGRABytes)
-        {
-            var max = BGRABytes.Length;
-            var RGBABytes = new byte[max];
-            var idx = 0;
-            byte r;
-            byte g;
-            byte b;
-            byte a;
-            while (idx < max)
-            {
-                // get colors in original order: B G R A
-                b = BGRABytes[idx];
-                g = BGRABytes[idx + 1];
-                r = BGRABytes[idx + 2];
-                a = BGRABytes[idx + 3];
-
-                // re-arrange to be in new order: R G B A
-                RGBABytes[idx] = r;
-                RGBABytes[idx + 1] = g;
-                RGBABytes[idx + 2] = b;
-                RGBABytes[idx + 3] = a;
-
-                idx += 4;
-            }
-            return RGBABytes;
+            using var add = new Mat();
+            Cv2.CvtColor(bgraMat, bgraMat, ColorConversionCodes.BGRA2BGR);
+            Cv2.CvtColor(inversed, inversed, ColorConversionCodes.GRAY2BGR);
+            Cv2.Add(bgraMat, inversed, add);
+            return add.ToWriteableBitmap();
         }
     }
 }

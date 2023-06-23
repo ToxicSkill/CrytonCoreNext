@@ -4,9 +4,16 @@ namespace CrytonCoreNext.Dictionaries
 {
     public static class Language
     {
+        private static int DictionaryIndex = 4;
+
         public static string Post(string key)
         {
-            var dictionary = Application.Current.Resources.MergedDictionaries[2];
+            var app = Application.Current;
+            if (app == null)
+            {
+                return string.Empty;
+            }
+            var dictionary = Application.Current.Resources.MergedDictionaries[DictionaryIndex];
             return dictionary.Contains(key) ? dictionary[key].ToString() ?? string.Empty : string.Empty;
         }
     }

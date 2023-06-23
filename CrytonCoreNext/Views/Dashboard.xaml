@@ -6,72 +6,22 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
             xmlns:viewModels="CrytonCoreNext.ViewModels"
-            xmlns:sys="clr-namespace:System;assembly=mscorlib"
-            Title="Dashboard"
+                xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                Title="Dashboard"
             mc:Ignorable="d" 
             d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="500" Height="120">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding Source={x:Static sys:DateTime.Today},   
-                StringFormat='{}{0:dddd, MMMM dd, yyyy}'}"/>
-            <StackPanel Grid.Row="1" HorizontalAlignment="Center" Orientation="Horizontal">
-                <TextBlock Text="CRYT" TextOptions.TextFormattingMode="Ideal"  FontSize="54" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBlock Text="ON" Foreground="{DynamicResource SystemAccentBrush}" Margin="0, 0, 0, 18" TextOptions.TextFormattingMode="Ideal"  FontSize="74" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel >
+                <Frame x:Name="LogoFrame" Width="110" Height="110"/>
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock Text="C R Y T " FontSize="{StaticResource G_LogoTitleFontSize}" VerticalAlignment="Center" FontWeight="Light" FontFamily="Candara Light"/>
+                    <TextBlock Text="O N" FontSize="{StaticResource G_LogoTitleFontSize}" Foreground="{DynamicResource SystemAccentBrush}" VerticalAlignment="Center" FontFamily="Candara Light" FontWeight="Bold"/>
+                </StackPanel>
+                <TextBlock Text="F O R   Y O U R   N E E D S" HorizontalAlignment="Center" FontSize="{StaticResource G_LogoSubtitleFontSize}" FontFamily="Candara Light"/>
             </StackPanel>
-
         </Grid>
-        <Grid Margin="0, 125, 0, 50">
-            <Path StrokeThickness="2" Stretch="Fill">
-                <Path.Resources>
-                    <Style TargetType="Path">
-                        <Setter Property="Stroke">
-                            <Setter.Value>
-                                <LinearGradientBrush>
-                                    <GradientStop Color="{DynamicResource SystemAccentColorPrimary}" Offset="0.0" />
-                                    <GradientStop Color="Transparent" Offset="0.5" />
-                                    <GradientStop Color="{DynamicResource SystemAccentColorPrimary}" Offset="1.0" />
-                                </LinearGradientBrush>
-                            </Setter.Value>
-                        </Setter>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneTime}" Value="true">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation
-                                                    Storyboard.TargetProperty="Stroke.(GradientBrush.GradientStops)[1].(GradientStop.Offset)"
-                                                    From="0" To="1" Duration="0:0:7"
-                                                    AutoReverse="True" RepeatBehavior="Forever"
-                                                    />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.EnterActions>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Path.Resources>
-                <Path.Data>
-                    <PathGeometry>
-                        <PathGeometry.Figures>
-                            <PathFigureCollection>
-                                <PathFigure StartPoint="0,20">
-                                    <PathFigure.Segments>
-                                        <PathSegmentCollection>
-                                            <QuadraticBezierSegment IsSmoothJoin="True" IsStroked="True" Point1="50,0" Point2="120,72" />
-                                            <QuadraticBezierSegment IsSmoothJoin="True" IsStroked="True" Point1="240,200" Point2="300,150" />
-                                            <QuadraticBezierSegment IsSmoothJoin="True" IsStroked="True" Point1="390, 68" Point2="500, 120"  />
-                                        </PathSegmentCollection>
-                                    </PathFigure.Segments>
-                                </PathFigure>
-                            </PathFigureCollection>
-                        </PathGeometry.Figures>
-                    </PathGeometry>
-                </Path.Data>
-            </Path>
-        </Grid>
+        <Frame x:Name="Background"/>
     </Grid>
+
 </ui:UiPage>

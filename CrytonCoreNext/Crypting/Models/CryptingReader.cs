@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Crypting.Interfaces;
+﻿using CrytonCoreNext.Crypting.Enums;
+using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Models;
 using System.Linq;
 using static CrytonCoreNext.Static.CryptingStatus;
@@ -7,10 +8,10 @@ namespace CrytonCoreNext.Crypting.Models
 {
     public class CryptingReader : ICryptingReader
     {
-        public CryptFile ReadCryptFile(File file, (bool succes, (string method, string extension)) cryptingRecognitionResult)
+        public CryptFile ReadCryptFile(File file, (bool succes, (EMethod method, string extension)) cryptingRecognitionResult)
         {
             var status = Status.Decrypted;
-            var method = string.Empty;
+            var method = EMethod.AES;
             if (cryptingRecognitionResult.succes)
             {
                 status = Status.Encrypted;

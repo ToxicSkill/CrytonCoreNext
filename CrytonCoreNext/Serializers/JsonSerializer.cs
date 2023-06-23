@@ -1,4 +1,4 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces.Serializers;
 using Newtonsoft.Json;
 using System;
 using System.IO;

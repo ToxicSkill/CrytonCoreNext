@@ -1,4 +1,4 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces.Serializers;
 using System.IO;
 
 namespace CrytonCoreNext.Serializers

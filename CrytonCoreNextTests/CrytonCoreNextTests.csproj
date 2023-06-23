@@ -10,12 +10,24 @@
   <ItemGroup>
     <None Remove="TestingFiles\2.pdf" />
     <None Remove="TestingFiles\3.pdf" />
+    <None Remove="TestingFiles\PDF NOT SECURED.pdf" />
+    <None Remove="TestingFiles\SECURED PDF 123456.pdf" />
     <None Remove="TestingFiles\test.pdf" />
+    <None Remove="TestingFiles\test.txt" />
     <None Remove="TestingFiles\testPDF.pdf" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="TestingFiles\test.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="OpenCvSharp4" Version="4.7.0.20230115" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.7.0.20230115" />
+    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.7.0.20230115" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -32,20 +44,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="TestingFiles\2.pdf" />
-    <Resource Include="TestingFiles\3.pdf">
+    <Resource Include="TestingFiles\PDF NOT SECURED.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="TestingFiles\test.pdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Resource Include="TestingFiles\SECURED PDF 123456.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="TestingFiles\testPDF.pdf" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="TestingFiles\test.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

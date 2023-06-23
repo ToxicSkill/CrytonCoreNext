@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +17,8 @@ namespace CrytonCoreNext.ViewModels
 {
     public partial class SettingsViewModel : ViewModelBase
     {
+        private const int MinimalWindowsBuildNumber = 22523;
+
         private readonly IThemeService _themeService;
 
         private List<UiViewElement<CardControl>> _elements;
@@ -28,6 +31,16 @@ namespace CrytonCoreNext.ViewModels
 
         private _verticalOffsetScrollUpdateDelegate VerticalOffsetScrollUpdate;
 
+        public delegate void OnThemeStyleChanged(BackgroundType value);
+
+        public event OnThemeStyleChanged ThemeStyleChanged;
+
+        [ObservableProperty]
+        public ObservableCollection<BackgroundType> themeStylesItemsSource;
+
+        [ObservableProperty]
+        public BackgroundType selectedThemeStyle;
+
         [ObservableProperty]
         public ObservableCollection<TreeViewItemModel> treeViewItemSource;
 
@@ -37,6 +50,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public bool isThemeSwitchChecked = true;
 
+        [ObservableProperty]
+        public bool isThemeStyleAvailable;
+
         public bool MembersInitialized { get => TreeViewItemSource.Any(); }
 
         public SettingsViewModel(IThemeService themeService)
@@ -45,6 +61,12 @@ namespace CrytonCoreNext.ViewModels
             _elements = new();
             _cardByTreeViewItem = new();
             TreeViewItemSource = new();
+            InitializeThemes();
+        }
+
+        partial void OnSelectedThemeStyleChanged(BackgroundType value)
+        {
+            ThemeStyleChanged?.Invoke(value);
         }
 
         public void UpdateSelectedTreeViewItem(CardControl card)
@@ -98,6 +120,20 @@ namespace CrytonCoreNext.ViewModels
                 offset += 8;
             }
             return offset;
+        }
+
+        private void InitializeThemes()
+        {
+            ThemeStylesItemsSource = new ObservableCollection<BackgroundType>
+                (new List<BackgroundType>()
+                    {
+                        BackgroundType.Acrylic,
+                        BackgroundType.Mica,
+                        BackgroundType.Tabbed
+                    }
+                );
+            SelectedThemeStyle = BackgroundType.Mica;
+            IsThemeStyleAvailable = WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber;
         }
 
         private void UpdateTreeView(TreeViewItemModel selectedTreeViewItem)

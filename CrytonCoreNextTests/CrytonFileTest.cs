@@ -1,19 +1,25 @@
 ﻿using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
-using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Crypting.Services;
+using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CrytonCoreNextTests
 {
-    public class CrytonFileTest
+    public class Files
     {
+        private readonly ICryptingService _cryptingService;
+
         private readonly ICryptingRecognition _cryptingRecognition;
+
+        private readonly ICryptingReader _cryptingReader;
 
         private readonly IFilesSaver _filesSaver;
 
@@ -23,30 +29,52 @@ namespace CrytonCoreNextTests
 
         private readonly List<string> _filesToOpen = new() { "./TestingFiles/test.txt" };
 
-        private readonly List<CryptFile> _files;
+        public readonly List<CryptFile> CryptFiles;
 
-        public Mock<IFilesSaver> FilesSaver = new();
-
-        public CrytonFileTest()
+        public Files()
         {
             _cryptingRecognition = new CryptingRecognition(new(Guid.NewGuid()));
+            _cryptingReader = new CryptingReader();
+            _cryptingService = new CryptingService(_cryptingRecognition, _cryptingReader);
             _filesSaver = new FilesSaver();
             _filesLoader = new FilesLoader();
             _filesManager = new FilesManager();
-            //_files = _filesLoader.LoadFiles(_filesToOpen);
+            CryptFiles = new List<CryptFile>();
+            LoadFiles();
+        }
+
+        private async Task LoadFiles()
+        {
+            await foreach (var file in _filesLoader.LoadFiles(_filesToOpen))
+            {
+                CryptFiles.Add(_cryptingService.ReadCryptFile(file));
+            }
+        }
+    }
+
+    public class CrytonFileTest : IClassFixture<Files>
+    {
+
+        private readonly Files _files;
+
+        public Mock<IFilesSaver> FilesSaver = new();
+
+        public CrytonFileTest(Files filesFixture)
+        {
+            _files = filesFixture;
         }
 
         [Fact]
         public void TestOpenFileShouldNotNull()
         {
-            var file = _files.First();
+            var file = _files.CryptFiles.First();
             Assert.NotNull(file);
         }
 
         [Fact]
         public void TestOpenFileShouldBytesNotNull()
         {
-            var file = _files.First();
+            var file = _files.CryptFiles.First();
             var bytes = file.Bytes;
             Assert.NotNull(bytes);
         }
@@ -54,7 +82,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestOpenFileShouldSizeNotEmpty()
         {
-            var file = _files.First();
+            var file = _files.CryptFiles.First();
             var size = file.Size;
             Assert.NotEmpty(size);
         }
@@ -62,7 +90,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestOpenFileShouldExtensionText()
         {
-            var file = _files.First();
+            var file = _files.CryptFiles.First();
             var expected = "txt";
             var extension = file.Extension;
             Assert.Equal(extension, expected);
@@ -71,7 +99,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestOpenFileShouldGuidNotEmpty()
         {
-            var file = _files.First();
+            var file = _files.CryptFiles.First();
             var reference = Guid.NewGuid();
             var guid = file.Guid;
             Assert.NotEqual(reference, guid);
@@ -80,7 +108,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestOpenFileShouldNameEqualsTest()
         {
-            var file = _files.First();
+            var file = _files.CryptFiles.First();
             var expected = "test";
             var name = file.Name;
             Assert.Equal(expected, name);
@@ -89,7 +117,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestOpenFileShouldStatusInfoDecrypted()
         {
-            var file = _files.First();
+            var file = _files.CryptFiles.First();
             var expected = CryptingStatus.Status.Decrypted;
             var statusInfo = file.Status;
             Assert.Equal(expected, statusInfo);
@@ -98,7 +126,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestOpenFileShouldIdEqualsZero()
         {
-            var file = _files.First();
+            var file = _files.CryptFiles.First();
             var expected = 1;
             var id = file.Id;
             Assert.Equal(expected, id);

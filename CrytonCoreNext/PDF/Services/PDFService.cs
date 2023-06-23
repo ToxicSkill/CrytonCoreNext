@@ -19,27 +19,47 @@ namespace CrytonCoreNext.PDF.Services
             _pdfReader = pdfReader;
         }
 
-        public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
+        //public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
+        //{
+        //    await foreach (var image in _pdfManager.LoadAllPDFImages(pdfFile))
+        //    {
+        //        yield return image;
+        //    }
+        //}
+
+        public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
-            await foreach (var image in _pdfManager.LoadAllPDFImages(pdfFile))
-            {
-                yield return image;
-            }
+            return _pdfManager.LoadImage(pdfFile);
         }
 
-        public async Task<File> Merge(List<PDFFile> pdfFiles)
+        public async Task<PDFFile> Merge(List<PDFFile> pdfFiles)
         {
             return await _pdfManager.Merge(pdfFiles);
         }
 
-        public PDFFile? ReadPdf(File file, string password = "")
+        public PDFFile ReadPdf(File file, string password = "")
         {
             return _pdfReader.ReadPdf(file, password);
         }
 
-        public async Task<File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
+        public async Task<PDFFile> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
         {
             return await _pdfManager.Split(pdfFile, fromPage, toPage, newId);
+        }
+
+        public PDFFile ImageToPdf(ImageFile image, int newId)
+        {
+           return _pdfManager.ImageToPdf(image, newId);
+        }
+
+        public void UpdatePdfFileInformations(ref PDFFile pdfFile)
+        {
+            _pdfReader.UpdatePdfFileInformations(ref pdfFile);
+        }
+
+        public async Task<PDFFile> MergeAllImagesToPDF(List<ImageFile> images, int newId)
+        {
+            return await _pdfManager.MergeAllImagesToPDF(images, newId);
         }
     }
 }

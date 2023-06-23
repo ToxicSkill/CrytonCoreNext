@@ -5,7 +5,7 @@ using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Helpers;
-using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Interfaces.Serializers;
 using CrytonCoreNext.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +52,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
         public string maxBytesMessage;
 
         [ObservableProperty]
-        public System.Windows.Media.Brush fileTooBigCautionColor = new SolidColorBrush(Colors.White);
+        public Brush fileTooBigCautionColor = new SolidColorBrush(Colors.White);
 
         public RSAViewModel(ICrypting crypting,
             ISnackbarService snackbarService,

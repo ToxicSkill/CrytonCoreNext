@@ -2,18 +2,17 @@
 
 namespace CrytonCoreNext.Abstract
 {
-    [ObservableObject]
-    public partial class ViewModelBase
+    public partial class ViewModelBase : ObservableObject
     {
         [ObservableProperty]
-        public string pageName;
+        public string pageName = "";
 
         [ObservableProperty]
         public bool isBusy;
 
         public ViewModelBase(string name = "")
         {
-            this.PageName = name;
+            PageName = name;
         }
 
         public virtual bool CanExecute()

@@ -1,4 +1,4 @@
-﻿using CrytonCoreNext.Interfaces;
+﻿using CrytonCoreNext.Interfaces.Extras;
 using Newtonsoft.Json;
 using System;
 using System.Globalization;

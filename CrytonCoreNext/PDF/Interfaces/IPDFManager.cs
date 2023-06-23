@@ -8,10 +8,16 @@ namespace CrytonCoreNext.PDF.Interfaces
 {
     public interface IPDFManager
     {
-        IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile);
+        //IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile);
 
-        Task<File> Split(PDFFile pdfFile, int fromPage, int toPage, int newId);
+        WriteableBitmap LoadImage(PDFFile pdfFile);
 
-        Task<File> Merge(List<PDFFile> pdfFiles);
+        Task<PDFFile> Split(PDFFile pdfFile, int fromPage, int toPage, int newId);
+
+        Task<PDFFile> Merge(List<PDFFile> pdfFiles);
+
+        PDFFile ImageToPdf(ImageFile image, int newId);
+
+        Task<PDFFile> MergeAllImagesToPDF(List<ImageFile> images, int newId);
     }
 }

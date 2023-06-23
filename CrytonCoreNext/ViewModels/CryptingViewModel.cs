@@ -5,8 +5,10 @@ using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +23,8 @@ namespace CrytonCoreNext.ViewModels
         private readonly ICryptingService _cryptingService;
 
         private readonly IFileService _fileService;
+
+        private readonly List<ICryptingView<CryptingMethodViewModel>> _cryptingViews;
 
         [ObservableProperty]
         public IProgressService progressService;
@@ -38,7 +42,6 @@ namespace CrytonCoreNext.ViewModels
         [NotifyPropertyChangedFor(nameof(Files))]
         public CryptFile selectedFile;
 
-
         public delegate void HandleFileChanged(CryptFile file);
 
         public event HandleFileChanged OnFileChanged;
@@ -46,22 +49,35 @@ namespace CrytonCoreNext.ViewModels
         public CryptingViewModel(IFileService fileService,
             IDialogService dialogService,
             ICryptingService cryptingService,
-            IFilesView filesView,
-            ISnackbarService snackbarService)
+            ISnackbarService snackbarService,
+            List<ICryptingView<CryptingMethodViewModel>> cryptingViews)
             : base(fileService, dialogService, snackbarService)
         {
             ProgressService = new ProgressService();
+
             _fileService = fileService;
             _cryptingService = cryptingService;
+            _cryptingViews = cryptingViews;
+
             files = new();
+
             UpdateCryptingViews();
+            RegisterFileChangedEvent();
+
             SelectedCryptingView = CryptingViewsItemSource.First();
-            _cryptingService.RegisterFileChangedEvent(ref OnFileChanged!);
+        }
+
+        private void RegisterFileChangedEvent()
+        {
+            foreach (var view in _cryptingViews)
+            {
+                OnFileChanged += view.ViewModel.HandleFileChanged;
+            }
         }
 
         private void UpdateCryptingViews()
         {
-            CryptingViewsItemSource = new(_cryptingService.GetCryptingViews());
+            CryptingViewsItemSource = new(_cryptingViews);
         }
 
         partial void OnSelectedFileChanged(CryptFile value)
@@ -136,24 +152,24 @@ namespace CrytonCoreNext.ViewModels
         private async void PerformCrypting()
         {
             Lock();
-            if (!_fileService.HasBytes(SelectedFile) || _cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
+            if (!_fileService.HasBytes(SelectedFile) || !_cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
             {
-                PostSnackbar("Error", Language.Post("WrongMethod"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+                PostErrorSnackbar(Language.Post("WrongMethod"));
                 return;
             }
 
             var progressReport = ProgressService.SetProgress<string>(SelectedCryptingView.ViewModel.Crypting.ProgressCount);
-            var result = await _cryptingService.RunCrypting(SelectedCryptingView, SelectedFile, progressReport);
+            var result = await _cryptingService.RunCrypting(SelectedCryptingView.ViewModel.Crypting, SelectedFile, progressReport);
 
             if (!result.Equals(Array.Empty<byte>()) && Files.Any())
             {
-                _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedFile.Name);
+                _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedCryptingView.ViewModel.Crypting.Method);
                 UpdateStateOfSelectedFile();
-                PostSnackbar("Success", Language.Post("Success"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+                PostSuccessSnackbar(Language.Post("Success"));
             }
             else
             {
-                PostSnackbar("Error", Language.Post("CryptingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+                PostErrorSnackbar(Language.Post("CryptingError"));
             }
             Unlock();
         }

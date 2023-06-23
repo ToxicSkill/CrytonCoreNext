@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Crypting.Interfaces;
+﻿using CrytonCoreNext.Crypting.Enums;
+using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.Static;
 using System;
@@ -9,11 +10,11 @@ namespace CrytonCoreNext.Crypting.Models
     {
         public CryptingStatus.Status Status { get; set; }
 
-        public string Method { get; set; }
+        public EMethod Method { get; set; }
 
         public ICrypting Crypting { get; set; }
 
-        public CryptFile(File file, CryptingStatus.Status status, string method, Guid guid) : base(file)
+        public CryptFile(File file, CryptingStatus.Status status, EMethod method, Guid guid) : base(file)
         {
             Status = status;
             Method = method;

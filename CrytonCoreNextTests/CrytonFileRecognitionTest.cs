@@ -1,3 +1,4 @@
+using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using System;
@@ -19,7 +20,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestNamesTrueShoudNotNull()
         {
-            var method = "AES";
+            var method = EMethod.AES;
             var extension = "pdf";
             var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.NotNull(result);
@@ -28,7 +29,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestNamesTrueShoudCorretLenght()
         {
-            var method = "AES";
+            var method = EMethod.AES;
             var extension = "pdf";
             var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.Equal(_correctLenght, result.Length);
@@ -38,7 +39,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestNamesFalseShoudEmpty()
         {
-            var method = string.Empty;
+            var method = EMethod.AES;
             var extension = string.Empty;
             var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.Equal(_defaultBytes, result);
@@ -47,7 +48,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestNamesPartlyFalseShoudEmpty()
         {
-            var method = "AES";
+            var method = EMethod.AES;
             var extension = string.Empty;
             var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.Equal(_defaultBytes, result);
@@ -56,7 +57,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestNamesToLongShoudNotEmpty()
         {
-            var method = "AESAESAEASAESAESAESAES";
+            var method = EMethod.AES;
             var extension = "txtxtxtxtxtxtxtxtx";
             var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.Equal(_correctLenght, result.Length);
@@ -65,7 +66,7 @@ namespace CrytonCoreNextTests
         [Fact]
         public void TestNamesMaxLenghtShoudNotNull()
         {
-            var method = "AESA";
+            var method = EMethod.AES;
             var extension = "txttxtttx";
             var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
             Assert.Equal(_correctLenght, result.Length);

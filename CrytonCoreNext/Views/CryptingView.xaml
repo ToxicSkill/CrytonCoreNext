@@ -7,9 +7,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels" 
+    xmlns:converterType="clr-namespace:CrytonCoreNext.Crypting.Models" 
     d:DataContext="{d:DesignInstance Type=viewmodels:CryptingViewModel}"
-    xmlns:c="clr-namespace:CrytonCoreNext.Converters"
+    xmlns:c="clr-namespace:CrytonCoreNext.Converters" 
     MinWidth="900"
+    Background="{DynamicResource ApplicationBackgroundBrush}"
     d:DesignHeight="850"
     d:DesignWidth="1400"
     mc:Ignorable="d">
@@ -24,23 +26,28 @@
     </ui:UiPage.Resources>
 
     <Grid>
-        <Grid Margin="10, 0 ,0 ,0">
+        <!--<ui:Button Grid.Row="0" Icon="Add20" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" Appearance="Primary" HorizontalAlignment="Stretch" Cursor="Hand" />-->
+
+        <!--<StackPanel Margin="10" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <TextBlock Text="Crypting" FontSize="72" FontWeight="Light" />
+            <TextBlock Text="Click anywhere to add file" FontSize="30" FontWeight="UltraLight" />
+        </StackPanel>
+        <Grid x:Name="PathsAnimations">
+            <Path Visibility="Hidden" Margin="0, 100, 0, 75" Style="{StaticResource G_PathAnimatedStyle}" HorizontalAlignment="Stretch" StrokeThickness="2" Stretch="Fill" Data="M 0 0 C 6 10 39 -26 51 2 Q 64 33 81 2 Q 103 -41 113 -4"/>
+            <Path Visibility="Hidden" Margin="0, 100, 0, 75" Style="{StaticResource G_PathAnimatedStyle}" HorizontalAlignment="Stretch" StrokeThickness="2" Stretch="Fill" Data="M 0 0 C 12 -18 32 -21 51 2 Q 77 30 81 2 Q 92 -74 145 -10"/>
+            <Path Visibility="Hidden" Margin="0, 100, 0, 75" Style="{StaticResource G_PathAnimatedStyle}" HorizontalAlignment="Stretch" StrokeThickness="2" Stretch="Fill" Data="M 0 0 C 22 -18 41 -22 51 2 Q 75 57 95 1 Q 122 -84 153 -12 Q 197 110 227 -7 Q 269 -192 292 -8 Q 326 196 366 -7"/>
+        </Grid>-->
+        <Grid Margin="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="70"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="20"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="Crypting" FontSize="32" FontWeight="Light" />
-                <ui:Button Grid.Row="1" Icon="Add20" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" Appearance="Primary" HorizontalAlignment="Stretch" />
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
@@ -55,37 +62,8 @@
                               ItemsSource="{Binding CryptingViewsItemSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                               SelectedItem="{Binding SelectedCryptingView}"/>
                 </Grid>
-                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged }">
-                    <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="0, 0, 0, -30">
-                        <!--<Border.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#002F3BEF" Offset="1"/>
-                                <GradientStop Color="#7F4CB1FF" Offset="0"/>
-                            </LinearGradientBrush>
-                        </Border.Background>-->
-                    </Border>
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ui:SymbolIcon Symbol="DocumentBulletListMultiple20" FontSize="62" Filled="True" FontWeight="Thin"/>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" Margin="10, 0 ,0 ,20" Text="Here will be the files that you upload" FontWeight="Thin"/>
-                        <DockPanel  HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="Add20" FontSize="18" Margin="20, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="upload files" FontWeight="Light"/>
-                        </DockPanel>
-                        <DockPanel HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="Save20" FontSize="18" Margin="20, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="save selected file" FontWeight="Light"/>
-                        </DockPanel>
-                        <DockPanel HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="Delete20" FontSize="18" Margin="20, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="delete selected file" FontWeight="Light"/>
-                        </DockPanel>
-                        <DockPanel HorizontalAlignment="Stretch">
-                            <ui:SymbolIcon Symbol="TextIndentIncreaseLtr20" FontSize="18" Margin="20, 0, 0 ,0"/>
-                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="0, 0 ,40 ,0" Text="select crypting method" FontWeight="Light"/>
-                        </DockPanel>
-                    </StackPanel>
-                </Grid>
-                <ScrollViewer Grid.Row="2" CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+
+                <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto">
                     <ListView ItemsSource="{Binding Files, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFile}">
                         <ListView.Template>
                             <ControlTemplate TargetType="ListBox">
@@ -126,32 +104,18 @@
                 </ScrollViewer>
             </Grid>
 
-            <Grid Grid.Column="1" Margin="20, 0, 0 ,0">
+            <Grid Grid.Column="1" Margin="20,0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="75"/>
-                    <RowDefinition Height="90"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="90"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Row="1" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                        <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" >
-                            <!--<Border.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#002F3BEF" Offset="1"/>
-                                <GradientStop Color="#7F4CB1FF" Offset="0"/>
-                            </LinearGradientBrush>
-                        </Border.Background>-->
-                        </Border>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <ui:SymbolIcon Symbol="AppsListDetail20" FontSize="28"/>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be the details of chosen the file" FontSize="14" FontWeight="Light"/>
-                        </StackPanel>
-                    </Grid>
+
                     <Grid Grid.Column="0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
@@ -172,63 +136,16 @@
                         <TextBlock Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Text="{Binding SelectedFile.Extension}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
                     </Grid>
 
-                    <Grid Grid.Column="1" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="20, 0, 0, 0">
-                        <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="0, 0, 20, 0">
-                            <!--<Border.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#002F3BEF" Offset="1"/>
-                                <GradientStop Color="#7F4CB1FF" Offset="0"/>
-                            </LinearGradientBrush>
-                        </Border.Background>-->
-                        </Border>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 0, 20, 0">
-                            <ui:SymbolIcon Symbol="TextBaseline20" FontSize="28"/>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be name of chosen method" FontSize="14" FontWeight="Light"/>
-                        </StackPanel>
-                    </Grid>
                     <TextBlock Grid.Column="1" Text="{Binding SelectedCryptingView.ViewModel.PageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                                Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                FontSize="78" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Grid>
-                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                    <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="0, 20, 20, 20">
-                        <!--<Border.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#002F3BEF" Offset="1"/>
-                                <GradientStop Color="#7F4CB1FF" Offset="0"/>
-                            </LinearGradientBrush>
-                        </Border.Background>-->
-                    </Border>
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ui:SymbolIcon Symbol="Fingerprint20" FontSize="62"/>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be the chosen crypting method settings view" FontSize="16" FontWeight="Light"/>
-                    </StackPanel>
-                </Grid>
-                <Grid Grid.Row="2" Margin="0, 20, 20, 0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                    <Frame Grid.Row="1" Content="{Binding SelectedCryptingView}"/>
-                </Grid>
-            </Grid>
-            <Grid Grid.Column="1" Grid.Row="3" Margin="18, 0, 0, 0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="55"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="100"/>
-                </Grid.RowDefinitions>
 
-                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="20, 0, 0, 0">
-                    <Border  CornerRadius="15" BorderThickness="1" BorderBrush="{StaticResource BrushBlueTransparent}" Margin="-18, 10, 20, 10">
-                        <!--<Border.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#002F3BEF" Offset="1"/>
-                                <GradientStop Color="#7F4CB1FF" Offset="0"/>
-                            </LinearGradientBrush>
-                        </Border.Background>-->
-                    </Border>
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ui:SymbolIcon Symbol="Fire20" FontSize="34"/>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Here will be action panel" FontSize="14" FontWeight="Light"/>
-                    </StackPanel>
+                <Grid Grid.Row="1" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    <Frame Content="{Binding SelectedCryptingView}"/>
                 </Grid>
+
+
                 <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -250,8 +167,58 @@
                     <Grid Grid.Column="0" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" >
                         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40, 0 ,0 ,0" Text="{Binding ProgressMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DataContext="{Binding ProgressService}"  FontSize="13"/>
                     </Grid>
-                 </Grid>
+                </Grid>
             </Grid>
+        </Grid>
+        <Grid Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <Frame x:Name="Background" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Grid.Column="1" FontSize="84" Text="Crypting" FontFamily="Candara Light"/>
+                <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="22" Text="Make your data safe" FontWeight="UltraLight" FontFamily="Candara Light"/>
+            </StackPanel>
+
+            <ui:Button VerticalAlignment="Center" HorizontalAlignment="Center" Margin="400,20,0,0" Cursor="Hand"
+                       Width="80" Height="80" Icon="Add20" FontSize="54" ToolTip="Load files"
+                       Command="{Binding LoadCryptFilesCommand}"/>
+
+            <!--<ui:Button Grid.Row="1" Icon="Add20" 
+                       Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                       Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" 
+                       Appearance="Primary" HorizontalAlignment="Stretch" Cursor="Hand" />-->
+            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20">
+                <TextBlock
+                    FontSize="{StaticResource G_NormalFontSize}"
+                    FontWeight="UltraLight"
+                    Text="Learn more" />
+                <ui:Hyperlink
+                    Margin="8,8,0,0"
+                    Padding="4"
+                    Content="GitHub"
+                    Icon="Empty"
+                    NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
+                    ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
+                <ui:Hyperlink
+                    Margin="8,0,0,0"
+                    Padding="4"
+                    Content="Advanced Encrypting Standard (AES)"
+                    Icon="Empty"
+                    NavigateUri="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard"
+                    ToolTip="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" />
+                <ui:Hyperlink
+                    Margin="8,0,0,0"
+                    Padding="4"
+                    Content="Rivest Shamir Adleman algorithm (RSA)"
+                    Icon="Empty"
+                    NavigateUri="https://en.wikipedia.org/wiki/RSA_(cryptosystem)"
+                    ToolTip="https://en.wikipedia.org/wiki/RSA_(cryptosystem)" />
+                <ui:Hyperlink
+                    Margin="8,0,0,0"
+                    Padding="4"
+                    Content="Fluent UI Documentation"
+                    Icon="Empty"
+                    NavigateUri="https://wpfui.lepo.co/"
+                    ToolTip="https://wpfui.lepo.co/" />
+            </StackPanel>
         </Grid>
     </Grid>
 </ui:UiPage>

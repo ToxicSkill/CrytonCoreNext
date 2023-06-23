@@ -1,10 +1,13 @@
-﻿using System;
+﻿using CrytonCoreNext.Extensions;
+using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace CrytonCoreNext.Models
 {
-    public class File
+    public class File : INotifyPropertyChanged
     {
-        public string Name { get; init; }
+        public string Name { get; private set; }
 
         public string NameWithExtension { get => $"{Name}.{Extension}"; }
 
@@ -22,11 +25,13 @@ namespace CrytonCoreNext.Models
 
         public Guid Guid { get; init; } = Guid.NewGuid();
 
-        public File(string name, string path, string size, DateTime date, string extension, int id, byte[] bytes)
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public File(string name, string path, DateTime date, string extension, int id, byte[] bytes)
         {
             Name = name;
             Path = path;
-            Size = size;
+            Size = bytes.GetSizeString();
             Date = date;
             Extension = extension;
             Id = id;
@@ -37,7 +42,7 @@ namespace CrytonCoreNext.Models
         {
             Name = name;
             Path = file.Path;
-            Size = file.Size;
+            Size = bytes.GetSizeString();
             Date = file.Date;
             Extension = file.Extension;
             Id = id;
@@ -48,11 +53,24 @@ namespace CrytonCoreNext.Models
         {
             Name = file.Name;
             Path = file.Path;
-            Size = file.Size;
+            Size = file.Bytes.GetSizeString();
             Date = file.Date;
             Extension = file.Extension;
             Id = file.Id;
             Bytes = file.Bytes;
+        }
+
+        public void Rename(string newName)
+        {
+            if (!string.IsNullOrEmpty(newName))
+            {
+                this.Name = newName;
+            }
+        }
+
+        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

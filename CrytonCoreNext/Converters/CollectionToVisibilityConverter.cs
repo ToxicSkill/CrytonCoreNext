@@ -1,8 +1,6 @@
-﻿using CrytonCoreNext.Crypting.Models;
-using System;
-using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
@@ -12,11 +10,25 @@ namespace CrytonCoreNext.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is ObservableCollection<CryptFile> files)
+            if (value is not ICollection files)
             {
-                return files.Any() ? Visibility.Collapsed : Visibility.Visible;
+                return Visibility.Collapsed;
             }
-            return Visibility.Visible;
+            else if (parameter is string countThreshold)
+            {
+                if (!Int32.TryParse(countThreshold, out int count))
+                {
+                    return Visibility.Collapsed;
+                }
+                else
+                {
+                    if (count > 0)
+                    {
+                        return files.Count >= count ? Visibility.Collapsed : Visibility.Visible;
+                    }
+                }
+            }
+            return files.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

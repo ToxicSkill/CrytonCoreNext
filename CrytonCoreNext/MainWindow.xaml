@@ -19,62 +19,65 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
+    <ui:UiWindow.Resources>
+        <ContextMenu x:Key="contextMenu">
+            <MenuItem Command="{Binding MinimizeCommand}">
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="LineHorizontal120"/>
+                        <TextBlock Margin="5,0" Text="Minimize"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem Command="{Binding MaximizeCommand}">
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="SquareMultiple20"/>
+                        <TextBlock Margin="5,0" Text="Maximize"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem Command="{Binding NormalCommand}">
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="CenterVertical20"/>
+                        <TextBlock Margin="5,0" Text="Normal"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem Command="{Binding ExitCommand}">
+                <MenuItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ArrowExit20"/>
+                        <TextBlock Margin="5,0" Text="Exit"/>
+                    </StackPanel>
+                </MenuItem.Header>
+            </MenuItem>
+        </ContextMenu>
+    </ui:UiWindow.Resources>
+    
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
         <Grid
             x:Name="RootMainGrid"
-            Grid.Row="1"
             Margin="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!--  This is the main navigation of the application.  -->
-            <ui:NavigationStore
+            <Grid Grid.Column="0" Background="#02000000"/>
+
+            <ui:NavigationStore Style="{StaticResource ColoredNavigationStore}"
                 x:Name="RootNavigation"
                 Grid.Column="0"
-                Margin="6,0,6,0"
+                Margin="6,10,6,0"
                 Frame="{Binding ElementName=RootFrame}"
                 Precache="False"
                 SelectedPageIndex="-1"
-                TransitionDuration="200"
+                TransitionDuration="600"
                 Items="{Binding MenuItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 Footer="{Binding FooterItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                 TransitionType="FadeInWithSlide">
-                <!--<ui:NavigationStore.Items>
-                    <ui:NavigationItem
-                        Cache="True"
-                        Content="Home"
-                        Icon="Home24"
-                        PageTag="home" 
-                        PageType="{x:Type pages:Dashboard}"/>
-                    <ui:NavigationSeparator />
-                    <ui:NavigationItem
-                        Cache="True"
-                        Content="Crypting"
-                        Icon="Fingerprint48"
-                        PageTag="crypting" 
-                        PageType="{x:Type pages:CryptingView}"/>
-                    <ui:NavigationItem
-                        Cache="True"
-                        Content="Pdf"
-                        Icon="Layer20"  
-                        PageTag="pdf" 
-                        PageType="{x:Type pages:NavigationPDFView}"/>
-                </ui:NavigationStore.Items>
-                <ui:NavigationStore.Footer>
-                    <ui:NavigationItem
-                        Cache="True"
-                        Content="Settings"
-                        Icon="Settings48"
-                        PageTag="settings" 
-                        PageType="{x:Type pages:SettingsView}"/>
-                </ui:NavigationStore.Footer>-->
             </ui:NavigationStore>
 
             <Border
@@ -84,25 +87,11 @@
             </Border>
         </Grid>
 
-
-        <ui:TitleBar
-            Title="Cryton Core Next"
-            Grid.Row="0"
-            ForceShutdown="False"
-            MinimizeToTray="False"
-            ShowHelp="False"
-            ShowClose="True"
-            ShowMaximize="True"
-            ShowMinimize="True"
-            UseSnapLayout="True">
-        </ui:TitleBar>
-        <ui:Snackbar
-                        x:Name="RootSnackbar"
-                        Grid.Row="1"
-                        MaxWidth="600"
-                        Appearance="Secondary"
-                        CloseButtonEnabled="True"
-                        Icon="PuzzlePiece24"
-                        Timeout="5000" />
+        <ui:Snackbar x:Name="RootSnackbar" MaxWidth="600" CloseButtonEnabled="True" Timeout="5000" />
+        <ui:SymbolIcon Symbol="GridDots20" HorizontalAlignment="Right"
+                       VerticalAlignment="Top" Margin="10" 
+                       ContextMenu="{StaticResource contextMenu}"
+                       MouseDown="SymbolIcon_MouseDown"
+                       MouseDoubleClick="SymbolIcon_MouseDoubleClick"/>
     </Grid>
 </ui:UiWindow>

@@ -1,7 +1,6 @@
 ﻿using CrytonCoreNext.Dictionaries;
-using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Wpf.Ui.Common;
@@ -9,7 +8,7 @@ using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Abstract
 {
-    public abstract class InteractiveViewBase : ViewModelBase, IDisposable
+    public abstract class InteractiveViewBase : ViewModelBase
     {
         private readonly ISnackbarService _snackbarService;
 
@@ -24,9 +23,19 @@ namespace CrytonCoreNext.Abstract
             _snackbarService = snackbarService;
         }
 
-        protected void PostSnackbar(string title, string text, SymbolRegular icon, ControlAppearance type)
+        protected void PostSuccessSnackbar(string text)
         {
-            _snackbarService.Show(title, text, icon, type);
+            _snackbarService.Show("Success", text, SymbolRegular.CheckmarkCircle20, ControlAppearance.Success);
+        }
+
+        protected void PostErrorSnackbar(string text)
+        {
+            _snackbarService.Show("Error", text, SymbolRegular.ErrorCircle20, ControlAppearance.Dark);
+        }
+
+        protected void PostWarningSnackbar(string text)
+        {
+            _snackbarService.Show("Warning", text, SymbolRegular.Warning20, ControlAppearance.Caution);
         }
 
         protected async IAsyncEnumerable<File> LoadFiles()
@@ -49,22 +58,22 @@ namespace CrytonCoreNext.Abstract
                     yield return file;
                 }
             }
-            if ((filesPaths.Count - loadedFilesCounter) > 0 && loadedFilesCounter > 0)
-            {
-                PostSnackbar("Warning", $"{Language.Post("NotAllFilesLoadedWarning")} ({filesPaths.Count - loadedFilesCounter})", SymbolRegular.Warning20, ControlAppearance.Caution);
-            }
-            else if (loadedFilesCounter == 1)
-            {
-                PostSnackbar("Information", Language.Post("FileLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
-            }
-            else if (loadedFilesCounter > 1)
-            {
-                PostSnackbar("Information", Language.Post("FilesLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
-            }
-            else if (loadedFilesCounter == 0 && filesPaths.Any())
-            {
-                PostSnackbar("Error", Language.Post("FilesLoadingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
-            }
+            //if ((filesPaths.Count - loadedFilesCounter) > 0 && loadedFilesCounter > 0)
+            //{
+            //    PostSnackbar("Warning", $"{Language.Post("NotAllFilesLoadedWarning")} ({filesPaths.Count - loadedFilesCounter})", SymbolRegular.Warning20, ControlAppearance.Caution);
+            //}
+            //else if (loadedFilesCounter == 1)
+            //{
+            //    PostSnackbar("Information", Language.Post("FileLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+            //}
+            //else if (loadedFilesCounter > 1)
+            //{
+            //    PostSnackbar("Information", Language.Post("FilesLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+            //}
+            //else if (loadedFilesCounter == 0 && filesPaths.Any())
+            //{
+            //    PostSnackbar("Error", Language.Post("FilesLoadingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+            //}
         }
 
         protected void SaveFile(File? file)
@@ -82,14 +91,12 @@ namespace CrytonCoreNext.Abstract
             var result = _fileService.SaveFile(filePath.First(), file);
             if (result)
             {
-                PostSnackbar("Information", Language.Post("FilesSaved"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+                PostSuccessSnackbar(Language.Post("FilesSaved"));
             }
             if (!result)
             {
-                PostSnackbar("Error", Language.Post("FilesSavingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+                PostErrorSnackbar(Language.Post("FilesSavingError"));
             }
         }
-
-        public virtual void Dispose() { }
     }
 }

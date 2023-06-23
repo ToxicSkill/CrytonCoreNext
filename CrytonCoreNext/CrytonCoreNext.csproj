@@ -5,6 +5,7 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <UserSecretsId>27951877-d714-4318-a7a0-fd1733d72457</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,19 +22,22 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
     <PackageReference Include="Docnet.Core" Version="2.3.1" />
-    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
-    <PackageReference Include="iTextSharp" Version="5.5.13.3" />
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.2" />
+    <PackageReference Include="itext7" Version="8.0.0" />
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.0" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.0.1" />
+    <PackageReference Include="MethodTimer.Fody" Version="3.2.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
-    <PackageReference Include="Moq" Version="4.18.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="PasswordBoxMVVM" Version="1.0.5" />
-    <PackageReference Include="SimpleModal.WPF" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Moq" Version="4.18.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="OpenCvSharp4" Version="4.7.0.20230115" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.7.0.20230115" />
+    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.7.0.20230115" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="System.IO.Pipelines" Version="7.0.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     <PackageReference Include="WPF-UI" Version="2.0.3" />
   </ItemGroup>

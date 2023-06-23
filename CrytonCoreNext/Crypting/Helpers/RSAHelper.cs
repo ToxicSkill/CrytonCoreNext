@@ -25,6 +25,7 @@ namespace CrytonCoreNext.Crypting.Helpers
             _useOAEP = useOAEP;
             _keySize = DefaultKeySize;
             _rsaCryptoServiceProvider = new(_keySize);
+            MaxFileSize = GetMaxNumberOfBytes(2048);
             ParseLegalKeys();
         }
 
