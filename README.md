@@ -38,6 +38,28 @@ Support touch & windows MICA maetrial.
         <img src="./Pictures/CryptingPage2.jpg"/>
     </a>
 </div>
+
+## Pdf page
+
+<div align="center">
+    <a href="./">
+        <img src="./Pictures/PdfPage.jpg"/>
+    </a>
+</div><div align="center">
+    <a href="./">
+        <img src="./Pictures/PdfPage2.jpg"/>
+    </a>
+</div><div align="center">
+    <a href="./">
+        <img src="./Pictures/PdfPage3.jpg"/>
+    </a>
+</div>
+<div align="center">
+    <a href="./">
+        <img src="./Pictures/PdfPage4.jpg"/>
+    </a>
+</div>
+
 ## Settings page
 
 <div align="center">
