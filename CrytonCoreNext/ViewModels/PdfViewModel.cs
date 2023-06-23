@@ -154,7 +154,6 @@ namespace CrytonCoreNext.ViewModels
             RemoveFileFromMergeList(null, true);
         }
 
-
         [RelayCommand]
         private void DeleteSplit()
         {
@@ -258,6 +257,15 @@ namespace CrytonCoreNext.ViewModels
             PdfFiles.Remove(SelectedPdfFile);
             OnFileDeleteAfter(oldIndex);
         }
+
+        [RelayCommand]
+        private void DeleteImageFile()
+        {
+            var oldIndex = ImageFiles.IndexOf(SelectedImageFile);
+            ImageFiles.Remove(SelectedImageFile);
+            OnImageFileDeleteAfter(oldIndex);
+        }
+        
 
         [RelayCommand]
         private async Task LoadPdfAndImageFiles(string? andImages = null)
@@ -607,6 +615,15 @@ namespace CrytonCoreNext.ViewModels
             CheckAnyFileLoaded();
         }
 
+        private void OnImageFileDeleteAfter(int oldIndex)
+        {
+            if (ImageFiles.Any())
+            {
+                SelectedImageFile = ImageFiles.ElementAt(oldIndex > 0 ? --oldIndex : oldIndex);
+            }
+            CheckAnyFileLoaded();
+        }
+
         private void OnFileDeleteBefore()
         {
             SelectedPdfFilesToMerge.Remove(SelectedPdfFile);
@@ -615,13 +632,13 @@ namespace CrytonCoreNext.ViewModels
 
         private void CheckAnyFileLoaded()
         {
-            if (PdfFiles.Any() && !ImageFiles.Any())
-            {
-                SelectedTabIndex = 0;
-            }
-            else if (!PdfFiles.Any() && ImageFiles.Any())
+            if (!PdfFiles.Any() && ImageFiles.Any())
             {
                 SelectedTabIndex = 3;
+            }
+            else
+            {
+                SelectedTabIndex = 0;
             }
             AnyLoadedFile = PdfFiles.Any() || ImageFiles.Any();
         }
