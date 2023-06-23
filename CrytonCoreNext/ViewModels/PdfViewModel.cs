@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using Wpf.Ui.Mvvm.Contracts;
@@ -191,37 +192,62 @@ namespace CrytonCoreNext.ViewModels
         private async Task Split()
         {
             var idAdd = 1;
+            var nofSplittedFiles = 0;
+            var snackbarText = new StringBuilder();
             foreach (var subPdfFile in PdfToSplitRangeFiles)
             {
                 if (!subPdfFile.IsSelectedToSplit)
                 {
                     continue;
                 }
-                var pdfFile = await _pdfService.Split(SelectedPdfFileToSplit, subPdfFile.From, subPdfFile.To, OpenedPdfFiles.Max(x => x.Id) + idAdd);
-                AddPdfToPdfList(pdfFile);
+                var from = subPdfFile.From;
+                var to = subPdfFile.To;
+                var pdfFile = await _pdfService.Split(SelectedPdfFileToSplit, from, to, OpenedPdfFiles.Max(x => x.Id) + idAdd);
+                if (AddPdfToPdfList(pdfFile))
+                {
+                    nofSplittedFiles++;
+                    if (from == to)
+                    {
+                        snackbarText.AppendLine($"{from}   {pdfFile.Name}");
+                    }
+                    else
+                    {
+                        snackbarText.AppendLine($"{from} - {to}   {pdfFile.Name}");
+                    }
+                }
                 idAdd++;
             }
+            PostSuccessSnackbar($"Successfully splited {nofSplittedFiles} files: \n{snackbarText}");
         }
 
         [RelayCommand]
         private async Task Merge()
         {
             var pdfFile = await _pdfService.Merge(SelectedPdfFilesToMerge.ToList());
-            AddPdfToPdfList(pdfFile);
+            if (AddPdfToPdfList(pdfFile))
+            {
+                PostSuccessSnackbar($"Merged {SelectedPdfFilesToMerge.Count} files into new: {pdfFile.Name}");
+            }
         }
 
         [RelayCommand]
         private async Task MergeAllImagesToPdf()
         {
             var mergedImagesPdf = await _pdfService.MergeAllImagesToPDF(ImageFiles.ToList(), ImageFiles.Max(x => x.Id) + 1);
-            AddPdfToPdfList(mergedImagesPdf);
+            if (AddPdfToPdfList(mergedImagesPdf))
+            {
+                PostSuccessSnackbar($"Merged {ImageFiles.Count} files into PDF: {mergedImagesPdf.Name}");
+            }
         }
 
         [RelayCommand]
         private void ConvertSelectedImageToPdf()
         {
             var convertedPdf = _pdfService.ImageToPdf(SelectedImageFile, ImageFiles.Max(x => x.Id) + 1);
-            AddPdfToPdfList(convertedPdf);
+            if (AddPdfToPdfList(convertedPdf))
+            {
+                PostSuccessSnackbar($"Converted image into PDF: {convertedPdf.Name}");
+            }
         }
 
         [RelayCommand]
@@ -285,15 +311,11 @@ namespace CrytonCoreNext.ViewModels
             }
             if (message != "")
             {
-                PostSnackbar("Warning", message,
-                    Wpf.Ui.Common.SymbolRegular.Warning20,
-                    Wpf.Ui.Common.ControlAppearance.Caution);
+                PostWarningSnackbar(message);
             }
             else
             {
-                PostSnackbar("Success", $"Successfully loaded {nofLoadedFiles} files",
-                    Wpf.Ui.Common.SymbolRegular.Checkmark20,
-                    Wpf.Ui.Common.ControlAppearance.Success);
+                PostSuccessSnackbar($"Successfully loaded {nofLoadedFiles} files");
             }
         }
 
@@ -387,11 +409,20 @@ namespace CrytonCoreNext.ViewModels
             UpdatePdfToMergeImage();
         }
 
-        private void AddPdfToPdfList(PDFFile pdfFile)
+        private bool AddPdfToPdfList(PDFFile pdfFile)
         {
-            _pdfService.UpdatePdfFileInformations(ref pdfFile);
-            CheckNameConflicts(pdfFile);
-            PdfFiles.Add(pdfFile);
+            try
+            {
+                _pdfService.UpdatePdfFileInformations(ref pdfFile);
+                CheckNameConflicts(pdfFile);
+                PdfFiles.Add(pdfFile);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                PostErrorSnackbar($"Something went wrong: {ex.Message}");
+                return false;
+            }
         }
 
         private void RemoveFileFromMergeList(PDFFile? file = null, bool updateEachStep = true)
@@ -788,17 +819,11 @@ namespace CrytonCoreNext.ViewModels
                 SelectedPdfFile.PdfStatus == PDF.Enums.EPdfStatus.Damaged)
             {
                 SelectedPdfFile.Password = string.Empty;
-                PostSnackbar("Caution",
-                    "Incorrect password",
-                    Wpf.Ui.Common.SymbolRegular.ErrorCircle20,
-                    Wpf.Ui.Common.ControlAppearance.Danger);
+                PostWarningSnackbar("Incorrect password");
             }
             else
             {
-                PostSnackbar("Success",
-                    "Pdf document has been open successfully",
-                    Wpf.Ui.Common.SymbolRegular.Checkmark20,
-                    Wpf.Ui.Common.ControlAppearance.Success);
+                PostSuccessSnackbar("Pdf document has been open successfully");
                 RefreshCollection();
             }
         }

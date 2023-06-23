@@ -154,7 +154,7 @@ namespace CrytonCoreNext.ViewModels
             Lock();
             if (!_fileService.HasBytes(SelectedFile) || !_cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
             {
-                PostSnackbar("Error", Language.Post("WrongMethod"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+                PostErrorSnackbar(Language.Post("WrongMethod"));
                 return;
             }
 
@@ -165,11 +165,11 @@ namespace CrytonCoreNext.ViewModels
             {
                 _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedCryptingView.ViewModel.Crypting.Method);
                 UpdateStateOfSelectedFile();
-                PostSnackbar("Success", Language.Post("Success"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+                PostSuccessSnackbar(Language.Post("Success"));
             }
             else
             {
-                PostSnackbar("Error", Language.Post("CryptingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+                PostErrorSnackbar(Language.Post("CryptingError"));
             }
             Unlock();
         }

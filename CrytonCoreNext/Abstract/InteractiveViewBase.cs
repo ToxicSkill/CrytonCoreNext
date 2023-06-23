@@ -23,9 +23,19 @@ namespace CrytonCoreNext.Abstract
             _snackbarService = snackbarService;
         }
 
-        protected void PostSnackbar(string title, string text, SymbolRegular icon, ControlAppearance type)
+        protected void PostSuccessSnackbar(string text)
         {
-            _snackbarService.Show(title, text, icon, type);
+            _snackbarService.Show("Success", text, SymbolRegular.CheckmarkCircle20, ControlAppearance.Success);
+        }
+
+        protected void PostErrorSnackbar(string text)
+        {
+            _snackbarService.Show("Error", text, SymbolRegular.ErrorCircle20, ControlAppearance.Dark);
+        }
+
+        protected void PostWarningSnackbar(string text)
+        {
+            _snackbarService.Show("Warning", text, SymbolRegular.Warning20, ControlAppearance.Caution);
         }
 
         protected async IAsyncEnumerable<File> LoadFiles()
@@ -81,11 +91,11 @@ namespace CrytonCoreNext.Abstract
             var result = _fileService.SaveFile(filePath.First(), file);
             if (result)
             {
-                PostSnackbar("Information", Language.Post("FilesSaved"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+                PostSuccessSnackbar(Language.Post("FilesSaved"));
             }
             if (!result)
             {
-                PostSnackbar("Error", Language.Post("FilesSavingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+                PostErrorSnackbar(Language.Post("FilesSavingError"));
             }
         }
     }
