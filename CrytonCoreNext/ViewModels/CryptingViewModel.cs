@@ -128,7 +128,7 @@ namespace CrytonCoreNext.ViewModels
         private async Task LoadCryptFiles()
         {
             Lock();
-            await foreach (var file in base.LoadFiles())
+            await foreach (var file in LoadFiles())
             {
                 Files.Add(_cryptingService.ReadCryptFile(file));
                 SelectedFile = Files.Last();

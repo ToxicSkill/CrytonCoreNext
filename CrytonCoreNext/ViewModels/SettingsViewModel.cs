@@ -6,6 +6,7 @@ using CrytonCoreNext.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Linq;
 using System.Windows.Controls;
 using Wpf.Ui.Appearance;
@@ -51,6 +52,9 @@ namespace CrytonCoreNext.ViewModels
         public bool isThemeSwitchChecked = true;
 
         [ObservableProperty]
+        public bool isFullscreenOnStart = false;
+
+        [ObservableProperty]
         public bool isThemeStyleAvailable;
 
         public bool MembersInitialized { get => TreeViewItemSource.Any(); }
@@ -62,11 +66,25 @@ namespace CrytonCoreNext.ViewModels
             _cardByTreeViewItem = new();
             TreeViewItemSource = new();
             InitializeThemes();
+            InitializeSettings();
+        }
+
+        private void InitializeSettings()
+        {
+            IsFullscreenOnStart = Properties.Settings.Default.Fullscreen;
         }
 
         partial void OnSelectedThemeStyleChanged(BackgroundType value)
         {
             ThemeStyleChanged?.Invoke(value);
+        }
+
+        partial void OnIsFullscreenOnStartChanged(bool value)
+        {
+            Properties.Settings.Default.Fullscreen = value;
+            var sync = Properties.Settings.Default.IsSynchronized;
+            Properties.Settings.Default.Upgrade();
+            Properties.Settings.Default.Save();
         }
 
         public void UpdateSelectedTreeViewItem(CardControl card)

@@ -86,7 +86,7 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
-        private static void Exit() => App.Current.Shutdown();
+        private static void Exit() => Application.Current.Shutdown();
 
         [RelayCommand]
         private static void Maximize() => Application.Current.MainWindow.WindowState = WindowState.Maximized;

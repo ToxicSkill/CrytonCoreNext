@@ -275,7 +275,7 @@ namespace CrytonCoreNext.ViewModels
             var damagedFilesCount = 0;
             var nofNotLoadedFiles = 0;
             var nofFilesBefore = PdfFiles.Count + ImageFiles.Count;
-            await foreach (var file in base.LoadFiles(andImages == null ? Static.Extensions.DialogFilters.PdfAndImages : Static.Extensions.DialogFilters.Pdf))
+            await foreach (var file in LoadFiles(andImages == null ? Static.Extensions.DialogFilters.PdfAndImages : Static.Extensions.DialogFilters.Pdf))
             {
                 if (file.Extension.ToLower().Contains("pdf"))
                 {
@@ -333,7 +333,7 @@ namespace CrytonCoreNext.ViewModels
             Lock();
             var nofNotLoadedFiles = 0;
             var nofFilesBefore = ImageFiles.Count;
-            await foreach (var imageFile in base.LoadFiles(Static.Extensions.DialogFilters.Images))
+            await foreach (var imageFile in LoadFiles(Static.Extensions.DialogFilters.Images))
             {
                 nofNotLoadedFiles += LoadImageFile(imageFile);
             }
@@ -348,7 +348,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 return;
             }
-            base.SaveFile(SelectedPdfFile);
+            SaveFile(SelectedPdfFile);
         }
 
         [RelayCommand]

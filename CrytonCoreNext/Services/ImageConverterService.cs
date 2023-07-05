@@ -16,7 +16,7 @@ namespace CrytonCoreNext.Services
             s.ReadByte();
             using (var pngImage = Image.FromStream(s))
             {
-                using (var jpegImage = new Bitmap(pngImage.Width, pngImage.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb))
+                using (var jpegImage = new Bitmap(pngImage.Width, pngImage.Height, PixelFormat.Format32bppRgb))
                 {
                     using (var graphics = Graphics.FromImage(jpegImage))
                     {
@@ -25,7 +25,7 @@ namespace CrytonCoreNext.Services
 
                     using (var memoryStream = new MemoryStream())
                     {
-                        jpegImage.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        jpegImage.Save(memoryStream, ImageFormat.Jpeg);
                         return memoryStream.ToArray();
                     }
                 }
