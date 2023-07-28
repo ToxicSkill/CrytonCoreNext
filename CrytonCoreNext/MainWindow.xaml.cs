@@ -31,8 +31,8 @@ namespace CrytonCoreNext
             navigationService.SetNavigationControl(RootNavigation);
             snackbarService.SetSnackbarControl(RootSnackbar);
 
-            //SetSystemTheme();
             ViewModel.ThemeStyleChanged += SetTheme;
+            LoadThemeFromSettings();
         }
 
         public void SetTheme(BackgroundType value = BackgroundType.Mica)
@@ -65,17 +65,20 @@ namespace CrytonCoreNext
         public void CloseWindow()
             => Close();
 
+        private void LoadThemeFromSettings()
+        {
+            if (Enum.TryParse(Properties.Settings.Default.Style, out BackgroundType backgroundTypeStyle))
+            {
+                SetTheme(backgroundTypeStyle);
+            }
+        }
+
         private void SymbolIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {
                 this.DragMove();
             }
-        }
-
-        private void SetSystemTheme()
-        {
-            Theme.Apply(Theme.GetSystemTheme().ToString().ToLower() == ThemeType.Dark.ToString().ToLower() ? ThemeType.Dark : ThemeType.Light, BackgroundType.Mica, true, true);
         }
 
         private void SymbolIcon_MouseDoubleClick(object sender, MouseButtonEventArgs e)

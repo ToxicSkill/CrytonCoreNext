@@ -153,6 +153,7 @@ namespace CrytonCoreNext
         private async void OnExit(object sender, ExitEventArgs e)
         {
             await _host.StopAsync();
+            CrytonCoreNext.Properties.Settings.Default.Save();
             _host.Dispose();
         }
 
