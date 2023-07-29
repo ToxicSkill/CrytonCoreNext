@@ -70,5 +70,41 @@ namespace CrytonCoreNext.Properties {
                 this["Language"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Enc")]
+        public string EncryptionSuffix {
+            get {
+                return ((string)(this["EncryptionSuffix"]));
+            }
+            set {
+                this["EncryptionSuffix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Dec")]
+        public string DecryptionSuffix {
+            get {
+                return ((string)(this["DecryptionSuffix"]));
+            }
+            set {
+                this["DecryptionSuffix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Test {
+            get {
+                return ((string)(this["Test"]));
+            }
+            set {
+                this["Test"] = value;
+            }
+        }
     }
 }

@@ -15,6 +15,8 @@ namespace CrytonCoreNext.Models
 
         public string Size { get; init; }
 
+        public string Suffix { get; set; }
+
         public DateTime Date { get; init; }
 
         public string Extension { get; set; }

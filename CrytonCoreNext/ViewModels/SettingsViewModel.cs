@@ -82,23 +82,27 @@ namespace CrytonCoreNext.ViewModels
                 SelectedThemeStyle = BackgroundType.Mica;
             }
             IsThemeSwitchChecked = Properties.Settings.Default.Theme;
+            SetSettings();
         }
 
         partial void OnSelectedThemeStyleChanged(BackgroundType value)
         {
             ThemeStyleChanged?.Invoke(value);
             Properties.Settings.Default.Style = value.ToString();
+            SetSettings();
         }
 
         partial void OnIsFullscreenOnStartChanged(bool value)
         {
             Properties.Settings.Default.FullscreenOnStart = value;
+            SetSettings();
         }
 
         partial void OnIsThemeSwitchCheckedChanged(bool value)
         {
             _themeService.SetTheme(value ? ThemeType.Dark : ThemeType.Light);
             Properties.Settings.Default.Theme = value;
+            SetSettings();
         }
 
         public void UpdateSelectedTreeViewItem(CardControl card)

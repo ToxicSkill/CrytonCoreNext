@@ -6,6 +6,7 @@ using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Interfaces.Files;
+using CrytonCoreNext.Properties;
 using CrytonCoreNext.Services;
 using System;
 using System.Collections.Generic;
@@ -128,6 +129,7 @@ namespace CrytonCoreNext.ViewModels
         private async Task LoadCryptFiles()
         {
             Lock();
+            ProgressService.ClearProgress();
             await foreach (var file in LoadFiles())
             {
                 Files.Add(_cryptingService.ReadCryptFile(file));
@@ -144,9 +146,19 @@ namespace CrytonCoreNext.ViewModels
         private void SaveCryptFile()
         {
             _cryptingService.AddRecognitionBytes(SelectedFile);
+            SetFileSuffix();
             base.SaveFile(SelectedFile);
         }
 
+        private void SetFileSuffix()
+        {
+            var suffix = SelectedFile.Status == Static.CryptingStatus.Status.Encrypted ? Settings.Default.EncryptionSuffix : Settings.Default.DecryptionSuffix;
+            if (SelectedFile.Name.EndsWith(Settings.Default.EncryptionSuffix) || SelectedFile.Name.EndsWith(Settings.Default.DecryptionSuffix) && SelectedFile.Name.Length > 3)
+            {
+                var newFileName = SelectedFile.Name[..^suffix.Length] + suffix;
+                SelectedFile.Rename(newFileName);
+            }
+        }
 
         [RelayCommand]
         private async void PerformCrypting()

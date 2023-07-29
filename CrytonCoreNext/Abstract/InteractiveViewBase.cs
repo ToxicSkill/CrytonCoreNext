@@ -83,7 +83,7 @@ namespace CrytonCoreNext.Abstract
                 return;
             }
 
-            var filePath = _dialogService.GetFilesNamesToSave(Static.Extensions.DialogFilters.All, Language.Post("SaveFile"), file.Name, file.Extension);
+            var filePath = _dialogService.GetFilesNamesToSave(Static.Extensions.DialogFilters.All, Language.Post("SaveFile"), file);
             if (filePath == null)
             {
                 return;

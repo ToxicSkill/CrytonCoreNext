@@ -14,5 +14,14 @@
     <Setting Name="Language" Type="System.String" Scope="User">
       <Value Profile="(Default)">english</Value>
     </Setting>
+    <Setting Name="EncryptionSuffix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Enc</Value>
+    </Setting>
+    <Setting Name="DecryptionSuffix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Dec</Value>
+    </Setting>
+    <Setting Name="Test" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
