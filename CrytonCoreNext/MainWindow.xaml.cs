@@ -32,7 +32,7 @@ namespace CrytonCoreNext
             snackbarService.SetSnackbarControl(RootSnackbar);
 
             ViewModel.ThemeStyleChanged += SetTheme;
-            LoadThemeFromSettings();
+            LoadSettings();
         }
 
         public void SetTheme(BackgroundType value = BackgroundType.Mica)
@@ -64,6 +64,20 @@ namespace CrytonCoreNext
 
         public void CloseWindow()
             => Close();
+
+        private void LoadSettings()
+        {
+            LoadThemeFromSettings();
+            LoadScreenModeFromSettings();
+        }
+
+        private void LoadScreenModeFromSettings()
+        {
+            App.Current.MainWindow.WindowState = 
+                Properties.Settings.Default.FullscreenOnStart ? 
+                System.Windows.WindowState.Maximized :
+                System.Windows.WindowState.Normal;
+        }
 
         private void LoadThemeFromSettings()
         {
