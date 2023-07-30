@@ -19,22 +19,9 @@ namespace CrytonCoreNext.PDF.Models
 {
     public class PDFReader : IPDFReader
     {
-        private readonly Dictionary<EPdfMetainfo, SymbolIcon> _symbolByPDFKey;
+        private Dictionary<EPdfMetainfo, SymbolIcon> _symbolByPDFKey;
 
         private readonly double _dimensions = 1.0d;
-
-        public PDFReader()
-        {
-            _symbolByPDFKey = new Dictionary<EPdfMetainfo, SymbolIcon>()
-            {
-                { EPdfMetainfo.Author, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20 } },
-                { EPdfMetainfo.Creator, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },
-                { EPdfMetainfo.CreationDate, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20  } },
-                { EPdfMetainfo.ModDate, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20, Filled=true  } },
-                { EPdfMetainfo.PageCount, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.DocumentMultiple20  } },
-                { EPdfMetainfo.Version, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Box20  } }
-            };
-        }
 
         public PDFFile ReadPdf(File file, string password = "")
         {
@@ -105,6 +92,11 @@ namespace CrytonCoreNext.PDF.Models
 
         private void GetMetaInfo(ref PDFFile pdfFile)
         {
+            if (!pdfFile.LoadMetadata)
+            {
+                return;
+            }
+            LoadSymbols();
             try
             {
                 var metaInfoDict = new Dictionary<string, string>();
@@ -191,6 +183,19 @@ namespace CrytonCoreNext.PDF.Models
                 password: string.Empty,
                 dimensions: _dimensions,
                 numberOfPages: reader.GetPageCount());
+        }
+
+        private void LoadSymbols()
+        {
+            _symbolByPDFKey = new Dictionary<EPdfMetainfo, SymbolIcon>()
+            {
+                { EPdfMetainfo.Author, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20 } },
+                { EPdfMetainfo.Creator, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },
+                { EPdfMetainfo.CreationDate, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20  } },
+                { EPdfMetainfo.ModDate, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20, Filled=true  } },
+                { EPdfMetainfo.PageCount, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.DocumentMultiple20  } },
+                { EPdfMetainfo.Version, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Box20  } }
+            };
         }
     }
 }

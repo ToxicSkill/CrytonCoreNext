@@ -25,6 +25,11 @@ namespace CrytonCoreNext.Models
 
         public byte[] Bytes { get; set; }
 
+        /// <summary>
+        /// Set value of that property to false when testing (no need STA UI thread)
+        /// </summary>
+        public bool LoadMetadata { get; set; } = true;
+
         public Guid Guid { get; init; } = Guid.NewGuid();
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -60,6 +65,7 @@ namespace CrytonCoreNext.Models
             Extension = file.Extension;
             Id = file.Id;
             Bytes = file.Bytes;
+            LoadMetadata = file.LoadMetadata;
         }
 
         public void Rename(string newName)

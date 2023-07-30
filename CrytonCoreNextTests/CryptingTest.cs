@@ -33,7 +33,7 @@ namespace CrytonCoreNextTests
             var stringByte = "abcd1234!@#$";
             var bytes = Encoding.ASCII.GetBytes(stringByte);
             var cryptFile = new CryptFile(
-                new CrytonCoreNext.Models.File("test", "", bytes.Length.ToString(), DateTime.Now, "", 0, bytes), 
+                new CrytonCoreNext.Models.File("test", "", DateTime.Now, "", 0, bytes), 
                 CrytonCoreNext.Static.CryptingStatus.Status.Decrypted, 
                 EMethod.AES, 
                 Guid.NewGuid());
@@ -52,7 +52,7 @@ namespace CrytonCoreNextTests
             var stringByte = "abcd1234!@#$";
             var bytes = Encoding.ASCII.GetBytes(stringByte);
             var cryptFile = new CryptFile(
-                new CrytonCoreNext.Models.File("test", "", bytes.Length.ToString(), DateTime.Now, "", 0, bytes),
+                new CrytonCoreNext.Models.File("test", "", DateTime.Now, "", 0, bytes),
                 CrytonCoreNext.Static.CryptingStatus.Status.Decrypted,
                 EMethod.RSA,
                 Guid.NewGuid());
