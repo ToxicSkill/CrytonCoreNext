@@ -138,11 +138,11 @@
 
                     <TextBlock Grid.Column="1" Text="{Binding SelectedCryptingView.ViewModel.PageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                                Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                               FontSize="78" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                               FontSize="78" VerticalAlignment="Top" HorizontalAlignment="Center"/>
                 </Grid>
 
                 <Grid Grid.Row="1" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                    <Frame Content="{Binding SelectedCryptingView}"/>
+                    <Frame VerticalAlignment="Stretch" Content="{Binding SelectedCryptingView}"/>
                 </Grid>
 
 

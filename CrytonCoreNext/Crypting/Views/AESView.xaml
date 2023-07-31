@@ -7,6 +7,7 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:viewmodels="clr-namespace:CrytonCoreNext.Crypting.ViewModels" 
              d:DataContext="{d:DesignInstance Type=viewmodels:AESViewModel}"
+             xmlns:components="clr-namespace:CrytonCoreNext.Controls"
              xmlns:c="clr-namespace:CrytonCoreNext.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="680" d:DesignWidth="800" 
@@ -19,37 +20,51 @@
         </ResourceDictionary>
     </ui:UiPage.Resources>
 
-    <Grid>
-        <StackPanel>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0" Grid.Row="0" Text="{DynamicResource BlockSize}" VerticalAlignment="Center" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
-                <TextBlock Grid.Column="0" Grid.Row="1" Text="{DynamicResource KeySize}" VerticalAlignment="Center" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
-                <ComboBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding BlockSizesComboBox}" SelectedItem="{Binding SelectedBlock}" 
-                      Padding="6" MinWidth="200" HorizontalAlignment="Right" FontSize="14"/>
-                <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding KeySizesComboBox}" SelectedItem="{Binding SelectedKey}" 
-                      Padding="6" MinWidth="200" HorizontalAlignment="Right" FontSize="14"/>
-            </Grid>
-            <ui:Button Icon="New20" Content="{DynamicResource GenerateKeys}" Command="{Binding GenerateRandomKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
-            <ui:Button Icon="ArrowCircleDown20" Content="{DynamicResource ExportKeys}" Command="{Binding ExportKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
-            <ui:Button Icon="ArrowCircleUp20" Content="{DynamicResource ImportKeys}" Command="{Binding ImportKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
-            <Grid Height="30" Margin="7, 0, 0, 0">
-                <StackPanel Orientation="Horizontal">
-                    <ui:SymbolIcon Symbol="CheckmarkCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource KeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
-                    <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource NoKeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
-                </StackPanel>
-            </Grid>
-        </StackPanel>
+    <Grid VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="{DynamicResource BlockSize}" VerticalAlignment="Center" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="{DynamicResource KeySize}" VerticalAlignment="Center" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
+            <ComboBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding BlockSizesComboBox}" SelectedItem="{Binding SelectedBlock}" 
+                    Padding="6" MinWidth="200" HorizontalAlignment="Right" FontSize="14"/>
+            <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding KeySizesComboBox}" SelectedItem="{Binding SelectedKey}" 
+                    Padding="6" MinWidth="200" HorizontalAlignment="Right" FontSize="14"/>
+        </Grid>
+        <ui:Button Grid.Row="1" Icon="New20" Content="{DynamicResource GenerateKeys}" Command="{Binding GenerateRandomKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
+        <ui:Button Grid.Row="2"  Icon="ArrowCircleDown20" Content="{DynamicResource ExportKeys}" Command="{Binding ExportKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
+        <ui:Button Grid.Row="3"  Icon="ArrowCircleUp20" Content="{DynamicResource ImportKeys}" Command="{Binding ImportKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
+
+        <Grid Grid.Row="4" >
+            <StackPanel Orientation="Horizontal">
+                <ui:SymbolIcon Symbol="CheckmarkCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource KeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
+                <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource NoKeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <components:CryptingStatisticsControl Speed="2" Strenght="1" Application="3"/>
+        </Grid>
     </Grid>
 </ui:UiPage>
