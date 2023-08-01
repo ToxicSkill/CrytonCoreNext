@@ -9,7 +9,7 @@
     xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels" 
     xmlns:converterType="clr-namespace:CrytonCoreNext.Crypting.Models" 
     d:DataContext="{d:DesignInstance Type=viewmodels:CryptingViewModel}"
-    xmlns:c="clr-namespace:CrytonCoreNext.Converters" 
+    xmlns:c="clr-namespace:CrytonCoreNext.Converters" xmlns:components="clr-namespace:CrytonCoreNext.Controls"
     MinWidth="900"
     Background="{DynamicResource ApplicationBackgroundBrush}"
     d:DesignHeight="850"
@@ -110,41 +110,35 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
+
+                <Grid Grid.Row="0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    <Frame VerticalAlignment="Stretch" Content="{Binding SelectedCryptingView}"/>
+                </Grid>
+                
+                <Grid Grid.Row="1" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+                    <!--<ui:Button Grid.Column="1" Grid.Row="1" Margin="10" Padding="6" HorizontalAlignment="Stretch" Icon="LockClosed20" Content="Encrypt" Appearance="Secondary"/>-->
 
-                    <Grid Grid.Column="0" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <!--<ui:Button Grid.Column="1" Grid.Row="1" Margin="10" Padding="6" HorizontalAlignment="Stretch" Icon="LockClosed20" Content="Encrypt" Appearance="Secondary"/>-->
+                    <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Current file" FontSize="16" FontWeight="Thin"/>
+                    <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Status" FontSize="16" FontWeight="Thin"/>
+                    <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Extension" FontSize="16" FontWeight="Thin"/>
+                    <TextBlock Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Text="{Binding SelectedFile.Name}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Text="{Binding SelectedFile.Status}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
+                    <TextBlock Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Text="{Binding SelectedFile.Extension}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
 
-                        <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Current file" FontSize="16" FontWeight="Thin"/>
-                        <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Status" FontSize="16" FontWeight="Thin"/>
-                        <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Extension" FontSize="16" FontWeight="Thin"/>
-                        <TextBlock Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Text="{Binding SelectedFile.Name}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
-                        <TextBlock Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Text="{Binding SelectedFile.Status}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
-                        <TextBlock Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Text="{Binding SelectedFile.Extension}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
-                    </Grid>
-
-                    <TextBlock Grid.Column="1" Text="{Binding SelectedCryptingView.ViewModel.PageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
-                               Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                               FontSize="78" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                    <ui:PasswordBox Grid.Column="0" Grid.Row="3" Name="FilePasswordBox" Icon="LockOpen20" PlaceholderText="Password"/>
+                    <ui:Button Grid.Column="1" Grid.Row="3"  HorizontalAlignment="Stretch" Content="OK" Margin="10,2" 
+                                   Command="{Binding ConfirmPasswordCommand}" Click="ConfirmPassword_Button"/>
                 </Grid>
-
-                <Grid Grid.Row="1" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                    <Frame VerticalAlignment="Stretch" Content="{Binding SelectedCryptingView}"/>
-                </Grid>
-
 
                 <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.ColumnDefinitions>

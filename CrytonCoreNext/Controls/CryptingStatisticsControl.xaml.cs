@@ -1,16 +1,8 @@
 ﻿using CrytonCoreNext.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
 namespace CrytonCoreNext.Controls
@@ -74,6 +66,21 @@ namespace CrytonCoreNext.Controls
 
         private void root_Loaded(object sender, RoutedEventArgs e)
         {
+            var animation = new DoubleAnimation
+            {
+                To = 1,
+                From = 0, 
+                Duration = TimeSpan.FromSeconds(4),
+                FillBehavior = FillBehavior.Stop
+            };
+
+            animation.Completed += (s, a) => SpeedGrid.Opacity = 1;
+            animation.Completed += (s, a) => StrenghtGrid.Opacity = 1;
+            animation.Completed += (s, a) => ApplicationGrid.Opacity = 1;
+
+            SpeedGrid.BeginAnimation(UIElement.OpacityProperty, animation);
+            StrenghtGrid.BeginAnimation(UIElement.OpacityProperty, animation);
+            ApplicationGrid.BeginAnimation(UIElement.OpacityProperty, animation);
             SetVisibility();
         }
     }

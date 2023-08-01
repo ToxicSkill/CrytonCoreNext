@@ -43,9 +43,13 @@ namespace CrytonCoreNext.ViewModels
         [NotifyPropertyChangedFor(nameof(Files))]
         public CryptFile selectedFile;
 
+        [ObservableProperty]
+        public string filePassword;
+
         public delegate void HandleFileChanged(CryptFile file);
 
         public event HandleFileChanged OnFileChanged;
+
 
         public CryptingViewModel(IFileService fileService,
             IDialogService dialogService,

@@ -19,9 +19,29 @@
         </ResourceDictionary>
     </ui:UiPage.Resources>
 
-    <Grid>
-        <StackPanel>
-            <Grid>
+    <Grid VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <components:CryptingStatisticsControl 
+                        Speed="{Binding Crypting.CryptingStatistics.Speed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                        Strenght="{Binding Crypting.CryptingStatistics.Strenght, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                        Application="{Binding Crypting.CryptingStatistics.Application, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Grid.Column="1" Text="{Binding PageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                               FontSize="78" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+        </Grid>
+        <!--<Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
@@ -30,10 +50,10 @@
                 <TextBlock Grid.Row="0" Text="{Binding SelectedKeySize}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" FontWeight="Thin" Margin="0, 8, 10, 8"/>
                 <Slider Grid.Row="1" Value="{Binding SelectedKeySize}" IsSnapToTickEnabled="True" TickPlacement="BottomRight" TickFrequency="{Binding SliderFrequency}" Minimum="{Binding SliderMinimum}" Maximum="{Binding SliderMaximum}" />
             </Grid>
-            <ui:Button Icon="New20" Content="{DynamicResource GenerateKeys}" Command="{Binding GenerateRandomKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
+            <ui:Button Grid.Row="2" Icon="New20" Content="{DynamicResource GenerateKeys}" Command="{Binding GenerateRandomKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
 
 
-            <ui:CardExpander
+            <ui:CardExpander Grid.Row="3"
                 Padding="6"
                 HorizontalContentAlignment="Center"
                 Icon="ArrowCircleDown20"
@@ -66,26 +86,26 @@
                     <ui:ToggleSwitch IsChecked="{Binding IncludePrivateKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </ui:CardExpander>
-            <ui:Button Icon="ArrowCircleUp20" Content="{DynamicResource ImportKeys}" Command="{Binding ImportKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
-            <Grid Margin="7, 0, 0, 0">
+        
+            <ui:Button Grid.Row="4" Icon="ArrowCircleUp20" Content="{DynamicResource ImportKeys}" Command="{Binding ImportKeysCommand}" HorizontalAlignment="Stretch" Cursor="Hand" Margin="0, 5, 0, 5" MinWidth="200"/>
+       
+        <Grid Grid.Row="5" Margin="7, 0, 0, 0">
+            <StackPanel>
                 <StackPanel>
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22" Foreground="{Binding FileTooBigCautionColor}"/>
-                            <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{Binding MaxBytesMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding FileTooBigCautionColor}"/>
-                        </StackPanel>
-                    </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="CheckmarkCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource KeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
-                        <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource NoKeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
+                        <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22" Foreground="{Binding FileTooBigCautionColor}"/>
+                        <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{Binding MaxBytesMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding FileTooBigCautionColor}"/>
                     </StackPanel>
                 </StackPanel>
-            </Grid>
-            <components:CryptingStatisticsControl Speed="3" Strenght="1" Application="5"/>
-        </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="CheckmarkCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource KeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="ErrorCircle20" FontSize="22" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
+                    <TextBlock VerticalAlignment="Center" Margin="10, 0, 0 ,0" FontSize="16" Text="{DynamicResource NoKeyAvailable}" Visibility="{Binding KeysAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>-->
     </Grid>
 </ui:UiPage>

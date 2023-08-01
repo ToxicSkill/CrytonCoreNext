@@ -2,13 +2,8 @@
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
-using iText.Kernel.Pdf;
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
-using Wpf.Ui.Controls;
 using Xunit;
 
 namespace CrytonCoreNextTests

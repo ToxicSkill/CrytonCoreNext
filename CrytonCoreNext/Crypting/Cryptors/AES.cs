@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using System;
 using System.IO;
@@ -22,6 +23,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
         public string DescriptionName => $"{Method} - Symmetric algorithm";
 
         public int ProgressCount => 1;
+
+        public CryptingStatistics CryptingStatistics => new(3, 2, 3);
 
         public AES()
         {
