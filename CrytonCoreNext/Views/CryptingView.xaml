@@ -138,24 +138,23 @@
                     <TextBlock Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Text="{Binding SelectedFile.Extension}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
                 </Grid>
                 <Grid Grid.Row="2" VerticalAlignment="Top" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                    <Grid>
+                  
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="1.25*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <components:PasswordStrenghtControl Strenght="{Binding PasswordStrenght, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <ui:PasswordBox Grid.Row="1" Name="FilePasswordBox" TextChanged="FilePasswordBox_TextChanged" Icon="LockOpen20" PlaceholderText="Password"/>
+                        <ui:PasswordBox Grid.Row="1" Name="FilePasswordBox" PasswordChanged="FilePasswordBox_PasswordChanged" Icon="LockOpen20" PlaceholderText="Password"/>
                         <ui:Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Content="OK" Height="34" Margin="10,0,0,0" 
                                    Command="{Binding ConfirmPasswordCommand}" Click="ConfirmPassword_Button"/>
 
-                        <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Strong"/>
+                        <TextBlock Grid.Column="1" Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Strong"/>
                         
 
-                    </Grid>
                 </Grid>
                 <Grid Grid.Row="3" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.ColumnDefinitions>

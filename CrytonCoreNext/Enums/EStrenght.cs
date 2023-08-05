@@ -2,7 +2,8 @@
 {
     public enum EStrength
     {
-        VeryWeak = 0,
+        None = 0,
+        VeryWeak,
         Weak,
         Reasonable,
         Strong,

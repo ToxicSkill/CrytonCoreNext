@@ -59,27 +59,27 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Rectangle Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="0" Grid.Row="0" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.4"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="1" Grid.Row="0" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="1" Grid.Row="0" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.6"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="2" Grid.Row="0" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="2" Grid.Row="0" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.8"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="3" Grid.Row="0" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="3" Grid.Row="0" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.9"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="4" Grid.Row="0" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="4" Grid.Row="0" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}"/>
                 </Rectangle.Fill>
@@ -95,27 +95,27 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Rectangle Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.4"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="1" Grid.Row="1" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.6"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="2" Grid.Row="1" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="2" Grid.Row="1" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.8"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="3" Grid.Row="1" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="3" Grid.Row="1" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.9"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="4" Grid.Row="1" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="4" Grid.Row="1" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}"/>
                 </Rectangle.Fill>
@@ -131,27 +131,27 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Rectangle Grid.Column="0" Grid.Row="2" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="0" Grid.Row="2" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.4"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="1" Grid.Row="2" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="1" Grid.Row="2" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.6"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="2" Grid.Row="2" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="2" Grid.Row="2" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.8"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="3" Grid.Row="2" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="3" Grid.Row="2" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" Opacity="0.9"/>
                 </Rectangle.Fill>
             </Rectangle>
-            <Rectangle Grid.Column="4" Grid.Row="2" VerticalAlignment="Stretch" Width="15" RadiusX="5" RadiusY="5" Margin="0,5">
+            <Rectangle Grid.Column="4" Grid.Row="2" VerticalAlignment="Stretch" Width="15" RadiusX="4" RadiusY="4" Margin="0,5">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}"/>
                 </Rectangle.Fill>

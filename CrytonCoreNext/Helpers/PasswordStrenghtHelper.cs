@@ -6,18 +6,17 @@ namespace CrytonCoreNext.Helpers
 {
     public static class EStrengthExtension
     {
-        #region Fields
 
         private static int _score;
 
 
-        #endregion
-
-        #region Public Methods
 
         public static EStrength PasswordStrength(this string password)
         {
             var score = password.GetStrengthScore();
+
+            if (score == 0)
+                return EStrength.None;
 
             if (score <= 3)
                 return EStrength.VeryWeak;
@@ -25,13 +24,13 @@ namespace CrytonCoreNext.Helpers
             if (score > 3 && score <= 5)
                 return EStrength.Weak;
 
-            if (score > 5 && score <= 10)
+            if (score > 5 && score <= 7)
                 return EStrength.Reasonable;
 
-            if (score > 10 && score <= 11)
+            if (score > 7 && score <= 9)
                 return EStrength.Strong;
 
-            if (score > 11)
+            if (score > 9)
                 return EStrength.VeryStrong;
 
             return EStrength.VeryWeak;
@@ -52,10 +51,6 @@ namespace CrytonCoreNext.Helpers
 
             return _score;
         }
-
-        #endregion
-
-        #region Private Methods
 
         private static string SetStrengthScoreDecimalDigitNumber(this string password)
         {
@@ -139,8 +134,5 @@ namespace CrytonCoreNext.Helpers
 
             return distincts.Count() > distinctCounter;
         }
-
-        #endregion
-
     }
 }
