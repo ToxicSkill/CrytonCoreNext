@@ -28,5 +28,10 @@ namespace CrytonCoreNext.Views
         {
             ViewModel.FilePassword = FilePasswordBox.Password;
         }
+
+        private void FilePasswordBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            ViewModel.FilePassword = FilePasswordBox.Password;
+        }
     }
 }

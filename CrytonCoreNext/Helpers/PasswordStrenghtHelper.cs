@@ -1,38 +1,146 @@
-﻿using System.Text.RegularExpressions;
+﻿using CrytonCoreNext.Enums;
+using System.Collections.Generic;
+using System.Linq;
 
-public enum PasswordScore
+namespace CrytonCoreNext.Helpers
 {
-    Blank = 0,
-    VeryWeak = 1,
-    Weak = 2,
-    Medium = 3,
-    Strong = 4,
-    VeryStrong = 5
-}
-
-public class PasswordStrenghtHelper
-{
-    public static PasswordScore CheckStrength(string password)
+    public static class EStrengthExtension
     {
-        int score = 0;
+        #region Fields
 
-        if (password.Length < 1)
-            return PasswordScore.Blank;
-        if (password.Length < 4)
-            return PasswordScore.VeryWeak;
+        private static int _score;
 
-        if (password.Length >= 8)
-            score++;
-        if (password.Length >= 12)
-            score++;
-        if (Regex.Match(password, @"/\d+/", RegexOptions.ECMAScript).Success)
-            score++;
-        if (Regex.Match(password, @"/[a-z]/", RegexOptions.ECMAScript).Success &&
-          Regex.Match(password, @"/[A-Z]/", RegexOptions.ECMAScript).Success)
-            score++;
-        if (Regex.Match(password, @"/.[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]/", RegexOptions.ECMAScript).Success)
-            score++;
 
-        return (PasswordScore)score;
+        #endregion
+
+        #region Public Methods
+
+        public static EStrength PasswordStrength(this string password)
+        {
+            var score = password.GetStrengthScore();
+
+            if (score <= 3)
+                return EStrength.VeryWeak;
+
+            if (score > 3 && score <= 5)
+                return EStrength.Weak;
+
+            if (score > 5 && score <= 10)
+                return EStrength.Reasonable;
+
+            if (score > 10 && score <= 11)
+                return EStrength.Strong;
+
+            if (score > 11)
+                return EStrength.VeryStrong;
+
+            return EStrength.VeryWeak;
+        }
+
+        public static int GetStrengthScore(this string password)
+        {
+            _score = 0;
+
+            password
+                .SetStrengthScoreLowerCase()
+                .SetStrengthScoreDecimalDigitNumber()
+                .SetStrengthScoreUpperCase()
+                .SetStrengthScorePunctuation()
+                .SetStrengthScoreSymbol()
+                .SetStrengthScoreSeparator()
+                .SetStrengthScoreSpecialChar();
+
+            return _score;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private static string SetStrengthScoreDecimalDigitNumber(this string password)
+        {
+            var distinctChars = password.Distinct().Where(character => char.IsDigit(character)).ToList().MoreThanOneAndNotInOrder();
+
+            if (password.Any(character => char.IsDigit(character)))
+                _score += distinctChars ? (int)EStrengthScore.DecimalDigitNumber * 2 : (int)EStrengthScore.DecimalDigitNumber;
+
+            return password;
+        }
+
+        private static string SetStrengthScoreLowerCase(this string password)
+        {
+            var distinctChars = password.Distinct().Where(character => char.IsLower(character)).ToList().MoreThanOneAndNotInOrder();
+
+            if (password.Any(c => char.IsLower(c)))
+                _score += distinctChars ? (int)EStrengthScore.LowerCase * 2 : (int)EStrengthScore.LowerCase;
+
+            return password;
+        }
+
+        private static string SetStrengthScoreUpperCase(this string password)
+        {
+            var distinctChars = password.Distinct().Where(character => char.IsUpper(character)).ToList().MoreThanOneAndNotInOrder();
+
+            if (password.Any(character => char.IsUpper(character)))
+                _score += distinctChars ? (int)EStrengthScore.UpperCase * 2 : (int)EStrengthScore.UpperCase;
+
+            return password;
+        }
+
+        private static string SetStrengthScorePunctuation(this string password)
+        {
+            var distinctChars = password.Distinct().Where(character => char.IsPunctuation(character)).ToList().MoreThanOneAndNotInOrder();
+
+            if (password.Any(character => char.IsPunctuation(character)))
+                _score += distinctChars ? (int)EStrengthScore.Punctuation * 2 : (int)EStrengthScore.Punctuation;
+
+            return password;
+        }
+
+        private static string SetStrengthScoreSymbol(this string password)
+        {
+            var distinctChars = password.Distinct().Where(character => char.IsSymbol(character)).ToList().MoreThanOneAndNotInOrder();
+
+            if (password.Any(character => char.IsSymbol(character)))
+                _score += distinctChars ? (int)EStrengthScore.Symbol * 2 : (int)EStrengthScore.Symbol;
+
+            return password;
+        }
+
+        private static string SetStrengthScoreSeparator(this string password)
+        {
+            var distinctChars = password.Distinct().Where(character => char.IsSeparator(character)).ToList().MoreThanOneAndNotInOrder();
+
+            if (password.Any(character => char.IsSeparator(character)))
+                _score += distinctChars ? (int)EStrengthScore.Separator * 2 : (int)EStrengthScore.Separator;
+
+            return password;
+        }
+
+        private static string SetStrengthScoreSpecialChar(this string password)
+        {
+            var distinctChars = password.Distinct().Where(character => character < ' ' || character > '~').ToList().MoreThanOneAndNotInOrder();
+
+            if (password.Any(character => character < ' ' || character > '~'))
+                _score += distinctChars ? (int)EStrengthScore.SpecialChar * 2 : (int)EStrengthScore.SpecialChar;
+
+            return password;
+        }
+
+        private static bool MoreThanOneAndNotInOrder(this List<char> distincts)
+        {
+            var distinctCounter = 1;
+
+            for (var item = 1; item < distincts.Count(); item++)
+            {
+                if (distincts[item] == distincts[item - 1] + 1)
+                    distinctCounter++;
+            }
+
+            return distincts.Count() > distinctCounter;
+        }
+
+        #endregion
+
     }
 }

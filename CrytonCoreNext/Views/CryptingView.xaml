@@ -7,9 +7,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels" 
+    xmlns:components="clr-namespace:CrytonCoreNext.Controls"
     xmlns:converterType="clr-namespace:CrytonCoreNext.Crypting.Models" 
     d:DataContext="{d:DesignInstance Type=viewmodels:CryptingViewModel}"
-    xmlns:c="clr-namespace:CrytonCoreNext.Converters" xmlns:components="clr-namespace:CrytonCoreNext.Controls"
+    xmlns:c="clr-namespace:CrytonCoreNext.Converters"
     MinWidth="900"
     Background="{DynamicResource ApplicationBackgroundBrush}"
     d:DesignHeight="850"
@@ -107,6 +108,7 @@
             <Grid Grid.Column="1" Margin="20,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
@@ -115,7 +117,7 @@
                     <Frame VerticalAlignment="Stretch" Content="{Binding SelectedCryptingView}"/>
                 </Grid>
                 
-                <Grid Grid.Row="1" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                <Grid Grid.Row="1" Margin="0,20" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="30"/>
@@ -124,7 +126,7 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="6*"/>
                     </Grid.ColumnDefinitions>
                     <!--<ui:Button Grid.Column="1" Grid.Row="1" Margin="10" Padding="6" HorizontalAlignment="Stretch" Icon="LockClosed20" Content="Encrypt" Appearance="Secondary"/>-->
 
@@ -134,13 +136,28 @@
                     <TextBlock Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Text="{Binding SelectedFile.Name}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
                     <TextBlock Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Text="{Binding SelectedFile.Status}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
                     <TextBlock Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Text="{Binding SelectedFile.Extension}" HorizontalAlignment="Right" FontSize="14" FontWeight="Medium"/>
-
-                    <ui:PasswordBox Grid.Column="0" Grid.Row="3" Name="FilePasswordBox" Icon="LockOpen20" PlaceholderText="Password"/>
-                    <ui:Button Grid.Column="1" Grid.Row="3"  HorizontalAlignment="Stretch" Content="OK" Margin="10,2" 
-                                   Command="{Binding ConfirmPasswordCommand}" Click="ConfirmPassword_Button"/>
                 </Grid>
+                <Grid Grid.Row="2" VerticalAlignment="Top" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <components:PasswordStrenghtControl Strenght="{Binding PasswordStrenght, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ui:PasswordBox Grid.Row="1" Name="FilePasswordBox" TextChanged="FilePasswordBox_TextChanged" Icon="LockOpen20" PlaceholderText="Password"/>
+                        <ui:Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Content="OK" Height="34" Margin="10,0,0,0" 
+                                   Command="{Binding ConfirmPasswordCommand}" Click="ConfirmPassword_Button"/>
 
-                <Grid Grid.Row="2" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Strong"/>
+                        
+
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="3" Visibility="{Binding Files, Converter={StaticResource ReverseCollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>

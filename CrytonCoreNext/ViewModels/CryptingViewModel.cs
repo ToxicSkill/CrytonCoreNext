@@ -4,10 +4,13 @@ using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
+using CrytonCoreNext.Enums;
+using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Properties;
 using CrytonCoreNext.Services;
+using Org.BouncyCastle.Asn1.Mozilla;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -42,6 +45,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Files))]
         public CryptFile selectedFile;
+
+        [ObservableProperty]
+        public EStrength passwordStrenght;
 
         [ObservableProperty]
         public string filePassword;
@@ -88,6 +94,11 @@ namespace CrytonCoreNext.ViewModels
         partial void OnSelectedFileChanged(CryptFile value)
         {
             OnFileChanged.Invoke(value);
+        }
+
+        partial void OnFilePasswordChanged(string value)
+        {
+            PasswordStrenght = value.PasswordStrength();
         }
 
         //public override bool CanExecute()
