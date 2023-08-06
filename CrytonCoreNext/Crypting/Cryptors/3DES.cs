@@ -16,6 +16,12 @@ namespace CrytonCoreNext.Crypting.Cryptors
 {
     public class _3DES : ICrypting
     {
+        private static readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
+
+        private static readonly CipherMode _cipherMode = CipherMode.ECB;
+
+        private TripleDES _tripleDES;
+
         private static readonly byte[] Key = new byte[24];
 
         public EMethod Method => EMethod._3DES;
@@ -28,6 +34,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public _3DES()
         {
+
+            _tripleDES = TripleDES.Create();
             Key[0] = 37;
             Key[1] = 232;
             Key[2] = 166;
@@ -61,49 +69,30 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {
-            return await Task.Run(() => Encrypt(data, false, progress));
+            _tripleDES.Key = Key;
+            _tripleDES.Mode = _cipherMode;
+            _tripleDES.Padding = _paddingMode;
+            ICryptoTransform cTransform = _tripleDES.CreateEncryptor();
+            return await Task.Run(() => Encrypt(data, cTransform, progress));
         }
 
         public async Task<byte[]> Decrypt(byte[] data, IProgress<string> progress)
         {
-            return await Task.Run(() => Decrypt(data, false, progress));
+            _tripleDES.Key = Key;
+            _tripleDES.Mode = _cipherMode;
+            _tripleDES.Padding = _paddingMode;
+            ICryptoTransform cTransform = _tripleDES.CreateDecryptor();
+            return await Task.Run(() => Decrypt(data, cTransform, progress));
         }
 
-        public static byte[] Encrypt(byte[] toEncrypt, bool useHashing, IProgress<string> progress)
+        public static byte[] Encrypt(byte[] data, ICryptoTransform cTransform, IProgress<string> progress)
         {
-
-            byte[] toEncryptArray = toEncrypt;
-
-            var tdes = TripleDES.Create();
-
-            tdes.Key = Key;
-            tdes.Mode = CipherMode.ECB;
-
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateEncryptor();
-            byte[] resultArray =
-              cTransform.TransformFinalBlock(toEncryptArray, 0,
-              toEncryptArray.Length);
-            tdes.Clear();
-            return resultArray;
+            return cTransform.TransformFinalBlock(data, 0,data.Length);
         }
 
-        public static byte[] Decrypt(byte[] cipherString, bool useHash, IProgress<string> progress)
+        public static byte[] Decrypt(byte[] data, ICryptoTransform cTransform, IProgress<string> progress)
         {
-            byte[] toDecryptArray = cipherString;
-
-            var tdes = TripleDES.Create();
-            tdes.Key = Key;
-
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateDecryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(
-                                 toDecryptArray, 0, toDecryptArray.Length);
-            tdes.Clear();
-            return resultArray;
+            return cTransform.TransformFinalBlock( data, 0, data.Length);
         }
     }
 }

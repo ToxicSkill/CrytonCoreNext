@@ -72,7 +72,7 @@ namespace CrytonCoreNextTests
             var stringByte = "{ \"ToSerialzie\":{\"Key\":\"BEA11965A5244BAEE406448F6BF8BF8B094F5768A6361910C0F787F74C9543C4\",\"IV\":\"D83945FDE5ED652415D96A7888EE21CE\"},\"Name\":\"AES\"}";
             var bytes = Encoding.ASCII.GetBytes(stringByte);
             var enrypted = await _3des.Encrypt(bytes, _progress);
-            var decrypted = await _3des.Encrypt(enrypted, _progress);
+            var decrypted = await _3des.Decrypt(enrypted, _progress);
             Assert.Equal(bytes, decrypted);
         }
     }
