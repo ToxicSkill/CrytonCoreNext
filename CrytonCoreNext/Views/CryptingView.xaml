@@ -22,6 +22,7 @@
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
             <c:ReverseCollectionToVisibilityConverter x:Key="ReverseCollectionToVisibilityConverter"/>
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <c:PasswordStrenghtToVisibility x:Key="PasswordStrenghtToVisibility"/>
             <SolidColorBrush x:Key="BrushBlueTransparent" Color="#7F8484EF"/>
         </ResourceDictionary>
     </ui:UiPage.Resources>
@@ -150,9 +151,11 @@
                         <components:PasswordStrenghtControl Strenght="{Binding PasswordStrenght, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <ui:PasswordBox Grid.Row="1" Name="FilePasswordBox" PasswordChanged="FilePasswordBox_PasswordChanged" Icon="LockOpen20" PlaceholderText="Password"/>
                         <ui:Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Content="OK" Height="34" Margin="10,0,0,0" 
-                                   Command="{Binding ConfirmPasswordCommand}" Click="ConfirmPassword_Button"/>
+                                   Command="{Binding ConfirmPasswordCommand}" Click="ConfirmPassword_Button"
+                                   IsEnabled="{Binding PasswordStrenght, Converter={StaticResource PasswordStrenghtToVisibility}}"/>
 
-                        <TextBlock Grid.Column="1" Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Strong"/>
+                        <TextBlock Grid.Column="1" Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                   Text="{Binding PasswordStrenght, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                         
 
                 </Grid>
