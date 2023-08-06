@@ -31,7 +31,7 @@ namespace CrytonCoreNext
 {
     public partial class App
     {
-        private static readonly Guid AppKey = new("adae2137-dead-beef-6666-3eb841121af8");
+        public static readonly Guid AppKey = new("adae2137-dead-beef-6666-3eb841121af8");
 
         private static readonly IHost _host = Host
         .CreateDefaultBuilder()
@@ -59,6 +59,7 @@ namespace CrytonCoreNext
             services.AddScoped<ICryptingReader, CryptingReader>();
             services.AddScoped<ICrypting, AES>();
             services.AddScoped<ICrypting, RSA>();
+            services.AddScoped<ICrypting, _3DES>();
             services.AddScoped(CreateAESViewModel);
             services.AddScoped(CreateRSAViewModel);
             services.AddSingleton(CreateAESView);

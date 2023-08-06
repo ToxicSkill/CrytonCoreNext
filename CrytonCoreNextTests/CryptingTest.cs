@@ -6,6 +6,7 @@ using CrytonCoreNext.Crypting.Services;
 using Moq;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CrytonCoreNextTests
@@ -62,6 +63,17 @@ namespace CrytonCoreNextTests
             var decrypted = await _cryptingService.RunCrypting(rsa, cryptFile, _progress);
             Assert.Equal(bytes, decrypted);
             Assert.NotEqual(enrypted, decrypted);
+        }
+
+        [Fact]
+        public async Task TripleDESEncryptDecrypt()
+        {
+            ICrypting _3des = new _3DES();
+            var stringByte = "{ \"ToSerialzie\":{\"Key\":\"BEA11965A5244BAEE406448F6BF8BF8B094F5768A6361910C0F787F74C9543C4\",\"IV\":\"D83945FDE5ED652415D96A7888EE21CE\"},\"Name\":\"AES\"}";
+            var bytes = Encoding.ASCII.GetBytes(stringByte);
+            var enrypted = await _3des.Encrypt(bytes, _progress);
+            var decrypted = await _3des.Encrypt(enrypted, _progress);
+            Assert.Equal(bytes, decrypted);
         }
     }
 }
