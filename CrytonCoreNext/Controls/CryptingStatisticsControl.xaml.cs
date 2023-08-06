@@ -12,6 +12,16 @@ namespace CrytonCoreNext.Controls
     /// </summary>
     public partial class CryptingStatisticsControl : UserControl
     {
+        private const int AnimationDurationSeconds = 2;
+
+        private static readonly DoubleAnimation Animation = new ()
+            {
+                To = 1,
+                From = 0,
+                Duration = TimeSpan.FromSeconds(AnimationDurationSeconds),
+                FillBehavior = FillBehavior.HoldEnd
+            };
+
         public static readonly DependencyProperty SpeedProperty = 
             DependencyProperty.Register("Speed", typeof(object), typeof(CryptingStatisticsControl), new PropertyMetadata(0));
 
@@ -66,21 +76,9 @@ namespace CrytonCoreNext.Controls
 
         private void root_Loaded(object sender, RoutedEventArgs e)
         {
-            var animation = new DoubleAnimation
-            {
-                To = 1,
-                From = 0, 
-                Duration = TimeSpan.FromSeconds(4),
-                FillBehavior = FillBehavior.Stop
-            };
-
-            animation.Completed += (s, a) => SpeedGrid.Opacity = 1;
-            animation.Completed += (s, a) => StrenghtGrid.Opacity = 1;
-            animation.Completed += (s, a) => ApplicationGrid.Opacity = 1;
-
-            SpeedGrid.BeginAnimation(UIElement.OpacityProperty, animation);
-            StrenghtGrid.BeginAnimation(UIElement.OpacityProperty, animation);
-            ApplicationGrid.BeginAnimation(UIElement.OpacityProperty, animation);
+            SpeedGrid.BeginAnimation(UIElement.OpacityProperty, Animation);
+            StrenghtGrid.BeginAnimation(UIElement.OpacityProperty, Animation);
+            ApplicationGrid.BeginAnimation(UIElement.OpacityProperty, Animation);
             SetVisibility();
         }
     }

@@ -14,6 +14,24 @@ namespace CrytonCoreNext.Controls
     /// </summary>
     public partial class PasswordStrenghtControl : UserControl
     {
+        private const int AnimationDurationSeconds = 2;
+
+        private static readonly DoubleAnimation AppearAnimation = new ()
+        {
+            To = 1,
+            From = 0,
+            Duration = TimeSpan.FromSeconds(AnimationDurationSeconds),
+            FillBehavior = FillBehavior.HoldEnd
+        };
+
+        private static readonly DoubleAnimation DisappearAnimation = new()
+        {
+            To = 0,
+            From = 1,
+            Duration = TimeSpan.FromSeconds(AnimationDurationSeconds),
+            FillBehavior = FillBehavior.HoldEnd
+        };
+
         public static readonly DependencyProperty StrenghtProperty =
             DependencyProperty.Register(
                 "Strenght", 
@@ -22,7 +40,7 @@ namespace CrytonCoreNext.Controls
                 new PropertyMetadata(EStrength.None, new PropertyChangedCallback(StrenghtPropertyChanged)));
 
 
-        private static List<Rectangle> Rectangles = new List<Rectangle>();
+        private static readonly List<Rectangle> Rectangles = new();
         
         public EStrength Strenght
         {
@@ -33,7 +51,12 @@ namespace CrytonCoreNext.Controls
         public PasswordStrenghtControl()
         {
             InitializeComponent();
+            InitializeRectangles();
             ClearRectangles();
+        }
+
+        private void InitializeRectangles()
+        {
             Rectangles.Add(VeryWeak);
             Rectangles.Add(Weak);
             Rectangles.Add(Reasonable);
@@ -41,32 +64,16 @@ namespace CrytonCoreNext.Controls
             Rectangles.Add(VeryStrong);
         }
 
-        private void ClearRectangles()
+        private static void ClearRectangles()
         {
-            var rectangles = strenghtGrid.FindVisualChildren<Rectangle>() ?? new List<Rectangle>();
-            foreach (var rect in rectangles)
+            foreach (var rect in Rectangles)
             {
                 rect.Visibility = Visibility.Collapsed;
             }
         }
-        private Rectangle _rectToChange;
 
         private static void StrenghtPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var appearAnimation = new DoubleAnimation
-            {
-                To = 1,
-                From = 0,
-                Duration = TimeSpan.FromSeconds(2),
-                FillBehavior = FillBehavior.HoldEnd
-            };
-            var disappearAnimation = new DoubleAnimation
-            {
-                To = 0,
-                From = 1,
-                Duration = TimeSpan.FromSeconds(2),
-                FillBehavior = FillBehavior.HoldEnd
-            }; 
             var iterator = 0;
             var newValue = (int)(EStrength)e.NewValue;
             var oldValue = (int)(EStrength)e.OldValue;
@@ -80,12 +87,12 @@ namespace CrytonCoreNext.Controls
                 if (iterator <= newValue && iterator > oldValue)
                 {
                     rect.Visibility = Visibility.Visible;
-                    rect.BeginAnimation(UIElement.OpacityProperty, appearAnimation);
+                    rect.BeginAnimation(UIElement.OpacityProperty, AppearAnimation);
                 }
                 else if (oldValue > newValue && iterator <= oldValue && iterator > newValue)
                 {
                     rect.Visibility = Visibility.Visible;
-                    rect.BeginAnimation(UIElement.OpacityProperty, disappearAnimation);
+                    rect.BeginAnimation(UIElement.OpacityProperty, DisappearAnimation);
                 }
             }
         }

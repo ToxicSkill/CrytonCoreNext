@@ -47,8 +47,8 @@ namespace CrytonCoreNext.Services
             {
                 gif.SelectActiveFrame(dim, i);
 
-                Rectangle destRegion = new Rectangle(gif.Width * i, 0, gif.Width, gif.Height);
-                Rectangle srcRegion = new Rectangle(0, 0, gif.Width, gif.Height);
+                Rectangle destRegion = new(gif.Width * i, 0, gif.Width, gif.Height);
+                Rectangle srcRegion = new(0, 0, gif.Width, gif.Height);
 
                 using (Graphics grD = Graphics.FromImage(resultingImage))
                 {
