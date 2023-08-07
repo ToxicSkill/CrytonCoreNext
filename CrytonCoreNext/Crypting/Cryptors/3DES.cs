@@ -2,6 +2,7 @@
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
+using Org.BouncyCastle.Crypto.Digests;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -20,9 +21,9 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         private static readonly CipherMode _cipherMode = CipherMode.ECB;
 
-        private TripleDES _tripleDES;
+        private static readonly string _password = "password";
 
-        private static readonly byte[] Key = new byte[24];
+        private TripleDES _tripleDES;
 
         public EMethod Method => EMethod._3DES;
 
@@ -36,30 +37,6 @@ namespace CrytonCoreNext.Crypting.Cryptors
         {
 
             _tripleDES = TripleDES.Create();
-            Key[0] = 37;
-            Key[1] = 232;
-            Key[2] = 166;
-            Key[3] = 233;
-            Key[4] = 45;
-            Key[5] = 43;
-            Key[6] = 88;
-            Key[7] = 155;
-            Key[8] = 191;
-            Key[9] = 167;
-            Key[10] = 103;
-            Key[11] = 74;
-            Key[12] = 192;
-            Key[13] = 17;
-            Key[14] = 208;
-            Key[15] = 108;
-            Key[16] = 1;
-            Key[17] = 199;
-            Key[18] = 105;
-            Key[19] = 68;
-            Key[20] = 52;
-            Key[21] = 120;
-            Key[22] = 209;
-            Key[23] = 191;
         }
 
         public object GetHelper()
@@ -69,7 +46,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {
-            _tripleDES.Key = Key;
+            _tripleDES.Key = SHA256.HashData(Encoding.ASCII.GetBytes(_password)).Take(_tripleDES.LegalKeySizes.First().MaxSize/8).ToArray<byte>();
             _tripleDES.Mode = _cipherMode;
             _tripleDES.Padding = _paddingMode;
             ICryptoTransform cTransform = _tripleDES.CreateEncryptor();
@@ -78,7 +55,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public async Task<byte[]> Decrypt(byte[] data, IProgress<string> progress)
         {
-            _tripleDES.Key = Key;
+            _tripleDES.Key = SHA256.HashData(Encoding.ASCII.GetBytes(_password)).Take(24).ToArray<byte>();
             _tripleDES.Mode = _cipherMode;
             _tripleDES.Padding = _paddingMode;
             ICryptoTransform cTransform = _tripleDES.CreateDecryptor();
