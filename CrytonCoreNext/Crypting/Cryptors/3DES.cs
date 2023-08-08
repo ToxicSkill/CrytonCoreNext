@@ -46,7 +46,11 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
         {
-            _tripleDES.Key = SHA256.HashData(Encoding.ASCII.GetBytes(_password)).Take(_tripleDES.LegalKeySizes.First().MaxSize/8).ToArray<byte>();
+            var bytesToTake = _tripleDES.LegalKeySizes[0].MaxSize / 8;
+            var keyBytes = new byte[bytesToTake];
+            var passwordBytes = SHA256.HashData(Encoding.ASCII.GetBytes(_password));
+            Buffer.BlockCopy(passwordBytes, 0, keyBytes, 0, bytesToTake);
+            _tripleDES.Key = keyBytes;
             _tripleDES.Mode = _cipherMode;
             _tripleDES.Padding = _paddingMode;
             ICryptoTransform cTransform = _tripleDES.CreateEncryptor();
@@ -55,7 +59,11 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public async Task<byte[]> Decrypt(byte[] data, IProgress<string> progress)
         {
-            _tripleDES.Key = SHA256.HashData(Encoding.ASCII.GetBytes(_password)).Take(24).ToArray<byte>();
+            var bytesToTake = _tripleDES.LegalKeySizes[0].MaxSize / 8;
+            var keyBytes = new byte[bytesToTake];
+            var passwordBytes = SHA256.HashData(Encoding.ASCII.GetBytes(_password));
+            Buffer.BlockCopy(passwordBytes, 0, keyBytes, 0, bytesToTake);
+            _tripleDES.Key = keyBytes;
             _tripleDES.Mode = _cipherMode;
             _tripleDES.Padding = _paddingMode;
             ICryptoTransform cTransform = _tripleDES.CreateDecryptor();
