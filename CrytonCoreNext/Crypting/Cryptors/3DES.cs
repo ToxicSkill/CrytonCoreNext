@@ -23,6 +23,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         private static readonly string _password = "password";
 
+        private readonly DESHelper _desHelper;
+
         private TripleDES _tripleDES;
 
         public EMethod Method => EMethod._3DES;
@@ -35,7 +37,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public _3DES()
         {
-
+            _desHelper = new DESHelper();
             _tripleDES = TripleDES.Create();
         }
 
@@ -48,7 +50,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
         {
             var bytesToTake = _tripleDES.LegalKeySizes[0].MaxSize / 8;
             var keyBytes = new byte[bytesToTake];
-            var passwordBytes = SHA256.HashData(Encoding.ASCII.GetBytes(_password));
+            var passwordBytes = SHA256.HashData(Encoding.ASCII.GetBytes(_desHelper.GetPassword()));
             Buffer.BlockCopy(passwordBytes, 0, keyBytes, 0, bytesToTake);
             _tripleDES.Key = keyBytes;
             _tripleDES.Mode = _cipherMode;
