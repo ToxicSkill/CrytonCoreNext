@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Windows;

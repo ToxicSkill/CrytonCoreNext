@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
@@ -60,7 +61,8 @@ namespace CrytonCoreNext.ViewModels
             IDialogService dialogService,
             ICryptingService cryptingService,
             ISnackbarService snackbarService,
-            List<ICryptingView<CryptingMethodViewModel>> cryptingViews)
+            List<ICryptingView<CryptingMethodViewModel>> cryptingViews,
+            DESHelper desHepler)
             : base(fileService, dialogService, snackbarService)
         {
             ProgressService = new ProgressService();

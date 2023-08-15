@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Crypting.Cryptors;
+using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.Services;
@@ -60,6 +61,7 @@ namespace CrytonCoreNext
             services.AddScoped<ICrypting, AES>();
             services.AddScoped<ICrypting, RSA>();
             services.AddScoped<ICrypting, _3DES>();
+            services.AddScoped<DESHelper>();
             services.AddScoped(CreateAESViewModel);
             services.AddScoped(CreateRSAViewModel);
             services.AddSingleton(CreateAESView);
@@ -173,8 +175,9 @@ namespace CrytonCoreNext
             var cryptingService = provider.GetRequiredService<ICryptingService>();
             var snackbar = provider.GetRequiredService<ISnackbarService>();
             var cryptors = provider.GetServices<ICryptingView<CryptingMethodViewModel>>();
+            var desHelper = provider.GetRequiredService<DESHelper>();
 
-            return new(fileService, dialogService, cryptingService, snackbar, cryptors.ToList());
+            return new(fileService, dialogService, cryptingService, snackbar, cryptors.ToList(), desHelper);
         }
 
         private static PdfViewModel CreatePdfViewModel(IServiceProvider provider)

@@ -1,5 +1,6 @@
 ﻿using CrytonCoreNext.Crypting.Cryptors;
 using CrytonCoreNext.Crypting.Enums;
+using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.Services;
@@ -69,6 +70,8 @@ namespace CrytonCoreNextTests
         public async Task TripleDESEncryptDecrypt()
         {
             ICrypting _3des = new _3DES();
+            DESHelper helper= (DESHelper)_3des.GetHelper();
+            helper.SetPassword("abcd1234");
             var stringByte = "{ \"ToSerialzie\":{\"Key\":\"BEA11965A5244BAEE406448F6BF8BF8B094F5768A6361910C0F787F74C9543C4\",\"IV\":\"D83945FDE5ED652415D96A7888EE21CE\"},\"Name\":\"AES\"}";
             var bytes = Encoding.ASCII.GetBytes(stringByte);
             var enrypted = await _3des.Encrypt(bytes, _progress);
