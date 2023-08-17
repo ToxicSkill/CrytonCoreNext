@@ -148,7 +148,13 @@
                             <RowDefinition Height="1.25*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <components:PasswordStrenghtControl Strenght="{Binding PasswordStrenght, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Rectangle HorizontalAlignment="Stretch" Height="10" RadiusX="5" RadiusY="5">
+                        <Rectangle.Fill>
+                            <ImageBrush ImageSource="{Binding GradientColorMat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                        <!--<Image Source="{Binding GradientColorMat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch"/>-->
+                        <!--<components:PasswordStrenghtControl Strenght="{Binding PasswordStrenght, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
                         <ui:PasswordBox Grid.Row="1" Name="FilePasswordBox" PasswordChanged="FilePasswordBox_PasswordChanged" Icon="LockOpen20" PlaceholderText="Password"/>
                         <ui:Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Content="OK" Height="34" Margin="10,0,0,0" 
                                    Command="{Binding ConfirmPasswordCommand}" Click="ConfirmPassword_Button"

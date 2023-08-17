@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
@@ -56,6 +57,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public EStrength? passwordStrenght;
 
+        [ObservableProperty]
+        public WriteableBitmap gradientColorMat;
+
         public delegate void HandleFileChanged(CryptFile file);
 
         public event HandleFileChanged OnFileChanged;
@@ -69,7 +73,6 @@ namespace CrytonCoreNext.ViewModels
             IPasswordProvider passwordProvider)
             : base(fileService, dialogService, snackbarService)
         {
-            ColorGradientGenerator.GenerateGradientImage(new OpenCvSharp.Size(400, 20), new OpenCvSharp.Scalar(45, 80, 95), new OpenCvSharp.Scalar(61, 202, 255));
             ProgressService = new ProgressService();
 
             _fileService = fileService;
@@ -107,7 +110,27 @@ namespace CrytonCoreNext.ViewModels
         {
             var newFilePassword = _passwordProvider.SetPassword(value);
             var result = _passwordProvider.GetPasswordStrenght();
+            var bStartValue = 45;
+            var gStartValue = 80;
+            var rStartValue = 95;
+            var aStartValue = 0;
+            var bEndValue = 61;
+            var gEndValue = 202;
+            var rEndValue = 255;
+            var aEndValue = 255;
             PasswordStrenght = result > EStrength.None ? result : null;
+            var bStep = (bEndValue - bStartValue) / 6;
+            var gStep = (gEndValue - gStartValue) / 6;
+            var rStep = (rEndValue - rStartValue) / 6;
+            var aStep = (aEndValue - aStartValue) / 6;
+            GradientColorMat = ColorGradientGenerator.GenerateGradient(
+                new OpenCvSharp.Size(400, 20), 
+                new OpenCvSharp.Scalar(bStartValue, gStartValue, rStartValue, aStartValue), 
+                new OpenCvSharp.Scalar(
+                    bStartValue + (bStep * (int)PasswordStrenght), 
+                gStartValue + (gStep * (int)PasswordStrenght), 
+                rStartValue + (rStep * (int)PasswordStrenght),
+                255));
             FilePassword = newFilePassword;
         } 
 
