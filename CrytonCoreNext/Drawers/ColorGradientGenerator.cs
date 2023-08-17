@@ -1,46 +1,33 @@
 ﻿using OpenCvSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Drawers
 {
     public static class ColorGradientGenerator
     {
-        public static Mat GenerateGradientImage(Size size, Scalar startColor, Scalar endColor, bool vertical = false)
-        {
-            using var retVal = GenerateGradientImage(size.Width, size.Height, startColor, endColor);
-            Cv2.ImWrite("C:\\Users\\gizmo\\OneDrive\\Obrazy\\ret.png", retVal);
-            return retVal;
-        }
+        public static Mat GenerateGradientImage(Size size, Scalar startColor, Scalar endColor) => 
+            GenerateGradient(size, startColor, endColor);
 
-        static Mat GenerateGradientImage(int width, int height, Scalar startColor, Scalar endColor)
+        public static Mat GenerateGradient(Size size, Scalar startColor, Scalar endColor)
         {
-            Mat gradientImage = new Mat(height, width, MatType.CV_8UC3);
+            var gradientImage = new Mat(size, MatType.CV_8UC3, startColor);
 
-            for (int y = 0; y < height; y++)
+            for (var x = 0; x < size.Width; x++)
             {
-                double t = (double)y / (height - 1);
-                Scalar interpolatedColor = InterpolateColor(startColor, endColor, y);
+                var alpha = (double)x / (size.Width - 1);
 
-                for (int x = 0; x < width; x++)
-                {
-                    gradientImage.Set(y, x, interpolatedColor);
-                }
+                var currentColor = new Scalar
+                (
+                    (1 - alpha) * startColor.Val0 + alpha * endColor.Val0,
+                    (1 - alpha) * startColor.Val1 + alpha * endColor.Val1,
+                    (1 - alpha) * startColor.Val2 + alpha * endColor.Val2
+                );
+
+                using var column = new Mat(size.Height, 1, MatType.CV_8UC3, currentColor);
+                var dest = gradientImage.ColRange(x, x + 1);
+                column.CopyTo(dest);
             }
 
             return gradientImage;
-        }
-
-        static Scalar InterpolateColor(Scalar startColor, Scalar endColor, double t)
-        {
-            double r = t;
-            double g = 0;
-            double b = 0;
-
-            return new Scalar(b, g, r); // OpenCV używa kolejności BGR
         }
     }
 }

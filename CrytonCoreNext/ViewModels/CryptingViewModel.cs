@@ -69,7 +69,7 @@ namespace CrytonCoreNext.ViewModels
             IPasswordProvider passwordProvider)
             : base(fileService, dialogService, snackbarService)
         {
-            ColorGradientGenerator.GenerateGradientImage(new OpenCvSharp.Size(200, 200), new OpenCvSharp.Scalar(255, 100, 100), new OpenCvSharp.Scalar(255, 100, 0));
+            ColorGradientGenerator.GenerateGradientImage(new OpenCvSharp.Size(400, 20), new OpenCvSharp.Scalar(45, 80, 95), new OpenCvSharp.Scalar(61, 202, 255));
             ProgressService = new ProgressService();
 
             _fileService = fileService;
