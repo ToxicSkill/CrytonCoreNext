@@ -6,35 +6,7 @@ namespace CrytonCoreNext.Helpers
 {
     public static class EStrengthExtension
     {
-
         private static int _score;
-
-
-
-        public static EStrength PasswordStrength(this string password)
-        {
-            var score = password.GetStrengthScore();
-
-            if (score == 0)
-                return EStrength.None;
-
-            if (score <= 3)
-                return EStrength.VeryWeak;
-
-            if (score > 3 && score <= 5)
-                return EStrength.Weak;
-
-            if (score > 5 && score <= 7)
-                return EStrength.Reasonable;
-
-            if (score > 7 && score <= 9)
-                return EStrength.Strong;
-
-            if (score > 9)
-                return EStrength.VeryStrong;
-
-            return EStrength.VeryWeak;
-        }
 
         public static int GetStrengthScore(this string password)
         {

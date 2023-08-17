@@ -82,6 +82,7 @@ namespace CrytonCoreNext.Crypting.Helpers
         {
             return _useOAEP ? (_rsaCryptoServiceProvider.KeySize - 384) / 8 + 37 : (_rsaCryptoServiceProvider.KeySize - 384) / 8 + 7;
         }
+
         public int GetMaxNumberOfBytes(int size)
         {
             return _useOAEP ? (size - 384) / 8 + 37 : (size - 384) / 8 + 7;

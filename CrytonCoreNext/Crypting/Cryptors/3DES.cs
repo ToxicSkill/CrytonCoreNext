@@ -2,6 +2,7 @@
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
+using CrytonCoreNext.Interfaces;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,7 +16,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         private static readonly CipherMode _cipherMode = CipherMode.ECB;
 
-        private readonly DESHelper _desHelper;
+        private readonly IPasswordProvider _passwordProvider;
 
         private TripleDES _tripleDES;
 
@@ -27,15 +28,15 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         public CryptingStatistics CryptingStatistics => new(4, 2, 3);
 
-        public _3DES()
+        public _3DES(IPasswordProvider provider)
         {
-            _desHelper = new DESHelper();
+            _passwordProvider = provider;
             _tripleDES = TripleDES.Create();
         }
 
         public object GetHelper()
         {
-            return _desHelper;
+            return _passwordProvider;
         }
 
         public async Task<byte[]> Encrypt(byte[] data, IProgress<string> progress)
@@ -66,7 +67,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
         {
             var bytesToTake = _tripleDES.LegalKeySizes[0].MaxSize / 8;
             var keyBytes = new byte[bytesToTake];
-            var passwordBytes = SHA256.HashData(Encoding.ASCII.GetBytes(_desHelper.GetPassword()));
+            var passwordBytes = SHA256.HashData(Encoding.ASCII.GetBytes(_passwordProvider.GetPassword()));
             Buffer.BlockCopy(passwordBytes, 0, keyBytes, 0, bytesToTake);
             _tripleDES.Key = keyBytes;
             _tripleDES.Mode = _cipherMode;

@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Crypting.Cryptors;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
+using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Enums;
 using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces;
@@ -25,6 +27,8 @@ namespace CrytonCoreNext.ViewModels
     public partial class CryptingViewModel : InteractiveViewBase
     {
         private readonly ICryptingService _cryptingService;
+
+        private readonly IPasswordProvider _passwordProvider;
 
         private readonly IFileService _fileService;
 
@@ -62,14 +66,16 @@ namespace CrytonCoreNext.ViewModels
             ICryptingService cryptingService,
             ISnackbarService snackbarService,
             List<ICryptingView<CryptingMethodViewModel>> cryptingViews,
-            DESHelper desHepler)
+            IPasswordProvider passwordProvider)
             : base(fileService, dialogService, snackbarService)
         {
+            ColorGradientGenerator.GenerateGradientImage(new OpenCvSharp.Size(200, 200), new OpenCvSharp.Scalar(255, 100, 100), new OpenCvSharp.Scalar(255, 100, 0));
             ProgressService = new ProgressService();
 
             _fileService = fileService;
             _cryptingService = cryptingService;
             _cryptingViews = cryptingViews;
+            _passwordProvider = passwordProvider;
 
             files = new();
 
@@ -99,31 +105,11 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnFilePasswordChanged(string value)
         {
-            var result = value.PasswordStrength();
+            var newFilePassword = _passwordProvider.SetPassword(value);
+            var result = _passwordProvider.GetPasswordStrenght();
             PasswordStrenght = result > EStrength.None ? result : null;
-        }
-
-        //public override bool CanExecute()
-        //{
-        //    return !IsBusy && !CurrentCryptingViewModel.IsBusy;
-        //}
-
-        //private void HandleAllFilesDeleted(object? sender, EventArgs e)
-        //{
-        //    _files.Clear();
-        //}
-
-        //private void HandleSelectedFileChanged(object? sender, EventArgs? e)
-        //{
-        //    var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetSelectedFileGuid());
-        //    if (file != null)
-        //    {
-        //        SelectedFile = file;
-        //        OnPropertyChanged(nameof(SelectedFile));
-        //        OnPropertyChanged(nameof(CryptButtonName));
-        //    }
-        //}
-
+            FilePassword = newFilePassword;
+        } 
 
         [RelayCommand]
         private void ClearFiles()
@@ -181,7 +167,10 @@ namespace CrytonCoreNext.ViewModels
         private async void PerformCrypting()
         {
             Lock();
-            if (!_fileService.HasBytes(SelectedFile) || !_cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
+            if (
+                !_fileService.HasBytes(SelectedFile) || 
+                !_passwordProvider.ValidatePassword() ||
+                !_cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
             {
                 PostErrorSnackbar(Language.Post("WrongMethod"));
                 return;

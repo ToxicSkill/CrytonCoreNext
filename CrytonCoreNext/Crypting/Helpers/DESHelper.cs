@@ -1,11 +1,14 @@
-﻿namespace CrytonCoreNext.Crypting.Helpers
+﻿using CrytonCoreNext.Providers; 
+
+namespace CrytonCoreNext.Crypting.Helpers
 {
     public class DESHelper
     {
-        private string _password;
+        public PasswordProvider PasswordProvider { get; set; }
 
-        public string GetPassword() { return _password; }
-
-        public void SetPassword(string password) { _password = password; }
+        public DESHelper()
+        {
+            PasswordProvider = new PasswordProvider();
+        }
     }
 }
