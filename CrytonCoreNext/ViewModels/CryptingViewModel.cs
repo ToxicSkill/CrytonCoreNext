@@ -58,6 +58,9 @@ namespace CrytonCoreNext.ViewModels
         public EStrength? passwordStrenght;
 
         [ObservableProperty]
+        public EStrength? minimalPasswordStrenght;
+
+        [ObservableProperty]
         public WriteableBitmap gradientColorMat;
 
         public delegate void HandleFileChanged(CryptFile file);
@@ -85,6 +88,7 @@ namespace CrytonCoreNext.ViewModels
             UpdateCryptingViews();
             RegisterFileChangedEvent();
 
+            MinimalPasswordStrenght = _passwordProvider.GetPasswordValidationStrength();
             SelectedCryptingView = CryptingViewsItemSource.First();
         }
 
@@ -108,29 +112,36 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnFilePasswordChanged(string value)
         {
+            MinimalPasswordStrenght = _passwordProvider.GetPasswordValidationStrength();
             var newFilePassword = _passwordProvider.SetPassword(value);
             var result = _passwordProvider.GetPasswordStrenght();
-            var bStartValue = 45;
-            var gStartValue = 80;
-            var rStartValue = 95;
-            var aStartValue = 0;
-            var bEndValue = 61;
-            var gEndValue = 202;
-            var rEndValue = 255;
-            var aEndValue = 255;
             PasswordStrenght = result > EStrength.None ? result : null;
-            var bStep = (bEndValue - bStartValue) / 6;
-            var gStep = (gEndValue - gStartValue) / 6;
-            var rStep = (rEndValue - rStartValue) / 6;
-            var aStep = (aEndValue - aStartValue) / 6;
-            GradientColorMat = ColorGradientGenerator.GenerateGradient(
-                new OpenCvSharp.Size(400, 20), 
-                new OpenCvSharp.Scalar(bStartValue, gStartValue, rStartValue, aStartValue), 
-                new OpenCvSharp.Scalar(
-                    bStartValue + (bStep * (int)PasswordStrenght), 
-                gStartValue + (gStep * (int)PasswordStrenght), 
-                rStartValue + (rStep * (int)PasswordStrenght),
-                255));
+            if (PasswordStrenght != null)
+            {
+                var bStartValue = 45;
+                var gStartValue = 80;
+                var rStartValue = 95;
+                var aStartValue = 0;
+                var bEndValue = 61;
+                var gEndValue = 202;
+                var rEndValue = 255;
+                var aEndValue = 255;
+                var bStep = (bEndValue - bStartValue) / 6;
+                var gStep = (gEndValue - gStartValue) / 6;
+                var rStep = (rEndValue - rStartValue) / 6; 
+                GradientColorMat = ColorGradientGenerator.GenerateGradient(
+                    new OpenCvSharp.Size(400, 20),
+                    new OpenCvSharp.Scalar(
+                        bStartValue, 
+                        gStartValue, 
+                        rStartValue, 
+                        aStartValue),
+                    new OpenCvSharp.Scalar(
+                        bStartValue + (bStep * (int)PasswordStrenght),
+                        gStartValue + (gStep * (int)PasswordStrenght),
+                        rStartValue + (rStep * (int)PasswordStrenght),
+                        aEndValue));
+            }
             FilePassword = newFilePassword;
         } 
 

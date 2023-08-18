@@ -25,10 +25,6 @@ namespace CrytonCoreNext.Providers
 
         public string SetPassword(string password)
         {
-            if (string.IsNullOrEmpty(password) || string.IsNullOrWhiteSpace(password))
-            {
-                return _password;
-            }
             if (password.Length <= MaxPasswordLenght)
             {
                 _password = password;
@@ -60,7 +56,6 @@ namespace CrytonCoreNext.Providers
             _validationPasswordStrenght = strength;
         }
 
-
         private static EStrength PasswordStrength(string password)
         {
             var score = password.GetStrengthScore();
@@ -68,19 +63,19 @@ namespace CrytonCoreNext.Providers
             if (score == 0)
                 return EStrength.None;
 
-            if (score <= 3)
+            if (score <= 2)
                 return EStrength.VeryWeak;
 
-            if (score > 3 && score <= 5)
+            if (score > 2 && score <= 4)
                 return EStrength.Weak;
 
-            if (score > 5 && score <= 7)
+            if (score > 4 && score <= 6)
                 return EStrength.Reasonable;
 
-            if (score > 7 && score <= 9)
+            if (score > 6 && score <= 8)
                 return EStrength.Strong;
 
-            if (score > 9)
+            if (score > 8)
                 return EStrength.VeryStrong;
 
             return EStrength.VeryWeak;
