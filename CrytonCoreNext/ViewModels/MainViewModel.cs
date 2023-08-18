@@ -64,7 +64,14 @@ namespace CrytonCoreNext.ViewModels
                 Content = "Pdf",
                 PageType = typeof(PdfView)
             });
-
+            MenuItems.Add(new NavigationItem()
+            {
+                Icon = SymbolRegular.Eye20,
+                PageTag = "images",
+                Cache = true,
+                Content = "AI Viewer",
+                PageType = typeof(AIViewerView)
+            });
             FooterItems.Add(new NavigationSeparator());
             FooterItems.Add(new NavigationItem()
             {

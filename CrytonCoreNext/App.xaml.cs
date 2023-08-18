@@ -80,6 +80,9 @@ namespace CrytonCoreNext
             services.AddScoped<PdfView>();
             services.AddScoped(CreatePdfViewModel);
 
+            //AI viewer
+            services.AddScoped<AIViewerView>();
+            services.AddScoped<AIViewerViewModel>();
 
             services.AddScoped<Dashboard>();
             services.AddScoped<DashboardViewModel>();
