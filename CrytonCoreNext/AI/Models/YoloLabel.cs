@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace CrytonCoreNext.AI.Models
 {
-    class YoloLabel
+    public class YoloLabel
     {
+        public int Id { get; set; }
+
+        public string? Name { get; set; }
+
+        public Color Color { get; set; }
     }
 }

@@ -1,0 +1,58 @@
+﻿using CrytonCoreNext.AI.Interfaces;
+using CrytonCoreNext.AI.Models;
+using CrytonCoreNext.AI.Utils;
+using OpenCvSharp;
+using OpenCvSharp.Extensions;
+using OpenCvSharp.WpfExtensions;
+using System.Collections.Generic;
+using System.Windows.Media.Imaging;
+
+namespace CrytonCoreNext.AI
+{
+    public class YoloModelService : IYoloModelService
+    {
+        private YoloV7 _yolov7;
+
+        public bool LoadYoloModel(string path, bool useCUDA = false)
+        {
+            _yolov7 = new YoloV7(path, useCUDA);
+            return _yolov7 != null;
+        }
+
+        public void LoadLabels(string pathToLabelsFile = "")
+        {
+            if (pathToLabelsFile == "")
+            {
+                _yolov7.SetupYoloDefaultLabels();
+            }
+        }
+
+        public WriteableBitmap PredictAndDraw(Mat mat)
+        {
+            using var image = mat.ToBitmap(System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            var predicitons = _yolov7.Predict(image);
+            return DrawPredicitons(mat, predicitons).ToWriteableBitmap();
+        }
+
+        private Mat DrawPredicitons(Mat mat, List<YoloPrediction> predicitons)
+        {
+            foreach (var prediction in predicitons)
+            {
+                var color = new Scalar(
+                    prediction.Label.Color.R,
+                    prediction.Label.Color.G,
+                    prediction.Label.Color.B);
+                var rect = new Rect(
+                    (int)prediction.Rectangle.X,
+                    (int)prediction.Rectangle.Y,
+                    (int)prediction.Rectangle.Width,
+                    (int)prediction.Rectangle.Height);
+                Cv2.Rectangle(mat, rect, color);
+                Cv2.PutText(mat, prediction.Label.Name, new Point(
+                    prediction.Rectangle.X - 7,
+                    prediction.Rectangle.Y - 23), HersheyFonts.HersheyPlain, 1, color, 2);
+            }
+            return mat;
+        }
+    }
+}
