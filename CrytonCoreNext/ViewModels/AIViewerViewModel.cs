@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CrytonCoreNext.AI.Interfaces;
+using CrytonCoreNext.AI.Models;
 using CrytonCoreNext.Models;
-using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System.Collections.ObjectModel;
 
@@ -8,30 +9,50 @@ namespace CrytonCoreNext.ViewModels
 {
     public partial class AIViewerViewModel : ObservableObject
     {
-        [ObservableProperty]
-        public ObservableCollection<SimpleImageItemContainer> detectecCurrentLabelsImages;
+        private readonly IYoloModelService _yoloModelService;
 
         [ObservableProperty]
-        public ObservableCollection<SimpleImageItemContainer> images;
+        public ObservableCollection<AIDetectionImage> detectedCurrentImages;
+
+        [ObservableProperty]
+        public AIDetectionImage detectedCurrentImage;
+
+        [ObservableProperty]
+        public ObservableCollection<AIImage> images;
 
         [ObservableProperty]
         public SimpleImageItemContainer selectedImage;
 
-        public AIViewerViewModel()
+        public AIViewerViewModel(IYoloModelService yoloModelService)
         {
-            Images = new ObservableCollection<SimpleImageItemContainer>()
+            DetectedCurrentImages = new();
+            _yoloModelService = yoloModelService;
+            _yoloModelService.LoadYoloModel("AI/YoloModels/yolov7-tiny.onnx");
+            _yoloModelService.LoadLabels();
+
+            Images = new ()
             {
-                new SimpleImageItemContainer()
-                {
-                    Label = "Zrzut ekranu (2)",
-                    Image = Cv2.ImRead("C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Zrzut ekranu (2).png").ToWriteableBitmap()
-                },
-                new SimpleImageItemContainer()
-                {
-                    Label = "Zrzut ekranu (3)",
-                    Image = Cv2.ImRead("C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Zrzut ekranu (3).png").ToWriteableBitmap()
-                },
+                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Zrzut ekranu (12).png"),
+                new ( "C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Zrzut ekranu 2023-06-14 140801.png"),
+                new ( "C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png")
             };
+
+            foreach (var image in Images)
+            {
+                image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
+                DetectedCurrentImages.Add(new(image));
+            }
+            DetectedCurrentImage = DetectedCurrentImages[0];
+        }
+
+        partial void OnSelectedImageChanged(SimpleImageItemContainer value)
+        {
+            var index = Images.IndexOf((AIImage)value);
+            if (index <= DetectedCurrentImages.Count)
+            {
+                DetectedCurrentImage = DetectedCurrentImages[index];
+            }
+
         }
     }
 }

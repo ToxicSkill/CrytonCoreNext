@@ -15,7 +15,7 @@ namespace CrytonCoreNext.AI.Utils
     public class YoloV7 : IDisposable
     {
         private readonly InferenceSession _inferenceSession;
-        private readonly YoloModel _model = new YoloModel();
+        private readonly YoloModel _model = new();
         private readonly MD5 _md5;
 
         public YoloV7(string modelPath, bool useCuda = false)

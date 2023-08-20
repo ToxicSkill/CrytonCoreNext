@@ -1,9 +1,10 @@
 ﻿using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
 using CrytonCoreNext.AI.Utils;
+using CrytonCoreNext.Drawers;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
-using OpenCvSharp.WpfExtensions;
+using OpenCvSharp.WpfExtensions; 
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
@@ -31,28 +32,13 @@ namespace CrytonCoreNext.AI
         {
             using var image = mat.ToBitmap(System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             var predicitons = _yolov7.Predict(image);
-            return DrawPredicitons(mat, predicitons).ToWriteableBitmap();
+            return YoloDetectionDrawer.DrawPredicitons(mat, predicitons).ToWriteableBitmap();
         }
 
-        private Mat DrawPredicitons(Mat mat, List<YoloPrediction> predicitons)
+        public List<YoloPrediction> GetPredictions(Mat mat)
         {
-            foreach (var prediction in predicitons)
-            {
-                var color = new Scalar(
-                    prediction.Label.Color.R,
-                    prediction.Label.Color.G,
-                    prediction.Label.Color.B);
-                var rect = new Rect(
-                    (int)prediction.Rectangle.X,
-                    (int)prediction.Rectangle.Y,
-                    (int)prediction.Rectangle.Width,
-                    (int)prediction.Rectangle.Height);
-                Cv2.Rectangle(mat, rect, color);
-                Cv2.PutText(mat, prediction.Label.Name, new Point(
-                    prediction.Rectangle.X - 7,
-                    prediction.Rectangle.Y - 23), HersheyFonts.HersheyPlain, 1, color, 2);
-            }
-            return mat;
+            using var image = mat.ToBitmap(System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            return _yolov7.Predict(image);
         }
     }
 }

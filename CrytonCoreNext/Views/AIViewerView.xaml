@@ -30,9 +30,9 @@
                 <TextBlock Grid.Column="2" Margin="0,10,0,0" Text="{Binding SelectedImage.Size}" HorizontalAlignment="Center"/>
             </Grid>
             <Image Grid.Row="1" Margin="0,10,0,0" Source="{Binding SelectedImage.Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <ListView Grid.Row="2" ItemsSource="{Binding DetectecCurrentLabelsImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                              SelectedItem="{Binding SelectedLabelImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            <ListView Grid.Row="2" ItemsSource="{Binding DetectedCurrentImage.DetectionImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                               ScrollViewer.VerticalScrollBarVisibility="Disabled"  
+                              PreviewMouseWheel="ListView_PreviewMouseWheel"
                               HorizontalAlignment="Center">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>

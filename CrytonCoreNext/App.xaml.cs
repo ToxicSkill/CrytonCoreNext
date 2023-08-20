@@ -1,5 +1,6 @@
-﻿using CrytonCoreNext.Crypting.Cryptors;
-using CrytonCoreNext.Crypting.Helpers;
+﻿using CrytonCoreNext.AI;
+using CrytonCoreNext.AI.Interfaces;
+using CrytonCoreNext.Crypting.Cryptors;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.Services;
@@ -81,6 +82,8 @@ namespace CrytonCoreNext
             services.AddScoped(CreatePdfViewModel);
 
             //AI viewer
+
+            services.AddSingleton<IYoloModelService, YoloModelService>();
             services.AddScoped<AIViewerView>();
             services.AddScoped<AIViewerViewModel>();
 

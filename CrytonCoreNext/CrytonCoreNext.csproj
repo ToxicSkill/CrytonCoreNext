@@ -21,6 +21,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="AI\YoloModels\yolov7-tiny.onnx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="AI\YoloModels\yolov7-tiny.onnx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
     <PackageReference Include="Docnet.Core" Version="2.3.1" />
     <PackageReference Include="itext7" Version="8.0.1" />
@@ -47,7 +57,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AI\YoloModels\" />
     <Folder Include="InformationServices\" />
   </ItemGroup>
 

@@ -1,12 +1,8 @@
 ﻿using CrytonCoreNext.ViewModels;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using Wpf.Ui.Common;
+using System.Windows;
 using Wpf.Ui.Common.Interfaces;
-using Wpf.Ui.Controls;
+using CrytonCoreNext.Extensions;
 
 namespace CrytonCoreNext.Views
 {
@@ -22,6 +18,20 @@ namespace CrytonCoreNext.Views
             ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;
+        }
+
+        private void ListView_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            ScrollViewer scrollViewer = ((DependencyObject)sender).GetChildOfType<ScrollViewer>();
+            if (e.Delta < 0)
+            {
+                scrollViewer.LineRight();
+            }
+            else
+            {
+                scrollViewer.LineLeft();
+            }
+            e.Handled = true;
         }
     }
 }
