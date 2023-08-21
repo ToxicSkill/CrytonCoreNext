@@ -31,8 +31,7 @@ namespace CrytonCoreNext.AI.Utils
                 SessionOptions opts = new();
                 _inferenceSession = new InferenceSession(modelPath, opts);
             }
-
-            // Get model info
+             
             get_input_details();
             get_output_details();
         }
@@ -65,11 +64,11 @@ namespace CrytonCoreNext.AI.Utils
         {
             var result = new ConcurrentBag<YoloPrediction>();
 
-            var (w, h) = (image.Width, image.Height); // image w and h
-            var (xGain, yGain) = (_model.Width / (float)w, _model.Height / (float)h); // x, y gains
-            var gain = Math.Min(xGain, yGain); // gain = resized / original
+            var (w, h) = (image.Width, image.Height);
+            var (xGain, yGain) = (_model.Width / (float)w, _model.Height / (float)h);
+            var gain = Math.Min(xGain, yGain);
 
-            var (xPad, yPad) = ((_model.Width - w * gain) / 2, (_model.Height - h * gain) / 2); // left, right pads
+            var (xPad, yPad) = ((_model.Width - w * gain) / 2, (_model.Height - h * gain) / 2); 
 
             Parallel.For(0, output.Dimensions[0], i =>
             {
@@ -81,12 +80,6 @@ namespace CrytonCoreNext.AI.Utils
                 var yMin = (span[2] - yPad) / gain;
                 var xMax = (span[3] - xPad) / gain;
                 var yMax = (span[4] - yPad) / gain;
-
-                //install package TensorFlow.Net,SciSharp.TensorFlow.Redist 安装这两个包可以用numpy 进行计算
-                //var box = np.array(item.GetValue(1), item.GetValue(2), item.GetValue(3), item.GetValue(4));
-                //var tmp =  np.array(xPad, yPad,xPad, yPad) ;
-                //box -= tmp;
-                //box /= gain;
 
                 prediction.Rectangle = new RectangleF(xMin, yMin, xMax - xMin, yMax - yMin);
                 result.Add(prediction);
@@ -101,23 +94,23 @@ namespace CrytonCoreNext.AI.Utils
 
             if (img.Width != _model.Width || img.Height != _model.Height)
             {
-                resized = Utils.ResizeImage(img, _model.Width, _model.Height); // fit image size to specified input size
+                resized = Utils.ResizeImage(img, _model.Width, _model.Height);
             }
             else
             {
                 resized = new Bitmap(img);
             }
 
-            var inputs = new List<NamedOnnxValue> // add image as onnx input
+            var inputs = new List<NamedOnnxValue>
             {
                 NamedOnnxValue.CreateFromTensor("images", Utils.ExtractPixels2(resized))
             };
 
-            var result = _inferenceSession.Run(inputs); // run inference
+            var result = _inferenceSession.Run(inputs);
 
             var output = new List<DenseTensor<float>>();
 
-            foreach (var item in _model.Outputs) // add outputs for processing
+            foreach (var item in _model.Outputs)
             {
                 output.Add(result.First(x => x.Name == item).Value as DenseTensor<float>);
             };

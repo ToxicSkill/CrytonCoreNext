@@ -4,6 +4,7 @@ using CrytonCoreNext.AI.Models;
 using CrytonCoreNext.Models;
 using OpenCvSharp.WpfExtensions;
 using System.Collections.ObjectModel;
+using System.Windows.Threading;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -18,10 +19,16 @@ namespace CrytonCoreNext.ViewModels
         public AIDetectionImage detectedCurrentImage;
 
         [ObservableProperty]
+        public AIDetectionImage selectedDetectionImage;
+
+        [ObservableProperty]
         public ObservableCollection<AIImage> images;
 
         [ObservableProperty]
-        public SimpleImageItemContainer selectedImage;
+        public AIImage selectedImage;
+
+        [ObservableProperty]
+        public bool drawAllBoxSelected; 
 
         public AIViewerViewModel(IYoloModelService yoloModelService)
         {
@@ -32,27 +39,37 @@ namespace CrytonCoreNext.ViewModels
 
             Images = new ()
             {
-                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Zrzut ekranu (12).png"),
-                new ( "C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Zrzut ekranu 2023-06-14 140801.png"),
+                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\2022-02-04-test_image.jpg"),
                 new ( "C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png")
             };
 
             foreach (var image in Images)
             {
-                image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
-                DetectedCurrentImages.Add(new(image));
-            }
-            DetectedCurrentImage = DetectedCurrentImages[0];
+                image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat())); 
+            } 
         }
 
-        partial void OnSelectedImageChanged(SimpleImageItemContainer value)
+        partial void OnSelectedImageChanged(AIImage value)
         {
-            var index = Images.IndexOf((AIImage)value);
-            if (index <= DetectedCurrentImages.Count)
-            {
-                DetectedCurrentImage = DetectedCurrentImages[index];
-            }
+            OnDrawAllBoxSelectedChanged(DrawAllBoxSelected);
+        }
 
+        partial void OnSelectedDetectionImageChanged(AIDetectionImage value)
+        {
+            DrawAllBoxSelected = false;
+            SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, SelectedDetectionImage);
+        }
+
+        partial void OnDrawAllBoxSelectedChanged(bool value)
+        {
+            if (value)
+            {
+                SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawAllDetections(SelectedImage);
+            }
+            else
+            {
+                SelectedImage.DetectionImage = SelectedImage.Image;
+            }
         }
     }
 }

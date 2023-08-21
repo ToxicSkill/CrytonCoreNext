@@ -3,11 +3,14 @@ using System.Windows.Controls;
 using System.Windows;
 using Wpf.Ui.Common.Interfaces;
 using CrytonCoreNext.Extensions;
+using CrytonCoreNext.AI.Models;
 
 namespace CrytonCoreNext.Views
 {
     public partial class AIViewerView : INavigableView<AIViewerViewModel>
     {
+        private ListViewItem _currentItem = null;
+
         public AIViewerViewModel ViewModel
         {
             get;
@@ -18,6 +21,21 @@ namespace CrytonCoreNext.Views
             ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;
+        }
+
+        private void ListViewItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            var item = sender as ListViewItem;
+            var detectionImage = (AIDetectionImage)item.Content;
+            if (!Equals(_currentItem, item) && detectionImage != null)
+            {
+                ViewModel.SelectedDetectionImage = detectionImage;
+            }
+        }
+
+        private void ListViewItem_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            _currentItem = null;
         }
 
         private void ListView_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)

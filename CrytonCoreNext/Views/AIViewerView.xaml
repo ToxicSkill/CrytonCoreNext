@@ -29,11 +29,21 @@
                 <TextBlock Grid.Column="1" Margin="0,10,0,0" Text="{Binding SelectedImage.DateOfCreation}" HorizontalAlignment="Center"/>
                 <TextBlock Grid.Column="2" Margin="0,10,0,0" Text="{Binding SelectedImage.Size}" HorizontalAlignment="Center"/>
             </Grid>
-            <Image Grid.Row="1" Margin="0,10,0,0" Source="{Binding SelectedImage.Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <ListView Grid.Row="2" ItemsSource="{Binding DetectedCurrentImage.DetectionImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                              ScrollViewer.VerticalScrollBarVisibility="Disabled"  
+            <Image Grid.Row="1" Margin="0,10,0,0" Source="{Binding SelectedImage.DetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <ListView Grid.Row="2" ItemsSource="{Binding SelectedImage.DetectionImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      SelectedItem="{Binding SelectedDetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"        
+                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                      
                               PreviewMouseWheel="ListView_PreviewMouseWheel"
                               HorizontalAlignment="Center">
+
+                <ListView.Resources>
+                    <Style TargetType="ListViewItem">
+                        <EventSetter Event="MouseEnter" Handler="ListViewItem_MouseEnter" />
+                        <EventSetter Event="MouseLeave" Handler="ListViewItem_MouseLeave" />
+                    </Style>
+                </ListView.Resources>
+
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" />
@@ -42,14 +52,7 @@
 
                 <ListView.ItemTemplate>
                     <DataTemplate >
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="12*"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Label, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Image Grid.Row="1"  Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </Grid>
+                        <Image Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>                        
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -57,10 +60,11 @@
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="3*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <TextBlock Text="Images" FontSize="32" Margin="0,10" HorizontalAlignment="Center"/>
-            <ListView Grid.Row="1" ItemsSource="{Binding Images, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+            <ListView Grid.Row="1" Margin="0,0,1,0" ItemsSource="{Binding Images, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                               SelectedItem="{Binding SelectedImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"  
                       HorizontalAlignment="Stretch" VerticalAlignment="Center">
@@ -78,6 +82,31 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:SymbolIcon Symbol="ScanObject20" FontSize="26" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="18" HorizontalAlignment="Left"
+                           Text="{Binding SelectedDetectionImage.Label, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:SymbolIcon Symbol="SelectObject20" FontSize="26" HorizontalAlignment="Right"/>
+                    <CheckBox Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="18"  Content="Draw all"
+                              HorizontalAlignment="Left" IsChecked="{Binding DrawAllBoxSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </ui:UiPage>

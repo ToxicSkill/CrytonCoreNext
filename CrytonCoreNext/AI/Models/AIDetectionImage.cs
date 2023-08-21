@@ -1,35 +1,20 @@
-﻿using CrytonCoreNext.Extensions;
-using CrytonCoreNext.Models;
-using OpenCvSharp;
-using OpenCvSharp.WpfExtensions;
-using System.Collections.Generic;
-using System.Windows.Media.Imaging;
+﻿using CrytonCoreNext.Models;
 
 namespace CrytonCoreNext.AI.Models
 {
     public class AIDetectionImage : SimpleImageItemContainer
     {
-        private readonly AIImage _parent;
+        public YoloPrediction Prediction { get; init; }
 
-        public List<SimpleImageItemContainer> DetectionImages { get; set; }
-
-        public AIDetectionImage(AIImage parent)
+        public AIDetectionImage(YoloPrediction yoloPrediction)
         {
-            DetectionImages = new();
-            _parent = parent;
-            ExtractDetectionImagesFromBitmap();
-        }
-
-        private void ExtractDetectionImagesFromBitmap()
-        {
-            using var mat = _parent.Image.ToMat();
-            foreach (var prediction in _parent.Predictions)
+            Prediction = yoloPrediction;
+            if (Prediction != null)
             {
-                DetectionImages.Add(
-                    new()
-                    {
-                        Image = new Mat(mat, prediction.Rectangle.ToRect()).ToWriteableBitmap()
-                    });
+                if (Prediction.Label != null)
+                {
+                    Label = Prediction.Label.Name ?? "N/A";
+                }
             }
         }
     }
