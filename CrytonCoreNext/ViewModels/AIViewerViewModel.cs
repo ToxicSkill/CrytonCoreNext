@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
 using CrytonCoreNext.Models;
@@ -36,8 +37,13 @@ namespace CrytonCoreNext.ViewModels
             _yoloModelService = yoloModelService;
             _yoloModelService.LoadYoloModel("AI/YoloModels/yolov7-tiny.onnx");
             _yoloModelService.LoadLabels();
+            Images = new();
+        }
 
-            Images = new ()
+        [RelayCommand]
+        private void LoadImages()
+        {
+            Images = new()
             {
                 new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\2022-02-04-test_image.jpg"),
                 new ( "C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png")
@@ -45,8 +51,8 @@ namespace CrytonCoreNext.ViewModels
 
             foreach (var image in Images)
             {
-                image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat())); 
-            } 
+                image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
+            }
         }
 
         partial void OnSelectedImageChanged(AIImage value)
