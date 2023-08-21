@@ -19,7 +19,7 @@ namespace CrytonCoreNext.ViewModels
         public AIDetectionImage detectedCurrentImage;
 
         [ObservableProperty]
-        public AIDetectionImage selectedDetectionImage;
+        public AIDetectionImage? selectedDetectionImage;
 
         [ObservableProperty]
         public ObservableCollection<AIImage> images;
@@ -54,10 +54,17 @@ namespace CrytonCoreNext.ViewModels
             OnDrawAllBoxSelectedChanged(DrawAllBoxSelected);
         }
 
-        partial void OnSelectedDetectionImageChanged(AIDetectionImage value)
+        partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
         {
             DrawAllBoxSelected = false;
-            SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, SelectedDetectionImage);
+            if (value == null)
+            {
+                SelectedImage.DetectionImage = SelectedImage.Image;
+            }
+            else
+            {
+                SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
+            }
         }
 
         partial void OnDrawAllBoxSelectedChanged(bool value)

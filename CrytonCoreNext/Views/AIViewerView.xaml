@@ -10,7 +10,7 @@
             d:DesignHeight="1080" d:DesignWidth="1920">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid>
@@ -61,8 +61,13 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="3*"/>
-                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+            </Grid>
             <TextBlock Text="Images" FontSize="32" Margin="0,10" HorizontalAlignment="Center"/>
             <ListView Grid.Row="1" Margin="0,0,1,0" ItemsSource="{Binding Images, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                               SelectedItem="{Binding SelectedImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
@@ -95,16 +100,6 @@
                     <ui:SymbolIcon Symbol="ScanObject20" FontSize="26" HorizontalAlignment="Right"/>
                     <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="18" HorizontalAlignment="Left"
                            Text="{Binding SelectedDetectionImage.Label, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-                    <ui:SymbolIcon Symbol="SelectObject20" FontSize="26" HorizontalAlignment="Right"/>
-                    <CheckBox Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="18"  Content="Draw all"
-                              HorizontalAlignment="Left" IsChecked="{Binding DrawAllBoxSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
                 </Grid>
             </Grid>
         </Grid>

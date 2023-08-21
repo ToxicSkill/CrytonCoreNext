@@ -38,8 +38,13 @@ namespace CrytonCoreNext.Drawers
                 return selectedImage.Image;
             }
             using var mat = selectedImage.Image.ToMat();
-            Cv2.Rectangle(mat, detectionImage.Prediction.Rectangle.ToRect(), detectionImage.Prediction.Label.Color.ToScalar(), Thickness);
-            return mat.ToWriteableBitmap();
+            using var overlay = new Mat(mat.Size(), mat.Type(), new Scalar(0, 0, 0));
+            using var roi = new Mat(mat, detectionImage.Prediction.Rectangle.ToRect());
+            using var combined = new Mat();
+            Cv2.AddWeighted(mat, 0.5, overlay, 0.5, 0, combined);
+            using var dest = new Mat(combined, detectionImage.Prediction.Rectangle.ToRect());
+            roi.CopyTo(dest); 
+            return combined.ToWriteableBitmap();
         }
 
         public static WriteableBitmap DrawAllDetections(AIImage selectedImage)

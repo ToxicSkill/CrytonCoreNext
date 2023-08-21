@@ -35,7 +35,7 @@ namespace CrytonCoreNext.Views
 
         private void ListViewItem_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            _currentItem = null;
+            ViewModel.SelectedDetectionImage = null;
         }
 
         private void ListView_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
