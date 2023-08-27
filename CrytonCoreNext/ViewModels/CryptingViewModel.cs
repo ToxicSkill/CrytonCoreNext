@@ -4,14 +4,18 @@ using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
+using CrytonCoreNext.Drawers;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Interfaces.Files;
+using CrytonCoreNext.Properties;
 using CrytonCoreNext.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
@@ -21,6 +25,8 @@ namespace CrytonCoreNext.ViewModels
     public partial class CryptingViewModel : InteractiveViewBase
     {
         private readonly ICryptingService _cryptingService;
+
+        private readonly IPasswordProvider _passwordProvider;
 
         private readonly IFileService _fileService;
 
@@ -42,15 +48,29 @@ namespace CrytonCoreNext.ViewModels
         [NotifyPropertyChangedFor(nameof(Files))]
         public CryptFile selectedFile;
 
+        [ObservableProperty]
+        public string filePassword;
+
+        [ObservableProperty]
+        public EStrength? passwordStrenght;
+
+        [ObservableProperty]
+        public EStrength? minimalPasswordStrenght;
+
+        [ObservableProperty]
+        public WriteableBitmap gradientColorMat;
+
         public delegate void HandleFileChanged(CryptFile file);
 
         public event HandleFileChanged OnFileChanged;
+
 
         public CryptingViewModel(IFileService fileService,
             IDialogService dialogService,
             ICryptingService cryptingService,
             ISnackbarService snackbarService,
-            List<ICryptingView<CryptingMethodViewModel>> cryptingViews)
+            List<ICryptingView<CryptingMethodViewModel>> cryptingViews,
+            IPasswordProvider passwordProvider)
             : base(fileService, dialogService, snackbarService)
         {
             ProgressService = new ProgressService();
@@ -58,12 +78,14 @@ namespace CrytonCoreNext.ViewModels
             _fileService = fileService;
             _cryptingService = cryptingService;
             _cryptingViews = cryptingViews;
+            _passwordProvider = passwordProvider;
 
             files = new();
 
             UpdateCryptingViews();
             RegisterFileChangedEvent();
 
+            MinimalPasswordStrenght = _passwordProvider.GetPasswordValidationStrength();
             SelectedCryptingView = CryptingViewsItemSource.First();
         }
 
@@ -85,27 +107,40 @@ namespace CrytonCoreNext.ViewModels
             OnFileChanged.Invoke(value);
         }
 
-        //public override bool CanExecute()
-        //{
-        //    return !IsBusy && !CurrentCryptingViewModel.IsBusy;
-        //}
-
-        //private void HandleAllFilesDeleted(object? sender, EventArgs e)
-        //{
-        //    _files.Clear();
-        //}
-
-        //private void HandleSelectedFileChanged(object? sender, EventArgs? e)
-        //{
-        //    var file = _files.FirstOrDefault(x => x?.Guid == FilesViewModel.GetSelectedFileGuid());
-        //    if (file != null)
-        //    {
-        //        SelectedFile = file;
-        //        OnPropertyChanged(nameof(SelectedFile));
-        //        OnPropertyChanged(nameof(CryptButtonName));
-        //    }
-        //}
-
+        partial void OnFilePasswordChanged(string value)
+        {
+            MinimalPasswordStrenght = _passwordProvider.GetPasswordValidationStrength();
+            var newFilePassword = _passwordProvider.SetPassword(value);
+            var result = _passwordProvider.GetPasswordStrenght();
+            PasswordStrenght = result > EStrength.None ? result : null;
+            if (PasswordStrenght != null)
+            {
+                var bStartValue = 45;
+                var gStartValue = 80;
+                var rStartValue = 95;
+                var aStartValue = 0;
+                var bEndValue = 61;
+                var gEndValue = 202;
+                var rEndValue = 255;
+                var aEndValue = 255;
+                var bStep = (bEndValue - bStartValue) / 6;
+                var gStep = (gEndValue - gStartValue) / 6;
+                var rStep = (rEndValue - rStartValue) / 6; 
+                GradientColorMat = ColorGradientGenerator.GenerateGradient(
+                    new OpenCvSharp.Size(400, 20),
+                    new OpenCvSharp.Scalar(
+                        bStartValue, 
+                        gStartValue, 
+                        rStartValue, 
+                        aStartValue),
+                    new OpenCvSharp.Scalar(
+                        bStartValue + (bStep * (int)PasswordStrenght),
+                        gStartValue + (gStep * (int)PasswordStrenght),
+                        rStartValue + (rStep * (int)PasswordStrenght),
+                        aEndValue));
+            }
+            FilePassword = newFilePassword;
+        } 
 
         [RelayCommand]
         private void ClearFiles()
@@ -128,7 +163,8 @@ namespace CrytonCoreNext.ViewModels
         private async Task LoadCryptFiles()
         {
             Lock();
-            await foreach (var file in base.LoadFiles())
+            ProgressService.ClearProgress();
+            await foreach (var file in LoadFiles())
             {
                 Files.Add(_cryptingService.ReadCryptFile(file));
                 SelectedFile = Files.Last();
@@ -144,15 +180,28 @@ namespace CrytonCoreNext.ViewModels
         private void SaveCryptFile()
         {
             _cryptingService.AddRecognitionBytes(SelectedFile);
+            SetFileSuffix();
             base.SaveFile(SelectedFile);
         }
 
+        private void SetFileSuffix()
+        {
+            var suffix = SelectedFile.Status == Static.CryptingStatus.Status.Encrypted ? Settings.Default.EncryptionSuffix : Settings.Default.DecryptionSuffix;
+            if (SelectedFile.Name.EndsWith(Settings.Default.EncryptionSuffix) || SelectedFile.Name.EndsWith(Settings.Default.DecryptionSuffix) && SelectedFile.Name.Length > 3)
+            {
+                var newFileName = SelectedFile.Name[..^suffix.Length] + suffix;
+                SelectedFile.Rename(newFileName);
+            }
+        }
 
         [RelayCommand]
         private async void PerformCrypting()
         {
             Lock();
-            if (!_fileService.HasBytes(SelectedFile) || !_cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
+            if (
+                !_fileService.HasBytes(SelectedFile) || 
+                !_passwordProvider.ValidatePassword() ||
+                !_cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
             {
                 PostErrorSnackbar(Language.Post("WrongMethod"));
                 return;

@@ -2,6 +2,7 @@
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CrytonCoreNext.Services
 {
@@ -25,14 +26,18 @@ namespace CrytonCoreNext.Services
             return openDialog.RunDialog();
         }
 
-        public List<string> GetFilesNamesToSave(Static.Extensions.DialogFilters filter, string title, string fileName = DefaultFileName, string extension = Empty)
+        public List<string> GetFilesNamesToSave(Static.Extensions.DialogFilters filter, string title, File file)
         {
+            if (file == null)
+            {
+                return (List<string>)Enumerable.Empty<string>();
+            }
             WindowDialog.SaveDialog saveDialog = new(new DialogHelper()
             {
                 Filters = Static.Extensions.FilterToPrompt(filter),
                 Multiselect = false,
                 Title = title,
-                FileName = fileName + (!extension.Equals(Empty) ? Dot + extension : Empty)
+                FileName = file.Name + file.Suffix + (!file.Extension.Equals(Empty) ? Dot + file.Extension : Empty)
             });
 
             return saveDialog.RunDialog();

@@ -10,48 +10,45 @@ namespace CrytonCoreNextTests
 {
     public class PdfFiles
     {
-        private readonly IFilesLoader _filesLoader;
+        public IPDFReader PdfReader { get; set; }
 
-        private readonly IPDFReader _pdfReader;
-
-        private readonly List<string> _pdfFilesToOpen = new() 
+        public List<string> PdfFilesToOpen = new() 
         { 
             "./TestingFiles/PDF NOT SECURED.pdf",
             "./TestingFiles/SECURED PDF 123456.pdf"
         };
 
-        public readonly List<PDFFile> PDFFiles;
-
         public PdfFiles()
         {
-            _pdfReader = new PDFReader();
-            _filesLoader = new FilesLoader();
-            PDFFiles = new List<PDFFile>();
-            LoadPdfFiles();
-        }
-
-        private async Task LoadPdfFiles()
-        {
-            await foreach (var file in _filesLoader.LoadFiles(_pdfFilesToOpen))
-            {
-                PDFFiles.Add(_pdfReader.ReadPdf(file));
-            }
+            PdfReader = new PDFReader();
         }
     }
+      
     public class PDFReaderTest : IClassFixture<PdfFiles>
     {
+        private readonly IFilesLoader _filesLoader;
+
         private readonly PdfFiles _files;
+
+        public List<PDFFile> PDFFiles;
 
         public PDFReaderTest(PdfFiles filesFixture)
         {
             _files = filesFixture;
+            _filesLoader = new FilesLoader();
+            PDFFiles = new List<PDFFile>();
         }
 
-        [Fact]
-        public void ShouldNotEmptyPdfLoadedFiles()
+        [StaFact]
+        public async Task ShouldNotEmptyPdfLoadedFiles()
         {
-            var files = _files.PDFFiles;
-            Assert.NotEmpty(files);
+            var expected = _files.PdfFilesToOpen.Count;
+            await foreach (var file in _filesLoader.LoadFiles(_files.PdfFilesToOpen))
+            {
+                file.LoadMetadata = false;
+                PDFFiles.Add(_files.PdfReader.ReadPdf(file));
+            }
+            Assert.Equal(expected, PDFFiles.Count);
         }
     }
 }

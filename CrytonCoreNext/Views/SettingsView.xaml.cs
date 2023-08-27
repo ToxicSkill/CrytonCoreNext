@@ -67,7 +67,7 @@ namespace CrytonCoreNext.Views
                 var headerText = hasHeader ? headers[_symbolBySymbolWithHeader.Keys.ToList().IndexOf(cardControl.Icon)].Text : "";
                 var symbol = hasHeader ? _symbolBySymbolWithHeader[cardControl.Icon] : cardControl.Icon;
                 ViewModel.RegisterNewUiNavigableElement(cardControl, hasHeader, _firstHeaderHeight, headerText, symbol);
-            }
+            } 
         }
 
         private void stackPanel_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)

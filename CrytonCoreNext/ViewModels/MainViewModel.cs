@@ -64,7 +64,14 @@ namespace CrytonCoreNext.ViewModels
                 Content = "Pdf",
                 PageType = typeof(PdfView)
             });
-
+            MenuItems.Add(new NavigationItem()
+            {
+                Icon = SymbolRegular.Eye20,
+                PageTag = "images",
+                Cache = true,
+                Content = "AI Viewer",
+                PageType = typeof(AIViewerView)
+            });
             FooterItems.Add(new NavigationSeparator());
             FooterItems.Add(new NavigationItem()
             {
@@ -86,7 +93,7 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
-        private static void Exit() => App.Current.Shutdown();
+        private static void Exit() => Application.Current.Shutdown();
 
         [RelayCommand]
         private static void Maximize() => Application.Current.MainWindow.WindowState = WindowState.Maximized;

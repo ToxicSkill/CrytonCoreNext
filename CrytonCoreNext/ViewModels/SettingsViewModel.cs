@@ -51,6 +51,9 @@ namespace CrytonCoreNext.ViewModels
         public bool isThemeSwitchChecked = true;
 
         [ObservableProperty]
+        public bool isFullscreenOnStart = false;
+
+        [ObservableProperty]
         public bool isThemeStyleAvailable;
 
         public bool MembersInitialized { get => TreeViewItemSource.Any(); }
@@ -62,11 +65,42 @@ namespace CrytonCoreNext.ViewModels
             _cardByTreeViewItem = new();
             TreeViewItemSource = new();
             InitializeThemes();
+            InitializeSettings();
+        }
+         
+        private void InitializeSettings()
+        {
+            IsFullscreenOnStart = Properties.Settings.Default.FullscreenOnStart;
+            if (Enum.TryParse(Properties.Settings.Default.Style, out BackgroundType backgroundTypeStyle))
+            {
+                SelectedThemeStyle = backgroundTypeStyle;
+            }
+            else
+            {
+                SelectedThemeStyle = BackgroundType.Mica;
+            }
+            IsThemeSwitchChecked = Properties.Settings.Default.Theme;
+            SetSettings();
         }
 
         partial void OnSelectedThemeStyleChanged(BackgroundType value)
         {
             ThemeStyleChanged?.Invoke(value);
+            Properties.Settings.Default.Style = value.ToString();
+            SetSettings();
+        }
+
+        partial void OnIsFullscreenOnStartChanged(bool value)
+        {
+            Properties.Settings.Default.FullscreenOnStart = value;
+            SetSettings();
+        }
+
+        partial void OnIsThemeSwitchCheckedChanged(bool value)
+        {
+            _themeService.SetTheme(value ? ThemeType.Dark : ThemeType.Light);
+            Properties.Settings.Default.Theme = value;
+            SetSettings();
         }
 
         public void UpdateSelectedTreeViewItem(CardControl card)
@@ -132,7 +166,6 @@ namespace CrytonCoreNext.ViewModels
                         BackgroundType.Tabbed
                     }
                 );
-            SelectedThemeStyle = BackgroundType.Mica;
             IsThemeStyleAvailable = WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber;
         }
 
@@ -175,11 +208,6 @@ namespace CrytonCoreNext.ViewModels
             };
             TreeViewItemSource.Last().Childs.Add(newSubTreeViewItem);
             _cardByTreeViewItem.Add(newSubTreeViewItem, card);
-        }
-
-        partial void OnIsThemeSwitchCheckedChanged(bool value)
-        {
-            _themeService.SetTheme(value ? ThemeType.Dark : ThemeType.Light);
         }
 
         [RelayCommand]

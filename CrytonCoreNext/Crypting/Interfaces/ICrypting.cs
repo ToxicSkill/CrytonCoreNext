@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Crypting.Enums;
+using CrytonCoreNext.Crypting.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -11,6 +12,8 @@ namespace CrytonCoreNext.Crypting.Interfaces
         public string DescriptionName { get; }
 
         public int ProgressCount { get; }
+
+        public CryptingStatistics CryptingStatistics { get; }
 
         object GetHelper();
 

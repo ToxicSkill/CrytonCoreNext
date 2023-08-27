@@ -2,6 +2,7 @@
 {
     public enum EMethod
     {
+        _3DES,
         AES,
         RSA
     }

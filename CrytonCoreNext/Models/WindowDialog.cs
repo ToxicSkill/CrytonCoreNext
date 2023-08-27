@@ -74,7 +74,7 @@ namespace CrytonCoreNext.Models
 
             public List<string> RunDialog()
             {
-                CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+                CommonOpenFileDialog dialog = new();
                 dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 dialog.IsFolderPicker = true;
                 dialog.Multiselect = false;

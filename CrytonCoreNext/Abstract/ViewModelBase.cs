@@ -29,5 +29,10 @@ namespace CrytonCoreNext.Abstract
         {
             IsBusy = false;
         }
+
+        public void SetSettings()
+        {
+            Properties.Settings.Default.Save();
+        }
     }
 }

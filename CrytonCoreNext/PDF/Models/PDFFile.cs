@@ -13,7 +13,6 @@ using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.PDF.Models
 {
-
     public class PdfRangeFile : INotifyPropertyChanged
     {
         private bool _isSelectedToSplit;

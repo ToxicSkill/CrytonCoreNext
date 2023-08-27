@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
+using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using System;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
         public string DescriptionName => $"{Method} - Asymmetric alorithm";
 
         public int ProgressCount => 3;
+
+        public CryptingStatistics CryptingStatistics => new(1, 4, 2);
 
         public RSA()
         {

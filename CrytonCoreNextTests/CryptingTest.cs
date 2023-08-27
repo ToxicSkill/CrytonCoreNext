@@ -1,11 +1,15 @@
 ﻿using CrytonCoreNext.Crypting.Cryptors;
 using CrytonCoreNext.Crypting.Enums;
+using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.Services;
+using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Providers;
 using Moq;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CrytonCoreNextTests
@@ -33,7 +37,7 @@ namespace CrytonCoreNextTests
             var stringByte = "abcd1234!@#$";
             var bytes = Encoding.ASCII.GetBytes(stringByte);
             var cryptFile = new CryptFile(
-                new CrytonCoreNext.Models.File("test", "", bytes.Length.ToString(), DateTime.Now, "", 0, bytes), 
+                new CrytonCoreNext.Models.File("test", "", DateTime.Now, "", 0, bytes), 
                 CrytonCoreNext.Static.CryptingStatus.Status.Decrypted, 
                 EMethod.AES, 
                 Guid.NewGuid());
@@ -52,7 +56,7 @@ namespace CrytonCoreNextTests
             var stringByte = "abcd1234!@#$";
             var bytes = Encoding.ASCII.GetBytes(stringByte);
             var cryptFile = new CryptFile(
-                new CrytonCoreNext.Models.File("test", "", bytes.Length.ToString(), DateTime.Now, "", 0, bytes),
+                new CrytonCoreNext.Models.File("test", "", DateTime.Now, "", 0, bytes),
                 CrytonCoreNext.Static.CryptingStatus.Status.Decrypted,
                 EMethod.RSA,
                 Guid.NewGuid());
@@ -62,6 +66,20 @@ namespace CrytonCoreNextTests
             var decrypted = await _cryptingService.RunCrypting(rsa, cryptFile, _progress);
             Assert.Equal(bytes, decrypted);
             Assert.NotEqual(enrypted, decrypted);
+        }
+
+        [Fact]
+        public async Task TripleDESEncryptDecrypt()
+        {
+            IPasswordProvider passwordProvider = new PasswordProvider();
+            ICrypting _3des = new _3DES(passwordProvider);
+            DESHelper helper= (DESHelper)_3des.GetHelper();
+            helper.PasswordProvider.SetPassword("abcd1234");
+            var stringByte = "{ \"ToSerialzie\":{\"Key\":\"BEA11965A5244BAEE406448F6BF8BF8B094F5768A6361910C0F787F74C9543C4\",\"IV\":\"D83945FDE5ED652415D96A7888EE21CE\"},\"Name\":\"AES\"}";
+            var bytes = Encoding.ASCII.GetBytes(stringByte);
+            var enrypted = await _3des.Encrypt(bytes, _progress);
+            var decrypted = await _3des.Decrypt(enrypted, _progress);
+            Assert.Equal(bytes, decrypted);
         }
     }
 }

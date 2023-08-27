@@ -26,7 +26,7 @@
         <Grid Margin="0, 40, 0, 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
             <TreeView Grid.Column="0" BorderThickness="0" Margin="0, 20, 0,0 "
                       ItemsSource="{Binding TreeViewItemSource}" >
@@ -84,7 +84,7 @@
                                 <TextBlock FontSize="12" Text="Set style type."/>
                             </StackPanel>
                         </ui:CardControl.Header>
-                        <ComboBox ItemsSource="{Binding ThemeStylesItemsSource}" SelectedItem="{Binding SelectedThemeStyle}"/>
+                        <ComboBox MinWidth="100" ItemsSource="{Binding ThemeStylesItemsSource}" SelectedItem="{Binding SelectedThemeStyle}"/>
                     </ui:CardControl>
                     <ui:CardControl Margin="15,8,15,0" Icon="Color20">
                         <ui:CardControl.Header>
@@ -103,7 +103,9 @@
                                 <TextBlock FontSize="12" Text="Set application language."/>
                             </StackPanel>
                         </ui:CardControl.Header>
-                        <ComboBox/>
+                        <ComboBox MinWidth="100" SelectedIndex="0">
+                            <ComboBoxItem Content="English"/>
+                        </ComboBox>
                     </ui:CardControl>
                     <TextBlock Text="Startup settings" FontSize="18" Margin="0,20,0,0" FontWeight="Light"/>
                     <ui:CardControl Name="al" Margin="15,8,15,0" Icon="StarSettings20">
@@ -113,7 +115,7 @@
                                 <TextBlock FontSize="12" Text="Set if aaplication should start in fullscreen mode."/>
                             </StackPanel>
                         </ui:CardControl.Header>
-                        <ui:ToggleSwitch IsChecked="{Binding IsThemeSwitchChecked}" />
+                        <ui:ToggleSwitch IsChecked="{Binding IsFullscreenOnStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </ui:CardControl>
                     <ui:CardControl Margin="15,8,15,0" Icon="Alert20">
                         <ui:CardControl.Header>

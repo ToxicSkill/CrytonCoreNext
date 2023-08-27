@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CrytonCoreNext.Models;
+using System.Collections.Generic;
 
 namespace CrytonCoreNext.Interfaces
 {
@@ -6,6 +7,6 @@ namespace CrytonCoreNext.Interfaces
     {
         List<string> GetFilesNamesToOpen(Static.Extensions.DialogFilters filter, string title, bool multiselect = false);
 
-        List<string> GetFilesNamesToSave(Static.Extensions.DialogFilters filter, string title, string fileName, string extension);
+        List<string> GetFilesNamesToSave(Static.Extensions.DialogFilters filter, string title, File file);
     }
 }

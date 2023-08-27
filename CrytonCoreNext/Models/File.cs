@@ -15,6 +15,8 @@ namespace CrytonCoreNext.Models
 
         public string Size { get; init; }
 
+        public string Suffix { get; set; }
+
         public DateTime Date { get; init; }
 
         public string Extension { get; set; }
@@ -22,6 +24,11 @@ namespace CrytonCoreNext.Models
         public int Id { get; set; }
 
         public byte[] Bytes { get; set; }
+
+        /// <summary>
+        /// Set value of that property to false when testing (no need STA UI thread)
+        /// </summary>
+        public bool LoadMetadata { get; set; } = true;
 
         public Guid Guid { get; init; } = Guid.NewGuid();
 
@@ -58,6 +65,7 @@ namespace CrytonCoreNext.Models
             Extension = file.Extension;
             Id = file.Id;
             Bytes = file.Bytes;
+            LoadMetadata = file.LoadMetadata;
         }
 
         public void Rename(string newName)

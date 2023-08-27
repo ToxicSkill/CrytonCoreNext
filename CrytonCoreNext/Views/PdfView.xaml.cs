@@ -32,6 +32,13 @@ namespace CrytonCoreNext.Views
             }
         }
 
+        private void PdfPasswordBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var value = PdfPasswordBox.IsPasswordRevealed;
+            LeftEyeIcon.Filled = value;
+            RightEyeIcon.Filled = value;
+        }
+
         private void UpdatePasswordBox()
         {
             ViewModel.PdfPassword = PdfPasswordBox.Password;
@@ -47,12 +54,6 @@ namespace CrytonCoreNext.Views
             PdfPasswordBox.Password = string.Empty;
         }
 
-        private void PdfPasswordBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            var value = PdfPasswordBox.IsPasswordRevealed;
-            LeftEyeIcon.Filled = value;
-            RightEyeIcon.Filled = value;
-        }
 
         private void Image_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {

@@ -1,4 +1,6 @@
-﻿using CrytonCoreNext.Crypting.Cryptors;
+﻿using CrytonCoreNext.AI;
+using CrytonCoreNext.AI.Interfaces;
+using CrytonCoreNext.Crypting.Cryptors;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.Services;
@@ -11,6 +13,7 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using CrytonCoreNext.PDF.Services;
+using CrytonCoreNext.Providers;
 using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
@@ -31,7 +34,7 @@ namespace CrytonCoreNext
 {
     public partial class App
     {
-        private static readonly Guid AppKey = new("adae2137-dead-beef-6666-3eb841121af8");
+        public static readonly Guid AppKey = new("adae2137-dead-beef-6666-3eb841121af8");
 
         private static readonly IHost _host = Host
         .CreateDefaultBuilder()
@@ -57,8 +60,11 @@ namespace CrytonCoreNext
             // crypting
             services.AddScoped(CreateCryptingRecognition);
             services.AddScoped<ICryptingReader, CryptingReader>();
+            services.AddScoped<ICryptingReader, CryptingReader>();
+            services.AddScoped<IPasswordProvider, PasswordProvider>();
             services.AddScoped<ICrypting, AES>();
             services.AddScoped<ICrypting, RSA>();
+            services.AddScoped<ICrypting, _3DES>();
             services.AddScoped(CreateAESViewModel);
             services.AddScoped(CreateRSAViewModel);
             services.AddSingleton(CreateAESView);
@@ -75,6 +81,11 @@ namespace CrytonCoreNext
             services.AddScoped<PdfView>();
             services.AddScoped(CreatePdfViewModel);
 
+            //AI viewer
+
+            services.AddSingleton<IYoloModelService, YoloModelService>();
+            services.AddScoped<AIViewerView>();
+            services.AddScoped<AIViewerViewModel>();
 
             services.AddScoped<Dashboard>();
             services.AddScoped<DashboardViewModel>();
@@ -84,39 +95,6 @@ namespace CrytonCoreNext
 
             services.AddScoped<INavigationWindow, MainWindow>();
             services.AddScoped<MainViewModel>();
-
-
-            //services.AddSingleton<IInternetConnection, InternetConnection>();
-            //services.AddSingleton<ITimeDate, TimeDate>();
-            //services.AddSingleton(CreateCryptingRecognition);
-            //services.AddSingleton<IFilesLoader, FilesLoader>();
-            //services.AddSingleton<IFilesSaver, FilesSaver>();
-            //services.AddSingleton<IFilesManager, FilesManager>(); ;
-            //services.AddSingleton<IPDFManager, PDFManager>();
-            //services.AddSingleton<IPDFReader, PDFReader>();
-            //services.AddSingleton<ICryptingReader, CryptingReader>();
-            //services.AddSingleton(CreateFileService);
-            //services.AddTransient(CreatePDFService);
-            //services.AddTransient(CreateFilesView);
-            //services.AddTransient(CreateFilesLeftView);
-            //services.AddTransient(CreateImagesView);
-            //services.AddTransient(CreateFilesSelectorListingViewViewModel);
-            //services.AddSingleton<IDialogService, DialogService>();
-            //services.AddTransient<IProgressService, ProgressService>();
-            //services.AddSingleton<IJsonSerializer, JsonSerializer>();
-            //services.AddSingleton<IXmlSerializer, XmlSerializer>();
-            //services.AddTransient(CreateProgressViewModel);
-            //services.AddTransient(CreateAES);
-            //services.AddTransient(CreateRSA);
-            //services.AddTransient(CreateCryptingService);
-            //services.AddTransient<InformationPopupViewModel>();
-            //services.AddSingleton(CreateCryptingViewModel);
-            //services.AddSingleton(CreatePdfManagerViewModel);
-            //services.AddSingleton(CreatePdfMergeViewModel);
-            //services.AddSingleton(CreatePdfSplitViewModel);
-            //services.AddSingleton(CreatePdfImageToPdfViewModel);
-            //services.AddSingleton(CreateMainWindowViewModel);
-            //services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
         }).Build();
 
         private readonly List<ResourceDictionary> LanguagesDictionaries;
@@ -153,6 +131,7 @@ namespace CrytonCoreNext
         private async void OnExit(object sender, ExitEventArgs e)
         {
             await _host.StopAsync();
+            CrytonCoreNext.Properties.Settings.Default.Save();
             _host.Dispose();
         }
 
@@ -171,8 +150,9 @@ namespace CrytonCoreNext
             var cryptingService = provider.GetRequiredService<ICryptingService>();
             var snackbar = provider.GetRequiredService<ISnackbarService>();
             var cryptors = provider.GetServices<ICryptingView<CryptingMethodViewModel>>();
+            var passwordProvider = provider.GetRequiredService<IPasswordProvider>();
 
-            return new(fileService, dialogService, cryptingService, snackbar, cryptors.ToList());
+            return new(fileService, dialogService, cryptingService, snackbar, cryptors.ToList(), passwordProvider);
         }
 
         private static PdfViewModel CreatePdfViewModel(IServiceProvider provider)
