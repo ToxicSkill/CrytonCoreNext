@@ -4,6 +4,7 @@ using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
 using OpenCvSharp.WpfExtensions;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 namespace CrytonCoreNext.ViewModels
@@ -12,7 +13,15 @@ namespace CrytonCoreNext.ViewModels
     {
         private const int DefaultCompareSliderValue = 50;
 
+        private const double DefaultAutoColorValue = 0.5;
+
+        private const string YoloModelONNXPath = "AI/YoloModels/yolov7-tiny.onnx";
+
         private readonly IYoloModelService _yoloModelService;
+
+        public delegate void TabControlChanged();
+
+        public event TabControlChanged OnTabControlChanged;
 
         [ObservableProperty]
         public ObservableCollection<AIDetectionImage> detectedCurrentImages;
@@ -30,7 +39,7 @@ namespace CrytonCoreNext.ViewModels
         public AIImage selectedImage;
 
         [ObservableProperty]
-        public Visibility compareSliderVisibility;
+        public bool userIsInAdjusterTab;
 
         [ObservableProperty]
         public int imageCompareSliderValue = DefaultCompareSliderValue;
@@ -42,7 +51,7 @@ namespace CrytonCoreNext.ViewModels
         public bool autoColorSwitch;
 
         [ObservableProperty]
-        public double autoColorValue;
+        public double autoColorValue = DefaultAutoColorValue;
 
         [ObservableProperty]
         public int selectedTabControlIndex;
@@ -51,7 +60,7 @@ namespace CrytonCoreNext.ViewModels
         {
             DetectedCurrentImages = new();
             _yoloModelService = yoloModelService;
-            _yoloModelService.LoadYoloModel("AI/YoloModels/yolov7-tiny.onnx");
+            _yoloModelService.LoadYoloModel(YoloModelONNXPath);
             _yoloModelService.LoadLabels();
             Images = new();
             OnSelectedTabControlIndexChanged(0);
@@ -70,11 +79,16 @@ namespace CrytonCoreNext.ViewModels
             {
                 image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
             }
+            SelectedImage = Images.First();
         }
 
         partial void OnSelectedTabControlIndexChanged(int value)
         {
-            CompareSliderVisibility = value == 1 ? Visibility.Visible : Visibility.Collapsed;
+            UserIsInAdjusterTab = value == 1;
+            if (value == 1)
+            {
+                OnTabControlChanged.Invoke();
+            }
         }
 
         partial void OnAutoColorValueChanged(double value)
@@ -84,7 +98,7 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnAutoColorSwitchChanged(bool value)
         {
-            SelectedImage.DetectionImage = value ? 
+            SelectedImage.AdjusterImage = value ? 
                 Drawers.ImageDrawer.DrawAutoColor(SelectedImage.Image.ToMat(), AutoColorValue).ToWriteableBitmap() : 
                 SelectedImage.Image;
         }

@@ -19,6 +19,9 @@ namespace CrytonCoreNext.AI.Models
         [ObservableProperty]
         public WriteableBitmap detectionImage;
 
+        [ObservableProperty]
+        public WriteableBitmap adjusterImage;
+
         public AIImage(string path)
         {
             DetectionImages = new();
@@ -26,6 +29,7 @@ namespace CrytonCoreNext.AI.Models
             Image = Cv2.ImRead(path).ToWriteableBitmap();
             Label = System.IO.Path.GetFileName(path);
             DetectionImage = Image;
+            AdjusterImage = Image;
         }
 
         public void SetPredicitons(List<YoloPrediction> predictions)

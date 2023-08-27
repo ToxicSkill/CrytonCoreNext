@@ -51,11 +51,27 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <Image Margin="0,10,0,0" Source="{Binding SelectedImage.DetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Slider Grid.Row="1"
-                            Visibility="{Binding CompareSliderVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                            Value="{Binding ImageCompareSliderValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                            Minimum="0" Maximum="100"/>
+                    <Grid x:Name="compareGrid"  HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Visibility="{Binding UserIsInAdjusterTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Image x:Name="BeforeImage" HorizontalAlignment="Left" Margin="0,0,0,20"
+                               Source="{Binding SelectedImage.AdjusterImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
+                        <Rectangle HorizontalAlignment="Left" Width="{Binding Value, ElementName=Slider}" Margin="0,0,0,20">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="{Binding SelectedImage.Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"
+                                            Stretch="UniformToFill" AlignmentX="Left" AlignmentY="Top" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Slider Grid.Row="1" x:Name="Slider" VerticalAlignment="Bottom"
+                                Maximum="{Binding ActualWidth, ElementName=BeforeImage}" 
+                             Visibility="{Binding UserIsInAdjusterTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Value="{Binding ImageCompareSliderValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <Image Source="{Binding SelectedImage.DetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                           Visibility="{Binding UserIsInAdjusterTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityInversionConverter}}"
+                               RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
+
                 </Grid>
                 <TabControl Grid.Row="2" SelectedIndex="{Binding SelectedTabControlIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <TabItem Header="Extractor">
@@ -101,20 +117,12 @@
                                 <ui:ToggleSwitch  Content="Auto color" IsChecked="{Binding AutoColorSwitch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 <ui:SymbolIcon Symbol="Color20" Margin="5,-2,0,0" FontSize="24">
                                     <ui:SymbolIcon.Foreground>
-                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                            <GradientStop Color="#FFD61022"/>
-                                            <GradientStop Color="#FFDA2222" Offset="1"/>
-                                            <GradientStop Color="#FFA000FF" Offset="0.2"/>
-                                            <GradientStop Color="#FF0033FF" Offset="0.4"/>
-                                            <GradientStop Color="#FF00FF9C" Offset="0.6"/>
-                                            <GradientStop Color="#FF65FF00" Offset="0.8"/>
-                                        </LinearGradientBrush>
+                                        <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" />
                                     </ui:SymbolIcon.Foreground>
                                 </ui:SymbolIcon>
                             </StackPanel>
 
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <ui:SymbolIcon Symbol="ArrowCounterclockwise20"/>
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center"> 
                                 <TextBlock Text="Contrast"/>
                                 <Slider Value="{Binding AutoColorValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="1"/>
                             </StackPanel>

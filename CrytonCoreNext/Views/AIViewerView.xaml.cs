@@ -5,6 +5,7 @@ using Wpf.Ui.Common.Interfaces;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.AI.Models;
 using CrytonCoreNext.BackgroundUI;
+using System;
 
 namespace CrytonCoreNext.Views
 {
@@ -23,6 +24,13 @@ namespace CrytonCoreNext.Views
             InitializeComponent();
             DataContext = ViewModel;
             Background.Content = new FluentWaves();
+            ViewModel.OnTabControlChanged += UpdateCompareGridMaxWidth;
+            compareGrid.SizeChanged += (s,e) => UpdateCompareGridMaxWidth();
+        }
+
+        private void UpdateCompareGridMaxWidth()
+        {
+            ViewModel.ImageCompareSliderValue = (int)(compareGrid.ActualWidth / 2);
         }
 
         private void ListViewItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
