@@ -53,7 +53,7 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Disabled">
                                     <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="(Border.BorderBrush).                     (SolidColorBrush.Color)">
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)">
                                             <EasingColorKeyFrame KeyTime="0" Value="#FFAAAAAA" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
@@ -99,10 +99,11 @@
                             <ContentPresenter
                                 x:Name="ContentSite"
                                 Margin="0"
-                                HorizontalAlignment="Left"
+                                HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 ContentSource="Header"
                                 RecognizesAccessKey="True" />
+                            
                         </Border>
 
                         <VisualStateManager.VisualStateGroups>
