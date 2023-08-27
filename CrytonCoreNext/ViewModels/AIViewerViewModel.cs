@@ -59,20 +59,20 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void LoadImages()
         {
+#if DEBUG
             Images = new()
             {
-#if DEBUG
                 new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\2022-02-04-test_image.jpg"),
                 new ( "C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png")
-
-#endif
-            };
+        };
 
             foreach (var image in Images)
             {
                 image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
             }
             SelectedImage = Images.First();
+
+#endif
         }
 
         partial void OnSelectedTabControlIndexChanged(int value)
