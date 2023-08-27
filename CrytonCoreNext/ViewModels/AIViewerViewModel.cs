@@ -38,6 +38,9 @@ namespace CrytonCoreNext.ViewModels
         public bool userIsInAdjusterTab;
 
         [ObservableProperty]
+        public bool userMouseIsInDetectedObject;
+
+        [ObservableProperty]
         public int imageCompareSliderValue = DefaultCompareSliderValue;
 
         [ObservableProperty]
@@ -58,8 +61,11 @@ namespace CrytonCoreNext.ViewModels
         {
             Images = new()
             {
+#if DEBUG
                 new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\2022-02-04-test_image.jpg"),
                 new ( "C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png")
+
+#endif
             };
 
             foreach (var image in Images)
@@ -82,7 +88,8 @@ namespace CrytonCoreNext.ViewModels
         {
             SelectedImage.DetectionImage = value == null ? 
                 SelectedImage.Image : 
-                Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);            
+                Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
+            UserMouseIsInDetectedObject = value != null;
         }
     }
 }

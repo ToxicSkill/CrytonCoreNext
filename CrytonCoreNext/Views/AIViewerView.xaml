@@ -57,7 +57,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <ui:SymbolIcon Grid.Column="0" Visibility="{Binding SelectedDetectionImage.Label, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ObjectToVisibility}}" 
+                        <ui:SymbolIcon Grid.Column="0" Visibility="{Binding UserMouseIsInDetectedObject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" 
                                        Symbol="ScanObject20" Margin="5,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         <TextBlock Grid.Column="1"  Margin="5,0" VerticalAlignment="Center"  HorizontalAlignment="Left"
                                    Text="{Binding SelectedDetectionImage.Label, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>

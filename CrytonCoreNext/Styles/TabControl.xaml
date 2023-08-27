@@ -97,7 +97,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="1,1,1,0"
-                            CornerRadius="4,4,0,0">
+                            CornerRadius="4,12,0,0">
                             <ContentPresenter
                                 x:Name="ContentSite"
                                 Margin="0"
