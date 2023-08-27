@@ -7,7 +7,9 @@ namespace CrytonCoreNext.AI.Interfaces
 {
     public interface IYoloModelService
     {
-        bool LoadYoloModel(string path, bool useCUDA = false);
+        private const string YoloModelONNXPath = "AI/YoloModels/yolov7-tiny.onnx";
+
+        bool LoadYoloModel(string path = YoloModelONNXPath, bool useCUDA = false);
 
         void LoadLabels(string pathToLabelsFile = "");
 

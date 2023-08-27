@@ -12,9 +12,14 @@ namespace CrytonCoreNext.AI.Models
 {
     public partial class AIImage : SimpleImageItemContainer
     {
+        private const double DefaultAutoColorValue = 0.5;
+
         public List<AIDetectionImage> DetectionImages { get; set; }
 
         public List<YoloPrediction> Predictions { get; private set; }
+
+        [ObservableProperty]
+        public double autoColorValue = DefaultAutoColorValue;
 
         [ObservableProperty]
         public WriteableBitmap detectionImage;
@@ -30,6 +35,11 @@ namespace CrytonCoreNext.AI.Models
             Label = System.IO.Path.GetFileName(path);
             DetectionImage = Image;
             AdjusterImage = Image;
+        }
+
+        partial void OnAutoColorValueChanging(double value)
+        {
+            AdjusterImage = Drawers.ImageDrawer.DrawAutoColor(Image.ToMat(), AutoColorValue).ToWriteableBitmap();
         }
 
         public void SetPredicitons(List<YoloPrediction> predictions)

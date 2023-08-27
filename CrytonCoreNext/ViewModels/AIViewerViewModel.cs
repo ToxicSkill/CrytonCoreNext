@@ -13,10 +13,6 @@ namespace CrytonCoreNext.ViewModels
     {
         private const int DefaultCompareSliderValue = 50;
 
-        private const double DefaultAutoColorValue = 0.5;
-
-        private const string YoloModelONNXPath = "AI/YoloModels/yolov7-tiny.onnx";
-
         private readonly IYoloModelService _yoloModelService;
 
         public delegate void TabControlChanged();
@@ -45,22 +41,13 @@ namespace CrytonCoreNext.ViewModels
         public int imageCompareSliderValue = DefaultCompareSliderValue;
 
         [ObservableProperty]
-        public bool drawAllBoxSelected;
-
-        [ObservableProperty]
-        public bool autoColorSwitch;
-
-        [ObservableProperty]
-        public double autoColorValue = DefaultAutoColorValue;
-
-        [ObservableProperty]
         public int selectedTabControlIndex;
 
         public AIViewerViewModel(IYoloModelService yoloModelService)
         {
             DetectedCurrentImages = new();
             _yoloModelService = yoloModelService;
-            _yoloModelService.LoadYoloModel(YoloModelONNXPath);
+            _yoloModelService.LoadYoloModel();
             _yoloModelService.LoadLabels();
             Images = new();
             OnSelectedTabControlIndexChanged(0);
@@ -85,52 +72,17 @@ namespace CrytonCoreNext.ViewModels
         partial void OnSelectedTabControlIndexChanged(int value)
         {
             UserIsInAdjusterTab = value == 1;
-            if (value == 1)
+            if (UserIsInAdjusterTab)
             {
                 OnTabControlChanged.Invoke();
             }
         }
 
-        partial void OnAutoColorValueChanged(double value)
-        {
-            OnAutoColorSwitchChanged(AutoColorSwitch);
-        }
-
-        partial void OnAutoColorSwitchChanged(bool value)
-        {
-            SelectedImage.AdjusterImage = value ? 
-                Drawers.ImageDrawer.DrawAutoColor(SelectedImage.Image.ToMat(), AutoColorValue).ToWriteableBitmap() : 
-                SelectedImage.Image;
-        }
-
-        partial void OnSelectedImageChanged(AIImage value)
-        {
-            OnDrawAllBoxSelectedChanged(DrawAllBoxSelected);
-        }
-
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
         {
-            DrawAllBoxSelected = false;
-            if (value == null)
-            {
-                SelectedImage.DetectionImage = SelectedImage.Image;
-            }
-            else
-            {
-                SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
-            }
-        }
-
-        partial void OnDrawAllBoxSelectedChanged(bool value)
-        {
-            if (value)
-            {
-                SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawAllDetections(SelectedImage);
-            }
-            else
-            {
-                SelectedImage.DetectionImage = SelectedImage.Image;
-            }
+            SelectedImage.DetectionImage = value == null ? 
+                SelectedImage.Image : 
+                Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);            
         }
     }
 }
