@@ -46,9 +46,19 @@
                     <TextBlock Grid.Column="2" Margin="10,10,0,0" VerticalAlignment="Center"  HorizontalAlignment="Left"
                            Text="{Binding SelectedDetectionImage.Label, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
-                <Image Grid.Row="1" Margin="0,10,0,0" Source="{Binding SelectedImage.DetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TabControl Grid.Row="2" >
-                    <TabItem Header="Factorizer">
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Image Margin="0,10,0,0" Source="{Binding SelectedImage.DetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Slider Grid.Row="1"
+                            Visibility="{Binding CompareSliderVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                            Value="{Binding ImageCompareSliderValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                            Minimum="0" Maximum="100"/>
+                </Grid>
+                <TabControl Grid.Row="2" SelectedIndex="{Binding SelectedTabControlIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TabItem Header="Extractor">
                         <ListView ItemsSource="{Binding SelectedImage.DetectionImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                       SelectedItem="{Binding SelectedDetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"        
                       ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -77,6 +87,38 @@
                         </ListView>
                     </TabItem>
                     <TabItem Header="Adjuster">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <ui:ToggleSwitch  Content="Auto color" IsChecked="{Binding AutoColorSwitch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <ui:SymbolIcon Symbol="Color20" Margin="5,-2,0,0" FontSize="24">
+                                    <ui:SymbolIcon.Foreground>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FFD61022"/>
+                                            <GradientStop Color="#FFDA2222" Offset="1"/>
+                                            <GradientStop Color="#FFA000FF" Offset="0.2"/>
+                                            <GradientStop Color="#FF0033FF" Offset="0.4"/>
+                                            <GradientStop Color="#FF00FF9C" Offset="0.6"/>
+                                            <GradientStop Color="#FF65FF00" Offset="0.8"/>
+                                        </LinearGradientBrush>
+                                    </ui:SymbolIcon.Foreground>
+                                </ui:SymbolIcon>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <ui:SymbolIcon Symbol="ArrowCounterclockwise20"/>
+                                <TextBlock Text="Contrast"/>
+                                <Slider Value="{Binding AutoColorValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="1"/>
+                            </StackPanel>
+                        </Grid>
                     </TabItem>
                 </TabControl>
                 

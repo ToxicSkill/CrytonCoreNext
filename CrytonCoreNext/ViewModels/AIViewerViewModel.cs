@@ -2,15 +2,16 @@
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
-using CrytonCoreNext.Models;
 using OpenCvSharp.WpfExtensions;
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
+using System.Windows;
 
 namespace CrytonCoreNext.ViewModels
 {
     public partial class AIViewerViewModel : ObservableObject
     {
+        private const int DefaultCompareSliderValue = 50;
+
         private readonly IYoloModelService _yoloModelService;
 
         [ObservableProperty]
@@ -29,7 +30,22 @@ namespace CrytonCoreNext.ViewModels
         public AIImage selectedImage;
 
         [ObservableProperty]
-        public bool drawAllBoxSelected; 
+        public Visibility compareSliderVisibility;
+
+        [ObservableProperty]
+        public int imageCompareSliderValue = DefaultCompareSliderValue;
+
+        [ObservableProperty]
+        public bool drawAllBoxSelected;
+
+        [ObservableProperty]
+        public bool autoColorSwitch;
+
+        [ObservableProperty]
+        public double autoColorValue;
+
+        [ObservableProperty]
+        public int selectedTabControlIndex;
 
         public AIViewerViewModel(IYoloModelService yoloModelService)
         {
@@ -38,6 +54,7 @@ namespace CrytonCoreNext.ViewModels
             _yoloModelService.LoadYoloModel("AI/YoloModels/yolov7-tiny.onnx");
             _yoloModelService.LoadLabels();
             Images = new();
+            OnSelectedTabControlIndexChanged(0);
         }
 
         [RelayCommand]
@@ -53,6 +70,23 @@ namespace CrytonCoreNext.ViewModels
             {
                 image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
             }
+        }
+
+        partial void OnSelectedTabControlIndexChanged(int value)
+        {
+            CompareSliderVisibility = value == 1 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        partial void OnAutoColorValueChanged(double value)
+        {
+            OnAutoColorSwitchChanged(AutoColorSwitch);
+        }
+
+        partial void OnAutoColorSwitchChanged(bool value)
+        {
+            SelectedImage.DetectionImage = value ? 
+                Drawers.ImageDrawer.DrawAutoColor(SelectedImage.Image.ToMat(), AutoColorValue).ToWriteableBitmap() : 
+                SelectedImage.Image;
         }
 
         partial void OnSelectedImageChanged(AIImage value)
