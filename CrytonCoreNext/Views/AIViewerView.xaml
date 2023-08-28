@@ -65,9 +65,9 @@
                 </Grid>
                 <TabControl Grid.Row="2" SelectedIndex="{Binding SelectedTabControlIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <TabItem Header="Extractor">
-                        <ListView ItemsSource="{Binding SelectedImage.DetectionImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                      SelectedItem="{Binding SelectedDetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"        
-                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                        <ListView ItemsSource="{Binding Images, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              SelectedItem="{Binding SelectedImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
                       
                               PreviewMouseWheel="ListView_PreviewMouseWheel"
                               HorizontalAlignment="Center">
@@ -129,12 +129,11 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="3*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="Images" FontSize="32" Margin="0,10" HorizontalAlignment="Center"/>
-                <ListView Grid.Row="1" Margin="0,0,1,0" ItemsSource="{Binding Images, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                              SelectedItem="{Binding SelectedImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"  
-                      HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                </Grid.RowDefinitions> 
+                <ListView Grid.Row="1" Margin="0,0,1,0" Width="200" HorizontalAlignment="Right"
+                          ItemsSource="{Binding SelectedImage.DetectionImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      SelectedItem="{Binding SelectedDetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"       
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"    VerticalAlignment="Center">
 
                     <ListView.ItemTemplate>
                         <DataTemplate >
