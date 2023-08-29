@@ -2,10 +2,14 @@
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
+using CrytonCoreNext.Views;
 using OpenCvSharp.WpfExtensions;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
+using Wpf.Ui.Controls.Interfaces;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -18,6 +22,9 @@ namespace CrytonCoreNext.ViewModels
         public delegate void TabControlChanged();
 
         public event TabControlChanged OnTabControlChanged;
+
+        [ObservableProperty]
+        private ObservableCollection<INavigationControl> navigationItems = new();
 
         [ObservableProperty]
         public ObservableCollection<AIDetectionImage> detectedCurrentImages;
@@ -35,16 +42,13 @@ namespace CrytonCoreNext.ViewModels
         public AIImage selectedImage;
 
         [ObservableProperty]
-        public bool userIsInAdjusterTab;
-
-        [ObservableProperty]
         public bool userMouseIsInDetectedObject;
 
         [ObservableProperty]
-        public int imageCompareSliderValue = DefaultCompareSliderValue;
+        public bool isCompareModeOn;
 
         [ObservableProperty]
-        public int selectedTabControlIndex;
+        public int imageCompareSliderValue = DefaultCompareSliderValue;
 
         public AIViewerViewModel(IYoloModelService yoloModelService)
         {
@@ -53,7 +57,16 @@ namespace CrytonCoreNext.ViewModels
             _yoloModelService.LoadYoloModel();
             _yoloModelService.LoadLabels();
             Images = new();
-            OnSelectedTabControlIndexChanged(0);
+            NavigationItems = new ObservableCollection<INavigationControl>
+            {
+                new NavigationItem
+                {
+                    Content = "Processes",
+                    PageTag = "processes",
+                    Icon = SymbolRegular.Apps24,
+                    PageType = typeof(PdfView)
+                }
+            };
         }
 
         [RelayCommand]
@@ -75,10 +88,9 @@ namespace CrytonCoreNext.ViewModels
 #endif
         }
 
-        partial void OnSelectedTabControlIndexChanged(int value)
+        partial void OnIsCompareModeOnChanged(bool value)
         {
-            UserIsInAdjusterTab = value == 1;
-            if (UserIsInAdjusterTab)
+            if (value)
             {
                 OnTabControlChanged.Invoke();
             }
