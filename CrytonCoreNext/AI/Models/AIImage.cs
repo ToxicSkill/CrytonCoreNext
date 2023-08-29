@@ -14,12 +14,22 @@ namespace CrytonCoreNext.AI.Models
     {
         private const double DefaultAutoColorValue = 0.5;
 
+        private const double DefaultContrastValue = 1;
+
+        private const int DefaultBrightnessValue = 0;
+
         public List<AIDetectionImage> DetectionImages { get; set; }
 
         public List<YoloPrediction> Predictions { get; private set; }
 
         [ObservableProperty]
         public double autoColorValue = DefaultAutoColorValue;
+
+        [ObservableProperty]
+        public double contrastValue = DefaultContrastValue;
+
+        [ObservableProperty]
+        public double brightnessValue = DefaultBrightnessValue;
 
         [ObservableProperty]
         public WriteableBitmap detectionImage;
@@ -35,6 +45,16 @@ namespace CrytonCoreNext.AI.Models
             Label = System.IO.Path.GetFileName(path);
             DetectionImage = Image;
             AdjusterImage = Image;
+        }
+
+        partial void OnContrastValueChanged(double value)
+        {
+            AdjusterImage = Drawers.ImageDrawer.DrawScaleAbs(Image.ToMat(), ContrastValue, BrightnessValue).ToWriteableBitmap();
+        }
+
+        partial void OnBrightnessValueChanged(double value)
+        {
+            AdjusterImage = Drawers.ImageDrawer.DrawScaleAbs(Image.ToMat(), ContrastValue, BrightnessValue).ToWriteableBitmap();
         }
 
         partial void OnAutoColorValueChanging(double value)

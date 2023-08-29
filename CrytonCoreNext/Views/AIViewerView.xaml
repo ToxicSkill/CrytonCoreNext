@@ -151,11 +151,11 @@
                                     </Grid.ColumnDefinitions>
                                     <ui:SymbolIcon Symbol="DarkTheme20" FontSize="22" HorizontalAlignment="Left" Margin="0,0,10,0"/>
                                     <TextBlock Grid.Column="1" Text="Contrast" FontSize="18" HorizontalAlignment="Left" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" />
-                                    <TextBlock Grid.Column="2" Text="{Binding SelectedImage.AutoColorValue, StringFormat=N2}" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" HorizontalAlignment="Right"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding SelectedImage.ContrastValue, StringFormat=N2}" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" HorizontalAlignment="Right"/>
 
                                 </Grid>
                             </ui:CardExpander.Header>
-                            <Slider Value="{Binding SelectedImage.AutoColorValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="1"/>
+                            <Slider Value="{Binding SelectedImage.ContrastValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="2"/>
 
                         </ui:CardExpander>
                         <ui:CardExpander HorizontalAlignment="Stretch" Margin="0,3">
@@ -167,12 +167,12 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <ui:SymbolIcon Symbol="Lightbulb20" FontSize="22" HorizontalAlignment="Left" Margin="0,0,10,0"/>
-                                    <TextBlock Grid.Column="1" Text="Light" FontSize="18" HorizontalAlignment="Left" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" />
-                                    <TextBlock Grid.Column="2" Text="{Binding SelectedImage.AutoColorValue, StringFormat=N2}" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" HorizontalAlignment="Right"/>
+                                    <TextBlock Grid.Column="1" Text="Brightness" FontSize="18" HorizontalAlignment="Left" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" />
+                                    <TextBlock Grid.Column="2" Text="{Binding SelectedImage.BrightnessValue, StringFormat=N2}" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" HorizontalAlignment="Right"/>
 
                                 </Grid>
                             </ui:CardExpander.Header>
-                            <Slider Value="{Binding SelectedImage.AutoColorValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="1"/>
+                            <Slider Value="{Binding SelectedImage.BrightnessValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="-50" Maximum="127"/>
 
                         </ui:CardExpander>
                     </StackPanel>
