@@ -38,10 +38,7 @@ namespace CrytonCoreNext.ViewModels
         public string pageMergeCountStatus;
 
         [ObservableProperty]
-        public bool hasMoreThanOnePageToMerge;
-        
-        [ObservableProperty]
-        public string pdfPassword;
+        public bool hasMoreThanOnePageToMerge; 
 
         [ObservableProperty]
         public ObservableCollection<PDFFile> pdfFiles;
@@ -54,6 +51,12 @@ namespace CrytonCoreNext.ViewModels
 
         [ObservableProperty]
         public ObservableCollection<PDFFile> selectedPdfFilesToSplit;
+
+        [ObservableProperty]
+        public ObservableCollection<PDFFile> pdfToProtectFiles;
+
+        [ObservableProperty]
+        public PDFFile pdfToProtectSelectedFile;
 
         [ObservableProperty]
         public ObservableCollection<PDFFile> outcomeFilesFromSplit;
@@ -116,15 +119,19 @@ namespace CrytonCoreNext.ViewModels
             _pdfService = pdfService;
             _pdfToMergePagesIndexes = new();
 
-            pdfFiles = new();
-            imageFiles = new();
-            openedPdfFiles = new(); 
-            selectedPdfFilesToMerge = new();
-            selectedPdfFilesToSplit = new();
-            outcomeFilesFromSplit = new ();
+            PdfFiles = new();
+            ImageFiles = new();
+            OpenedPdfFiles = new(); 
+            PdfToProtectFiles = new();
+            OutcomeFilesFromSplit = new ();
             _pdfExcludedMergeIndexes = new();
-            pdfToSplitImages = new();
-            pdfToSplitRangeFiles = new();
+            PdfToSplitImages = new();
+            PdfToSplitRangeFiles = new();
+        }
+
+        public void SetPdfPassword(string password)
+        {
+            SelectedPdfFile.Password = password;
         }
 
         [RelayCommand]
@@ -360,7 +367,6 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void ConfirmPassword()
         {
-            SelectedPdfFile.Password = PdfPassword;
             UpdateProtectedPdf();
         }
 
@@ -526,7 +532,10 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnSelectedTabIndexChanged(int value)
         {
-            if (SelectedTabIndex == 1 || SelectedTabIndex == 2)
+            if (SelectedTabIndex == 1 || 
+                SelectedTabIndex == 2 || 
+                SelectedTabIndex == 3 || 
+                SelectedTabIndex == 4)
             {
                 OpenedPdfFiles.Clear();
                 foreach (var file in PdfFiles)

@@ -44,7 +44,7 @@ namespace CrytonCoreNext.Views
 
         private void UpdatePasswordBox()
         {
-            ViewModel.PdfPassword = PdfPasswordBox.Password;
+            ViewModel.SetPdfPassword(PdfPasswordBox.Password);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -54,9 +54,20 @@ namespace CrytonCoreNext.Views
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            LeftEyeIcon.Filled = true;
+            RightEyeIcon.Filled = true;
             PdfPasswordBox.Password = string.Empty;
         }
 
+        private void ListView_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            LeftEyeIconSecond.Filled = true;
+            RightEyeIconSecond.Filled = true;
+            if (ViewModel.PdfToProtectSelectedFile is not null)
+            {
+                PdfPasswordBoxSecond.Password = ViewModel.PdfToProtectSelectedFile.Password;
+            }
+        }
 
         private void Image_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
