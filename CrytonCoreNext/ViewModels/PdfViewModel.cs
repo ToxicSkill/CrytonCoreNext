@@ -155,6 +155,12 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
+        private void ProtectFile()
+        {
+            _pdfService.ProtectFile(SelectedPdfFile);
+        }
+
+        [RelayCommand]
         private void DeleteSplit()
         {
             DrawSplitLine(EDirection.Both, true);

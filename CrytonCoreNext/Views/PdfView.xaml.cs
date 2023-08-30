@@ -35,8 +35,11 @@ namespace CrytonCoreNext.Views
         private void PdfPasswordBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var value = PdfPasswordBox.IsPasswordRevealed;
+            var valueSecond = PdfPasswordBoxSecond.IsPasswordRevealed;
             LeftEyeIcon.Filled = value;
             RightEyeIcon.Filled = value;
+            LeftEyeIconSecond.Filled = valueSecond;
+            RightEyeIconSecond.Filled = valueSecond;
         }
 
         private void UpdatePasswordBox()

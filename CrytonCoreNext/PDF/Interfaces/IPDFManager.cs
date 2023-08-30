@@ -8,7 +8,7 @@ namespace CrytonCoreNext.PDF.Interfaces
 {
     public interface IPDFManager
     {
-        //IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile);
+        Task ProtectFile(PDFFile pdfFile);
 
         WriteableBitmap LoadImage(PDFFile pdfFile);
 

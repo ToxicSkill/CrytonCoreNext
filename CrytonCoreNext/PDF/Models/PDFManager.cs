@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Enums;
+using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.Services;
@@ -6,14 +7,16 @@ using Docnet.Core;
 using Docnet.Core.Editors;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
-using iText.Layout;
-using MethodTimer;
+using iText.Kernel.Pdf;
+using iText.Layout; 
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -22,26 +25,7 @@ using File = CrytonCoreNext.Models.File;
 namespace CrytonCoreNext.PDF.Models
 {
     public class PDFManager : IPDFManager
-    {
-        //public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
-        //{
-        //    using IDocLib pdfLibrary = DocLib.Instance;
-        //    var dimensions = pdfFile.Dimensions;
-        //    var reader = pdfFile.Password.Equals(string.Empty) ?
-        //        pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
-        //        pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
-        //    using var docReader = reader;
-        //    for (int i = 0; i <= pdfFile.NumberOfPages; i++)
-        //    {
-        //        yield return await Task.Run(() =>
-        //        {
-        //            using var pageReader = docReader.GetPageReader(i);
-        //            return GetImage(pageReader);
-        //        });
-        //    }
-        //}
-
-        [Time]
+    { 
         public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
             if (pdfFile.PdfStatus == Enums.EPdfStatus.Protected && string.IsNullOrEmpty(pdfFile.Password))
@@ -56,6 +40,27 @@ namespace CrytonCoreNext.PDF.Models
             using var docReader = reader;
             using var pageReader = docReader.GetPageReader(pdfFile.LastPage);
             return GetImage(pageReader);
+        }
+
+        public async Task ProtectFile(PDFFile pdfFile)
+        {
+            using (var pdfReader = new PdfReader(new MemoryStream(pdfFile.Bytes)))
+            using (var pdfDocument = new PdfDocument(pdfReader))
+            {
+                using var stream = new MemoryStream();
+                var p1 = Encoding.UTF8.GetBytes(pdfFile.Password);
+                try
+                {
+                    PdfEncryptor.Encrypt(new PdfReader(new MemoryStream(pdfFile.Bytes)), stream, new EncryptionProperties().SetStandardEncryption(
+                         p1, p1,
+                        EncryptionConstants.ALLOW_COPY,
+                        EncryptionConstants.ENCRYPTION_AES_256));
+                }
+                catch (Exception)
+                {  
+                }
+                pdfFile.Bytes = stream.ToArray();
+            }
         }
 
         public async Task<PDFFile> Merge(List<PDFFile> pdfFiles)
@@ -97,7 +102,6 @@ namespace CrytonCoreNext.PDF.Models
                 Width = (int)image.Width,
                 Height = (int)image.Height
             };
-
             using IDocLib pdfLibrary = DocLib.Instance;
             var pdfBbytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
             var file = new File($"{image.Name}_Converted", string.Empty, DateTime.Now, "pdf", newId, pdfBbytes);
