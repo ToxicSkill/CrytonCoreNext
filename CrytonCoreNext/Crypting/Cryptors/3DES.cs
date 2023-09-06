@@ -19,6 +19,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
 
         private TripleDES _tripleDES;
 
+        private byte[] _iv; 
+
         public EMethod Method => EMethod._3DES;
 
         public string DescriptionName => $"{Method} - Symmetric algorithm";
@@ -31,6 +33,8 @@ namespace CrytonCoreNext.Crypting.Cryptors
         {
             _passwordProvider = provider;
             _tripleDES = TripleDES.Create();
+            _tripleDES.GenerateIV();
+            _iv = _tripleDES.IV;
         }
 
         public object GetHelper()
@@ -71,6 +75,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
             _tripleDES.Key = keyBytes;
             _tripleDES.Mode = _cipherMode;
             _tripleDES.Padding = _paddingMode;
+            _tripleDES.IV = _iv;
         }
     }
 }

@@ -73,8 +73,8 @@ namespace CrytonCoreNextTests
         {
             IPasswordProvider passwordProvider = new PasswordProvider();
             ICrypting _3des = new _3DES(passwordProvider);
-            DESHelper helper= (DESHelper)_3des.GetHelper();
-            helper.PasswordProvider.SetPassword("abcd1234");
+            IPasswordProvider helper = (IPasswordProvider)_3des.GetHelper();
+            helper.SetPassword("abcd1234");
             var stringByte = "{ \"ToSerialzie\":{\"Key\":\"BEA11965A5244BAEE406448F6BF8BF8B094F5768A6361910C0F787F74C9543C4\",\"IV\":\"D83945FDE5ED652415D96A7888EE21CE\"},\"Name\":\"AES\"}";
             var bytes = Encoding.ASCII.GetBytes(stringByte);
             var enrypted = await _3des.Encrypt(bytes, _progress);
