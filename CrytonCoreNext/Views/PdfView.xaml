@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
              xmlns:models="clr-namespace:CrytonCoreNext.PDF.Models"
+             xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              xmlns:c="clr-namespace:CrytonCoreNext.Converters"
              d:DataContext="{d:DesignInstance Type=viewmodels:PdfViewModel}"
              d:DesignHeight="890"
@@ -712,6 +713,15 @@
                                        Appearance="Caution" HorizontalAlignment="Stretch" />
                         </StackPanel>
                 </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Margin="0,0,6,0" Symbol="ViewDesktop20" FontSize="{StaticResource G_NormalFontSize}" />
+                        <TextBlock Text="View" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <wpf:WebView2 Source="{Binding WebViewSource}" Margin="20"/>
             </TabItem>
         </TabControl>
         <Grid Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">

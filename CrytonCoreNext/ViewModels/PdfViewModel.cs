@@ -33,8 +33,10 @@ namespace CrytonCoreNext.ViewModels
 
         private int _currentPdfToMergeImageIndex = 0;
 
-
         private object _locker;
+
+        [ObservableProperty]
+        public string webViewSource;
 
         [ObservableProperty]
         public bool anyLoadedFile;
