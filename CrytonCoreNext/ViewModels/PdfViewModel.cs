@@ -6,6 +6,7 @@ using CrytonCoreNext.Enums;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using System;
@@ -125,6 +126,8 @@ namespace CrytonCoreNext.ViewModels
             PdfToProtectFiles = new();
             OutcomeFilesFromSplit = new ();
             _pdfExcludedMergeIndexes = new();
+            SelectedPdfFilesToMerge = new();
+            SelectedPdfFilesToSplit = new();
             PdfToSplitImages = new();
             PdfToSplitRangeFiles = new();
         }
@@ -532,10 +535,7 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnSelectedTabIndexChanged(int value)
         {
-            if (SelectedTabIndex == 1 || 
-                SelectedTabIndex == 2 || 
-                SelectedTabIndex == 3 || 
-                SelectedTabIndex == 4)
+            if (SelectedTabIndex != (int)EPdfTabControls.Manage)
             {
                 OpenedPdfFiles.Clear();
                 foreach (var file in PdfFiles)
@@ -546,7 +546,7 @@ namespace CrytonCoreNext.ViewModels
                     }
                 }
             }
-            if (SelectedTabIndex == 2)
+            if (SelectedTabIndex == (int)EPdfTabControls.Split)
             {
                 if (SelectedPdfFileToSplit == null)
                 {
