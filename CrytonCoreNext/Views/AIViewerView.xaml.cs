@@ -5,7 +5,6 @@ using Wpf.Ui.Common.Interfaces;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.AI.Models;
 using CrytonCoreNext.BackgroundUI;
-using System;
 
 namespace CrytonCoreNext.Views
 {

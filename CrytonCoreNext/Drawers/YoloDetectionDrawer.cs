@@ -2,7 +2,6 @@
 using CrytonCoreNext.Extensions;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
-using System;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 

@@ -6,7 +6,6 @@ using CrytonCoreNext.Views;
 using OpenCvSharp.WpfExtensions;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Controls.Interfaces;

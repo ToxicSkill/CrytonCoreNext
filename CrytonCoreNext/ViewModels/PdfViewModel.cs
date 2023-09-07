@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using Wpf.Ui.Mvvm.Contracts;
 using File = CrytonCoreNext.Models.File;
@@ -31,6 +32,9 @@ namespace CrytonCoreNext.ViewModels
         private List<(int pdfIndex, int pdfPage)> _pdfExcludedMergeIndexes;
 
         private int _currentPdfToMergeImageIndex = 0;
+
+
+        private object _locker;
 
         [ObservableProperty]
         public bool anyLoadedFile;
@@ -125,11 +129,15 @@ namespace CrytonCoreNext.ViewModels
             OpenedPdfFiles = new(); 
             PdfToProtectFiles = new();
             OutcomeFilesFromSplit = new ();
-            _pdfExcludedMergeIndexes = new();
             SelectedPdfFilesToMerge = new();
             SelectedPdfFilesToSplit = new();
             PdfToSplitImages = new();
             PdfToSplitRangeFiles = new();
+
+            _pdfExcludedMergeIndexes = new();
+            _locker = new object();
+
+            BindingOperations.EnableCollectionSynchronization(PdfFiles, _locker);
         }
 
         public void SetPdfPassword(string password)
@@ -660,27 +668,30 @@ namespace CrytonCoreNext.ViewModels
 
         private int LoadPdfFile(ref int protectedFilesCount, ref int damagedFilesCount, File file)
         {
-            var pdfFile = _pdfService.ReadPdf(file);
-            if (pdfFile != null)
+            lock(_locker)
             {
-                if (!PdfFiles.Contains(pdfFile, new FileComparer()))
+                var pdfFile = _pdfService.ReadPdf(file);
+                if (pdfFile != null)
                 {
-                    PdfFiles.Add(pdfFile);
+                    if (!PdfFiles.Contains(pdfFile, new FileComparer()))
+                    {
+                        PdfFiles.Add(pdfFile);
+                    }
+                    else
+                    {
+                        return 1;
+                    }
                 }
-                else
+                if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected)
                 {
-                    return 1;
+                    protectedFilesCount++;
                 }
+                if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Damaged)
+                {
+                    damagedFilesCount++;
+                }
+                SelectedPdfFile = PdfFiles.Last();
             }
-            if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected)
-            {
-                protectedFilesCount++;
-            }
-            if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Damaged)
-            {
-                damagedFilesCount++;
-            }
-            SelectedPdfFile = PdfFiles.Last();
             return 0;
         }
 

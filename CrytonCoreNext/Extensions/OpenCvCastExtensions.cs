@@ -1,6 +1,5 @@
 ﻿using OpenCvSharp;
 using System.Drawing;
-using System.Windows.Media;
 
 namespace CrytonCoreNext.Extensions
 {

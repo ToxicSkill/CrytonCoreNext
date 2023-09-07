@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.Services;
@@ -8,17 +7,18 @@ using Docnet.Core.Editors;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
 using iText.Kernel.Pdf;
-using iText.Layout; 
+using iText.Layout;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using File = CrytonCoreNext.Models.File;
 
@@ -26,8 +26,25 @@ namespace CrytonCoreNext.PDF.Models
 {
     public class PDFManager : IPDFManager
     { 
+        public WriteableBitmap LoadImageHiRes(PDFFile pdfFile)
+        {
+            if (pdfFile.PdfStatus == Enums.EPdfStatus.Protected && string.IsNullOrEmpty(pdfFile.Password))
+            {
+                return default;
+            } 
+            using var image = GetPageImage(pdfFile.LastPage, GetPageSize(pdfFile.Document, pdfFile.LastPage), pdfFile.Document, 96);
+            using var bitmap = new Bitmap(image); 
+            return new WriteableBitmap(
+                Imaging.CreateBitmapSourceFromHBitmap(
+                    bitmap.GetHbitmap(), 
+                    IntPtr.Zero, 
+                    Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions()));
+        }
+
         public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
+            return LoadImageHiRes(pdfFile);
             if (pdfFile.PdfStatus == Enums.EPdfStatus.Protected && string.IsNullOrEmpty(pdfFile.Password))
             {
                 return default;
@@ -190,6 +207,17 @@ namespace CrytonCoreNext.PDF.Models
             Cv2.CvtColor(inversed, inversed, ColorConversionCodes.GRAY2BGR);
             Cv2.Add(bgraMat, inversed, add);
             return add.ToWriteableBitmap();
+        }
+
+        private static Image GetPageImage(int lastPage, System.Drawing.Size size, PdfiumViewer.PdfDocument document, int dpi)
+        {
+            return document.Render(lastPage, size.Width, size.Height, dpi, dpi, PdfiumViewer.PdfRenderFlags.None);
+        }
+
+        private static System.Drawing.Size GetPageSize(PdfiumViewer.PdfDocument document, int lastPage)
+        {
+            var size = document.PageSizes[lastPage];
+            return new System.Drawing.Size((int)(size.Width), (int)(size.Height));
         }
     }
 }
