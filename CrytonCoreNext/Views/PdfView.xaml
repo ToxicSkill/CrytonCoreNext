@@ -652,7 +652,7 @@
                     <ScrollViewer Grid.Column="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,15,5,0">
                         <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
                                   SelectedItem="{Binding PdfToProtectSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  PreviewMouseDoubleClick="ListViewMerge_PreviewMouseDoubleClick" SelectionMode="Single"
+                                  SelectionMode="Single"
                                   SelectionChanged="ListView_SelectionChanged_1">
                             <ListView.Template>
                                 <ControlTemplate TargetType="ListBox">

@@ -7,15 +7,15 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf;
 using System.Text;
 using Wpf.Ui.Controls;
-using System.Linq;
 using CrytonCoreNext.Extensions;
+using PdfiumViewer;
 using System.Globalization;
 
 namespace CrytonCoreNext.PDF.Models
 {
     public class PDFReader : IPDFReader
     {
-        private Dictionary<EPdfMetainfo, SymbolIcon> _symbolByPDFKey;
+        private Dictionary<string, SymbolIcon> _symbolByPdfInformation;
 
         private readonly double _dimensions = 1.0d;
 
@@ -88,28 +88,7 @@ namespace CrytonCoreNext.PDF.Models
             LoadSymbols();
             try
             {
-                var metaInfoDict = new Dictionary<string, string>();
-                using var pdfReader = new PdfReader(pdfFile.Path, new ReaderProperties().SetPassword(Encoding.Default.GetBytes(pdfFile.Password)));
-                using var pdfDocument = new PdfDocument(pdfReader);
-                metaInfoDict["PDF.PageCount"] = $"{pdfDocument.GetNumberOfPages():D}";
-                metaInfoDict["PDF.Version"] = $"{pdfDocument.GetPdfVersion()}";
-
-                var pdfTrailer = pdfDocument.GetTrailer();
-                var pdfDictInfo = pdfTrailer.GetAsDictionary(PdfName.Info);
-                if (pdfTrailer != null && pdfDictInfo != null)
-                {
-                    foreach (var pdfEntryPair in pdfDictInfo.EntrySet())
-                    {
-                        var key = "PDF." + pdfEntryPair.Key.ToString()[1..];
-                        string value = pdfEntryPair.Value switch
-                        {
-                            PdfString pdfString => pdfString.ToUnicodeString(),
-                            _ => pdfEntryPair.Value.ToString(),
-                        };
-                        metaInfoDict[key] = value;
-                    }
-                }
-                ParseNativeMetainfo(pdfFile, metaInfoDict);
+                ParseNativeMetainfo(pdfFile);
             }
             catch (Exception ex)
             {
@@ -119,36 +98,26 @@ namespace CrytonCoreNext.PDF.Models
             }
         }
 
-        private void ParseNativeMetainfo(PDFFile pdfFile, Dictionary<string, string> metaInfoDict)
+        private void ParseNativeMetainfo(PDFFile pdfFile)
         {
-            var indirectDict = new Dictionary<EPdfMetainfo, string>();
-            foreach (var metaEnum in Enum.GetValues(typeof(EPdfMetainfo)).Cast<EPdfMetainfo>())
+            var info = pdfFile.Document.GetInformation();
+            foreach (var key in _symbolByPdfInformation.Keys)
             {
-                var metaKey = metaEnum.ToString(true);
-                if (metaInfoDict.ContainsKey(metaKey))
+                string? value;
+                if (key.ToLowerInvariant().Contains("date"))
                 {
-                    indirectDict.Add(metaEnum, metaInfoDict[metaKey]);
+                    var date = (DateTime)info.GetPropertyValue(key);
+                    value = date.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
                 }
-            }
-            pdfFile.Metadata = new Dictionary<SymbolIcon, string>();
-            foreach (var key in indirectDict.Keys)
-            {
-                if (_symbolByPDFKey.ContainsKey(key))
+                else
                 {
-                    var symbol = _symbolByPDFKey[key];
-                    var text = indirectDict[key];
-                    if (key == EPdfMetainfo.CreationDate ||
-                        key == EPdfMetainfo.ModDate)
-                    {
-                        text = text[2..16];
-                        DateTime.TryParseExact(text, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
-                        if (dateTime != DateTime.MinValue)
-                        {
-                            text = dateTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
-                        }
-                    }
-                    symbol.ToolTip = key.ToString(false);
-                    pdfFile.Metadata.Add(symbol, text);
+                    value = (string)info.GetPropertyValue(key);
+                }
+                if (!string.IsNullOrEmpty(value))
+                {
+                    var symbol = _symbolByPdfInformation[key];
+                    symbol.ToolTip = key.ToPdfInformationString(false);
+                    pdfFile.Metadata.Add(symbol, value);
                 }
             }
         }
@@ -168,14 +137,17 @@ namespace CrytonCoreNext.PDF.Models
 
         private void LoadSymbols()
         {
-            _symbolByPDFKey = new Dictionary<EPdfMetainfo, SymbolIcon>()
+            var fakeInfo = new PdfInformation();
+            _symbolByPdfInformation = new ()
             {
-                { EPdfMetainfo.Author, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20 } },
-                { EPdfMetainfo.Creator, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },
-                { EPdfMetainfo.CreationDate, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20  } },
-                { EPdfMetainfo.ModDate, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20, Filled=true  } },
-                { EPdfMetainfo.PageCount, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.DocumentMultiple20  } },
-                { EPdfMetainfo.Version, new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Box20  } }
+                { nameof(fakeInfo.Author), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20 } },
+                { nameof(fakeInfo.Creator), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },
+                { nameof(fakeInfo.CreationDate), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20  } },
+                { nameof(fakeInfo.ModificationDate), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20, Filled=true  } },
+                { nameof(fakeInfo.Producer), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Production20  } },
+                { nameof(fakeInfo.Title), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.TextCaseTitle20  } },
+                { nameof(fakeInfo.Subject), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Subtitles20  } },
+                { nameof(fakeInfo.Keywords), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Key20  } }
             };
         }
     }

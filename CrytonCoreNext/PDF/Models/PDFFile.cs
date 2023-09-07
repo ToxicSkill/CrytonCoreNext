@@ -103,7 +103,7 @@ namespace CrytonCoreNext.PDF.Models
             } 
         }
 
-        public Dictionary<SymbolIcon, string> Metadata { get; set; }
+        public Dictionary<SymbolIcon, string> Metadata { get; set; } = new Dictionary<SymbolIcon, string>();
 
         public bool IsOpened { get; set; }
 

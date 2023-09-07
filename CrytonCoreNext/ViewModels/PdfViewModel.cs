@@ -563,6 +563,11 @@ namespace CrytonCoreNext.ViewModels
                     PdfToSplitImages = new();
                 }
             }
+            if (SelectedTabIndex == (int)EPdfTabControls.Protect &&
+                OpenedPdfFiles.Any())
+            {
+                PdfToProtectSelectedFile = OpenedPdfFiles.First();
+            }
         }
 
         partial void OnSelectedPdfFileChanged(PDFFile value)

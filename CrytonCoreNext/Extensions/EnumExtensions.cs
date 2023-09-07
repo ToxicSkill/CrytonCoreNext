@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.PDF.Enums;
 
 namespace CrytonCoreNext.Extensions
 {
@@ -11,7 +10,7 @@ namespace CrytonCoreNext.Extensions
         /// <param name="metainfo"></param>
         /// <param name="pdf"></param>
         /// <returns>If <paramref name="pdf"/> is true returns metadata key. If <paramref name="pdf"/> is false returns sentence string</returns>
-        public static string ToString(this EPdfMetainfo metainfo, bool pdf)
+        public static string ToPdfInformationString(this string metainfo, bool pdf)
         {
             return pdf ? $"PDF.{metainfo}" : metainfo.ToString().ToSentenceCase();            
         }
