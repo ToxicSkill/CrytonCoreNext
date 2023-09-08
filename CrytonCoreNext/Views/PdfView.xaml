@@ -723,21 +723,22 @@
                 </TabItem.Header>
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="50"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <ui:Button
+                        <ui:Button 
                                 Icon="ArrowUpload20" Command="{Binding LoadViewFileCommand}" CommandParameter="false" 
-                                Content="Load" Margin="20,20" 
-                                Appearance="Secondary" 
+                                Content="Load" Margin="20,8,5,8"
+                                Appearance="Primary" 
                                 VerticalAlignment="Stretch"
                                 HorizontalAlignment="Stretch" />
-                        <TextBlock Grid.Column="1" Text="{Binding LoadedViewFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        
+                        <ui:Badge Grid.Column="1" Margin="0,8,20,8" VerticalAlignment="Center" Appearance="Secondary" Content="{Binding WebViewSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                     <wpf:WebView2 Grid.Row="1" Source="{Binding WebViewSource}" Margin="20"/>
                 </Grid>
