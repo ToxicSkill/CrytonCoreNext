@@ -118,6 +118,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public bool isOnFirstMergePage = true;
 
+        [ObservableProperty]
+        public string loadedViewFile;
+
         public PdfViewModel(IPDFService pdfService,
             IFileService fileService,
             IDialogService dialogService,
@@ -145,6 +148,14 @@ namespace CrytonCoreNext.ViewModels
         public void SetPdfPassword(string password)
         {
             SelectedPdfFile.Password = password;
+        }
+
+        [RelayCommand]
+        private void LoadViewFile()
+        {
+            Lock();
+            WebViewSource = GetFileFromDialog(Static.Extensions.DialogFilters.Pdf);
+            Unlock();
         }
 
         [RelayCommand]

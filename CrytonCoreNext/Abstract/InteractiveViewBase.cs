@@ -3,6 +3,7 @@ using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 
@@ -44,6 +45,16 @@ namespace CrytonCoreNext.Abstract
             {
                 yield return file;
             }
+        }
+
+        protected string GetFileFromDialog(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
+        {
+            var selectedFiles = _dialogService.GetFilesNamesToOpen(filters, Language.Post("OpenFiles"));
+            if (selectedFiles.Any())
+            {
+                return selectedFiles.First();
+            }
+            return string.Empty;
         }
 
         protected async IAsyncEnumerable<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)

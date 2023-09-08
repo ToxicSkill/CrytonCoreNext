@@ -106,8 +106,16 @@ namespace CrytonCoreNext.PDF.Models
                 string? value;
                 if (key.ToLowerInvariant().Contains("date"))
                 {
-                    var date = (DateTime)info.GetPropertyValue(key);
-                    value = date.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
+                    var date = (DateTime?)info.GetPropertyValue(key);
+                    var dateTime = date ?? default;
+                    if (dateTime != default)
+                    {
+                        value = dateTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        value = string.Empty;
+                    }
                 }
                 else
                 {

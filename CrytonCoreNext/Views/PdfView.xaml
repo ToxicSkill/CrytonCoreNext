@@ -721,7 +721,27 @@
                         <TextBlock Text="View" FontSize="{StaticResource G_NormalFontSize}" FontWeight="Thin"/>
                     </StackPanel>
                 </TabItem.Header>
-                <wpf:WebView2 Source="{Binding WebViewSource}" Margin="20"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ui:Button
+                                Icon="ArrowUpload20" Command="{Binding LoadViewFileCommand}" CommandParameter="false" 
+                                Content="Load" Margin="20,20" 
+                                Appearance="Secondary" 
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch" />
+                        <TextBlock Grid.Column="1" Text="{Binding LoadedViewFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                    <wpf:WebView2 Grid.Row="1" Source="{Binding WebViewSource}" Margin="20"/>
+                </Grid>
+                
             </TabItem>
         </TabControl>
         <Grid Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
