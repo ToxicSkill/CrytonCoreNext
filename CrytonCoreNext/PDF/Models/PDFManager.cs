@@ -59,25 +59,23 @@ namespace CrytonCoreNext.PDF.Models
             return GetImage(pageReader);
         }
 
-        public async Task ProtectFile(PDFFile pdfFile)
+        public void ProtectFile(PDFFile pdfFile)
         {
-            using (var pdfReader = new PdfReader(new MemoryStream(pdfFile.Bytes)))
-            using (var pdfDocument = new PdfDocument(pdfReader))
+            using var pdfReader = new PdfReader(new MemoryStream(pdfFile.Bytes));
+            using var pdfDocument = new PdfDocument(pdfReader);
+            using var stream = new MemoryStream();
+            var p1 = Encoding.UTF8.GetBytes(pdfFile.Password);
+            try
             {
-                using var stream = new MemoryStream();
-                var p1 = Encoding.UTF8.GetBytes(pdfFile.Password);
-                try
-                {
-                    PdfEncryptor.Encrypt(new PdfReader(new MemoryStream(pdfFile.Bytes)), stream, new EncryptionProperties().SetStandardEncryption(
-                         p1, p1,
-                        EncryptionConstants.ALLOW_COPY,
-                        EncryptionConstants.ENCRYPTION_AES_256));
-                }
-                catch (Exception)
-                {  
-                }
-                pdfFile.Bytes = stream.ToArray();
+                PdfEncryptor.Encrypt(new PdfReader(new MemoryStream(pdfFile.Bytes)), stream, new EncryptionProperties().SetStandardEncryption(
+                    p1, p1,
+                    EncryptionConstants.ALLOW_COPY,
+                    EncryptionConstants.ENCRYPTION_AES_256));
             }
+            catch (Exception)
+            {
+            }
+            pdfFile.Bytes = stream.ToArray();
         }
 
         public async Task<PDFFile> Merge(List<PDFFile> pdfFiles)

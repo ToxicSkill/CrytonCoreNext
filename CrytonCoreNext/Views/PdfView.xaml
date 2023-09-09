@@ -168,7 +168,7 @@
                                         PlaceholderText="Password" PreviewMouseUp="PdfPasswordBox_PreviewMouseUp"/>
                             <ui:Button HorizontalAlignment="Stretch" Content="OK" Margin="0,2" 
                                    Command="{Binding ConfirmPasswordCommand}" 
-                                    Click="Button_Click"/>
+                                    Click="Password_Click"/>
                         </StackPanel>
                         <Image Margin="10" Stretch="Uniform" PreviewMouseWheel="Image_PreviewMouseWheel"
                            Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -710,6 +710,7 @@
                          <ui:Button Grid.Column="0" Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                        Icon="Fingerprint20" Command="{Binding ProtectFileCommand}" 
                                        Content="Protect" Margin="0,5"
+                                         Click="PasswordSecond_Click"
                                        Appearance="Caution" HorizontalAlignment="Stretch" />
                         </StackPanel>
                 </Grid>

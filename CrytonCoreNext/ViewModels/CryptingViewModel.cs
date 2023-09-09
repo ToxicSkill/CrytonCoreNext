@@ -180,7 +180,7 @@ namespace CrytonCoreNext.ViewModels
         {
             _cryptingService.AddRecognitionBytes(SelectedFile);
             SetFileSuffix();
-            base.SaveFile(SelectedFile);
+            SaveFile(SelectedFile);
         }
 
         private void SetFileSuffix()

@@ -533,7 +533,7 @@ namespace CrytonCoreNext.ViewModels
             }
             if (!_pdfToMergePagesIndexes.Any())
             {
-                PdfToMergeImage = null;
+                PdfToMergeImage = default;
             }
             else
             {
@@ -700,11 +700,11 @@ namespace CrytonCoreNext.ViewModels
                         return 1;
                     }
                 }
-                if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected)
+                if (pdfFile!.PdfStatus == EPdfStatus.Protected)
                 {
                     protectedFilesCount++;
                 }
-                if (pdfFile.PdfStatus == PDF.Enums.EPdfStatus.Damaged)
+                if (pdfFile.PdfStatus == EPdfStatus.Damaged)
                 {
                     damagedFilesCount++;
                 }
@@ -874,10 +874,10 @@ namespace CrytonCoreNext.ViewModels
 
         private void UpdateProtectedPdf()
         {
-            SelectedPdfFile.PdfStatus = PDF.Enums.EPdfStatus.Opened;
+            SelectedPdfFile.PdfStatus = EPdfStatus.Opened;
             _pdfService.UpdatePdfFileInformations(ref selectedPdfFile);
-            if (SelectedPdfFile.PdfStatus == PDF.Enums.EPdfStatus.Protected ||
-                SelectedPdfFile.PdfStatus == PDF.Enums.EPdfStatus.Damaged)
+            if (SelectedPdfFile.PdfStatus == EPdfStatus.Protected ||
+                SelectedPdfFile.PdfStatus == EPdfStatus.Damaged)
             {
                 SelectedPdfFile.Password = string.Empty;
                 PostWarningSnackbar("Incorrect password");

@@ -42,12 +42,17 @@ namespace CrytonCoreNext.Views
             RightEyeIconSecond.Filled = valueSecond;
         }
 
-        private void UpdatePasswordBox()
+        private void UpdatePasswordBox(bool isSecond = false)
         {
-            ViewModel.SetPdfPassword(PdfPasswordBox.Password);
+            ViewModel.SetPdfPassword(isSecond ? PdfPasswordBoxSecond.Password : PdfPasswordBox.Password);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void PasswordSecond_Click(object sender, RoutedEventArgs e)
+        {
+            UpdatePasswordBox(true);
+        }
+
+        private void Password_Click(object sender, RoutedEventArgs e)
         {
             UpdatePasswordBox();
         }
