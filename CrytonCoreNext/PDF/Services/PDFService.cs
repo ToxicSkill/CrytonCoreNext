@@ -62,9 +62,19 @@ namespace CrytonCoreNext.PDF.Services
             return await _pdfManager.MergeAllImagesToPDF(images, newId);
         }
 
-        public void ProtectFile(PDFFile pdfFile)
+        public void ProtectFile(PDFFile pdfFile, int limitations, int encryption)
         {
-            _pdfManager.ProtectFile(pdfFile);
+            _pdfManager.ProtectFile(pdfFile, limitations, encryption);
+        }
+
+        public List<string> GetAvailableEncryptionOptions()
+        {
+            return _pdfManager.GetAvailableEncryptionOptions();
+        }
+
+        public List<string> GetAvailableEncryptionAllowOptions()
+        {
+            return _pdfManager.GetAvailableEncryptionAllowOptions();
         }
     }
 }

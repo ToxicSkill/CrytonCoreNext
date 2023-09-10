@@ -38,7 +38,7 @@ namespace CrytonCoreNext.PDF.Models
                     BitmapSizeOptions.FromEmptyOptions()));
         }
 
-        public List<string> GetAvailableEncryptionConstants()
+        public List<string> GetAvailableEncryptionOptions()
         {
             return new List<string>()
             {
@@ -49,7 +49,7 @@ namespace CrytonCoreNext.PDF.Models
             };
         }
 
-        public List<string> GetAvailableEncryptionOptions()
+        public List<string> GetAvailableEncryptionAllowOptions()
         {
             return new List<string>()
             {
@@ -64,7 +64,7 @@ namespace CrytonCoreNext.PDF.Models
             };
         }
 
-        public void ProtectFile(PDFFile pdfFile)
+        public void ProtectFile(PDFFile pdfFile, int permissions, int encryption)
         {
             using var pdfReader = new PdfReader(new MemoryStream(pdfFile.Bytes));
             using var pdfDocument = new PdfDocument(pdfReader);
@@ -74,8 +74,8 @@ namespace CrytonCoreNext.PDF.Models
             {
                 PdfEncryptor.Encrypt(new PdfReader(new MemoryStream(pdfFile.Bytes)), stream, new EncryptionProperties().SetStandardEncryption(
                     password, password,
-                    EncryptionConstants.ALLOW_COPY,
-                    EncryptionConstants.ENCRYPTION_AES_256));
+                    permissions,
+                    encryption));
             }
             catch (Exception)
             {

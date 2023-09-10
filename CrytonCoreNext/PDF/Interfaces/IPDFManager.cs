@@ -8,7 +8,7 @@ namespace CrytonCoreNext.PDF.Interfaces
 {
     public interface IPDFManager
     {
-        void ProtectFile(PDFFile pdfFile);
+        void ProtectFile(PDFFile pdfFile, int permissions, int encryption);
 
         WriteableBitmap LoadImage(PDFFile pdfFile);
 
@@ -19,5 +19,9 @@ namespace CrytonCoreNext.PDF.Interfaces
         PDFFile ImageToPdf(ImageFile image, int newId);
 
         Task<PDFFile> MergeAllImagesToPDF(List<ImageFile> images, int newId);
+
+        List<string> GetAvailableEncryptionOptions();
+
+        List<string> GetAvailableEncryptionAllowOptions();
     }
 }

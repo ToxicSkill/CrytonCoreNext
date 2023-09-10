@@ -28,7 +28,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
-            <TreeView Grid.Column="0" BorderThickness="0" Margin="0, 20, 0,0 "
+            <TreeView Grid.Column="0" BorderThickness="0" Margin="0, 20, 0,0 " 
+                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                       ItemsSource="{Binding TreeViewItemSource}" >
                 <e:Interaction.Behaviors>
                     <extensions:BindableSelectedItemBehavior SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

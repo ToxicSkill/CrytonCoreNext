@@ -691,6 +691,32 @@
                             </ListView.ItemTemplate>
                         </ListView>
                     </ScrollViewer>
+                    <Grid Grid.Column="1"  Margin="0,-350,0,0"
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock HorizontalAlignment="Center" Text="Encryption"/>
+                            <ComboBox Grid.Row="1" Margin="10" ItemsSource="{Binding AvailableEncryptionOptions}"
+                                  SelectedItem="{Binding SelectedEncryptionOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock HorizontalAlignment="Center" Text="Permissions"/>
+                            <ComboBox Grid.Row="1" Margin="10" ItemsSource="{Binding AvailablePermissionsOptions}"
+                                  SelectedItem="{Binding SelectedPermissionOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+                    </Grid>
                     <StackPanel Grid.Column="1" Margin="0,-100,0,0"
                                 VerticalAlignment="Center" 
                                 HorizontalAlignment="Center">

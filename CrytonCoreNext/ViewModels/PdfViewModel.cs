@@ -9,6 +9,7 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
+using iText.Kernel.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -121,6 +122,18 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public string loadedViewFile;
 
+        [ObservableProperty]
+        public List<string> availableEncryptionOptions;
+
+        [ObservableProperty]
+        public List<string> availablePermissionsOptions;
+
+        [ObservableProperty]
+        public string selectedPermissionOption;
+
+        [ObservableProperty]
+        public string selectedEncryptionOption;
+
         public PdfViewModel(IPDFService pdfService,
             IFileService fileService,
             IDialogService dialogService,
@@ -139,10 +152,20 @@ namespace CrytonCoreNext.ViewModels
             PdfToSplitImages = new();
             PdfToSplitRangeFiles = new();
 
+            InitializeComboBoxes();
+
             _pdfExcludedMergeIndexes = new();
             _locker = new object();
 
             BindingOperations.EnableCollectionSynchronization(PdfFiles, _locker);
+        }
+
+        private void InitializeComboBoxes()
+        {
+            AvailablePermissionsOptions = _pdfService.GetAvailableEncryptionAllowOptions();
+            AvailableEncryptionOptions = _pdfService.GetAvailableEncryptionOptions();
+            SelectedPermissionOption = AvailablePermissionsOptions.Single(x => x.Equals(nameof(EncryptionConstants.ALLOW_COPY)));
+            SelectedEncryptionOption = AvailableEncryptionOptions.Single(x => x.Equals(nameof(EncryptionConstants.ENCRYPTION_AES_256)));
         }
 
         public void SetPdfPassword(string password)
@@ -188,7 +211,12 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void ProtectFile()
         {
-            _pdfService.ProtectFile(SelectedPdfFile);
+            var permissions = typeof(EncryptionConstants).GetField(SelectedPermissionOption).GetValue(null);
+            var encryption = typeof(EncryptionConstants).GetField(SelectedEncryptionOption).GetValue(null);
+            if (permissions != null && encryption != null)
+            {
+                _pdfService.ProtectFile(SelectedPdfFile, (int)permissions, (int)encryption);
+            }
         }
 
         [RelayCommand]
