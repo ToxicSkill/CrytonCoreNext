@@ -20,8 +20,8 @@
     <Setting Name="DecryptionSuffix" Type="System.String" Scope="User">
       <Value Profile="(Default)">Dec</Value>
     </Setting>
-    <Setting Name="Test" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="PdfRenderDpi" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">96</Value>
     </Setting>
   </Settings>
 </SettingsFile>

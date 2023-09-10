@@ -14,7 +14,7 @@ namespace CrytonCoreNext.Views
     {
         private double _firstHeaderHeight = 0d;
 
-        private Dictionary<SymbolRegular, SymbolRegular> _symbolBySymbolWithHeader;
+        private readonly Dictionary<SymbolRegular, SymbolRegular> _symbolBySymbolWithHeader;
 
         public SettingsViewModel ViewModel
         {
@@ -60,6 +60,7 @@ namespace CrytonCoreNext.Views
             _symbolBySymbolWithHeader.Add(SymbolRegular.DarkTheme20, SymbolRegular.Eye20);
             _symbolBySymbolWithHeader.Add(SymbolRegular.LocalLanguage20, SymbolRegular.ReadAloud20);
             _symbolBySymbolWithHeader.Add(SymbolRegular.StarSettings20, SymbolRegular.Rocket20);
+            _symbolBySymbolWithHeader.Add(SymbolRegular.PreviewLink20, SymbolRegular.DocumentPdf20);
             var headers = FindVisualChilds<TextBlock>(stackPanel, false).ToList();
             foreach (var cardControl in FindVisualChilds<CardControl>(stackPanel, false))
             {

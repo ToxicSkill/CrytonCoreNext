@@ -97,13 +97,13 @@ namespace CrytonCoreNext.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Test {
+        [global::System.Configuration.DefaultSettingValueAttribute("96")]
+        public int PdfRenderDpi {
             get {
-                return ((string)(this["Test"]));
+                return ((int)(this["PdfRenderDpi"]));
             }
             set {
-                this["Test"] = value;
+                this["PdfRenderDpi"] = value;
             }
         }
     }

@@ -56,6 +56,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public bool isThemeStyleAvailable;
 
+        [ObservableProperty]    
+        public int pdfDpiValue;
+
         public bool MembersInitialized { get => TreeViewItemSource.Any(); }
 
         public SettingsViewModel(IThemeService themeService)
@@ -63,7 +66,9 @@ namespace CrytonCoreNext.ViewModels
             _themeService = themeService;
             _elements = new();
             _cardByTreeViewItem = new();
+
             TreeViewItemSource = new();
+
             InitializeThemes();
             InitializeSettings();
         }
@@ -80,6 +85,12 @@ namespace CrytonCoreNext.ViewModels
                 SelectedThemeStyle = BackgroundType.Mica;
             }
             IsThemeSwitchChecked = Properties.Settings.Default.Theme;
+            PdfDpiValue = Properties.Settings.Default.PdfRenderDpi;
+            SetSettings();
+        }
+
+        partial void OnPdfDpiValueChanged(int value)
+        {
             SetSettings();
         }
 
