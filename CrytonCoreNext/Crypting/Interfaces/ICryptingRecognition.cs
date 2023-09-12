@@ -4,8 +4,8 @@ namespace CrytonCoreNext.Crypting.Interfaces
 {
     public interface ICryptingRecognition
     {
-        byte[] PrepareRerecognizableBytes(EMethod method, string extension);
+        byte[] PrepareRerecognizableBytes(EMethod method, string extension, string keys);
 
-        (bool succes, (EMethod method, string extension)) RecognizeBytes(byte[] bytes);
+        (bool succes, (EMethod method, string extension, string keys)) RecognizeBytes(byte[] bytes);
     }
 }

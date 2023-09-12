@@ -10,6 +10,8 @@ namespace CrytonCoreNext.Models
 
         public string Extension;
 
+        public string Keys;
+
         public byte[]? CheckSum;
 
         public RecognitionValues(Guid appKey)
@@ -17,6 +19,7 @@ namespace CrytonCoreNext.Models
             Unique = appKey;
             Method = string.Empty;
             Extension = string.Empty;
+            Keys = string.Empty;
         }
     }
 }

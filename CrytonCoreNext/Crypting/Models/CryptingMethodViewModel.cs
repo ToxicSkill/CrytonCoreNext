@@ -10,5 +10,6 @@ namespace CrytonCoreNext.Crypting.Models
         public CryptingMethodViewModel(string pageName) : base(pageName) { }
 
         public virtual void HandleFileChanged(CryptFile file) { }
+
     }
 }

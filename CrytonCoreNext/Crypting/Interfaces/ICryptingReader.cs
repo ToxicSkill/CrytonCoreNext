@@ -6,6 +6,6 @@ namespace CrytonCoreNext.Crypting.Interfaces
 {
     public interface ICryptingReader
     {
-        CryptFile ReadCryptFile(File file, (bool succes, (EMethod method, string extension)) cryptingRecognitionResult);
+        CryptFile ReadCryptFile(File file, (bool succes, (EMethod method, string extension, string keys)) cryptingRecognitionResult);
     }
 }

@@ -4,8 +4,8 @@ namespace CrytonCoreNext.Interfaces.Serializers
 {
     public interface IJsonSerializer
     {
-        void Serialize(object obj, string filePath);
+        string Serialize(object obj);
 
-        object Deserialize(string path, Type type);
+        object? Deserialize(string str, Type type);
     }
 }

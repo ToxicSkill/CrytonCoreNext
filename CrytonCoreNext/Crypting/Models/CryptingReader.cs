@@ -8,7 +8,7 @@ namespace CrytonCoreNext.Crypting.Models
 {
     public class CryptingReader : ICryptingReader
     {
-        public CryptFile ReadCryptFile(File file, (bool succes, (EMethod method, string extension)) cryptingRecognitionResult)
+        public CryptFile ReadCryptFile(File file, (bool succes, (EMethod method, string extension, string keys)) cryptingRecognitionResult)
         {
             var status = Status.Decrypted;
             var method = EMethod.AES;
@@ -19,7 +19,7 @@ namespace CrytonCoreNext.Crypting.Models
                 file.Extension = cryptingRecognitionResult.Item2.extension;
                 method = cryptingRecognitionResult.Item2.method;
             }
-            return new CryptFile(file, status, method, file.Guid);
+            return new CryptFile(file, status, method, cryptingRecognitionResult.Item2.keys, file.Guid);
         }
     }
 }

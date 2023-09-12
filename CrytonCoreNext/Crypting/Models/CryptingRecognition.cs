@@ -15,6 +15,8 @@ namespace CrytonCoreNext.Crypting.Models
 
         private const int ExtensionMaxSize = 18;
 
+        private const int KeysMaxSize = 1024;
+
         private readonly MD5 _MD5Hash;
 
         private static RecognitionValues _recognitionValues;
@@ -32,11 +34,12 @@ namespace CrytonCoreNext.Crypting.Models
                 { nameof(_recognitionValues.Unique), new(_recognitionValues.Unique.ToByteArray().Length, _recognitionValues.Unique.ToByteArray()) },
                 { nameof(_recognitionValues.Method), new(MethodMaxSize, _defaultBytes) },
                 { nameof(_recognitionValues.Extension), new(ExtensionMaxSize, _defaultBytes) },
+                { nameof(_recognitionValues.Keys), new(KeysMaxSize, _defaultBytes) },
                 { nameof(_recognitionValues.CheckSum), new(_MD5Hash.HashSize / 8, _defaultBytes) }
             };
         }
 
-        public (bool succes, (EMethod method, string extension)) RecognizeBytes(byte[] bytes)
+        public (bool succes, (EMethod method, string extension, string keys)) RecognizeBytes(byte[] bytes)
         {
             var maxSize = 0;
             foreach (var value in EXCFheader.Values)
@@ -46,7 +49,7 @@ namespace CrytonCoreNext.Crypting.Models
 
             if (maxSize > bytes.Length)
             {
-                return new(false, new(EMethod.AES, string.Empty));
+                return new(false, GetDefaultResult());
             }
 
             var recognizeByteArray = new byte[maxSize];
@@ -57,23 +60,31 @@ namespace CrytonCoreNext.Crypting.Models
             Array.Copy(recognizeByteArray, unique.Length, method, 0, method.Length);
             var extension = new byte[EXCFheader[nameof(_recognitionValues.Extension)].size];
             Array.Copy(recognizeByteArray, unique.Length + method.Length, extension, 0, extension.Length);
+            var keys = new byte[EXCFheader[nameof(_recognitionValues.Keys)].size];
+            Array.Copy(recognizeByteArray, unique.Length + method.Length + extension.Length, keys, 0, keys.Length);
             var checkSum = new byte[EXCFheader[nameof(_recognitionValues.CheckSum)].size];
-            Array.Copy(recognizeByteArray, unique.Length + method.Length + extension.Length, checkSum, 0, checkSum.Length);
+            Array.Copy(recognizeByteArray, unique.Length + method.Length + extension.Length + keys.Length, checkSum, 0, checkSum.Length);
 
-            var checkArray = new byte[method.Length + extension.Length];
+            var checkArray = new byte[method.Length + extension.Length + keys.Length];
             Buffer.BlockCopy(method, 0, checkArray, 0, method.Length);
             Buffer.BlockCopy(extension, 0, checkArray, method.Length, extension.Length);
+            Buffer.BlockCopy(keys, 0, checkArray, method.Length + extension.Length, keys.Length);
             var hashedArray = _MD5Hash.ComputeHash(checkArray);
 
             if (hashedArray.SequenceEqual(checkSum) && unique.SequenceEqual(EXCFheader[nameof(_recognitionValues.Unique)].value))
             {
-                return new(true, new(StringToMethodEnum(GetStringFromByteArray(method)), GetStringFromByteArray(extension)));
+                return new(true, new(StringToMethodEnum(GetStringFromByteArray(method)), GetStringFromByteArray(extension), GetStringFromByteArray(keys)));
             }
 
-            return new(false, new(EMethod.AES, string.Empty));
+            return new(false, GetDefaultResult());
         }
 
-        public byte[] PrepareRerecognizableBytes(EMethod method, string extension)
+        private static (EMethod method, string extension, string keys) GetDefaultResult()
+        {
+            return new(EMethod.AES, string.Empty, string.Empty);
+        }
+
+        public byte[] PrepareRerecognizableBytes(EMethod method, string extension, string keys)
         {
             var methodString = method.ToString();
             if (methodString.Length > EXCFheader[nameof(_recognitionValues.Method)].size)
@@ -92,6 +103,7 @@ namespace CrytonCoreNext.Crypting.Models
 
             EXCFheader[nameof(_recognitionValues.Method)] = new(EXCFheader[nameof(_recognitionValues.Method)].size, Encoding.ASCII.GetBytes(methodString));
             EXCFheader[nameof(_recognitionValues.Extension)] = new(EXCFheader[nameof(_recognitionValues.Extension)].size, Encoding.ASCII.GetBytes(extension));
+            EXCFheader[nameof(_recognitionValues.Keys)] = new(EXCFheader[nameof(_recognitionValues.Keys)].size, Encoding.ASCII.GetBytes(keys));
 
             if (!SanityCheck())
             {
@@ -99,9 +111,13 @@ namespace CrytonCoreNext.Crypting.Models
             }
 
             offset = 0;
-            var checkArray = new byte[EXCFheader[nameof(_recognitionValues.Method)].size + EXCFheader[nameof(_recognitionValues.Extension)].size];
+            var checkArray = new byte[
+                EXCFheader[nameof(_recognitionValues.Method)].size + 
+                EXCFheader[nameof(_recognitionValues.Extension)].size +
+                EXCFheader[nameof(_recognitionValues.Keys)].size];
             Buffer.BlockCopy(EXCFheader[nameof(_recognitionValues.Method)].value, 0, checkArray, 0, EXCFheader[nameof(_recognitionValues.Method)].value.Length);
             Buffer.BlockCopy(EXCFheader[nameof(_recognitionValues.Extension)].value, 0, checkArray, EXCFheader[nameof(_recognitionValues.Method)].size, EXCFheader[nameof(_recognitionValues.Extension)].value.Length);
+            Buffer.BlockCopy(EXCFheader[nameof(_recognitionValues.Keys)].value, 0, checkArray, EXCFheader[nameof(_recognitionValues.Method)].size + EXCFheader[nameof(_recognitionValues.Extension)].size, EXCFheader[nameof(_recognitionValues.Keys)].value.Length);
             var hashedArray = _MD5Hash.ComputeHash(checkArray);
             EXCFheader[nameof(_recognitionValues.CheckSum)] = new(EXCFheader[nameof(_recognitionValues.CheckSum)].size, hashedArray);
 
@@ -110,7 +126,6 @@ namespace CrytonCoreNext.Crypting.Models
                 Buffer.BlockCopy(item.Value.value, 0, recognizableArray, offset, item.Value.value.Length);
                 offset += item.Value.size;
             }
-
             return recognizableArray;
         }
 

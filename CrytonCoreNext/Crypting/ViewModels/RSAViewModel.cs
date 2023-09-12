@@ -15,7 +15,7 @@ using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.ViewModels
 {
-    public partial class RSAViewModel : CryptingMethodViewModel
+    public partial class RSAViewModel : CryptingMethodViewModel, ICryptingViewModel
     {
         private readonly ISnackbarService _snackbarService;
 
@@ -133,8 +133,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
             CombineMaxBytesMessage();
         }
 
-        [RelayCommand]
-        private void ExportKeys()
+        public string ExportObjects()
         {
             var serialzieObjects = new Objects()
             {
@@ -144,53 +143,32 @@ namespace CrytonCoreNext.Crypting.ViewModels
                     SelectedKeySize = selectedKeySize
                 },
                 Name = PageName
-            };
-
-            WindowDialog.SaveDialog saveDialog = new(new DialogHelper()
-            {
-                Filters = Static.Extensions.FilterToPrompt(Static.Extensions.DialogFilters.Json),
-                Multiselect = false,
-                //Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
-            });
-
-            var saveDestination = saveDialog.RunDialog();
-            if (saveDestination != null)
-            {
-                _jsonSerializer.Serialize(serialzieObjects, saveDestination.First());
-                _snackbarService.Show(Language.Post("Information"), Language.Post("Exported"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
-            }
+            }; 
+            return _jsonSerializer.Serialize(serialzieObjects);            
         }
 
-        [RelayCommand]
-        private async Task ImportKeys()
+        public bool ImportObjects(string str)
         {
-            WindowDialog.OpenDialog openDialog = new(new DialogHelper()
+            var objects = _jsonSerializer.Deserialize(str, typeof(Objects));
+            if (objects is not null)
             {
-                Filters = Static.Extensions.FilterToPrompt(Static.Extensions.DialogFilters.Json),
-                Multiselect = false,
-                //Title = (string)(Application.Current as App).Resources.MergedDictionaries[0]["OpenFileDialog"]
-            });
-
-            var saveDestination = openDialog.RunDialog();
-            if (saveDestination.Count != 0)
-            {
-                var objects = _jsonSerializer.Deserialize(saveDestination.First(), typeof(Objects));
-                if (objects is not null)
+                var castedObjects = (Objects)objects;
+                if (castedObjects.Name != PageName)
                 {
-                    var castedObjects = (Objects)objects;
-                    if (castedObjects.Name != PageName)
-                    {
-                        _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
-                    }
-                    else
-                    {
-                        _rsaHelper.FromXmlString(castedObjects.ToSerialzie.Keys);
-                        selectedKeySize = castedObjects.ToSerialzie.SelectedKeySize;
-                        await Task.Run(() => UpdateKeys());
-                        _snackbarService.Show(Language.Post("Information"), Language.Post("Imported"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
-                    }
+                    _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
+                    return false;
+                }
+                else
+                {
+                    _rsaHelper.FromXmlString(castedObjects.ToSerialzie.Keys);
+                    selectedKeySize = castedObjects.ToSerialzie.SelectedKeySize;
+                    UpdateKeys();
+                    _snackbarService.Show(Language.Post("Information"), Language.Post("Imported"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
+                    return true;
                 }
             }
+            return false;
         }
+
     }
 }

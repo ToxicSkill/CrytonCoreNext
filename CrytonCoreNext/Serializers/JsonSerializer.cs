@@ -1,32 +1,19 @@
 ﻿using CrytonCoreNext.Interfaces.Serializers;
 using Newtonsoft.Json;
-using System;
-using System.IO;
+using System; 
 
 namespace CrytonCoreNext.Serializers
 {
     public class JsonSerializer : IJsonSerializer
     {
-        public void Serialize(object obj, string filePath)
+        public string Serialize(object obj)
         {
-            var serializer = new Newtonsoft.Json.JsonSerializer();
-
-            using (var sw = new StreamWriter(filePath))
-            using (JsonWriter writer = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(writer, obj);
-            }
+            return JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
         }
 
-        public object Deserialize(string path, Type type)
+        public object? Deserialize(string str, Type type)
         {
-            var serializer = new Newtonsoft.Json.JsonSerializer();
-
-            using (var sw = new StreamReader(path))
-            using (var reader = new JsonTextReader(sw))
-            {
-                return serializer.Deserialize(reader, type);
-            }
+            return JsonConvert.DeserializeObject(str, type);
         }
     }
 }

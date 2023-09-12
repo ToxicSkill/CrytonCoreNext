@@ -16,7 +16,6 @@ namespace CrytonCoreNext.Crypting.Services
 
         private readonly ICryptingReader _cryptingReader;
 
-
         private List<string> _methodsNames;
 
         public CryptingService(ICryptingRecognition cryptingRecognition,
@@ -31,7 +30,7 @@ namespace CrytonCoreNext.Crypting.Services
         {
             if (file.Status.Equals(Status.Encrypted))
             {
-                var recognitionBytes = _cryptingRecognition.PrepareRerecognizableBytes(file.Method, file.Extension);
+                var recognitionBytes = _cryptingRecognition.PrepareRerecognizableBytes(file.Method, file.Extension, file.Keys);
                 var newBytes = recognitionBytes.Concat(file.Bytes);
                 if (recognitionBytes != null)
                 {

@@ -10,6 +10,7 @@ using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Properties;
 using CrytonCoreNext.Services;
+using CrytonCoreNext.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,8 +29,6 @@ namespace CrytonCoreNext.ViewModels
         private readonly IPasswordProvider _passwordProvider;
 
         private readonly IFileService _fileService;
-
-        private readonly List<ICryptingView<CryptingMethodViewModel>> _cryptingViews;
 
         [ObservableProperty]
         public IProgressService progressService;
@@ -76,12 +75,10 @@ namespace CrytonCoreNext.ViewModels
 
             _fileService = fileService;
             _cryptingService = cryptingService;
-            _cryptingViews = cryptingViews;
             _passwordProvider = passwordProvider;
-
             files = new();
 
-            UpdateCryptingViews();
+            CryptingViewsItemSource = new(cryptingViews);
             RegisterFileChangedEvent();
 
             MinimalPasswordStrenght = _passwordProvider.GetPasswordValidationStrength();
@@ -90,15 +87,10 @@ namespace CrytonCoreNext.ViewModels
 
         private void RegisterFileChangedEvent()
         {
-            foreach (var view in _cryptingViews)
+            foreach (var view in CryptingViewsItemSource)
             {
                 OnFileChanged += view.ViewModel.HandleFileChanged;
             }
-        }
-
-        private void UpdateCryptingViews()
-        {
-            CryptingViewsItemSource = new(_cryptingViews);
         }
 
         partial void OnSelectedFileChanged(CryptFile value)
@@ -194,7 +186,7 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
-        private async void PerformCrypting()
+        private async Task PerformCrypting()
         {
             Lock();
             if (
@@ -212,6 +204,7 @@ namespace CrytonCoreNext.ViewModels
             if (!result.Equals(Array.Empty<byte>()) && Files.Any())
             {
                 _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedCryptingView.ViewModel.Crypting.Method);
+                SelectedFile.Keys = ((ICryptingViewModel)SelectedCryptingView.ViewModel).ExportObjects(); 
                 UpdateStateOfSelectedFile();
                 PostSuccessSnackbar(Language.Post("Success"));
             }
