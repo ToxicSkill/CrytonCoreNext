@@ -58,7 +58,7 @@ namespace CrytonCoreNext
             services.AddSingleton<IXmlSerializer, XmlSerializer>();
 
             // crypting
-            services.AddScoped(CreateCryptingRecognition);
+            services.AddScoped<ICryptingRecognition, CryptingRecognition>();
             services.AddScoped<ICryptingReader, CryptingReader>();
             services.AddScoped<ICryptingReader, CryptingReader>();
             services.AddScoped<IPasswordProvider, PasswordProvider>();
@@ -199,12 +199,6 @@ namespace CrytonCoreNext
             var snackbar = provider.GetRequiredService<ISnackbarService>();
             var rsa = provider.GetServices<ICrypting>().ToList().Where(x => x.Method == Crypting.Enums.EMethod.RSA).First();
             return new RSAViewModel(rsa, snackbar, jsonSerialzer, xmlSerialzer, rsa.Method.ToString());
-        }
-
-        private static ICryptingRecognition CreateCryptingRecognition(IServiceProvider provider)
-        {
-            var recognitionValues = new RecognitionValues(AppKey);
-            return new CryptingRecognition(recognitionValues);
         }
 
         private static IFileService CreateFileService(IServiceProvider provider)

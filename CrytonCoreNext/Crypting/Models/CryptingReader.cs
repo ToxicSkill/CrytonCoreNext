@@ -8,18 +8,18 @@ namespace CrytonCoreNext.Crypting.Models
 {
     public class CryptingReader : ICryptingReader
     {
-        public CryptFile ReadCryptFile(File file, (bool succes, (EMethod method, string extension, string keys)) cryptingRecognitionResult)
+        public CryptFile ReadCryptFile(File file, Recognition recognition)
         {
             var status = Status.Decrypted;
             var method = EMethod.AES;
-            if (cryptingRecognitionResult.succes)
+            if (recognition.Status == CrytonCoreNext.Enums.EStatus.Success)
             {
                 status = Status.Encrypted;
                 file.Bytes = file.Bytes.Skip(64).ToArray();
-                file.Extension = cryptingRecognitionResult.Item2.extension;
-                method = cryptingRecognitionResult.Item2.method;
+                file.Extension = recognition.Extension;
+                method = recognition.Method;
             }
-            return new CryptFile(file, status, method, cryptingRecognitionResult.Item2.keys, file.Guid);
+            return new CryptFile(file, status, method, recognition.Keys, file.Guid);
         }
     }
 }
