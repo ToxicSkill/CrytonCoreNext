@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Crypting.Enums;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Models;
 
 namespace CrytonCoreNext.Crypting.Interfaces
@@ -8,5 +9,9 @@ namespace CrytonCoreNext.Crypting.Interfaces
         byte[] PrepareRerecognizableBytes(Recognition recon);
 
         Recognition RecognizeBytes(byte[] bytes);
+
+        void AddObject(ERObject obj);
+
+        void RemoveObject(ERObject obj);
     }
 }

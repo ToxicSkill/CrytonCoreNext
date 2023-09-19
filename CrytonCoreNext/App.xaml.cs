@@ -6,6 +6,8 @@ using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.Services;
 using CrytonCoreNext.Crypting.ViewModels;
 using CrytonCoreNext.Crypting.Views;
+using CrytonCoreNext.Enums;
+using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Interfaces.Serializers;
@@ -117,10 +119,15 @@ namespace CrytonCoreNext
             await _host.StartAsync();
             var mw = _host.Services.GetService<MainViewModel>();
             var sw = _host.Services.GetService<SettingsViewModel>();
+            var cr = _host.Services.GetService<ICryptingRecognition>();
             if (sw != null && mw != null)
             {
                 sw.ThemeStyleChanged += mw.InvokeThemeChanged;
             }
+            cr?.Add(ERObject.CheckSum)
+                .Add(ERObject.Method)
+                .Add(ERObject.Extension)
+                .Add(ERObject.Keys);
         }
 
         private void OnLoaded(object sender, System.Windows.Navigation.NavigationEventArgs e)

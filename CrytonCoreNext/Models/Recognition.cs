@@ -5,6 +5,25 @@ using System.Collections.Generic;
 
 namespace CrytonCoreNext.Models
 {
+    public struct RecognitionResult
+    {
+        public EStatus Status { get; init; }
+
+        public byte[] Bytes { get; init; }
+
+        public RecognitionResult(EStatus status, byte[] bytes)
+        {
+            Status = status;
+            Bytes = bytes;
+        }
+
+        public RecognitionResult(EStatus status)
+        {
+            Status = status;
+            Bytes = Array.Empty<byte>();
+        }
+    }
+
     public struct Recognition
     {
         private const int MethodMaxSize = 14;

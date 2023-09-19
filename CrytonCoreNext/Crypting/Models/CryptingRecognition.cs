@@ -16,11 +16,83 @@ namespace CrytonCoreNext.Crypting.Models
 
     public class CryptingRecognition : ICryptingRecognition
     {
+        private List<ERObject> _objectsToRecognize; 
+
         private readonly MD5 _MD5Hash;
 
         public CryptingRecognition()
         {
             _MD5Hash = MD5.Create();
+            _objectsToRecognize = new();
+        }
+
+        public void AddObject(ERObject obj)
+        {
+            _objectsToRecognize.Add(obj);
+        }
+
+        public void RemoveObject(ERObject obj)
+        {
+            if (_objectsToRecognize.Contains(obj))
+            {
+                _objectsToRecognize.Remove(obj);
+            }
+        }
+
+        public RecognitionResult GetRecognitionBytes(Recognition recon)
+        {
+            var objectsToStoreByRObject = new Dictionary<ERObject, string>();
+
+            if (!_objectsToRecognize.Contains(ERObject.CheckSum) ||
+                recon.Keys.Length > recon.SizeOf[ERObject.Keys] ||
+                !_objectsToRecognize.Any()) 
+            {
+                return new RecognitionResult(EStatus.Error);
+            }
+
+            if (_objectsToRecognize.Contains(ERObject.Method))
+            {
+                var methodString = recon.Method.ToString();
+                if (methodString.Length > recon.SizeOf[ERObject.Method])
+                {
+                    methodString = methodString[..recon.SizeOf[ERObject.Method]];
+                }
+                objectsToStoreByRObject.Add(ERObject.Method, methodString);
+            }
+
+            if (_objectsToRecognize.Contains(ERObject.Extension))
+            {
+                if (recon.Extension.Length > recon.SizeOf[ERObject.Extension])
+                {
+                    recon.Extension = recon.Extension[..recon.SizeOf[ERObject.Extension]];
+                }
+                objectsToStoreByRObject.Add(ERObject.Extension, recon.Extension);
+            }
+
+            if (_objectsToRecognize.Contains(ERObject.Keys))
+            { 
+                objectsToStoreByRObject.Add(ERObject.Keys, recon.Keys);
+            }
+
+
+            var offset = 0;
+            byte[] recognizableArray = new byte[objectsToStoreByRObject.Sum(x => recon.SizeOf[x.Key])];
+            foreach (var obj in objectsToStoreByRObject)
+            {
+                var bytesToAdd = Encoding.ASCII.GetBytes(obj.Value);
+                Buffer.BlockCopy(bytesToAdd, 0, recognizableArray, offset, bytesToAdd.Length);
+                offset += recon.SizeOf[obj.Key];
+            }
+            var combinedString = string.Join("", objectsToStoreByRObject.Select(x => x.Value).ToArray());
+            var stringBytes = Encoding.ASCII.GetBytes(combinedString);
+            if (stringBytes == null || stringBytes.Length == 0)
+            {
+                return new RecognitionResult(EStatus.Error);
+            }
+            else
+            {
+                return new(EStatus.Success, recognizableArray);
+            }
         }
 
         public Recognition RecognizeBytes(byte[] bytes)
@@ -68,6 +140,7 @@ namespace CrytonCoreNext.Crypting.Models
 
         public byte[] PrepareRerecognizableBytes(Recognition recon)
         {
+            var res = GetRecognitionBytes(recon);
             var methodString = recon.Method.ToString();
             if (methodString.Length > recon.SizeOf[ERObject.Method])
             {
