@@ -2,28 +2,52 @@
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Enums;
 using CrytonCoreNext.Models;
+using Nito.AsyncEx.Synchronous;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Crypting.Models
 {
 
     public class CryptingRecognition : ICryptingRecognition
     {
-        private List<ERObject> _objectsToRecognize; 
+        private readonly List<ERObject> _objectsToRecognize;
+
+        private readonly ICrypting _cryptingMethod;
 
         private readonly MD5 _MD5Hash;
 
-        public CryptingRecognition()
+        private const int MethodMaxSize = 14;
+
+        private const int ExtensionMaxSize = 18;
+
+        private const int KeysMaxSize = 1064;
+
+        private const int CheckSumMaxSize = 16;
+
+        private Dictionary<ERObject, int> _sizeOf;
+
+        public CryptingRecognition(ICrypting crypting)
         {
             _MD5Hash = MD5.Create();
             _objectsToRecognize = new();
+            _cryptingMethod = crypting;
+            CreateDictionariy();
+        }
+
+        private void CreateDictionariy()
+        {
+            _sizeOf = new()
+            {
+                { ERObject.CheckSum, CheckSumMaxSize},
+                { ERObject.Method, MethodMaxSize },
+                { ERObject.Extension, ExtensionMaxSize },
+                { ERObject.Keys, KeysMaxSize }
+            };
         }
 
         public void AddObject(ERObject obj)
@@ -43,8 +67,7 @@ namespace CrytonCoreNext.Crypting.Models
         {
             var objectsToStoreByRObject = new Dictionary<ERObject, string>();
 
-            if (!_objectsToRecognize.Contains(ERObject.CheckSum) ||
-                recon.Keys.Length > recon.SizeOf[ERObject.Keys] ||
+            if (recon.Keys.Length + 8> _sizeOf[ERObject.Keys] || // max 3des size is n*8-(n%8)
                 !_objectsToRecognize.Any()) 
             {
                 return new RecognitionResult(EStatus.Error);
@@ -53,18 +76,18 @@ namespace CrytonCoreNext.Crypting.Models
             if (_objectsToRecognize.Contains(ERObject.Method))
             {
                 var methodString = recon.Method.ToString();
-                if (methodString.Length > recon.SizeOf[ERObject.Method])
+                if (methodString.Length > _sizeOf[ERObject.Method])
                 {
-                    methodString = methodString[..recon.SizeOf[ERObject.Method]];
+                    methodString = methodString[.._sizeOf[ERObject.Method]];
                 }
                 objectsToStoreByRObject.Add(ERObject.Method, methodString);
             }
 
             if (_objectsToRecognize.Contains(ERObject.Extension))
             {
-                if (recon.Extension.Length > recon.SizeOf[ERObject.Extension])
+                if (recon.Extension.Length > _sizeOf[ERObject.Extension])
                 {
-                    recon.Extension = recon.Extension[..recon.SizeOf[ERObject.Extension]];
+                    recon.Extension = recon.Extension[.._sizeOf[ERObject.Extension]];
                 }
                 objectsToStoreByRObject.Add(ERObject.Extension, recon.Extension);
             }
@@ -72,26 +95,77 @@ namespace CrytonCoreNext.Crypting.Models
             if (_objectsToRecognize.Contains(ERObject.Keys))
             { 
                 objectsToStoreByRObject.Add(ERObject.Keys, recon.Keys);
-            }
-
+            }           
 
             var offset = 0;
-            byte[] recognizableArray = new byte[objectsToStoreByRObject.Sum(x => recon.SizeOf[x.Key])];
+            var checkArray = new byte[objectsToStoreByRObject.Sum(x => _sizeOf[x.Key])];
+            var protectedKeysBytes = Array.Empty<byte>();
             foreach (var obj in objectsToStoreByRObject)
             {
                 var bytesToAdd = Encoding.ASCII.GetBytes(obj.Value);
-                Buffer.BlockCopy(bytesToAdd, 0, recognizableArray, offset, bytesToAdd.Length);
-                offset += recon.SizeOf[obj.Key];
+                if (obj.Key == ERObject.Keys)
+                {
+                    protectedKeysBytes = CryptCheckArray(bytesToAdd).Bytes;
+                }
+                Buffer.BlockCopy(bytesToAdd, 0, checkArray, offset, bytesToAdd.Length);
+                offset += _sizeOf[obj.Key];
             }
             var combinedString = string.Join("", objectsToStoreByRObject.Select(x => x.Value).ToArray());
-            var stringBytes = Encoding.ASCII.GetBytes(combinedString);
-            if (stringBytes == null || stringBytes.Length == 0)
+            var checkArrayBytes = Encoding.ASCII.GetBytes(combinedString);
+
+            var hashedArray = _MD5Hash.ComputeHash(checkArray);
+            offset = 0;
+            foreach (var obj in objectsToStoreByRObject)
+            {
+                if (obj.Key == ERObject.Keys)
+                {
+                    break;
+                }
+                offset += _sizeOf[obj.Key];
+            }
+            Buffer.BlockCopy(new byte[_sizeOf[ERObject.Keys]], 0, checkArray, offset, _sizeOf[ERObject.Keys]);
+            Buffer.BlockCopy(protectedKeysBytes, 0, checkArray, offset, protectedKeysBytes.Length);
+            var recognizableBytes = new byte[checkArray.Length + hashedArray.Length];
+
+            Buffer.BlockCopy(checkArray, 0, recognizableBytes, 0, checkArray.Length);
+            Buffer.BlockCopy(hashedArray, 0, recognizableBytes, checkArray.Length, hashedArray.Length);
+
+            if (checkArrayBytes == null || checkArrayBytes.Length == 0)
             {
                 return new RecognitionResult(EStatus.Error);
             }
             else
             {
-                return new(EStatus.Success, recognizableArray);
+                var re = RecognizeBytes(recognizableBytes);
+                return new(EStatus.Success, recognizableBytes);
+            }
+        }
+
+        private RecognitionResult CryptCheckArray(byte[] array)
+        {
+            try
+            {
+                var task = Task.Run(async () => await _cryptingMethod.Encrypt(array, new Progress<string>()));
+                var resultArray = task.WaitAndUnwrapException();
+                return new RecognitionResult(EStatus.Success, resultArray);
+            }
+            catch (CryptographicException)
+            {
+                return new RecognitionResult(EStatus.Error, Array.Empty<byte>());
+            }
+        }
+
+        private RecognitionResult DecryptCheckArray(byte[] array)
+        {
+            try
+            {
+                var task = Task.Run(async () => await _cryptingMethod.Decrypt(array, new Progress<string>()));
+                var resultArray = task.WaitAndUnwrapException(); 
+                return new RecognitionResult(EStatus.Success, resultArray);
+            }
+            catch (CryptographicException)
+            {
+                return new RecognitionResult(EStatus.Error, Array.Empty<byte>());
             }
         }
 
@@ -99,7 +173,7 @@ namespace CrytonCoreNext.Crypting.Models
         {
             var recon = new Recognition();
             var maxSize = 0;
-            foreach (var size in recon.SizeOf.Values)
+            foreach (var size in _sizeOf.Values)
             {
                 maxSize += size;
             }
@@ -111,19 +185,43 @@ namespace CrytonCoreNext.Crypting.Models
 
             var recognizeByteArray = new byte[maxSize];
             Buffer.BlockCopy(bytes, 0, recognizeByteArray, 0, maxSize);
-            var method = new byte[recon.SizeOf[ERObject.Method]];
-            Array.Copy(recognizeByteArray, 0, method, 0, recon.SizeOf[ERObject.Method]);
-            var extension = new byte[recon.SizeOf[ERObject.Extension]];
-            Array.Copy(recognizeByteArray, method.Length, extension, 0, recon.SizeOf[ERObject.Extension]);
-            var keys = new byte[recon.SizeOf[ERObject.Keys]];
-            Array.Copy(recognizeByteArray,  method.Length + extension.Length, keys, 0, recon.SizeOf[ERObject.Keys]);
-            var checkSum = new byte[recon.SizeOf[ERObject.CheckSum]];
-            Array.Copy(recognizeByteArray, method.Length + extension.Length + keys.Length, checkSum, 0, recon.SizeOf[ERObject.CheckSum]);
+            var method = new byte[_sizeOf[ERObject.Method]];
+            Array.Copy(recognizeByteArray, 0, method, 0, _sizeOf[ERObject.Method]);
+            var extension = new byte[_sizeOf[ERObject.Extension]];
+            Array.Copy(recognizeByteArray, method.Length, extension, 0, _sizeOf[ERObject.Extension]);
+            var keys = new byte[_sizeOf[ERObject.Keys]];
+            Array.Copy(recognizeByteArray,  method.Length + extension.Length, keys, 0, _sizeOf[ERObject.Keys]);
+            var checkSum = new byte[_sizeOf[ERObject.CheckSum]];
+            Array.Copy(recognizeByteArray, method.Length + extension.Length + keys.Length, checkSum, 0, _sizeOf[ERObject.CheckSum]);
+
+            if (method == null || extension == null || keys == null || checkSum == null)
+            {
+                return recon;
+            }
+
+            var offset = 0;
+            for (var i = keys.Length - 1; i >=0; i--)
+            {
+                if (keys[i] != 0)
+                {
+                    offset = i + 1;
+                    break;
+                }
+            }
+            var protectedKeys = new byte[offset];
+            Array.Copy(keys, 0, protectedKeys, 0, offset);
+            try
+            {
+                var decryptedBytes = DecryptCheckArray(protectedKeys).Bytes;
+            }
+            catch (CryptographicException)
+            {
+            }
 
             var checkArray = new byte[
-                recon.SizeOf[ERObject.Method] +
-                recon.SizeOf[ERObject.Extension] +
-                recon.SizeOf[ERObject.Keys]];
+                _sizeOf[ERObject.Method] +
+                _sizeOf[ERObject.Extension] +
+                _sizeOf[ERObject.Keys]];
 
             Buffer.BlockCopy(method, 0, checkArray, 0, method.Length);
             Buffer.BlockCopy(extension, 0, checkArray, method.Length, extension.Length);
@@ -136,49 +234,6 @@ namespace CrytonCoreNext.Crypting.Models
             }
 
             return recon;
-        }
-
-        public byte[] PrepareRerecognizableBytes(Recognition recon)
-        {
-            var res = GetRecognitionBytes(recon);
-            var methodString = recon.Method.ToString();
-            if (methodString.Length > recon.SizeOf[ERObject.Method])
-            {
-                methodString = methodString[..recon.SizeOf[ERObject.Method]];
-            }
-
-            if (recon.Extension.Length > recon.SizeOf[ERObject.Extension])
-            {
-                recon.Extension = recon.Extension[..recon.SizeOf[ERObject.Extension]];
-            }
-
-            var offset = 0;
-            byte[] recognizableArray = new byte[recon.SizeOf.Sum(x => x.Value)];
-            byte[] checkSum = new byte[recon.SizeOf[ERObject.CheckSum]];
-
-            var methodBytes = Encoding.ASCII.GetBytes(methodString);
-            var extensionBytes = Encoding.ASCII.GetBytes(recon.Extension);
-            var keysBytes = Encoding.ASCII.GetBytes(recon.Keys);
-
-            offset = 0;
-            var checkArray = new byte[
-                recon.SizeOf[ERObject.Method] + 
-                recon.SizeOf[ERObject.Extension] +
-                recon.SizeOf[ERObject.Keys]];
-            Buffer.BlockCopy(methodBytes, 0, checkArray, 0, methodBytes.Length);
-            Buffer.BlockCopy(extensionBytes, 0, checkArray, recon.SizeOf[ERObject.Method], extensionBytes.Length);
-            Buffer.BlockCopy(keysBytes, 0, checkArray, recon.SizeOf[ERObject.Method] + recon.SizeOf[ERObject.Extension], keysBytes.Length);
-            var hashedArray = _MD5Hash.ComputeHash(checkArray);
-
-            Buffer.BlockCopy(methodBytes, 0, recognizableArray, offset, methodBytes.Length);
-            offset += recon.SizeOf[ERObject.Method];
-            Buffer.BlockCopy(extensionBytes, 0, recognizableArray, offset, extensionBytes.Length);
-            offset += recon.SizeOf[ERObject.Extension];
-            Buffer.BlockCopy(keysBytes, 0, recognizableArray, offset, keysBytes.Length);
-            offset += recon.SizeOf[ERObject.Keys];
-            Buffer.BlockCopy(hashedArray, 0, recognizableArray, offset, hashedArray.Length);
-
-            return recognizableArray;
         }
 
         private string GetStringFromByteArray(byte[] array)

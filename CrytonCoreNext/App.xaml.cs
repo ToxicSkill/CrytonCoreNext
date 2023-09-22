@@ -124,8 +124,7 @@ namespace CrytonCoreNext
             {
                 sw.ThemeStyleChanged += mw.InvokeThemeChanged;
             }
-            cr?.Add(ERObject.CheckSum)
-                .Add(ERObject.Method)
+            cr?.Add(ERObject.Method)
                 .Add(ERObject.Extension)
                 .Add(ERObject.Keys);
         }

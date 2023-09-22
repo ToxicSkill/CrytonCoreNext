@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace CrytonCoreNext.Crypting.Interfaces
+﻿namespace CrytonCoreNext.Crypting.Interfaces
 {
     public interface ICryptingViewModel
     {

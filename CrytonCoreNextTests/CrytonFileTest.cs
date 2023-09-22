@@ -33,7 +33,7 @@ namespace CrytonCoreNextTests
 
         public Files()
         {
-            _cryptingRecognition = new CryptingRecognition(new(Guid.NewGuid()));
+            _cryptingRecognition = new CryptingRecognition();
             _cryptingReader = new CryptingReader();
             _cryptingService = new CryptingService(_cryptingRecognition, _cryptingReader);
             _filesSaver = new FilesSaver();

@@ -14,7 +14,7 @@ namespace CrytonCoreNextTests
 
         public CrytonFileRecognitionTest()
         {
-            _cryptingRecognition = new CryptingRecognition(new(Guid.NewGuid()));
+            _cryptingRecognition = new CryptingRecognition();
         }
 
         [Fact]
@@ -22,54 +22,68 @@ namespace CrytonCoreNextTests
         {
             var method = EMethod.AES;
             var extension = "pdf";
-            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
-            Assert.NotNull(result);
+            var result = _cryptingRecognition.GetRecognitionBytes(new CrytonCoreNext.Models.Recognition()
+            { 
+                Method = EMethod.AES,
+                Extension = "pdf"
+            });
+            Assert.Equal(result.Status, CrytonCoreNext.Enums.EStatus.Success);
         }
 
         [Fact]
         public void TestNamesTrueShoudCorretLenght()
         {
-            var method = EMethod.AES;
-            var extension = "pdf";
-            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
-            Assert.Equal(_correctLenght, result.Length);
+            var result = _cryptingRecognition.GetRecognitionBytes(new CrytonCoreNext.Models.Recognition()
+            {
+                Method = EMethod.AES,
+                Extension = "pdf"
+            });
+            Assert.Equal(_correctLenght, result.Bytes.Length);
         }
 
 
         [Fact]
         public void TestNamesFalseShoudEmpty()
         {
-            var method = EMethod.AES;
-            var extension = string.Empty;
-            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
-            Assert.Equal(_defaultBytes, result);
+            var result = _cryptingRecognition.GetRecognitionBytes(new CrytonCoreNext.Models.Recognition()
+            {
+                Method = EMethod.AES,
+                Extension = string.Empty
+            });
+            Assert.Equal(_defaultBytes, result.Bytes);
         }
 
         [Fact]
         public void TestNamesPartlyFalseShoudEmpty()
         {
-            var method = EMethod.AES;
-            var extension = string.Empty;
-            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
-            Assert.Equal(_defaultBytes, result);
+            var result = _cryptingRecognition.GetRecognitionBytes(new CrytonCoreNext.Models.Recognition()
+            {
+                Method = EMethod.AES,
+                Extension = string.Empty
+            });
+            Assert.Equal(_defaultBytes, result.Bytes);
         }
 
         [Fact]
         public void TestNamesToLongShoudNotEmpty()
         {
-            var method = EMethod.AES;
-            var extension = "txtxtxtxtxtxtxtxtx";
-            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
-            Assert.Equal(_correctLenght, result.Length);
+            var result = _cryptingRecognition.GetRecognitionBytes(new CrytonCoreNext.Models.Recognition()
+            {
+                Method = EMethod.AES,
+                Extension = "txtxtxtxtxtxtxtxtx"
+            });
+            Assert.Equal(_correctLenght, result.Bytes.Length);
         }
 
         [Fact]
         public void TestNamesMaxLenghtShoudNotNull()
         {
-            var method = EMethod.AES;
-            var extension = "txttxtttx";
-            var result = _cryptingRecognition.PrepareRerecognizableBytes(method, extension);
-            Assert.Equal(_correctLenght, result.Length);
+            var result = _cryptingRecognition.GetRecognitionBytes(new CrytonCoreNext.Models.Recognition()
+            {
+                Method = EMethod.AES,
+                Extension = "txttxtttx"
+            });
+            Assert.Equal(_correctLenght, result.Bytes.Length);
         }
     }
 }

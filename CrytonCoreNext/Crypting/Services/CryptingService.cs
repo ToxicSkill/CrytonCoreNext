@@ -30,16 +30,16 @@ namespace CrytonCoreNext.Crypting.Services
         {
             if (file.Status.Equals(Status.Encrypted))
             {
-                var recognitionBytes = _cryptingRecognition.PrepareRerecognizableBytes(
+                var recognitionResult = _cryptingRecognition.GetRecognitionBytes(
                     new Recognition(
                         CrytonCoreNext.Enums.EStatus.Success, 
                         file.Method,
                         file.Extension, 
                         file.Keys));
-                var newBytes = recognitionBytes.Concat(file.Bytes);
-                if (recognitionBytes != null)
+                var newBytes = recognitionResult.Bytes.Concat(file.Bytes);
+                if (recognitionResult.Status == CrytonCoreNext.Enums.EStatus.Success)
                 {
-                    if (recognitionBytes.Length > 0)
+                    if (recognitionResult.Bytes.Length > 0)
                     {
                         file.Bytes = newBytes.ToArray();
                     }

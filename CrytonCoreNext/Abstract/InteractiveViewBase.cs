@@ -3,7 +3,6 @@ using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 

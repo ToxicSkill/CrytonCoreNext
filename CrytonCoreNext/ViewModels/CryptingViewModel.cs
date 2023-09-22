@@ -10,7 +10,6 @@ using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Properties;
 using CrytonCoreNext.Services;
-using CrytonCoreNext.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

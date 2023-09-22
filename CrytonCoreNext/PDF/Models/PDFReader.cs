@@ -4,8 +4,6 @@ using CrytonCoreNext.PDF.Interfaces;
 using System.Diagnostics;
 using System;
 using System.Collections.Generic;
-using iText.Kernel.Pdf;
-using System.Text;
 using Wpf.Ui.Controls;
 using CrytonCoreNext.Extensions;
 using PdfiumViewer;
