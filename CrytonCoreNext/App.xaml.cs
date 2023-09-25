@@ -119,14 +119,10 @@ namespace CrytonCoreNext
             await _host.StartAsync();
             var mw = _host.Services.GetService<MainViewModel>();
             var sw = _host.Services.GetService<SettingsViewModel>();
-            var cr = _host.Services.GetService<ICryptingRecognition>();
             if (sw != null && mw != null)
             {
                 sw.ThemeStyleChanged += mw.InvokeThemeChanged;
             }
-            cr?.Add(ERObject.Method)
-                .Add(ERObject.Extension)
-                .Add(ERObject.Keys);
         }
 
         private void OnLoaded(object sender, System.Windows.Navigation.NavigationEventArgs e)

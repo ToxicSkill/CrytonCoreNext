@@ -203,7 +203,7 @@ namespace CrytonCoreNext.ViewModels
             if (!result.Equals(Array.Empty<byte>()) && Files.Any())
             {
                 _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedCryptingView.ViewModel.Crypting.Method);
-                SelectedFile.Keys = ((ICryptingViewModel)SelectedCryptingView.ViewModel).ExportObjects(); 
+                SelectedFile.Recognition.SetKeys(((ICryptingViewModel)SelectedCryptingView.ViewModel).ExportObjects()); 
                 UpdateStateOfSelectedFile();
                 PostSuccessSnackbar(Language.Post("Success"));
             }

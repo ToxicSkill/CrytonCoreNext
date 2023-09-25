@@ -6,6 +6,7 @@ using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces.Serializers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows.Media;
 using Wpf.Ui.Mvvm.Contracts;
 
@@ -129,7 +130,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
             CombineMaxBytesMessage();
         }
 
-        public string ExportObjects()
+        public byte[] ExportObjects()
         {
             var serialzieObjects = new Objects()
             {
@@ -139,8 +140,8 @@ namespace CrytonCoreNext.Crypting.ViewModels
                     SelectedKeySize = selectedKeySize
                 },
                 Name = PageName
-            }; 
-            return _jsonSerializer.Serialize(serialzieObjects);            
+            };
+            return Encoding.ASCII.GetBytes(_jsonSerializer.Serialize(serialzieObjects)); 
         }
 
         public bool ImportObjects(string str)

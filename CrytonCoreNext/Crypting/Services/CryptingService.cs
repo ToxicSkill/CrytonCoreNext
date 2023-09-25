@@ -35,7 +35,9 @@ namespace CrytonCoreNext.Crypting.Services
                         CrytonCoreNext.Enums.EStatus.Success, 
                         file.Method,
                         file.Extension, 
-                        file.Keys));
+                        file.Recognition.Keys,
+                        file.Recognition.KeysLenght,
+                        file.Recognition.KeysCheckSum));
                 var newBytes = recognitionResult.Bytes.Concat(file.Bytes);
                 if (recognitionResult.Status == CrytonCoreNext.Enums.EStatus.Success)
                 {

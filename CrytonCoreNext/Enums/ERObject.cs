@@ -2,9 +2,11 @@
 {
     public enum ERObject
     {
-        CheckSum,
         Method,
         Extension,
-        Keys
+        Keys,
+        KeysLenght,
+        CheckSumKeys,
+        CheckSum
     }
 }

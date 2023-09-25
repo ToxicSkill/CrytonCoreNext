@@ -8,9 +8,5 @@ namespace CrytonCoreNext.Crypting.Interfaces
         RecognitionResult GetRecognitionBytes(Recognition recon);
 
         Recognition RecognizeBytes(byte[] bytes);
-
-        void AddObject(ERObject obj);
-
-        void RemoveObject(ERObject obj);
     }
 }

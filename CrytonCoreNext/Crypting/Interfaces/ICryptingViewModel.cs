@@ -2,7 +2,7 @@
 {
     public interface ICryptingViewModel
     {
-        string ExportObjects();
+        byte[] ExportObjects();
 
         bool ImportObjects(string str);
     }

@@ -6,6 +6,7 @@ using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces.Serializers;
 using System.Collections.ObjectModel;
+using System.Text;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 
@@ -61,7 +62,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
             SelectedKey = _aesHelper.GetCurrentKeySize();
         }
 
-        public string ExportObjects()
+        public byte[] ExportObjects()
         {
             var serialzieObjects = new Objects()
             {
@@ -72,7 +73,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
                 },
                 Name = PageName
             };
-            return _jsonSerializer.Serialize(serialzieObjects);
+            return Encoding.ASCII.GetBytes(_jsonSerializer.Serialize(serialzieObjects));
         }
 
         public bool ImportObjects(string str)

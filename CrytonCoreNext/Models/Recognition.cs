@@ -23,30 +23,38 @@ namespace CrytonCoreNext.Models
         }
     }
 
-    public struct Recognition
+    public class Recognition
     {
-
         public EMethod Method { get; set; }
 
         public string Extension { get; set; }
 
-        public string Keys { get; set; }
+        public byte[] Keys { get; set; }
 
-        public EStatus Status { get; set; }
+        public int KeysLenght { get; set; }
 
-        public byte[] CheckSum { get; set; }
+        public EStatus Status { get; set; } 
 
-        public Recognition(EStatus status, EMethod method, string extension, string keys)
+        public byte[] KeysCheckSum { get; set; }
+
+        public Recognition(EStatus status, EMethod method, string extension, byte[] keys, int keysLenght, byte[] keysCheckArray)
         { 
             Status = status;
             Method = method;
             Extension = extension;
             Keys = keys;
+            KeysLenght = keysLenght;
+            KeysCheckSum = keysCheckArray;
         }
 
         public Recognition()
         { 
             Status = EStatus.Error;
+        }
+
+        public void SetKeys(byte[] keys)
+        {
+            Keys = keys;
         }
     }
 }

@@ -17,9 +17,8 @@ namespace CrytonCoreNext.Crypting.Models
                 status = Status.Encrypted;
                 file.Bytes = file.Bytes.Skip(64).ToArray();
                 file.Extension = recognition.Extension;
-                method = recognition.Method;
             }
-            return new CryptFile(file, status, method, recognition.Keys, file.Guid);
+            return new CryptFile(file, status, recognition, file.Guid);
         }
     }
 }
