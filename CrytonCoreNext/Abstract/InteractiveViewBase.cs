@@ -1,8 +1,11 @@
 ﻿using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.Sound;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 
@@ -26,6 +29,7 @@ namespace CrytonCoreNext.Abstract
         protected void PostSuccessSnackbar(string text)
         {
             _snackbarService.Show("Success", text, SymbolRegular.CheckmarkCircle20, ControlAppearance.Success);
+            NotificationPlayer.PlayNotificationSound();
         }
 
         protected void PostErrorSnackbar(string text)
@@ -36,6 +40,7 @@ namespace CrytonCoreNext.Abstract
         protected void PostWarningSnackbar(string text)
         {
             _snackbarService.Show("Warning", text, SymbolRegular.Warning20, ControlAppearance.Caution);
+            SystemSounds.Exclamation.Play();
         }
 
         protected async IAsyncEnumerable<File> LoadFiles()
