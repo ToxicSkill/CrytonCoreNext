@@ -765,7 +765,7 @@
                                 VerticalAlignment="Stretch"
                                 HorizontalAlignment="Stretch" />
                         
-                        <ui:Badge Grid.Column="1" Margin="0,8,20,8" VerticalAlignment="Center" Appearance="Secondary" Content="{Binding WebViewSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <ui:Badge Grid.Column="1" Margin="0,8,20,8" VerticalAlignment="Center" Appearance="Secondary" Content="{Binding WebViewSourceFileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                     <wpf:WebView2 Grid.Row="1" Source="{Binding WebViewSource}" Margin="20"/>
                 </Grid>

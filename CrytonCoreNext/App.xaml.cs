@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using Wpf.Ui.Mvvm.Contracts;
 using Wpf.Ui.Mvvm.Services;
@@ -117,12 +118,16 @@ namespace CrytonCoreNext
         private async void OnStartup(object sender, StartupEventArgs e)
         {
             await _host.StartAsync();
+            await Task.Delay(200);
             var mw = _host.Services.GetService<MainViewModel>();
             var sw = _host.Services.GetService<SettingsViewModel>();
             if (sw != null && mw != null)
             {
                 sw.ThemeStyleChanged += mw.InvokeThemeChanged;
             }
+            var pv = _host.Services.GetService<PdfView>();
+            var cv = _host.Services.GetService<CryptingView>();
+            var av = _host.Services.GetService<AIViewerView>();
         }
 
         private void OnLoaded(object sender, System.Windows.Navigation.NavigationEventArgs e)

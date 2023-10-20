@@ -13,6 +13,7 @@ using iText.Kernel.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +39,9 @@ namespace CrytonCoreNext.ViewModels
 
         [ObservableProperty]
         public string webViewSource;
+
+        [ObservableProperty]
+        public string webViewSourceFileName;
 
         [ObservableProperty]
         public bool anyLoadedFile;
@@ -178,6 +182,7 @@ namespace CrytonCoreNext.ViewModels
         {
             Lock();
             WebViewSource = GetFileFromDialog(Static.Extensions.DialogFilters.Pdf);
+            WebViewSourceFileName = Path.GetFileName(WebViewSource);
             Unlock();
         }
 
