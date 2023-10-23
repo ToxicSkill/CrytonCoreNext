@@ -37,7 +37,7 @@
     </ui:UiPage.Resources>
 
     <Grid>
-        <TabControl Margin="0, 20, 0, 0" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+        <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <TabItem>
                 <TabItem.Header>
