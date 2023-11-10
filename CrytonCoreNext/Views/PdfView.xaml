@@ -781,7 +781,7 @@
 
             <ui:Button VerticalAlignment="Center" HorizontalAlignment="Center" Margin="600,20,0,0" Cursor="Hand"
                        Width="80" Height="80" Icon="Add20" FontSize="54" ToolTip="Load files"
-                       Command="{Binding LoadPdfAndImageFilesCommand}"/>
+                       Command="{Binding LoadPdfAndImageFilesCommand}" CommandParameter="true"/>
 
             <!--<ui:Button Grid.Row="1" Icon="Add20" 
                        Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 

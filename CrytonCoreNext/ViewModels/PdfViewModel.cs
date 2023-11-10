@@ -338,14 +338,15 @@ namespace CrytonCoreNext.ViewModels
         
 
         [RelayCommand]
-        private async Task LoadPdfAndImageFiles(string? andImages = null)
+        private async Task LoadPdfAndImageFiles(string param)
         {
             Lock();
             var protectedFilesCount = 0;
             var damagedFilesCount = 0;
             var nofNotLoadedFiles = 0;
             var nofFilesBefore = PdfFiles.Count + ImageFiles.Count;
-            await foreach (var file in LoadFiles(andImages == null ? Static.Extensions.DialogFilters.PdfAndImages : Static.Extensions.DialogFilters.Pdf))
+            var withImages = param.ToLowerInvariant() == true.ToString().ToLowerInvariant();
+            await foreach (var file in LoadFiles(withImages ? Static.Extensions.DialogFilters.PdfAndImages : Static.Extensions.DialogFilters.Pdf))
             {
                 if (file.Extension.ToLower().Contains("pdf"))
                 {

@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using Wpf.Ui.Controls;
 using CrytonCoreNext.Extensions;
 using PdfiumViewer;
-using System.Globalization;
+using System.Globalization; 
+using System.IO;
 
 namespace CrytonCoreNext.PDF.Models
 {
@@ -17,7 +18,7 @@ namespace CrytonCoreNext.PDF.Models
 
         private readonly double _dimensions = 1.0d;
 
-        public PDFFile ReadPdf(File file, string password = "")
+        public PDFFile ReadPdf(CrytonCoreNext.Models.File file, string password = "")
         {
             var status = EPdfStatus.Opened;
 
@@ -57,9 +58,10 @@ namespace CrytonCoreNext.PDF.Models
         { 
             try
             {
+                var stream = new MemoryStream(file.Bytes);
                 file.Document = file.Password.Equals(string.Empty, default) ?
-                    PdfiumViewer.PdfDocument.Load(file.Path) :
-                    PdfiumViewer.PdfDocument.Load(file.Path, file.Password);
+                    PdfiumViewer.PdfDocument.Load(stream) :
+                    PdfiumViewer.PdfDocument.Load(stream, file.Password);
             }
             catch (PdfiumViewer.PdfException)
             {
@@ -128,7 +130,7 @@ namespace CrytonCoreNext.PDF.Models
             }
         }
 
-        private PDFFile CreateNewPdfFile(File file, PdfiumViewer.PdfDocument? pdfDocument, EPdfStatus status)
+        private PDFFile CreateNewPdfFile(CrytonCoreNext.Models.File file, PdfiumViewer.PdfDocument? pdfDocument, EPdfStatus status)
         {
             return pdfDocument == null
                 ? new PDFFile(file, status)
