@@ -431,6 +431,7 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void GoPreviousPage()
         {
+            var oldPageIndex = SelectedPdfFile.LastPage;
             if (SelectedPdfFile == null)
             {
                 return;
@@ -439,6 +440,11 @@ namespace CrytonCoreNext.ViewModels
             {
                 SelectedPdfFile.LastPage -= 1;
             }
+            if (oldPageIndex == SelectedPdfFile.LastPage)
+            {
+                return;
+
+            }
             SelectedPdfFile.PageImage = _pdfService.LoadImage(SelectedPdfFile);
             OnPropertyChanged(nameof(SelectedPdfFile));
         }
@@ -446,6 +452,7 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void GoNextPage()
         {
+            var oldPageIndex = SelectedPdfFile.LastPage;
             if (SelectedPdfFile == null)
             {
                 return;
@@ -453,6 +460,11 @@ namespace CrytonCoreNext.ViewModels
             if (SelectedPdfFile.NumberOfPages > 0 && SelectedPdfFile.LastPage < SelectedPdfFile.NumberOfPages - 1)
             {
                 SelectedPdfFile.LastPage += 1;
+            }
+            if (oldPageIndex == SelectedPdfFile.LastPage)
+            {
+                return;
+
             }
             SelectedPdfFile.PageImage = _pdfService.LoadImage(SelectedPdfFile);
             OnPropertyChanged(nameof(SelectedPdfFile));

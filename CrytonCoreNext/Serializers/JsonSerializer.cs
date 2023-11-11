@@ -8,7 +8,7 @@ namespace CrytonCoreNext.Serializers
     {
         public string Serialize(object obj)
         {
-            return JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            return JsonConvert.SerializeObject(obj, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
         }
 
         public object? Deserialize(string str, Type type)

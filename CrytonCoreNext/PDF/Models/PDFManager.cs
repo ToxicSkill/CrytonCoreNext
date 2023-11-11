@@ -5,16 +5,17 @@ using CrytonCoreNext.Services;
 using Docnet.Core;
 using Docnet.Core.Editors; 
 using iText.Kernel.Pdf;
-using iText.Layout; 
+using iText.Layout;
+using OpenCvSharp;
+using OpenCvSharp.Extensions;
+using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Interop;
+using System.Threading.Tasks; 
 using System.Windows.Media.Imaging;
 using File = CrytonCoreNext.Models.File;
 
@@ -29,14 +30,11 @@ namespace CrytonCoreNext.PDF.Models
                 return default;
             } 
             using var image = GetPageImage(pdfFile.LastPage, GetPageSize(pdfFile.Document, pdfFile.LastPage), pdfFile.Document, Properties.Settings.Default.PdfRenderDpi);
-            using var bitmap = new Bitmap(image); 
-            return new WriteableBitmap(
-                Imaging.CreateBitmapSourceFromHBitmap(
-                    bitmap.GetHbitmap(), 
-                    IntPtr.Zero, 
-                    Int32Rect.Empty,
-                    BitmapSizeOptions.FromEmptyOptions()));
-        }
+            using var bitmap = new Bitmap(image);
+            using var mat = new Mat(bitmap.Height, bitmap.Width, MatType.CV_8UC3);
+            BitmapConverter.ToMat(bitmap, mat);
+            return mat.ToWriteableBitmap();
+        } 
 
         public List<string> GetAvailableEncryptionOptions()
         {

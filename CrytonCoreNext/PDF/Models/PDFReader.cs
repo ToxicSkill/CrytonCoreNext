@@ -30,8 +30,8 @@ namespace CrytonCoreNext.PDF.Models
             try
             {
                 document = password.Equals(string.Empty, default) ?
-                    PdfiumViewer.PdfDocument.Load(file.Path) :
-                    PdfiumViewer.PdfDocument.Load(file.Path, password);
+                    PdfDocument.Load(file.Path) :
+                    PdfDocument.Load(file.Path, password);
             }
             catch (PdfiumViewer.PdfException)
             {
@@ -60,8 +60,8 @@ namespace CrytonCoreNext.PDF.Models
             {
                 var stream = new MemoryStream(file.Bytes);
                 file.Document = file.Password.Equals(string.Empty, default) ?
-                    PdfiumViewer.PdfDocument.Load(stream) :
-                    PdfiumViewer.PdfDocument.Load(stream, file.Password);
+                    PdfDocument.Load(stream) :
+                    PdfDocument.Load(stream, file.Password);
             }
             catch (PdfiumViewer.PdfException)
             {
