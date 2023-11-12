@@ -116,23 +116,22 @@
                 </Grid>
 
             </Grid>
-            <Grid Grid.Column="1" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
+            <Grid Grid.Column="1" Margin="0,10,0,0">
+                <Grid.RowDefinitions> 
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
-                <ui:ToggleSwitch VerticalAlignment="Center" Content="Compare mode" IsChecked="{Binding IsCompareModeOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <ScrollViewer Grid.Row="1" >
+                <ScrollViewer>
                     <StackPanel>
                         <ui:CardExpander HorizontalAlignment="Stretch" Margin="0,3" IsExpanded="True">
                             <ui:CardExpander.Header>
                                 <Grid VerticalAlignment="Center">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="*"/> 
+                                        <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <ui:SymbolIcon Symbol="Autocorrect20" FontSize="22" HorizontalAlignment="Left" Margin="0,0,10,0"/>
-                                    <TextBlock Grid.Column="1" Text="IMAGE ADJUSTEMENT" FontSize="18" HorizontalAlignment="Left" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" />
+                                    <ui:SymbolIcon Symbol="Image20" Filled="False" FontSize="22" HorizontalAlignment="Left" Margin="0,0,10,0"/>
+                                    <TextBlock Grid.Column="1" Text="Image" FontSize="22" HorizontalAlignment="Left" />
                                 </Grid>
                             </ui:CardExpander.Header>
                             <Grid>
@@ -145,6 +144,48 @@
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="40"/>
+                                    <RowDefinition Height="80"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon Symbol="DesignIdeas20" FontSize="22" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,2,10,0"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding SelectedImage.Label}" FontSize="18" HorizontalAlignment="Left" RenderOptions.EdgeMode="Aliased" FontWeight="Thin"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                    <ui:SymbolIcon Symbol="AutoFitWidth20" FontSize="22" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,2,10,0"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding SelectedImage.Constrains.Width}" FontSize="18" HorizontalAlignment="Left" RenderOptions.EdgeMode="Aliased" FontWeight="Thin"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                    <ui:SymbolIcon Symbol="AutoFitHeight20" FontSize="22" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,2,10,0"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding SelectedImage.Constrains.Height}" FontSize="18" HorizontalAlignment="Left" RenderOptions.EdgeMode="Aliased" FontWeight="Thin"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="3">
+                                    <ui:SymbolIcon Symbol="History20" FontSize="22" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,2,10,0"/>
+                                    <Image Width="250" Height="100" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                        Source="{Binding SelectedImage.Histogram, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
+                                </StackPanel>
+                            </Grid>
+                        </ui:CardExpander>
+                        <ui:CardExpander HorizontalAlignment="Stretch" Margin="0,3" IsExpanded="True">
+                            <ui:CardExpander.Header>
+                                <Grid VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/> 
+                                    </Grid.ColumnDefinitions>
+                                    <ui:SymbolIcon Symbol="LightbulbFilament20" Filled="False" FontSize="22" HorizontalAlignment="Left" Margin="0,0,10,0"/>
+                                    <TextBlock Grid.Column="1" Text="Light" FontSize="22" HorizontalAlignment="Left" />
+                                </Grid>
+                            </ui:CardExpander.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/>
+                                    <RowDefinition Height="40"/> 
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="DarkTheme20" FontSize="22" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,2,10,0"/>
@@ -159,7 +200,30 @@
                                 </StackPanel>
                                 <Slider Grid.Column="1" Grid.Row="1" Margin="10,0" Value="{Binding SelectedImage.BrightnessValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="2"/>
                                 <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding SelectedImage.BrightnessValue, StringFormat=N2}" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" HorizontalAlignment="Right"/>
-
+ 
+                            </Grid>
+                        </ui:CardExpander>
+                        <ui:CardExpander HorizontalAlignment="Stretch" Margin="0,3" IsExpanded="True">
+                            <ui:CardExpander.Header>
+                                <Grid VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ui:SymbolIcon Symbol="ColorLine20" Filled="False" FontSize="22" HorizontalAlignment="Left" Margin="0,0,10,0"/>
+                                    <TextBlock Grid.Column="1" Text="Color" FontSize="22" HorizontalAlignment="Left" />
+                                </Grid>
+                            </ui:CardExpander.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40"/> 
+                                </Grid.RowDefinitions>
+                                 
                                 <StackPanel Orientation="Horizontal" Grid.Row="2">
                                     <ui:SymbolIcon Symbol="Color20" FontSize="22" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,2,10,0"/>
                                     <TextBlock Grid.Column="1" Text="Auto color" FontSize="18" HorizontalAlignment="Left" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" />
@@ -169,7 +233,6 @@
 
                             </Grid>
                         </ui:CardExpander>
-                        
                     </StackPanel>
                     <!--<Grid> 
                     <Grid.RowDefinitions>
@@ -195,6 +258,7 @@
                     </Grid>
                 </Grid>-->
                 </ScrollViewer>
+                <ui:Button Margin="0,0,15,5" Grid.Row="1" Content="Comapre" Icon="ImageMultiple20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18"/>
             </Grid>
         </Grid>
 
