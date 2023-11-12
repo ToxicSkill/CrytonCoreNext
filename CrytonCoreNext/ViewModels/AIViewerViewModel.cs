@@ -44,7 +44,7 @@ namespace CrytonCoreNext.ViewModels
         public bool userMouseIsInDetectedObject;
 
         [ObservableProperty]
-        public bool isCompareModeOn;
+        public bool showOriginal;
 
         [ObservableProperty]
         public int imageCompareSliderValue = DefaultCompareSliderValue;
@@ -87,19 +87,10 @@ namespace CrytonCoreNext.ViewModels
 #endif
         }
 
-        partial void OnIsCompareModeOnChanged(bool value)
-        {
-            if (value)
-            {
-                OnTabControlChanged.Invoke();
-            }
-        }
 
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
         {
-            SelectedImage.DetectionImage = value == null ? 
-                SelectedImage.Image : 
-                Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
+            Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
             UserMouseIsInDetectedObject = value != null;
         }
     }

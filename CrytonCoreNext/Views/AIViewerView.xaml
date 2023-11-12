@@ -30,39 +30,14 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="200"/>
                 </Grid.RowDefinitions>
-                <Grid x:Name="compareGrid"> 
-                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5"
-                          Visibility="{Binding IsCompareModeOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <Image x:Name="BeforeImage" HorizontalAlignment="Left" Margin="0,0,0,20"
-                               Source="{Binding SelectedImage.AdjusterImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                               RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
-                        <Rectangle HorizontalAlignment="Left" Width="{Binding Value, ElementName=Slider}" Margin="0,0,0,20">
-                            <Rectangle.Fill>
-                                <ImageBrush ImageSource="{Binding SelectedImage.Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"
-                                            Stretch="UniformToFill" AlignmentX="Left" AlignmentY="Top" />
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <Slider x:Name="Slider" VerticalAlignment="Bottom"
-                                Maximum="{Binding ActualWidth, ElementName=BeforeImage}" 
-                             Visibility="{Binding IsCompareModeOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Value="{Binding ImageCompareSliderValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    </Grid>
-                    <Image Source="{Binding SelectedImage.DetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                           Visibility="{Binding IsCompareModeOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityInversionConverter}}"
-                           Margin="0,5,0,25" RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
-                    <Grid  VerticalAlignment="Bottom" 
-                          Visibility="{Binding IsCompareModeOn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityInversionConverter}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <ui:SymbolIcon Grid.Column="0" Visibility="{Binding UserMouseIsInDetectedObject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" 
-                                       Symbol="ScanObject20" Margin="5,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBlock Grid.Column="1"  Margin="5,0" VerticalAlignment="Center"  HorizontalAlignment="Left"
-                                   Text="{Binding SelectedDetectionImage.Label, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid>
-                </Grid>
+                <Image x:Name="BeforeImage" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0"
+                       Visibility="{Binding ShowOriginal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityInversionConverter}}"
+                       Source="{Binding SelectedImage.AdjusterImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
+                <Image x:Name="OriginalImage" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0"
+                       Visibility="{Binding ShowOriginal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter }}"
+                       Source="{Binding SelectedImage.Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="3*"/>
@@ -159,9 +134,9 @@
                                     <TextBlock Grid.Column="1" Text="{Binding SelectedImage.Constrains.Height}" FontSize="18" HorizontalAlignment="Left" RenderOptions.EdgeMode="Aliased" FontWeight="Thin"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Grid.Row="3">
-                                    <ui:SymbolIcon Symbol="History20" FontSize="22" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,2,10,0"/>
-                                    <Image Width="250" Height="100" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                        Source="{Binding SelectedImage.Histogram, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    <ui:SymbolIcon Symbol="DeviceEq20" FontSize="22" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,2,10,0"/>
+                                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                        Source="{Binding SelectedImage.Histogram , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
                                 </StackPanel>
                             </Grid>
@@ -233,32 +208,11 @@
 
                             </Grid>
                         </ui:CardExpander>
-                    </StackPanel>
-                    <!--<Grid> 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Auto color" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" HorizontalAlignment="Left"/>
-                            <TextBlock Grid.Column="1" Text="{Binding SelectedImage.AutoColorValue, StringFormat=N2}" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" HorizontalAlignment="Right"/>
-
-                        </Grid>
-                        <Slider Grid.Row="1" Value="{Binding SelectedImage.AutoColorValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="1"/>
-                    </Grid>
-                </Grid>-->
+                    </StackPanel> 
                 </ScrollViewer>
-                <ui:Button Margin="0,0,15,5" Grid.Row="1" Content="Comapre" Icon="ImageMultiple20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18"/>
+                <ui:Button Margin="0,0,15,5" Grid.Row="1" Content="Comapre" Icon="ImageMultiple20" 
+                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18"
+                           MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"/>
             </Grid>
         </Grid>
 

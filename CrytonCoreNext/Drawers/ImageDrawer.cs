@@ -4,7 +4,7 @@ namespace CrytonCoreNext.Drawers
 {
     public static class ImageDrawer
     {
-        public static Mat DrawAutoColor(Mat mat, double strenght)
+        public static Mat ApplyAll(Mat mat, double strenght, double alpha, double beta)
         {
             using var labColorMat = new Mat();
             Cv2.CvtColor(mat, labColorMat, ColorConversionCodes.BGR2Lab);
@@ -13,14 +13,8 @@ namespace CrytonCoreNext.Drawers
             Cv2.Merge(channels, labColorMat);
             Cv2.CvtColor(labColorMat, labColorMat, ColorConversionCodes.Lab2LBGR);
             Cv2.AddWeighted(mat, 1 - strenght, labColorMat,  strenght, 0, labColorMat);
+            Cv2.ConvertScaleAbs(labColorMat, labColorMat, alpha, beta);
             return labColorMat.Clone();
-        }
-
-        public static Mat DrawScaleAbs(Mat mat, double alpha, double beta)
-        {
-            var contrastMat = mat.Clone();
-            Cv2.ConvertScaleAbs(contrastMat, contrastMat, alpha, beta);
-            return contrastMat;
         }
     }
 }
