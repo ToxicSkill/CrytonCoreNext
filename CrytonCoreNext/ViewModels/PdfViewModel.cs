@@ -388,6 +388,10 @@ namespace CrytonCoreNext.ViewModels
                  "One file is already loaded. \n" :
                  $"At least {nofNotLoadedFiles} files are aleardy loaded or has same content. \n";
             }
+            if (nofLoadedFiles == 0 && damagedFilesCount == 0 && protectedFilesCount == 0 && nofNotLoadedFiles == 0)
+            {
+                return;
+            }
             if (message != "")
             {
                 PostWarningSnackbar(message);

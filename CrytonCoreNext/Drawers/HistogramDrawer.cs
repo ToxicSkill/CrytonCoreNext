@@ -18,11 +18,11 @@ namespace CrytonCoreNext.Drawers
             Cv2.Split(image.ToMat(), out Mat[] planes);
 
             int[] histSize = { 256 };
-            Rangef[] ranges = { new Rangef(0, 256) };
+            Rangef[] ranges = { new(0, 256) };
 
-            Mat histB = new Mat();
-            Mat histG = new Mat();
-            Mat histR = new Mat();
+            Mat histB = new();
+            Mat histG = new();
+            Mat histR = new();
             Cv2.CalcHist(new Mat[] { planes[0] }, new int[] { 0 }, null, histB, 1, histSize, ranges);
             Cv2.CalcHist(new Mat[] { planes[1] }, new int[] { 0 }, null, histG, 1, histSize, ranges);
             Cv2.CalcHist(new Mat[] { planes[2] }, new int[] { 0 }, null, histR, 1, histSize, ranges);

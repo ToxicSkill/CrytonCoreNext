@@ -70,9 +70,31 @@ namespace CrytonCoreNext.ViewModels
             TreeViewItemSource = new();
 
             InitializeThemes();
-            InitializeSettings();
+            InitializeSettings(); 
         }
-         
+
+        public void OnStartup()
+        {
+            if (Properties.Settings.Default.FirstRun)
+            {
+                Properties.Settings.Default.FirstRun = false;
+                SelectedThemeStyle = BackgroundType.Mica;
+            }
+        }
+
+        private void InitializeThemes()
+        {
+            ThemeStylesItemsSource = new ObservableCollection<BackgroundType>
+                (
+                    [
+                        BackgroundType.Acrylic,
+                        BackgroundType.Mica,
+                        BackgroundType.Tabbed
+                    ]
+                );
+            IsThemeStyleAvailable = WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber;
+        }
+
         private void InitializeSettings()
         {
             IsFullscreenOnStart = Properties.Settings.Default.FullscreenOnStart;
@@ -165,19 +187,6 @@ namespace CrytonCoreNext.ViewModels
                 offset += 8;
             }
             return offset;
-        }
-
-        private void InitializeThemes()
-        {
-            ThemeStylesItemsSource = new ObservableCollection<BackgroundType>
-                (new List<BackgroundType>()
-                    {
-                        BackgroundType.Acrylic,
-                        BackgroundType.Mica,
-                        BackgroundType.Tabbed
-                    }
-                );
-            IsThemeStyleAvailable = WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber;
         }
 
         private void UpdateTreeView(TreeViewItemModel selectedTreeViewItem)

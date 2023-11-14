@@ -105,7 +105,7 @@ namespace CrytonCoreNext
         public App()
         {
             LanguagesDictionaries = new List<ResourceDictionary>(){
-                new ResourceDictionary() { Source = new Uri("..\\Dictionaries\\EnglishDictionary.xaml", UriKind.Relative) }
+                new() { Source = new Uri("..\\Dictionaries\\EnglishDictionary.xaml", UriKind.Relative) }
             };
         }
 
@@ -128,6 +128,7 @@ namespace CrytonCoreNext
             var pv = _host.Services.GetService<PdfView>();
             var cv = _host.Services.GetService<CryptingView>();
             var av = _host.Services.GetService<AIViewerView>();
+            sw?.OnStartup();
         }
 
         private void OnLoaded(object sender, System.Windows.Navigation.NavigationEventArgs e)
