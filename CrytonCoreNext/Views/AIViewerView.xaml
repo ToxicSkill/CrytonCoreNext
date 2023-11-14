@@ -173,7 +173,8 @@
                                     <ui:SymbolIcon Symbol="Lightbulb20" FontSize="22" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,2,10,0"/>
                                     <TextBlock Grid.Column="1" Text="Brightness" FontSize="18" HorizontalAlignment="Left" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" />
                                 </StackPanel>
-                                <Slider Grid.Column="1" Grid.Row="1" Margin="10,0" Value="{Binding SelectedImage.BrightnessValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="2"/>
+                                <Slider Grid.Column="1" Grid.Row="1" Margin="10,0" Value="{Binding SelectedImage.BrightnessValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        TickFrequency="1" SmallChange="1" Ticks="1" Interval="1" LargeChange="5" Minimum="0" Maximum="255"/>
                                 <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding SelectedImage.BrightnessValue, StringFormat=N2}" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" HorizontalAlignment="Right"/>
  
                             </Grid>
