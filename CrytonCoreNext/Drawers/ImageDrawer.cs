@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using OpenCvSharp;
+﻿using OpenCvSharp;
 
 namespace CrytonCoreNext.Drawers
 {
     public static class ImageDrawer
     {
-        public static Mat ApplyAll(Mat mat, double strenght, double alpha, double beta)
+        public static Mat ApplyAll(Mat mat, double strenght, double contrast, double brightness, double exposure, bool normalizeHistogram)
         {
             using var labColorMat = new Mat();
             Cv2.CvtColor(mat, labColorMat, ColorConversionCodes.BGR2Lab);
@@ -14,36 +13,27 @@ namespace CrytonCoreNext.Drawers
             Cv2.Merge(channels, labColorMat);
             Cv2.CvtColor(labColorMat, labColorMat, ColorConversionCodes.Lab2LBGR);
             Cv2.AddWeighted(mat, 1 - strenght, labColorMat,  strenght, 0, labColorMat);
-            using var brightnessMat = SetBrightness(labColorMat, (int)beta);
-            return brightnessMat.Clone();
+            using var brightnessMat = SetBrightness(labColorMat, contrast, (int)brightness);
+            using var exposureMat = SetExposure(brightnessMat, exposure);
+            if (normalizeHistogram)
+            {
+                Cv2.Normalize(exposureMat, exposureMat); 
+            }
+            return exposureMat.Clone(); 
         }
 
-        private static Mat SetBrightness(Mat mat, int brightness)
+        private static Mat SetBrightness(Mat mat, double contrast, int brightness)
         {
-            using var hsv = new Mat();
-            Cv2.CvtColor(mat, hsv, ColorConversionCodes.BGR2HSV);
-            var hsvChannles = Cv2.Split(hsv);
-            var lim = 255 - brightness;
+            var bcMat = new Mat();
+            Cv2.ConvertScaleAbs(mat, bcMat, contrast, brightness);
+            return bcMat;
+        }
 
-            for (var i = 0; i < hsv.Height; i++)
-            {
-                for (var j = 0; j < hsv.Width; j++)
-                {
-                    var value = hsvChannles[2].Get<byte>(i, j);
-                    if (value > lim)
-                    {
-                        hsvChannles[2].Set<byte>(i, j, 255);
-                    }
-                    else
-                    {
-                        hsvChannles[2].Set<byte>(i, j, (byte)(value+brightness));
-                    }
-                }
-            }
-
-            Cv2.Merge(hsvChannles, hsv); 
-            Cv2.CvtColor(hsv, mat, ColorConversionCodes.HSV2BGR);
-            return mat;
+        private static Mat SetExposure(Mat mat, double exposure)
+        {
+            var exMat = new Mat();
+            Cv2.AddWeighted(mat, 1,  mat, 1 + exposure, 1, exMat);
+            return exMat;
         }
     }
 }

@@ -19,6 +19,8 @@ namespace CrytonCoreNext.AI.Models
     {
         private const double DefaultAutoColorValue = 0.5;
 
+        private const double DefaultExposureValue = 0.5;
+
         private const double DefaultContrastValue = 1;
 
         private const int DefaultBrightnessValue = 0;
@@ -26,7 +28,6 @@ namespace CrytonCoreNext.AI.Models
         public List<AIDetectionImage> DetectionImages { get; set; }
 
         public List<YoloPrediction> Predictions { get; private set; }
-
 
         [ObservableProperty]
         public System.Drawing.Size constrains;
@@ -39,6 +40,12 @@ namespace CrytonCoreNext.AI.Models
 
         [ObservableProperty]
         public double brightnessValue = DefaultBrightnessValue;
+
+        [ObservableProperty]
+        public double exposureValue = DefaultExposureValue;
+
+        [ObservableProperty]
+        public bool normalizeHistogram;
 
         [ObservableProperty]
         public WriteableBitmap histogram;
@@ -64,7 +71,7 @@ namespace CrytonCoreNext.AI.Models
 
         private void UpdateImage()
         {
-            AdjusterImage = Drawers.ImageDrawer.ApplyAll(Image.ToMat(), AutoColorValue, ContrastValue, BrightnessValue).ToWriteableBitmap();
+            AdjusterImage = Drawers.ImageDrawer.ApplyAll(Image.ToMat(), AutoColorValue, ContrastValue, BrightnessValue, ExposureValue, NormalizeHistogram).ToWriteableBitmap();
             Histogram = HistogramDrawer.CalcualteHistogram(AdjusterImage);
         }
 
@@ -79,6 +86,11 @@ namespace CrytonCoreNext.AI.Models
         }
 
         partial void OnAutoColorValueChanging(double value)
+        {
+            UpdateImage();
+        }
+
+        partial void OnNormalizeHistogramChanged(bool oldValue, bool newValue)
         {
             UpdateImage();
         }
