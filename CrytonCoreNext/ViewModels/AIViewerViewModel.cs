@@ -74,7 +74,7 @@ namespace CrytonCoreNext.ViewModels
 #if DEBUG
             Images = new()
             {
-                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\2022-02-04-test_image.jpg"),
+                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Screenshot (4).png"),
                 new ( "C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png")
         };
 

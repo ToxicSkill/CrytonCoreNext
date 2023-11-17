@@ -26,14 +26,14 @@ namespace CrytonCoreNext.PDF.Models
             {
                 return CreateNewPdfFile(file, null, status);
             }
-            PdfiumViewer.PdfDocument? document = null;
+            PdfDocument? document = null;
             try
             {
                 document = password.Equals(string.Empty, default) ?
                     PdfDocument.Load(file.Path) :
                     PdfDocument.Load(file.Path, password);
             }
-            catch (PdfiumViewer.PdfException)
+            catch (PdfException)
             {
                 status = EPdfStatus.Protected;
             }
@@ -63,7 +63,7 @@ namespace CrytonCoreNext.PDF.Models
                     PdfDocument.Load(stream) :
                     PdfDocument.Load(stream, file.Password);
             }
-            catch (PdfiumViewer.PdfException)
+            catch (PdfException)
             {
                 file.PdfStatus = EPdfStatus.Protected;
                 return;
@@ -130,7 +130,7 @@ namespace CrytonCoreNext.PDF.Models
             }
         }
 
-        private PDFFile CreateNewPdfFile(CrytonCoreNext.Models.File file, PdfiumViewer.PdfDocument? pdfDocument, EPdfStatus status)
+        private PDFFile CreateNewPdfFile(CrytonCoreNext.Models.File file, PdfDocument? pdfDocument, EPdfStatus status)
         {
             return pdfDocument == null
                 ? new PDFFile(file, status)
