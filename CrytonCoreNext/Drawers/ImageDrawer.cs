@@ -48,13 +48,15 @@ namespace CrytonCoreNext.Drawers
             var step2 = new TransformBlock<AIImage, AIImage>(NormalizeLABHistogram, dfBlockOptions);
             var step3 = new TransformBlock<AIImage, AIImage>(NormalizeRGBHistogram, dfBlockOptions);
             var step4 = new TransformBlock<AIImage, AIImage>(SetBrightness, dfBlockOptions); 
-            var step5 = new TransformBlock<AIImage, AIImage>(DrawHistogram, dfBlockOptions);
+            var step5 = new TransformBlock<AIImage, AIImage>(SetExposure, dfBlockOptions);
+            var step6 = new TransformBlock<AIImage, AIImage>(DrawHistogram, dfBlockOptions);
             var outputBlock = new ActionBlock<AIImage>(result);  
             inputBlock.LinkTo(step2, dfLinkOptions);
             step2.LinkTo(step3, dfLinkOptions); 
             step3.LinkTo(step4, dfLinkOptions);
             step4.LinkTo(step5, dfLinkOptions);
-            step5.LinkTo(outputBlock, dfLinkOptions); 
+            step5.LinkTo(step6, dfLinkOptions);
+            step6.LinkTo(outputBlock, dfLinkOptions); 
             return inputBlock;
         }
 
@@ -130,8 +132,13 @@ namespace CrytonCoreNext.Drawers
         }
 
         private static AIImage SetExposure(AIImage image)
-        { 
-            Cv2.AddWeighted(image.PipelineMat, 1, image.PipelineMat, 1 + 0, 1, image.PipelineMat);
+        {
+            var expMat = new Mat();
+            Cv2.CvtColor(image.PipelineMat, expMat, ColorConversionCodes.BGR2HSV);
+            var channels = Cv2.Split(expMat);
+            Cv2.ConvertScaleAbs(channels[2], channels[2], image.ExposureValue);
+            Cv2.Merge(channels, expMat);
+            Cv2.CvtColor(expMat, image.PipelineMat, ColorConversionCodes.HSV2BGR);
             return image;
         }
     }

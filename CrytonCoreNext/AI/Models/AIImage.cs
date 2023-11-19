@@ -19,7 +19,7 @@ namespace CrytonCoreNext.AI.Models
 
         public const double DefaultAutoColorValue = 0.5;
 
-        public const double DefaultExposureValue = 0.5;
+        public const double DefaultExposureValue = 1.0;
 
         public const double DefaultContrastValue = 1;
 
@@ -77,7 +77,12 @@ namespace CrytonCoreNext.AI.Models
             await _drawer.Post(this);
         }
 
-        partial void  OnContrastValueChanged(double value)
+        partial void OnExposureValueChanged(double value)
+        {
+            Task.Run(UpdateImage);
+        }
+
+        partial void OnContrastValueChanged(double value)
         {
             Task.Run(UpdateImage);
         }
