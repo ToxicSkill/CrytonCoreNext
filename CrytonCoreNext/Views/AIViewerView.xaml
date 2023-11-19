@@ -34,10 +34,10 @@
                        Visibility="{Binding ShowOriginal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityInversionConverter}}"
                        Source="{Binding SelectedImage.AdjusterImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
-                <Image x:Name="OriginalImage" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0"
+                <!--<Image x:Name="OriginalImage" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0"
                        Visibility="{Binding ShowOriginal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter }}"
                        Source="{Binding SelectedImage.Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                       RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
+                       RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>-->
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="3*"/>
@@ -213,7 +213,7 @@
                                 <ui:SymbolIcon Grid.Row="0" Symbol="Color20" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <TextBlock Grid.Row="0" Grid.Column="1" Margin="5,0" Text="Auto color" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin"  VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                 <ui:SymbolIcon Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"  FontSize="8" Filled="True" Symbol="Circle20"/>
-                                <Slider Grid.Row="1" Grid.Column="1"  Value="{Binding SelectedImage.AutoColorValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="2" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                <ui:ToggleSwitch Grid.Row="1" Grid.Column="1" IsChecked="{Binding SelectedImage.UseAutoColor}"/>
                                 <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding SelectedImage.AutoColorValue, StringFormat=N2}" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
                                 <ui:SymbolIcon Grid.Row="2"  Symbol="AlignCenterHorizontal16" Filled="True" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center"/>

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
+using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Views;
 using OpenCvSharp.WpfExtensions;
 using System.Collections.ObjectModel;
@@ -17,6 +18,8 @@ namespace CrytonCoreNext.ViewModels
         private const int DefaultCompareSliderValue = 50;
 
         private readonly IYoloModelService _yoloModelService;
+
+        private ImageDrawer _imageDrawer;
 
         public delegate void TabControlChanged();
 
@@ -49,8 +52,9 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public int imageCompareSliderValue = DefaultCompareSliderValue;
 
-        public AIViewerViewModel(IYoloModelService yoloModelService)
+        public AIViewerViewModel(IYoloModelService yoloModelService, ImageDrawer drawer)
         {
+            _imageDrawer = drawer;
             DetectedCurrentImages = new();
             _yoloModelService = yoloModelService;
             _yoloModelService.LoadYoloModel();
@@ -74,8 +78,8 @@ namespace CrytonCoreNext.ViewModels
 #if DEBUG
             Images = new()
             {
-                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Screenshot (4).png"),
-                new ( "C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png")
+                new ("C:\\Users\\Adam Poler\\Pictures\\Przykład 2.jpg",_imageDrawer),
+                new ("C:\\Users\\Adam Poler\\Pictures\\Przykład 3.jpg",_imageDrawer)
         };
 
             foreach (var image in Images)
@@ -86,7 +90,6 @@ namespace CrytonCoreNext.ViewModels
 
 #endif
         }
-
 
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
         {

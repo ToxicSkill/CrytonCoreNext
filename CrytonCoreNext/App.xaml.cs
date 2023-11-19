@@ -6,6 +6,7 @@ using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.Services;
 using CrytonCoreNext.Crypting.ViewModels;
 using CrytonCoreNext.Crypting.Views;
+using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Enums;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces;
@@ -86,6 +87,7 @@ namespace CrytonCoreNext
 
             //AI viewer
 
+            services.AddSingleton<ImageDrawer>();
             services.AddSingleton<IYoloModelService, YoloModelService>();
             services.AddScoped<AIViewerView>();
             services.AddScoped<AIViewerViewModel>();

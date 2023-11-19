@@ -7,33 +7,31 @@ using OpenCvSharp.Internal.Vectors;
 using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows.Media.Imaging;
-using static iText.Kernel.Pdf.Colorspace.PdfDeviceCs;
+using System.Drawing; 
+using System.Windows.Media.Imaging; 
 
 namespace CrytonCoreNext.AI.Models
 {
     public partial class AIImage : SimpleImageItemContainer
     {
-        private const double DefaultAutoColorValue = 0.5;
+        private readonly ImageDrawer _drawer;
 
-        private const double DefaultExposureValue = 0.5;
+        public const double DefaultAutoColorValue = 0.5;
 
-        private const double DefaultContrastValue = 1;
+        public const double DefaultExposureValue = 0.5;
 
-        private const int DefaultBrightnessValue = 0;
+        public const double DefaultContrastValue = 1;
+
+        public const int DefaultBrightnessValue = 0;
 
         public List<AIDetectionImage> DetectionImages { get; set; }
 
         public List<YoloPrediction> Predictions { get; private set; }
 
-        [ObservableProperty]
-        public System.Drawing.Size constrains;
+        public Mat PipelineMat { get; set; }
 
         [ObservableProperty]
-        public double autoColorValue = DefaultAutoColorValue;
+        public System.Drawing.Size constrains;
 
         [ObservableProperty]
         public double contrastValue = DefaultContrastValue;
@@ -48,6 +46,9 @@ namespace CrytonCoreNext.AI.Models
         public bool normalizeHistogram;
 
         [ObservableProperty]
+        public bool useAutoColor;
+
+        [ObservableProperty]
         public WriteableBitmap histogram;
 
         [ObservableProperty]
@@ -57,8 +58,9 @@ namespace CrytonCoreNext.AI.Models
         public WriteableBitmap adjusterImage;
 
 
-        public AIImage(string path)
+        public AIImage(string path, ImageDrawer drawer)
         {
+            _drawer = drawer;
             DetectionImages = new();
             Predictions = new ();
             Image = Cv2.ImRead(path).ToWriteableBitmap();
@@ -66,13 +68,12 @@ namespace CrytonCoreNext.AI.Models
             Constrains = new System.Drawing.Size((int)Image.Width, (int)Image.Height);
             DetectionImage = Image;
             AdjusterImage = Image;
-            Histogram = HistogramDrawer.CalcualteHistogram(AdjusterImage);
+            UpdateImage();
         }
 
         private void UpdateImage()
         {
-            AdjusterImage = Drawers.ImageDrawer.ApplyAll(Image.ToMat(), AutoColorValue, ContrastValue, BrightnessValue, ExposureValue, NormalizeHistogram).ToWriteableBitmap();
-            Histogram = HistogramDrawer.CalcualteHistogram(AdjusterImage);
+            _drawer.Post(this);
         }
 
         partial void OnContrastValueChanged(double value)
@@ -85,7 +86,7 @@ namespace CrytonCoreNext.AI.Models
             UpdateImage();
         }
 
-        partial void OnAutoColorValueChanging(double value)
+        partial void OnUseAutoColorChanged(bool value)
         {
             UpdateImage();
         }
