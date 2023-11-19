@@ -226,9 +226,19 @@
                         </ui:CardExpander>
                     </StackPanel> 
                 </ScrollViewer>
-                <ui:Button Margin="0,0,15,5" Grid.Row="1" Content="Comapre" Icon="ImageMultiple20" 
+                <Grid Grid.Row="1" Margin="0,2,15,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:Button Content="Comapre" Icon="ImageMultiple20" 
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18"
                            MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"/>
+                    <ui:Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Cursor="Hand"
+                               Icon="Add20" Content="Load" FontSize="18" ToolTip="Load files"
+                               Command="{Binding LoadImagesCommand}"/>
+
+                </Grid>
             </Grid>
         </Grid>
 

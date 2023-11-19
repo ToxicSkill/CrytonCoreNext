@@ -118,11 +118,15 @@ namespace CrytonCoreNext.AI.Models
             using var mat = Image.ToMat();
             foreach (var prediction in Predictions)
             {
-                DetectionImages.Add(
-                    new(prediction)
-                    {
-                        Image = new Mat(mat, prediction.Rectangle.ToRect()).ToWriteableBitmap()
-                    });
+                var rectangle = prediction.Rectangle.ToRect();
+                if (rectangle.X >= 0 && rectangle.Y >= 0)
+                {
+                    DetectionImages.Add(
+                        new(prediction)
+                        {
+                            Image = new Mat(mat, rectangle).ToWriteableBitmap()
+                        });
+                }
             }
         }
 

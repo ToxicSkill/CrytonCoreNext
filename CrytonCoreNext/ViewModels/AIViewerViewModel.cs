@@ -3,11 +3,17 @@ using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
 using CrytonCoreNext.Drawers;
+using CrytonCoreNext.Enums;
+using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Views;
+using Microsoft.Win32;
 using OpenCvSharp.WpfExtensions;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Documents;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Controls.Interfaces;
@@ -56,13 +62,13 @@ namespace CrytonCoreNext.ViewModels
         public AIViewerViewModel(IYoloModelService yoloModelService, ImageDrawer drawer)
         {
             _imageDrawer = drawer;
-            DetectedCurrentImages = new();
+            DetectedCurrentImages = [];
             _yoloModelService = yoloModelService;
             _yoloModelService.LoadYoloModel();
             _yoloModelService.LoadLabels();
-            Images = new();
-            NavigationItems = new ObservableCollection<INavigationControl>
-            {
+            Images = [];
+            NavigationItems =
+            [
                 new NavigationItem
                 {
                     Content = "Processes",
@@ -70,26 +76,36 @@ namespace CrytonCoreNext.ViewModels
                     Icon = SymbolRegular.Apps24,
                     PageType = typeof(PdfView)
                 }
-            };
+            ];
         }
 
         [RelayCommand]
         private void LoadImages()
         {
-#if DEBUG
-            Images =
-            [
-                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Screenshot (4).png",_imageDrawer),
-                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png",_imageDrawer)
-            ];
-
-            foreach (var image in Images)
+            var folderDialog = new OpenFileDialog()
             {
-                image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
-            }
-            SelectedImage = Images.First();
+                Title = "Select Folder",
+                Multiselect = true,
+                Filter = Static.Extensions.FilterToPrompt(Static.Extensions.DialogFilters.Images),
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
+            };
 
-#endif
+            if (folderDialog.ShowDialog() == true)
+            {
+                var newFiles = new List<AIImage>();
+                foreach (var item in folderDialog.FileNames)
+                {
+                    newFiles.Add(new(item, _imageDrawer));
+                }
+                foreach (var image in newFiles)
+                {
+                    image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
+                }
+                var oldList = Images.ToList();
+                oldList.AddRange(newFiles);
+                Images = new (oldList);
+                SelectedImage = Images.First();
+            }
         }
 
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
