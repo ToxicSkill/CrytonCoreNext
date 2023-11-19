@@ -44,10 +44,10 @@ namespace CrytonCoreNext.AI.Models
         public double exposureValue = DefaultExposureValue;
 
         [ObservableProperty]
-        public bool normalizeHistogram;
+        public bool normalizeRGBHistogram;
 
         [ObservableProperty]
-        public bool useAutoColor;
+        public bool normalizeLABHistogram;
 
         [ObservableProperty]
         public WriteableBitmap histogram;
@@ -87,12 +87,12 @@ namespace CrytonCoreNext.AI.Models
             Task.Run(UpdateImage);
         }
 
-        partial void OnUseAutoColorChanged(bool value)
+        partial void OnNormalizeLABHistogramChanged(bool oldValue, bool newValue)
         {
             Task.Run(UpdateImage);
         }
 
-        partial void OnNormalizeHistogramChanged(bool oldValue, bool newValue)
+        partial void OnNormalizeRGBHistogramChanged(bool oldValue, bool newValue)
         {
             Task.Run(UpdateImage);
         }

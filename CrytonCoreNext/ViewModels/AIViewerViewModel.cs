@@ -78,8 +78,8 @@ namespace CrytonCoreNext.ViewModels
 #if DEBUG
             Images = new()
             {
-                new ("C:\\Users\\Adam Poler\\Pictures\\Przykład 2.jpg",_imageDrawer),
-                new ("C:\\Users\\Adam Poler\\Pictures\\Przykład 3.jpg",_imageDrawer)
+                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Screenshot (4).png",_imageDrawer),
+                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png",_imageDrawer)
         };
 
             foreach (var image in Images)
