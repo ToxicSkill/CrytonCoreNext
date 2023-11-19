@@ -17,6 +17,12 @@
             <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter"/>
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <c:ObjectToVisibility x:Key="ObjectToVisibility"/>
+            <ContextMenu x:Key="ImageContextMenu">
+                <ui:MenuItem Header="Delete" SymbolIcon="Delete20" 
+                 Command="{Binding DeleteImageCommand}"/>
+                <ui:MenuItem Header="Save" SymbolIcon="Save20" 
+                 Command="{Binding SaveImageCommand}"/>
+            </ContextMenu>
         </ResourceDictionary>
     </ui:UiPage.Resources>
     <Grid>
@@ -49,7 +55,7 @@
                     </Grid.RowDefinitions>
                     <ListView ItemsSource="{Binding Images, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                               SelectedItem="{Binding SelectedImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
-                             ScrollViewer.VerticalScrollBarVisibility="Disabled"                      
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled" ContextMenu="{StaticResource ImageContextMenu}"                  
                               PreviewMouseWheel="ListView_PreviewMouseWheel"
                               HorizontalAlignment="Center">
 
@@ -234,7 +240,7 @@
                     <ui:Button Content="Comapre" Icon="ImageMultiple20" 
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontSize="18"
                            MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"/>
-                    <ui:Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Cursor="Hand"
+                    <ui:Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Cursor="Hand" Margin="2,0,0,0"
                                Icon="Add20" Content="Load" FontSize="18" ToolTip="Load files"
                                Command="{Binding LoadImagesCommand}"/>
 
