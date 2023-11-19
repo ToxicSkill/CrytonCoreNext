@@ -38,6 +38,10 @@
                        Visibility="{Binding ShowOriginal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter }}"
                        Source="{Binding SelectedImage.Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
+                <Image x:Name="DetectionImage" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0"
+                       Visibility="{Binding UserMouseIsInDetectedObject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter }}"
+                       Source="{Binding SelectedImage.DetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                       RenderOptions.BitmapScalingMode="LowQuality" RenderOptions.EdgeMode="Unspecified"/>
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="3*"/>
@@ -62,13 +66,11 @@
                         </ListView.ItemTemplate>
                     </ListView>
                     <ListView Grid.Row="1"
-                                  ItemsSource="{Binding SelectedImage.DetectionImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              ItemsSource="{Binding SelectedImage.DetectionImages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                               SelectedItem="{Binding SelectedDetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"    
-                             ScrollViewer.VerticalScrollBarVisibility="Disabled"                      
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled"                      
                               PreviewMouseWheel="ListView_PreviewMouseWheel"
                               HorizontalAlignment="Center">
-
-
                         <ListView.Resources>
                             <Style TargetType="ListViewItem">
                                 <EventSetter Event="MouseEnter" Handler="ListViewItem_MouseEnter" />
@@ -91,7 +93,7 @@
                 </Grid>
 
             </Grid>
-            <Grid Grid.Column="1" Margin="0,10,0,0">
+            <Grid Grid.Column="1" Margin="10,10,0,0">
                 <Grid.RowDefinitions> 
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="50"/>
@@ -180,7 +182,7 @@
                                 <ui:SymbolIcon Grid.Row="4"  Symbol="AddSubtractCircle20" Filled="True" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <TextBlock Grid.Row="4"  Grid.Column="1" Margin="5,0" Text="Exposure" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin"  VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                 <ui:SymbolIcon Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"  FontSize="8" Filled="True" Symbol="Circle20"/>
-                                <Slider Grid.Row="5"  Grid.Column="1"  Value="{Binding SelectedImage.ExposureValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsMoveToPointEnabled="True" Minimum="0" Maximum="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                <Slider Grid.Row="5"  Grid.Column="1"  Value="{Binding SelectedImage.ExposureValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsMoveToPointEnabled="True" Minimum="0" Maximum="2" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                 <TextBlock Grid.Row="5"  Grid.Column="2" Text="{Binding SelectedImage.ExposureValue, StringFormat=N2}" FontSize="18" RenderOptions.EdgeMode="Aliased" FontWeight="Thin" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
                             </Grid>
@@ -204,8 +206,6 @@
                                     <ColumnDefinition Width="30"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="20"/>
                                     <RowDefinition Height="40"/>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="40"/>

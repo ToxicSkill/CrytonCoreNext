@@ -6,6 +6,7 @@ using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Views;
 using OpenCvSharp.WpfExtensions;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
@@ -76,11 +77,11 @@ namespace CrytonCoreNext.ViewModels
         private void LoadImages()
         {
 #if DEBUG
-            Images = new()
-            {
+            Images =
+            [
                 new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\Zrzuty ekranu\\Screenshot (4).png",_imageDrawer),
                 new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png",_imageDrawer)
-        };
+            ];
 
             foreach (var image in Images)
             {
@@ -93,7 +94,7 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
         {
-            Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
+            SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
             UserMouseIsInDetectedObject = value != null;
         }
     }
