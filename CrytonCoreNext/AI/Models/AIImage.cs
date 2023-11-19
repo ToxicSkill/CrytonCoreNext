@@ -7,7 +7,8 @@ using OpenCvSharp.Internal.Vectors;
 using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing; 
+using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging; 
 
 namespace CrytonCoreNext.AI.Models
@@ -68,32 +69,32 @@ namespace CrytonCoreNext.AI.Models
             Constrains = new System.Drawing.Size((int)Image.Width, (int)Image.Height);
             DetectionImage = Image;
             AdjusterImage = Image;
-            UpdateImage();
+            Task.Run(UpdateImage);
         }
 
-        private void UpdateImage()
+        private async Task UpdateImage()
         {
-            _drawer.Post(this);
+            await _drawer.Post(this);
         }
 
-        partial void OnContrastValueChanged(double value)
+        partial void  OnContrastValueChanged(double value)
         {
-            UpdateImage();
+            Task.Run(UpdateImage);
         }
 
         partial void OnBrightnessValueChanged(double value)
         {
-            UpdateImage();
+            Task.Run(UpdateImage);
         }
 
         partial void OnUseAutoColorChanged(bool value)
         {
-            UpdateImage();
+            Task.Run(UpdateImage);
         }
 
         partial void OnNormalizeHistogramChanged(bool oldValue, bool newValue)
         {
-            UpdateImage();
+            Task.Run(UpdateImage);
         }
 
         public void SetPredicitons(List<YoloPrediction> predictions)
