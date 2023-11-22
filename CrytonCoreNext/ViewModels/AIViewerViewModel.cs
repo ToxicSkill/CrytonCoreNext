@@ -7,16 +7,19 @@ using CrytonCoreNext.Enums;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Views;
 using Microsoft.Win32;
+using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Documents;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Controls.Interfaces;
+using static CrytonCoreNext.Models.WindowDialog;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -77,6 +80,45 @@ namespace CrytonCoreNext.ViewModels
                     PageType = typeof(PdfView)
                 }
             ];
+        }
+
+        [RelayCommand]
+        private void DeleteImage()
+        {
+            var index = Images.IndexOf(SelectedImage);
+            Images = new(Images.Except(new List<AIImage>() { SelectedImage }));
+            if (index > 0) 
+            {
+                SelectedImage = Images[index - 1];
+            }
+            else if (index == 0 && Images.Any())
+            {
+                SelectedImage = Images[0];
+            }
+        }
+
+        [RelayCommand]
+        private void SaveImage()
+        {
+            var fileDialog = new SaveFileDialog()
+            {
+                Title = "Save file",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
+            };
+            if (fileDialog.ShowDialog() == true)
+            {
+                var outputFilePath = fileDialog.FileName;
+                if (outputFilePath == null)
+                {
+                    return;
+                }
+                else if (Path.GetExtension(outputFilePath) == string.Empty)
+                {
+                    outputFilePath = Path.ChangeExtension(outputFilePath, ".png");
+                }
+                
+                Cv2.ImWrite(outputFilePath, SelectedImage.AdjusterImage.ToMat());
+            }
         }
 
         [RelayCommand]
