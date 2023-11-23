@@ -1,5 +1,4 @@
-﻿using CrytonCoreNext.Models;
-using CrytonCoreNext.PDF.Enums;
+﻿using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.PDF.Interfaces;
 using System.Diagnostics;
 using System;
@@ -7,7 +6,7 @@ using System.Collections.Generic;
 using Wpf.Ui.Controls;
 using CrytonCoreNext.Extensions;
 using PdfiumViewer;
-using System.Globalization; 
+using System.Globalization;
 using System.IO;
 
 namespace CrytonCoreNext.PDF.Models

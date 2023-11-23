@@ -7,8 +7,6 @@ using CrytonCoreNext.Crypting.Services;
 using CrytonCoreNext.Crypting.ViewModels;
 using CrytonCoreNext.Crypting.Views;
 using CrytonCoreNext.Drawers;
-using CrytonCoreNext.Enums;
-using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Interfaces.Serializers;
@@ -51,7 +49,6 @@ namespace CrytonCoreNext
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ISnackbarService, SnackbarService>();
 
-            services.AddSingleton<Interfaces.IDialogService, Services.DialogService>();
             services.AddTransient<IProgressService, ProgressService>();
             services.AddSingleton<IFilesLoader, FilesLoader>();
             services.AddSingleton<IFilesSaver, FilesSaver>();

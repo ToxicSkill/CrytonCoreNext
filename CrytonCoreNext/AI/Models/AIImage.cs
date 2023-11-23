@@ -3,13 +3,12 @@ using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Models;
 using OpenCvSharp;
-using OpenCvSharp.Internal.Vectors;
 using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging; 
+using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.AI.Models
 {

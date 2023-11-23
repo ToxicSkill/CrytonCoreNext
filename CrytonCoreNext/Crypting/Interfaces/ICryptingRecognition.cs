@@ -1,5 +1,4 @@
-﻿using CrytonCoreNext.Enums;
-using CrytonCoreNext.Models;
+﻿using CrytonCoreNext.Models;
 
 namespace CrytonCoreNext.Crypting.Interfaces
 {
