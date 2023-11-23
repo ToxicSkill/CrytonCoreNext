@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
 using CrytonCoreNext.Drawers;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Views;
 using Microsoft.Win32;
 using OpenCvSharp;
@@ -16,7 +17,6 @@ using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
-using static CrytonCoreNext.Models.WindowDialog;
 
 namespace CrytonCoreNext.ViewModels
 {
