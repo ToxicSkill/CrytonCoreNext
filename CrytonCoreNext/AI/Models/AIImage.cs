@@ -62,10 +62,11 @@ namespace CrytonCoreNext.AI.Models
         public AIImage(string path, ImageDrawer drawer)
         {
             _drawer = drawer;
-            DetectionImages = new();
-            Predictions = new ();
-            Image = Cv2.ImRead(path).ToWriteableBitmap();
-            Label = System.IO.Path.GetFileName(path);
+            DetectionImages = [];
+            Predictions = [];
+            Path = path;
+            Image = Cv2.ImRead(Path).ToWriteableBitmap();
+            Label = System.IO.Path.GetFileName(Path);
             Constrains = new System.Drawing.Size((int)Image.Width, (int)Image.Height);
             DetectionImage = Image;
             AdjusterImage = Image;
@@ -119,14 +120,15 @@ namespace CrytonCoreNext.AI.Models
             foreach (var prediction in Predictions)
             {
                 var rectangle = prediction.Rectangle.ToRect();
-                if (rectangle.X >= 0 && rectangle.Y >= 0)
-                {
-                    DetectionImages.Add(
-                        new(prediction)
-                        {
-                            Image = new Mat(mat, rectangle).ToWriteableBitmap()
-                        });
-                }
+                var newWidth = Math.Clamp(rectangle.Width, 0, mat.Width - rectangle.X);
+                var newHeight = Math.Clamp(rectangle.Height, 0, mat.Height - rectangle.Y);
+                var newRect = new Rect(rectangle.X, rectangle.Y, newWidth, newHeight);
+                prediction.Rectangle = new RectangleF(newRect.X, newRect.Y, newRect.Width, newRect.Height);
+                DetectionImages.Add(
+                    new(this, prediction)
+                    {
+                        Image = new Mat(mat, newRect).ToWriteableBitmap()
+                    });
             }
         }
 

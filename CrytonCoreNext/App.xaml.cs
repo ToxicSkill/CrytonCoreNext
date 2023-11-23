@@ -106,9 +106,9 @@ namespace CrytonCoreNext
 
         public App()
         {
-            LanguagesDictionaries = new List<ResourceDictionary>(){
+            LanguagesDictionaries = [
                 new() { Source = new Uri("..\\Dictionaries\\EnglishDictionary.xaml", UriKind.Relative) }
-            };
+            ];
         }
 
         public static T GetService<T>()

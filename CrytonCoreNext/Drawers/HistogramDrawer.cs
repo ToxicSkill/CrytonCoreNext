@@ -29,8 +29,8 @@ namespace CrytonCoreNext.Drawers
             Cv2.Resize(image, matForHistogram, newSize);
             Cv2.Split(matForHistogram, out Mat[] planes);
 
-            int[] histSize = { MaxMatDimensionSize };
-            Rangef[] ranges = { new(1, 255) };
+            int[] histSize = [MaxMatDimensionSize];
+            Rangef[] ranges = [new(1, 255)];
 
             Mat histB = new();
             Mat histG = new();

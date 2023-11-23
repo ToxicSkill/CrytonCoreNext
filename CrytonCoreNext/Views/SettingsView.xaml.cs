@@ -23,7 +23,7 @@ namespace CrytonCoreNext.Views
 
         public SettingsView(SettingsViewModel viewModel)
         {
-            _symbolBySymbolWithHeader = new ();
+            _symbolBySymbolWithHeader = [];
             ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;

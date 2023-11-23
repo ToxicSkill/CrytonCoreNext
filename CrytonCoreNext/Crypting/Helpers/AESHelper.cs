@@ -11,9 +11,9 @@ namespace CrytonCoreNext.Crypting.Helpers
 
         public readonly PaddingMode _paddingMode;
 
-        public List<int> LegalKeys = new();
+        public List<int> LegalKeys = [];
 
-        public List<int> LegalBlocks = new();
+        public List<int> LegalBlocks = [];
 
         public AESHelper(AesCng aes, PaddingMode paddingMode = PaddingMode.PKCS7)
         {

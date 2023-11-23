@@ -19,6 +19,7 @@ using System.Windows.Documents;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Controls.Interfaces;
+using Wpf.Ui.Mvvm.Contracts;
 using static CrytonCoreNext.Models.WindowDialog;
 
 namespace CrytonCoreNext.ViewModels
@@ -29,14 +30,18 @@ namespace CrytonCoreNext.ViewModels
 
         private readonly IYoloModelService _yoloModelService;
 
-        private ImageDrawer _imageDrawer;
+        private readonly PdfViewModel _pdfViewModel;
+
+        private readonly INavigationService _navigationService;
+
+        private readonly ImageDrawer _imageDrawer;
 
         public delegate void TabControlChanged();
 
         public event TabControlChanged OnTabControlChanged;
 
         [ObservableProperty]
-        private ObservableCollection<INavigationControl> navigationItems = new();
+        private ObservableCollection<INavigationControl> navigationItems = [];
 
         [ObservableProperty]
         public ObservableCollection<AIDetectionImage> detectedCurrentImages;
@@ -62,8 +67,14 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public int imageCompareSliderValue = DefaultCompareSliderValue;
 
-        public AIViewerViewModel(IYoloModelService yoloModelService, ImageDrawer drawer)
+        public AIViewerViewModel(
+            IYoloModelService yoloModelService, 
+            PdfViewModel pdfViewModel, 
+            INavigationService navigationService, 
+            ImageDrawer drawer)
         {
+            _pdfViewModel = pdfViewModel;
+            _navigationService = navigationService; 
             _imageDrawer = drawer;
             DetectedCurrentImages = [];
             _yoloModelService = yoloModelService;
@@ -80,6 +91,21 @@ namespace CrytonCoreNext.ViewModels
                     PageType = typeof(PdfView)
                 }
             ];
+        }
+
+        [RelayCommand]
+        private void ExportImageToPDF()
+        {
+            if (_pdfViewModel.ExportImageToPDF(
+                new Models.File(
+                    SelectedImage.Path, 
+                    DateTime.Now, 
+                    EImageExtensions.png.ToString(),
+                    0, SelectedImage.AdjusterImage.ToMat().ToBytes()), 
+                SelectedImage.AdjusterImage.ToMat()))
+            {
+                _navigationService.Navigate(typeof(PdfView));
+            }
         }
 
         [RelayCommand]

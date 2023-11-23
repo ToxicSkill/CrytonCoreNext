@@ -38,7 +38,7 @@ namespace CrytonCoreNext.Crypting.Models
         public CryptingRecognition(ICrypting crypting)
         {
             _MD5Hash = MD5.Create();
-            _objectsToRecognize = new();
+            _objectsToRecognize = [];
             _cryptingMethod = crypting;
             CreateDictionariy();
             InitializeObjectToRecognize();

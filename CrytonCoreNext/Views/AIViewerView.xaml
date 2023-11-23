@@ -22,6 +22,8 @@
                  Command="{Binding DeleteImageCommand}"/>
                 <ui:MenuItem Header="Save" SymbolIcon="Save20" 
                  Command="{Binding SaveImageCommand}"/>
+                <ui:MenuItem Header="Export to PDF" SymbolIcon="ArrowExportUp20" 
+                 Command="{Binding ExportImageToPDFCommand}"/>
             </ContextMenu>
         </ResourceDictionary>
     </ui:UiPage.Resources>

@@ -32,7 +32,7 @@ namespace CrytonCoreNext.Models
                 if (openFileDialog.ShowDialog() == true && openFileDialog.FileNames.Count() > 0)
                     return openFileDialog.FileNames.ToList();
                 else
-                    return new List<string>();
+                    return [];
             }
         }
 
@@ -78,7 +78,7 @@ namespace CrytonCoreNext.Models
                 dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 dialog.IsFolderPicker = true;
                 dialog.Multiselect = false;
-                return dialog.ShowDialog() == CommonFileDialogResult.Ok ? new List<string>() { dialog.FileName } : null;
+                return dialog.ShowDialog() == CommonFileDialogResult.Ok ? [dialog.FileName] : null;
             }
         }
     }

@@ -20,6 +20,19 @@ namespace CrytonCoreNext.Models
 
         public bool Color { get; }
 
+        public ImageFile(File file, Mat image) : base(file)
+        {
+            if (image != null)
+            {
+                Bitmap = image.ToWriteableBitmap();
+                if (Bitmap != null)
+                {
+                    Width = Bitmap.Width;
+                    Height = Bitmap.Height;
+                }
+            }
+        }
+
         public ImageFile(File file) : base(file)
         {
             LoadImage();

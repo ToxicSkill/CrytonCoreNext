@@ -9,7 +9,9 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
+using iText.Forms.Fields;
 using iText.Kernel.Pdf;
+using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -144,24 +146,29 @@ namespace CrytonCoreNext.ViewModels
             ISnackbarService snackbarService) : base(fileService, dialogService, snackbarService)
         {
             _pdfService = pdfService;
-            _pdfToMergePagesIndexes = new();
+            _pdfToMergePagesIndexes = [];
 
-            PdfFiles = new();
-            ImageFiles = new();
-            OpenedPdfFiles = new(); 
-            PdfToProtectFiles = new();
-            OutcomeFilesFromSplit = new ();
-            SelectedPdfFilesToMerge = new();
-            SelectedPdfFilesToSplit = new();
-            PdfToSplitImages = new();
-            PdfToSplitRangeFiles = new();
+            PdfFiles = [];
+            ImageFiles = [];
+            OpenedPdfFiles = []; 
+            PdfToProtectFiles = [];
+            OutcomeFilesFromSplit = [];
+            SelectedPdfFilesToMerge = [];
+            SelectedPdfFilesToSplit = [];
+            PdfToSplitImages = [];
+            PdfToSplitRangeFiles = [];
 
             InitializeComboBoxes();
 
-            _pdfExcludedMergeIndexes = new();
+            _pdfExcludedMergeIndexes = [];
             _locker = new object();
 
             BindingOperations.EnableCollectionSynchronization(PdfFiles, _locker);
+        }
+
+        public bool ExportImageToPDF(File file, Mat image)
+        {
+            return LoadImageFile(file, image);
         }
 
         private void InitializeComboBoxes()
@@ -218,9 +225,18 @@ namespace CrytonCoreNext.ViewModels
         {
             var permissions = typeof(EncryptionConstants).GetField(SelectedPermissionOption).GetValue(null);
             var encryption = typeof(EncryptionConstants).GetField(SelectedEncryptionOption).GetValue(null);
-            if (permissions != null && encryption != null)
+            if (permissions != null && encryption != null && PdfToProtectSelectedFile != null)
             {
-                _pdfService.ProtectFile(SelectedPdfFile, (int)permissions, (int)encryption);
+                if (_pdfService.ProtectFile(PdfToProtectSelectedFile, (int)permissions, (int)encryption))
+                {
+                    UpdatePdfFile(PdfToProtectSelectedFile);
+                    OnSelectedTabIndexChanged((int)EPdfTabControls.Protect);
+                    PostSuccessSnackbar("Pdf file has been protected successfully");
+                }
+                else
+                { 
+                    PostWarningSnackbar("Error during protecting PDF, try other settings or password");
+                }
             }
         }
 
@@ -252,7 +268,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 SelectedPdfFilesToSplit.Clear();
                 PdfToSplitImages.Clear();
-                PdfToSplitImages = new ();
+                PdfToSplitImages = [];
                 SelectedPdfToSplitImage = null;
             }
         }
@@ -315,6 +331,10 @@ namespace CrytonCoreNext.ViewModels
             var convertedPdf = _pdfService.ImageToPdf(SelectedImageFile, ImageFiles.Max(x => x.Id) + 1);
             if (AddPdfToPdfList(convertedPdf))
             {
+                if (PdfFiles.Count == 1)
+                {
+                    SelectedTabIndex = 0;
+                }
                 PostSuccessSnackbar($"Converted image into PDF: {convertedPdf.Name}");
             }
         }
@@ -335,7 +355,7 @@ namespace CrytonCoreNext.ViewModels
             ImageFiles.Remove(SelectedImageFile);
             OnImageFileDeleteAfter(oldIndex);
         }
-        
+
 
         [RelayCommand]
         private async Task LoadPdfAndImageFiles(string param)
@@ -510,6 +530,7 @@ namespace CrytonCoreNext.ViewModels
                 _pdfService.UpdatePdfFileInformations(ref pdfFile);
                 CheckNameConflicts(pdfFile);
                 PdfFiles.Add(pdfFile);
+                SelectedPdfFile ??= pdfFile;
                 return true;
             }
             catch (Exception ex)
@@ -545,6 +566,20 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
+        private void UpdatePdfFile(PDFFile pdfFile)
+        {
+            if (PdfFiles.Contains(pdfFile))
+            {
+                return;
+            }
+            var oldIndex = PdfFiles.IndexOf(pdfFile);
+            PdfFiles.Remove(pdfFile);
+            PdfFiles.Insert(oldIndex, pdfFile);
+            if (SelectedPdfFile == null)
+            {
+                SelectedPdfFile = PdfFiles.First();
+            }
+        }
 
         private void UpdatePdfToSplitImage()
         {
@@ -606,6 +641,17 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnSelectedTabIndexChanged(int value)
         {
+            if (SelectedTabIndex == (int)EPdfTabControls.Manage)
+            {
+                var oldSelectedFileIndex = PdfFiles.IndexOf(SelectedPdfFile);
+                var pdfFiles = PdfFiles.ToList();
+                PdfFiles.Clear();
+                foreach (var item in pdfFiles)
+                {
+                    PdfFiles.Add(item);
+                }
+                SelectedPdfFile = PdfFiles[oldSelectedFileIndex];
+            }
             if (SelectedTabIndex != (int)EPdfTabControls.Manage)
             {
                 OpenedPdfFiles.Clear();
@@ -629,7 +675,18 @@ namespace CrytonCoreNext.ViewModels
             if (SelectedTabIndex == (int)EPdfTabControls.Protect &&
                 OpenedPdfFiles.Any())
             {
-                PdfToProtectSelectedFile = OpenedPdfFiles.First();
+                PdfToProtectFiles.Clear();
+                foreach (var file in OpenedPdfFiles)
+                {
+                    if (!file.HasPassword)
+                    {
+                        PdfToProtectFiles.Add(file);
+                    }
+                }
+                if (PdfToProtectFiles.Any())
+                {
+                    PdfToProtectSelectedFile = PdfToProtectFiles.First();
+                } 
             }
         }
 
@@ -892,7 +949,7 @@ namespace CrytonCoreNext.ViewModels
             }
             else
             {
-                PdfToSplitRangeFiles = new();
+                PdfToSplitRangeFiles = [];
             }
         }
 
@@ -901,12 +958,26 @@ namespace CrytonCoreNext.ViewModels
             return indx.from == indx.to ? $"Only{indx.from}" : $"From{indx.from}_To{indx.to}.pdf";
         }
 
+        private bool LoadImageFile(File file, Mat image)
+        {
+            var imageFile = new ImageFile(file, image);
+            if (imageFile != null)
+            {
+                ImageFiles.Add(imageFile);
+                SelectedImageFile = ImageFiles.Last();
+                CheckAnyFileLoaded();
+                return true;
+            }
+            return false;
+        }
+
         private int LoadImageFile(File imageFile)
         {
             if (!ImageFiles.Contains(imageFile, new FileComparer()))
             { 
                 ImageFiles.Add(new ImageFile(imageFile));
-                SelectedImageFile = ImageFiles.Last();
+                SelectedImageFile = ImageFiles.Last(); 
+                CheckAnyFileLoaded();
                 return 0;
             }
             return 1;

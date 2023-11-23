@@ -75,7 +75,7 @@ namespace CrytonCoreNext.ViewModels
             _fileService = fileService;
             _cryptingService = cryptingService;
             _passwordProvider = passwordProvider;
-            files = new();
+            files = [];
 
             CryptingViewsItemSource = new(cryptingViews);
             RegisterFileChangedEvent();

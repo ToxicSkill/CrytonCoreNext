@@ -27,7 +27,7 @@ namespace CrytonCoreNextTests
 
         private readonly IFilesManager _filesManager;
 
-        private readonly List<string> _filesToOpen = new() { "./TestingFiles/test.txt" };
+        private readonly List<string> _filesToOpen = ["./TestingFiles/test.txt"];
 
         public readonly List<CryptFile> CryptFiles;
 
@@ -39,7 +39,7 @@ namespace CrytonCoreNextTests
             _filesSaver = new FilesSaver();
             _filesLoader = new FilesLoader();
             _filesManager = new FilesManager();
-            CryptFiles = new List<CryptFile>();
+            CryptFiles = [];
             LoadFiles();
         }
 

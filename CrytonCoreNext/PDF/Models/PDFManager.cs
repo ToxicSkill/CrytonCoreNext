@@ -38,19 +38,19 @@ namespace CrytonCoreNext.PDF.Models
 
         public List<string> GetAvailableEncryptionOptions()
         {
-            return new List<string>()
-            {
+            return
+            [
                 nameof(EncryptionConstants.ENCRYPTION_AES_256),
                 nameof(EncryptionConstants.ENCRYPTION_AES_128),
                 nameof(EncryptionConstants.STANDARD_ENCRYPTION_40),
                 nameof(EncryptionConstants.STANDARD_ENCRYPTION_128)
-            };
+            ];
         }
 
         public List<string> GetAvailableEncryptionAllowOptions()
         {
-            return new List<string>()
-            {
+            return
+            [
                 nameof(EncryptionConstants.ALLOW_ASSEMBLY),
                 nameof(EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS),
                 nameof(EncryptionConstants.ALLOW_MODIFY_CONTENTS),
@@ -59,26 +59,29 @@ namespace CrytonCoreNext.PDF.Models
                 nameof(EncryptionConstants.ALLOW_PRINTING),
                 nameof(EncryptionConstants.ALLOW_DEGRADED_PRINTING),
                 nameof(EncryptionConstants.ALLOW_SCREENREADERS)
-            };
+            ];
         }
 
-        public void ProtectFile(PDFFile pdfFile, int permissions, int encryption)
+        public bool ProtectFile(PDFFile pdfFile, int permissions, int encryption)
         {
-            using var pdfReader = new PdfReader(new MemoryStream(pdfFile.Bytes));
-            using var pdfDocument = new PdfDocument(pdfReader);
-            using var stream = new MemoryStream();
-            var password = Encoding.UTF8.GetBytes(pdfFile.Password);
             try
             {
+                using var pdfReader = new PdfReader(new MemoryStream(pdfFile.Bytes));
+                using var pdfDocument = new PdfDocument(pdfReader);
+                using var stream = new MemoryStream();
+                var password = Encoding.UTF8.GetBytes(pdfFile.Password);
                 PdfEncryptor.Encrypt(new PdfReader(new MemoryStream(pdfFile.Bytes)), stream, new EncryptionProperties().SetStandardEncryption(
                     password, password,
                     permissions,
                     encryption));
+                pdfFile.HasPassword = true;
+                pdfFile.Bytes = stream.ToArray();
+                return true;
             }
             catch (Exception)
             {
+                return false;
             }
-            pdfFile.Bytes = stream.ToArray();
         }
 
         public async Task<PDFFile> Merge(List<PDFFile> pdfFiles)
@@ -122,7 +125,7 @@ namespace CrytonCoreNext.PDF.Models
             };
             using IDocLib pdfLibrary = DocLib.Instance;
             var pdfBbytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
-            var file = new File($"{image.Name}_Converted", string.Empty, DateTime.Now, "pdf", newId, pdfBbytes);
+            var file = new File($"{image.Name}_Converted", DateTime.Now, "pdf", newId, pdfBbytes);
             return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 

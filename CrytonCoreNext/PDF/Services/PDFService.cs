@@ -7,25 +7,11 @@ using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.PDF.Services
 {
-    public class PDFService : IPDFService
+    public class PDFService(IPDFManager pdfManager, IPDFReader pdfReader) : IPDFService
     {
-        private readonly IPDFManager _pdfManager;
+        private readonly IPDFManager _pdfManager = pdfManager;
 
-        private readonly IPDFReader _pdfReader;
-
-        public PDFService(IPDFManager pdfManager, IPDFReader pdfReader)
-        {
-            _pdfManager = pdfManager;
-            _pdfReader = pdfReader;
-        }
-
-        //public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
-        //{
-        //    await foreach (var image in _pdfManager.LoadAllPDFImages(pdfFile))
-        //    {
-        //        yield return image;
-        //    }
-        //}
+        private readonly IPDFReader _pdfReader = pdfReader;
 
         public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
@@ -62,9 +48,9 @@ namespace CrytonCoreNext.PDF.Services
             return await _pdfManager.MergeAllImagesToPDF(images, newId);
         }
 
-        public void ProtectFile(PDFFile pdfFile, int limitations, int encryption)
+        public bool ProtectFile(PDFFile pdfFile, int limitations, int encryption)
         {
-            _pdfManager.ProtectFile(pdfFile, limitations, encryption);
+            return _pdfManager.ProtectFile(pdfFile, limitations, encryption);
         }
 
         public List<string> GetAvailableEncryptionOptions()
