@@ -64,10 +64,10 @@ namespace CrytonCoreNext.ViewModels
         public SettingsViewModel(IThemeService themeService)
         {
             _themeService = themeService;
-            _elements = new();
-            _cardByTreeViewItem = new();
+            _elements = [];
+            _cardByTreeViewItem = [];
 
-            TreeViewItemSource = new();
+            TreeViewItemSource = [];
 
             InitializeThemes();
             InitializeSettings(); 
@@ -215,7 +215,7 @@ namespace CrytonCoreNext.ViewModels
                     Title = headerTitle,
                     Symbol = mainItemSymbol,
                     IsExpanded = true,
-                    Childs = new()
+                    Childs = []
                 };
                 TreeViewItemSource.Add(newTreeViewItem);
                 _cardByTreeViewItem.Add(newTreeViewItem, card);

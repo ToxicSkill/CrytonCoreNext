@@ -144,21 +144,21 @@ namespace CrytonCoreNext.ViewModels
             ISnackbarService snackbarService) : base(fileService, dialogService, snackbarService)
         {
             _pdfService = pdfService;
-            _pdfToMergePagesIndexes = new();
+            _pdfToMergePagesIndexes = [];
 
-            PdfFiles = new();
-            ImageFiles = new();
-            OpenedPdfFiles = new(); 
-            PdfToProtectFiles = new();
-            OutcomeFilesFromSplit = new ();
-            SelectedPdfFilesToMerge = new();
-            SelectedPdfFilesToSplit = new();
-            PdfToSplitImages = new();
-            PdfToSplitRangeFiles = new();
+            PdfFiles = [];
+            ImageFiles = [];
+            OpenedPdfFiles = []; 
+            PdfToProtectFiles = [];
+            OutcomeFilesFromSplit = [];
+            SelectedPdfFilesToMerge = [];
+            SelectedPdfFilesToSplit = [];
+            PdfToSplitImages = [];
+            PdfToSplitRangeFiles = [];
 
             InitializeComboBoxes();
 
-            _pdfExcludedMergeIndexes = new();
+            _pdfExcludedMergeIndexes = [];
             _locker = new object();
 
             BindingOperations.EnableCollectionSynchronization(PdfFiles, _locker);
@@ -252,7 +252,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 SelectedPdfFilesToSplit.Clear();
                 PdfToSplitImages.Clear();
-                PdfToSplitImages = new ();
+                PdfToSplitImages = [];
                 SelectedPdfToSplitImage = null;
             }
         }
@@ -892,7 +892,7 @@ namespace CrytonCoreNext.ViewModels
             }
             else
             {
-                PdfToSplitRangeFiles = new();
+                PdfToSplitRangeFiles = [];
             }
         }
 

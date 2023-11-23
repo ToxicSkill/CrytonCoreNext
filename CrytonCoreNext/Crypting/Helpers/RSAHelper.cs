@@ -13,7 +13,7 @@ namespace CrytonCoreNext.Crypting.Helpers
 
         public readonly int DefaultKeySize = 2048;
 
-        public List<int> LegalKeys = new();
+        public List<int> LegalKeys = [];
 
         public int KeyValueStep = 1;
 

@@ -38,19 +38,19 @@ namespace CrytonCoreNext.PDF.Models
 
         public List<string> GetAvailableEncryptionOptions()
         {
-            return new List<string>()
-            {
+            return
+            [
                 nameof(EncryptionConstants.ENCRYPTION_AES_256),
                 nameof(EncryptionConstants.ENCRYPTION_AES_128),
                 nameof(EncryptionConstants.STANDARD_ENCRYPTION_40),
                 nameof(EncryptionConstants.STANDARD_ENCRYPTION_128)
-            };
+            ];
         }
 
         public List<string> GetAvailableEncryptionAllowOptions()
         {
-            return new List<string>()
-            {
+            return
+            [
                 nameof(EncryptionConstants.ALLOW_ASSEMBLY),
                 nameof(EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS),
                 nameof(EncryptionConstants.ALLOW_MODIFY_CONTENTS),
@@ -59,7 +59,7 @@ namespace CrytonCoreNext.PDF.Models
                 nameof(EncryptionConstants.ALLOW_PRINTING),
                 nameof(EncryptionConstants.ALLOW_DEGRADED_PRINTING),
                 nameof(EncryptionConstants.ALLOW_SCREENREADERS)
-            };
+            ];
         }
 
         public void ProtectFile(PDFFile pdfFile, int permissions, int encryption)

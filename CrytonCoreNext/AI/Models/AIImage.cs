@@ -3,13 +3,12 @@ using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Models;
 using OpenCvSharp;
-using OpenCvSharp.Internal.Vectors;
 using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging; 
+using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.AI.Models
 {
@@ -62,8 +61,8 @@ namespace CrytonCoreNext.AI.Models
         public AIImage(string path, ImageDrawer drawer)
         {
             _drawer = drawer;
-            DetectionImages = new();
-            Predictions = new ();
+            DetectionImages = [];
+            Predictions = [];
             Image = Cv2.ImRead(path).ToWriteableBitmap();
             Label = System.IO.Path.GetFileName(path);
             Constrains = new System.Drawing.Size((int)Image.Width, (int)Image.Height);

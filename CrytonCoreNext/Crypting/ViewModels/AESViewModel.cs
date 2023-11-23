@@ -45,8 +45,8 @@ namespace CrytonCoreNext.Crypting.ViewModels
             _snackbarService = snackbarService;
             _jsonSerializer = json;
 
-            BlockSizesComboBox = new();
-            KeySizesComboBox = new();
+            BlockSizesComboBox = [];
+            KeySizesComboBox = [];
             UpdateKeyAvailability(true);
             InitializeHelper((AESHelper)Crypting.GetHelper());
         }

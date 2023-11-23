@@ -65,8 +65,8 @@ namespace CrytonCoreNext.PDF.Abstarct
 
         public PdfBase(InteractiveViewBase pdfManagerViewModel, IPDFService pdfService)
         {
-            _images = new();
-            Files = new();
+            _images = [];
+            Files = [];
 
             PdfService = pdfService;
             PdfManagerViewModel = pdfManagerViewModel;

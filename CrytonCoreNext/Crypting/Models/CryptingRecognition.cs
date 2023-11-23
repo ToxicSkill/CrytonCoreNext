@@ -9,7 +9,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace CrytonCoreNext.Crypting.Models
 {
@@ -38,7 +37,7 @@ namespace CrytonCoreNext.Crypting.Models
         public CryptingRecognition(ICrypting crypting)
         {
             _MD5Hash = MD5.Create();
-            _objectsToRecognize = new();
+            _objectsToRecognize = [];
             _cryptingMethod = crypting;
             CreateDictionariy();
             InitializeObjectToRecognize();

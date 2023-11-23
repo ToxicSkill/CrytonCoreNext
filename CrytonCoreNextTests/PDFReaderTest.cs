@@ -12,11 +12,11 @@ namespace CrytonCoreNextTests
     {
         public IPDFReader PdfReader { get; set; }
 
-        public List<string> PdfFilesToOpen = new() 
-        { 
+        public List<string> PdfFilesToOpen =
+        [
             "./TestingFiles/PDF NOT SECURED.pdf",
             "./TestingFiles/SECURED PDF 123456.pdf"
-        };
+        ];
 
         public PdfFiles()
         {
@@ -36,7 +36,7 @@ namespace CrytonCoreNextTests
         {
             _files = filesFixture;
             _filesLoader = new FilesLoader();
-            PDFFiles = new List<PDFFile>();
+            PDFFiles = [];
         }
 
         [StaFact]

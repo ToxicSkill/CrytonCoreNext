@@ -39,7 +39,7 @@ namespace CrytonCoreNext.Controls
                 new PropertyMetadata(EStrength.None, new PropertyChangedCallback(StrenghtPropertyChanged)));
 
 
-        private static readonly List<Rectangle> Rectangles = new();
+        private static readonly List<Rectangle> Rectangles = [];
         
         public EStrength Strenght
         {
