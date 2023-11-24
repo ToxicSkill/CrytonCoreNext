@@ -16,8 +16,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Wpf.Ui.Mvvm.Contracts;
-using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
+using Wpf.Ui.Mvvm.Contracts; 
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -63,12 +62,12 @@ namespace CrytonCoreNext.ViewModels
 
 
         public CryptingViewModel(IFileService fileService,
-            IDialogService dialogService,
             ICryptingService cryptingService,
             ISnackbarService snackbarService,
             List<ICryptingView<CryptingMethodViewModel>> cryptingViews,
-            IPasswordProvider passwordProvider)
-            : base(fileService, dialogService, snackbarService)
+            IPasswordProvider passwordProvider,
+            DialogService dialogService)
+            : base(fileService, snackbarService, dialogService)
         {
             ProgressService = new ProgressService();
 

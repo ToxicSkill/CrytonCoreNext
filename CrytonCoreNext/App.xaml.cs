@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Wpf.Ui.Mvvm.Contracts;
 using Wpf.Ui.Mvvm.Services;
+using DialogService = CrytonCoreNext.Services.DialogService;
 
 namespace CrytonCoreNext
 {
@@ -48,6 +49,7 @@ namespace CrytonCoreNext
             services.AddSingleton<ICustomPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ISnackbarService, SnackbarService>();
+            services.AddSingleton<DialogService>();
 
             services.AddTransient<IProgressService, ProgressService>();
             services.AddSingleton<IFilesLoader, FilesLoader>();
@@ -153,23 +155,23 @@ namespace CrytonCoreNext
         private static CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
         {
             var fileService = provider.GetRequiredService<IFileService>();
-            var dialogService = provider.GetRequiredService<Interfaces.IDialogService>();
+            var dialogService = provider.GetRequiredService<DialogService>();
             var cryptingService = provider.GetRequiredService<ICryptingService>();
             var snackbar = provider.GetRequiredService<ISnackbarService>();
             var cryptors = provider.GetServices<ICryptingView<CryptingMethodViewModel>>();
             var passwordProvider = provider.GetRequiredService<IPasswordProvider>();
 
-            return new(fileService, dialogService, cryptingService, snackbar, cryptors.ToList(), passwordProvider);
+            return new(fileService, cryptingService, snackbar, cryptors.ToList(), passwordProvider, dialogService);
         }
 
         private static PdfViewModel CreatePdfViewModel(IServiceProvider provider)
         {
             var fileService = provider.GetRequiredService<IFileService>();
-            var dialogService = provider.GetRequiredService<Interfaces.IDialogService>();
             var pdfService = provider.GetRequiredService<IPDFService>();
             var snackbar = provider.GetRequiredService<ISnackbarService>();
+            var dialogService = provider.GetRequiredService<DialogService>();
 
-            return new(pdfService, fileService, dialogService, snackbar);
+            return new(pdfService, fileService, snackbar, dialogService);
         }
 
         public static ICryptingService CreateCryptingService(IServiceProvider provider)

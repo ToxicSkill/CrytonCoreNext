@@ -9,6 +9,7 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
+using CrytonCoreNext.Services;
 using iText.Forms.Fields;
 using iText.Kernel.Pdf;
 using OpenCvSharp;
@@ -22,8 +23,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using Wpf.Ui.Mvvm.Contracts;
-using File = CrytonCoreNext.Models.File;
-using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
+using File = CrytonCoreNext.Models.File; 
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -142,8 +142,8 @@ namespace CrytonCoreNext.ViewModels
 
         public PdfViewModel(IPDFService pdfService,
             IFileService fileService,
-            IDialogService dialogService,
-            ISnackbarService snackbarService) : base(fileService, dialogService, snackbarService)
+            ISnackbarService snackbarService,
+            DialogService dialogService) : base(fileService, snackbarService, dialogService)
         {
             _pdfService = pdfService;
             _pdfToMergePagesIndexes = [];

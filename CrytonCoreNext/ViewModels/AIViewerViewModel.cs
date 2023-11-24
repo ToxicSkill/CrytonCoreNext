@@ -4,6 +4,7 @@ using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
 using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Enums;
+using CrytonCoreNext.Services;
 using CrytonCoreNext.Views;
 using Microsoft.Win32;
 using OpenCvSharp;
@@ -17,6 +18,8 @@ using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Controls.Interfaces;
 using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui.Mvvm.Services;
+using DialogService = CrytonCoreNext.Services.DialogService;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -31,6 +34,8 @@ namespace CrytonCoreNext.ViewModels
         private readonly INavigationService _navigationService;
 
         private readonly ImageDrawer _imageDrawer;
+
+        private readonly DialogService _dialogService;
 
         public delegate void TabControlChanged();
 
@@ -67,11 +72,13 @@ namespace CrytonCoreNext.ViewModels
             IYoloModelService yoloModelService, 
             PdfViewModel pdfViewModel, 
             INavigationService navigationService, 
-            ImageDrawer drawer)
+            ImageDrawer drawer,
+            DialogService dialogService)
         {
             _pdfViewModel = pdfViewModel;
             _navigationService = navigationService; 
             _imageDrawer = drawer;
+            _dialogService = dialogService;
             DetectedCurrentImages = [];
             _yoloModelService = yoloModelService;
             _yoloModelService.LoadYoloModel();
@@ -122,42 +129,21 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void SaveImage()
         {
-            var fileDialog = new SaveFileDialog()
+            var outputFileName = _dialogService.GetFileNameToSave(".png", Environment.SpecialFolder.Recent);
+            if (outputFileName != string.Empty)
             {
-                Title = "Save file",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
-            };
-            if (fileDialog.ShowDialog() == true)
-            {
-                var outputFilePath = fileDialog.FileName;
-                if (outputFilePath == null)
-                {
-                    return;
-                }
-                else if (Path.GetExtension(outputFilePath) == string.Empty)
-                {
-                    outputFilePath = Path.ChangeExtension(outputFilePath, ".png");
-                }
-                
-                Cv2.ImWrite(outputFilePath, SelectedImage.AdjusterImage.ToMat());
+                Cv2.ImWrite(outputFileName, SelectedImage.AdjusterImage.ToMat());
             }
         }
 
         [RelayCommand]
         private void LoadImages()
         {
-            var folderDialog = new OpenFileDialog()
-            {
-                Title = "Select Folder",
-                Multiselect = true,
-                Filter = Static.Extensions.FilterToPrompt(Static.Extensions.DialogFilters.Images),
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
-            };
-
-            if (folderDialog.ShowDialog() == true)
+            var filesToOpen = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.Images, Environment.SpecialFolder.Recent);
+            if (filesToOpen.Count != 0)
             {
                 var newFiles = new List<AIImage>();
-                foreach (var item in folderDialog.FileNames)
+                foreach (var item in filesToOpen)
                 {
                     newFiles.Add(new(item, _imageDrawer));
                 }
@@ -167,7 +153,7 @@ namespace CrytonCoreNext.ViewModels
                 }
                 var oldList = Images.ToList();
                 oldList.AddRange(newFiles);
-                Images = new (oldList);
+                Images = new(oldList);
                 SelectedImage = Images.First();
             }
         }
