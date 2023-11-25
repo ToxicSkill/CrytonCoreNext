@@ -12,7 +12,7 @@ namespace CrytonCoreNext.Models
 
         public string Label { get; set; }
 
-        public WriteableBitmap Image { get; init; }
+        public WriteableBitmap Image { get; set; }
 
         public string Path { get; init; }
     }

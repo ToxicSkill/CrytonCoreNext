@@ -37,6 +37,42 @@
     </ui:UiPage.Resources>
 
     <Grid>
+        <Grid Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <Frame x:Name="Background" Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Grid.Column="1" FontSize="84" Text="PDF Manager" FontFamily="Candara Light"/>
+                <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="22" Text="Simple document manager" FontWeight="UltraLight" FontFamily="Candara Light"/>
+            </StackPanel>
+
+            <ui:Button VerticalAlignment="Center" HorizontalAlignment="Center" Margin="600,20,0,0" Cursor="Hand"
+               Width="80" Height="80" Icon="Add20" FontSize="54" ToolTip="Load files"
+               Command="{Binding LoadPdfAndImageFilesCommand}" CommandParameter="true"/>
+
+            <!--<ui:Button Grid.Row="1" Icon="Add20" 
+               Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+               Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" 
+               Appearance="Primary" HorizontalAlignment="Stretch" Cursor="Hand" />-->
+            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20">
+                <TextBlock
+            FontSize="{StaticResource G_NormalFontSize}"
+            FontWeight="UltraLight"
+            Text="Learn more" />
+                <ui:Hyperlink
+            Margin="8,8,0,0"
+            Padding="4"
+            Content="GitHub"
+            Icon="Empty"
+            NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
+            ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
+                <ui:Hyperlink
+            Margin="8,0,0,0"
+            Padding="4"
+            Content="Portable Document Format (PDF)"
+            Icon="Empty"
+            NavigateUri="https://en.wikipedia.org/wiki/PDF"
+            ToolTip="https://en.wikipedia.org/wiki/PDF" />
+            </StackPanel>
+        </Grid>
         <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <TabItem>
@@ -77,7 +113,7 @@
                                        Appearance="Secondary" HorizontalAlignment="Right" />
                         </Grid>
                         <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,50,0,0">
-                            <ListView ItemsSource="{Binding PdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
+                            <ListView ItemsSource="{Binding PdfFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                       SelectedItem="{Binding SelectedPdfFile}" 
                                       SelectionChanged="ListView_SelectionChanged" SelectionMode="Single"
                                       ScrollViewer.CanContentScroll="True">
@@ -213,7 +249,7 @@
                         <!--IMPLEMENT FLYOUT WITH INFOMRATION ABOUT 1 > PAGES FOR SPLIT-->
                     </ui:Flyout>
                     <ScrollViewer Grid.Column="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,5,0">
-                        <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
+                        <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                   SelectedItem="{Binding OpenedPdfSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   PreviewMouseDoubleClick="ListViewMerge_PreviewMouseDoubleClick" SelectionMode="Single">
                             <ListView.Template>
@@ -265,7 +301,7 @@
                                    Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </ui:CardControl>
                     <ScrollViewer Grid.Column="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
-                        <ListView ItemsSource="{Binding SelectedPdfFilesToMerge, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                        <ListView ItemsSource="{Binding SelectedPdfFilesToMerge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   SelectedItem="{Binding SelectedPdfFileToMerge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Merge" SelectionMode="Single">
                             <ListView.Template>
@@ -367,7 +403,7 @@
                             </ui:CardControl.Header>
                         </ui:CardControl>
                         <ScrollViewer Grid.Column="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,75,0,0">
-                            <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                            <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedItem="{Binding OpenedPdfSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 PreviewMouseDoubleClick="ListViewSplit_PreviewMouseDoubleClick" SelectionMode="Single">
                                 <ListView.Template>
@@ -420,7 +456,7 @@
                                 </ui:CardControl.Header>
                             </ui:CardControl>
                             <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Auto"  Margin="0,10">
-                                <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedItem="{Binding SelectedPdfFileToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Split" SelectionMode="Single">
                                     <ListView.Template>
@@ -594,7 +630,7 @@
                         </StackPanel>
 
                         <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" Margin="0,80,0,0">
-                            <ListView ItemsSource="{Binding ImageFiles, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" 
+                            <ListView ItemsSource="{Binding ImageFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                       SelectedItem="{Binding SelectedImageFile}" SelectionMode="Single">
                                 <ListView.Template>
                                     <ControlTemplate TargetType="ListBox">
@@ -771,41 +807,6 @@
                 
             </TabItem>
         </TabControl>
-        <Grid Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-            <Frame x:Name="Background" Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Grid.Column="1" FontSize="84" Text="PDF Manager" FontFamily="Candara Light"/>
-                <TextBlock Grid.Column="1" HorizontalAlignment="Center" FontSize="22" Text="Simple document manager" FontWeight="UltraLight" FontFamily="Candara Light"/>
-            </StackPanel>
-
-            <ui:Button VerticalAlignment="Center" HorizontalAlignment="Center" Margin="600,20,0,0" Cursor="Hand"
-                       Width="80" Height="80" Icon="Add20" FontSize="54" ToolTip="Load files"
-                       Command="{Binding LoadPdfAndImageFilesCommand}" CommandParameter="true"/>
-
-            <!--<ui:Button Grid.Row="1" Icon="Add20" 
-                       Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                       Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" 
-                       Appearance="Primary" HorizontalAlignment="Stretch" Cursor="Hand" />-->
-            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20">
-                <TextBlock
-                    FontSize="{StaticResource G_NormalFontSize}"
-                    FontWeight="UltraLight"
-                    Text="Learn more" />
-                <ui:Hyperlink
-                    Margin="8,8,0,0"
-                    Padding="4"
-                    Content="GitHub"
-                    Icon="Empty"
-                    NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
-                    ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
-                <ui:Hyperlink
-                    Margin="8,0,0,0"
-                    Padding="4"
-                    Content="Portable Document Format (PDF)"
-                    Icon="Empty"
-                    NavigateUri="https://en.wikipedia.org/wiki/PDF"
-                    ToolTip="https://en.wikipedia.org/wiki/PDF" />
-            </StackPanel>
-        </Grid>
+        
     </Grid>
 </ui:UiPage>

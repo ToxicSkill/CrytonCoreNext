@@ -6,6 +6,7 @@
         Merge,
         Split,
         Convert,
-        Protect
+        Protect,
+        All
     }
 }

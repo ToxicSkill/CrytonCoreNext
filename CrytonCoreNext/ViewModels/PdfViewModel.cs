@@ -16,6 +16,8 @@ using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -148,7 +150,6 @@ namespace CrytonCoreNext.ViewModels
             _pdfService = pdfService;
             _pdfToMergePagesIndexes = [];
 
-            PdfFiles = [];
             ImageFiles = [];
             OpenedPdfFiles = []; 
             PdfToProtectFiles = [];
@@ -157,6 +158,7 @@ namespace CrytonCoreNext.ViewModels
             SelectedPdfFilesToSplit = [];
             PdfToSplitImages = [];
             PdfToSplitRangeFiles = [];
+            PdfFiles = [];
 
             InitializeComboBoxes();
 
@@ -164,6 +166,47 @@ namespace CrytonCoreNext.ViewModels
             _locker = new object();
 
             BindingOperations.EnableCollectionSynchronization(PdfFiles, _locker);
+        }
+
+        private void OnPdfFilesChanged()
+        {
+            OpenedPdfFiles = new(PdfFiles.Where(x => x.IsOpened).ToList());
+            PdfToProtectFiles = new(OpenedPdfFiles.Where(x => x.HasPassword == false).ToList());
+            var splitFilesToRemove = new List<PDFFile>();
+            var mergeFilesToRemove = new List<PDFFile>();
+            foreach (var splitFile in SelectedPdfFilesToSplit)
+            {
+                if (!OpenedPdfFiles.Contains(splitFile))
+                {
+                    splitFilesToRemove.Add(splitFile);
+                }
+            }
+            foreach (var mergeFile in SelectedPdfFilesToMerge)
+            {
+                if (!OpenedPdfFiles.Contains(mergeFile))
+                {
+                    mergeFilesToRemove.Add(mergeFile);
+                }
+            }
+            SelectedPdfFilesToSplit = new(SelectedPdfFilesToSplit.Except(splitFilesToRemove));
+            SelectedPdfFilesToMerge = new(SelectedPdfFilesToMerge.Except(mergeFilesToRemove));
+            if (SelectedPdfFile == null && PdfFiles.Any())
+            {
+                SelectedPdfFile = PdfFiles.Last();
+            }
+            if (SelectedPdfFileToMerge == null && SelectedPdfFilesToMerge.Any())
+            {
+                SelectedPdfFileToMerge = SelectedPdfFilesToMerge.Last();
+            }
+            if (SelectedPdfFileToSplit == null && SelectedPdfFilesToSplit.Any())
+            {
+                SelectedPdfFileToSplit = SelectedPdfFilesToSplit.Last();
+            }
+            if (!PdfFiles.Any() && ImageFiles.Any())
+            {
+                SelectedTabIndex = (int)EPdfTabControls.Convert;
+            }
+            AnyLoadedFile = PdfFiles.Any() || ImageFiles.Any();
         }
 
         public bool ExportImageToPDF(File file, Mat image)
@@ -342,10 +385,8 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void DeleteFile()
         {
-            var oldIndex = PdfFiles.IndexOf(SelectedPdfFile);
-            OnFileDeleteBefore();
             PdfFiles.Remove(SelectedPdfFile);
-            OnFileDeleteAfter(oldIndex);
+            OnPdfFilesChanged();
         }
 
         [RelayCommand]
@@ -383,7 +424,6 @@ namespace CrytonCoreNext.ViewModels
             }
             var nofFilesAfter = PdfFiles.Count + ImageFiles.Count;
             PostInformations(protectedFilesCount, damagedFilesCount, nofNotLoadedFiles, nofFilesAfter - nofFilesBefore);
-            CheckAnyFileLoaded();
             Unlock();
         }
 
@@ -639,57 +679,6 @@ namespace CrytonCoreNext.ViewModels
             OnPropertyChanged(nameof(SelectedPdfFilesToMerge));
         }
 
-        partial void OnSelectedTabIndexChanged(int value)
-        {
-            if (SelectedTabIndex == (int)EPdfTabControls.Manage)
-            {
-                var oldSelectedFileIndex = PdfFiles.IndexOf(SelectedPdfFile);
-                var pdfFiles = PdfFiles.ToList();
-                PdfFiles.Clear();
-                foreach (var item in pdfFiles)
-                {
-                    PdfFiles.Add(item);
-                }
-                SelectedPdfFile = PdfFiles[oldSelectedFileIndex];
-            }
-            if (SelectedTabIndex != (int)EPdfTabControls.Manage)
-            {
-                OpenedPdfFiles.Clear();
-                foreach (var file in PdfFiles)
-                {
-                    if (file.IsOpened)
-                    {
-                        OpenedPdfFiles.Add(file);
-                    }
-                }
-            }
-            if (SelectedTabIndex == (int)EPdfTabControls.Split)
-            {
-                if (SelectedPdfFileToSplit == null)
-                {
-                    PdfToSplitImages.Clear();
-                    PdfToSplitRangeFiles.Clear();
-                    PdfToSplitImages = new();
-                }
-            }
-            if (SelectedTabIndex == (int)EPdfTabControls.Protect &&
-                OpenedPdfFiles.Any())
-            {
-                PdfToProtectFiles.Clear();
-                foreach (var file in OpenedPdfFiles)
-                {
-                    if (!file.HasPassword)
-                    {
-                        PdfToProtectFiles.Add(file);
-                    }
-                }
-                if (PdfToProtectFiles.Any())
-                {
-                    PdfToProtectSelectedFile = PdfToProtectFiles.First();
-                } 
-            }
-        }
-
         partial void OnSelectedPdfFileChanged(PDFFile value)
         {
             if (value != null)
@@ -754,14 +743,6 @@ namespace CrytonCoreNext.ViewModels
             return 0;
         }
 
-        private void OnFileDeleteAfter(int oldIndex)
-        {
-            if (PdfFiles.Any())
-            {
-                SelectedPdfFile = PdfFiles.ElementAt(oldIndex > 0 ? --oldIndex : oldIndex);
-            }
-            CheckAnyFileLoaded();
-        }
 
         private void OnImageFileDeleteAfter(int oldIndex)
         {
@@ -769,7 +750,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 SelectedImageFile = ImageFiles.ElementAt(oldIndex > 0 ? --oldIndex : oldIndex);
             }
-            CheckAnyFileLoaded();
+            OnPdfFilesChanged();
         }
 
         private void OnFileDeleteBefore()
@@ -778,18 +759,6 @@ namespace CrytonCoreNext.ViewModels
             SelectedPdfFilesToSplit.Remove(SelectedPdfFile);
         }
 
-        private void CheckAnyFileLoaded()
-        {
-            if (!PdfFiles.Any() && ImageFiles.Any())
-            {
-                SelectedTabIndex = 3;
-            }
-            else
-            {
-                SelectedTabIndex = 0;
-            }
-            AnyLoadedFile = PdfFiles.Any() || ImageFiles.Any();
-        }
 
         private int LoadPdfFile(ref int protectedFilesCount, ref int damagedFilesCount, File file)
         {
@@ -801,6 +770,7 @@ namespace CrytonCoreNext.ViewModels
                     if (!PdfFiles.Contains(pdfFile, new FileComparer()))
                     {
                         PdfFiles.Add(pdfFile);
+                        OnPdfFilesChanged();
                     }
                     else
                     {
@@ -965,7 +935,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 ImageFiles.Add(imageFile);
                 SelectedImageFile = ImageFiles.Last();
-                CheckAnyFileLoaded();
+                OnPdfFilesChanged();
                 return true;
             }
             return false;
@@ -976,8 +946,8 @@ namespace CrytonCoreNext.ViewModels
             if (!ImageFiles.Contains(imageFile, new FileComparer()))
             { 
                 ImageFiles.Add(new ImageFile(imageFile));
-                SelectedImageFile = ImageFiles.Last(); 
-                CheckAnyFileLoaded();
+                SelectedImageFile = ImageFiles.Last();
+                OnPdfFilesChanged();
                 return 0;
             }
             return 1;
@@ -1006,18 +976,18 @@ namespace CrytonCoreNext.ViewModels
             else
             {
                 PostSuccessSnackbar("Pdf document has been open successfully");
-                RefreshCollection();
+                //RefreshCollection();
             }
         }
 
-        private void RefreshCollection()
-        {
-            var oldFile = SelectedPdfFile;
-            var oldIndex = PdfFiles.IndexOf(SelectedPdfFile);
-            PdfFiles.Remove(SelectedPdfFile);
-            PdfFiles.Insert(oldIndex, oldFile);
-            SelectedPdfFile = oldFile;
-            CheckAnyFileLoaded();
-        }
+        //private void RefreshCollection()
+        //{
+        //    var oldFile = SelectedPdfFile;
+        //    var oldIndex = PdfFiles.IndexOf(SelectedPdfFile);
+        //    PdfFiles.Remove(SelectedPdfFile);
+        //    PdfFiles.Insert(oldIndex, oldFile);
+        //    SelectedPdfFile = oldFile;
+        //    CheckAnyFileLoaded();
+        //}
     }
 }
