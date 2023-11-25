@@ -47,7 +47,7 @@ namespace CrytonCoreNext.Abstract
 
         protected async IAsyncEnumerable<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
-            var filesPaths = dialogService.GetFilesNamesToOpen(filters, Environment.SpecialFolder.Recent);
+            var filesPaths = dialogService.GetFilesNamesToOpen(filters, Environment.SpecialFolder.Desktop);
             var loadedFilesCounter = 0;
             await foreach (var file in fileService.LoadFiles(filesPaths))
             {

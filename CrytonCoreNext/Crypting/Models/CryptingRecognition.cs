@@ -86,7 +86,7 @@ namespace CrytonCoreNext.Crypting.Models
                 objectsToStoreByRObject.Add(ERObject.KeysLenght, Encoding.ASCII.GetBytes(protectedKeysBytes.Length.ToString()));
                 objectsToStoreByRObject.Add(ERObject.CheckSumKeys, keysCheckArray);
             }
-            objectsToStoreByRObject.Add(ERObject.CheckSum, Array.Empty<byte>());
+            objectsToStoreByRObject.Add(ERObject.CheckSum, []);
 
             var offset = 0;
             var recognitionArray = new byte[objectsToStoreByRObject.Sum(x => _sizeOf[x.Key])];
@@ -205,7 +205,7 @@ namespace CrytonCoreNext.Crypting.Models
             }
             catch (CryptographicException)
             {
-                return new RecognitionResult(EStatus.Error, Array.Empty<byte>());
+                return new RecognitionResult(EStatus.Error, []);
             }
         }
 
@@ -219,7 +219,7 @@ namespace CrytonCoreNext.Crypting.Models
             }
             catch (CryptographicException)
             {
-                return new RecognitionResult(EStatus.Error, Array.Empty<byte>());
+                return new RecognitionResult(EStatus.Error, []);
             }
         }
 

@@ -19,7 +19,7 @@ namespace CrytonCoreNext.Models
         public RecognitionResult(EStatus status)
         {
             Status = status;
-            Bytes = Array.Empty<byte>();
+            Bytes = [];
         }
     }
 

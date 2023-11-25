@@ -8,7 +8,7 @@ namespace CrytonCoreNextTests
 {
     public class CrytonFileRecognitionTest
     {
-        private static readonly byte[] _defaultBytes = Array.Empty<byte>();
+        private static readonly byte[] _defaultBytes = [];
         private static readonly int _correctLenght = 64;
         private readonly ICryptingRecognition _cryptingRecognition;
 

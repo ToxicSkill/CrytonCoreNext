@@ -253,7 +253,6 @@ namespace CrytonCoreNext.ViewModels
             {
                 SelectedPdfFilesToSplit.Add(OpenedPdfSelectedFile);
                 SelectedPdfFileToSplit = SelectedPdfFilesToSplit.First();
-                UpdatePdfToSplitImage();
             }
         }
 
@@ -272,8 +271,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 if (_pdfService.ProtectFile(PdfToProtectSelectedFile, (int)permissions, (int)encryption))
                 {
-                    UpdatePdfFile(PdfToProtectSelectedFile);
-                    OnSelectedTabIndexChanged((int)EPdfTabControls.Protect);
+                    OnPdfFilesChanged();
                     PostSuccessSnackbar("Pdf file has been protected successfully");
                 }
                 else
@@ -570,7 +568,6 @@ namespace CrytonCoreNext.ViewModels
                 _pdfService.UpdatePdfFileInformations(ref pdfFile);
                 CheckNameConflicts(pdfFile);
                 PdfFiles.Add(pdfFile);
-                SelectedPdfFile ??= pdfFile;
                 return true;
             }
             catch (Exception ex)
@@ -604,25 +601,6 @@ namespace CrytonCoreNext.ViewModels
                     UpdatePdfToMergeImage();
                 }
             }
-        }
-
-        private void UpdatePdfFile(PDFFile pdfFile)
-        {
-            if (PdfFiles.Contains(pdfFile))
-            {
-                return;
-            }
-            var oldIndex = PdfFiles.IndexOf(pdfFile);
-            PdfFiles.Remove(pdfFile);
-            PdfFiles.Insert(oldIndex, pdfFile);
-            if (SelectedPdfFile == null)
-            {
-                SelectedPdfFile = PdfFiles.First();
-            }
-        }
-
-        private void UpdatePdfToSplitImage()
-        {
         }
 
         private void UpdatePdfToMergeImage()
@@ -683,7 +661,10 @@ namespace CrytonCoreNext.ViewModels
         {
             if (value != null)
             {
-                value.PageImage = _pdfService.LoadImage(value);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    value.PageImage = _pdfService.LoadImage(value);
+                });
             }
         }
 
