@@ -126,7 +126,9 @@ namespace CrytonCoreNext.AI.Models
                 var rectangle = prediction.Rectangle.ToRect();
                 var newWidth = Math.Clamp(rectangle.Width, 0, mat.Width - rectangle.X);
                 var newHeight = Math.Clamp(rectangle.Height, 0, mat.Height - rectangle.Y);
-                var newRect = new Rect(rectangle.X, rectangle.Y, newWidth, newHeight);
+                var newX = Math.Clamp(rectangle.X, 0, mat.Width);
+                var newY = Math.Clamp(rectangle.Y, 0, mat.Height);
+                var newRect = new Rect(newX, newY, newWidth, newHeight);
                 prediction.Rectangle = new RectangleF(newRect.X, newRect.Y, newRect.Width, newRect.Height);
                 DetectionImages.Add(
                     new(this, prediction)
