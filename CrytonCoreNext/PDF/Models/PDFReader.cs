@@ -1,13 +1,13 @@
-﻿using CrytonCoreNext.PDF.Enums;
+﻿using CrytonCoreNext.Extensions;
+using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.PDF.Interfaces;
-using System.Diagnostics;
+using PdfiumViewer;
 using System;
 using System.Collections.Generic;
-using Wpf.Ui.Controls;
-using CrytonCoreNext.Extensions;
-using PdfiumViewer;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.PDF.Models
 {
@@ -54,7 +54,7 @@ namespace CrytonCoreNext.PDF.Models
         }
 
         public void UpdatePdfFileInformations(ref PDFFile file)
-        { 
+        {
             try
             {
                 var stream = new MemoryStream(file.Bytes);
@@ -72,7 +72,7 @@ namespace CrytonCoreNext.PDF.Models
                 file.PdfStatus = EPdfStatus.Damaged;
                 return;
             }
-             
+
             file.NumberOfPages = file.Document.PageCount;
             file.IsOpened = true;
             GetMetaInfo(ref file);
@@ -92,13 +92,14 @@ namespace CrytonCoreNext.PDF.Models
             catch (Exception ex)
             {
                 if (Debugger.IsAttached) Debugger.Break();
-                pdfFile.Metadata = new ()
+                pdfFile.Metadata = new()
                 { { new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.ErrorCircle20 }, ex.Message} };
             }
         }
 
         private void ParseNativeMetainfo(PDFFile pdfFile)
         {
+            pdfFile.Metadata = [];
             var info = pdfFile.Document.GetInformation();
             foreach (var key in _symbolByPdfInformation.Keys)
             {
@@ -135,7 +136,7 @@ namespace CrytonCoreNext.PDF.Models
                 ? new PDFFile(file, status)
                 : new PDFFile(
                 file: file,
-                document: pdfDocument, 
+                document: pdfDocument,
                 pdfStatus: status,
                 password: string.Empty,
                 dimensions: _dimensions,
@@ -145,7 +146,7 @@ namespace CrytonCoreNext.PDF.Models
         private void LoadSymbols()
         {
             var fakeInfo = new PdfInformation();
-            _symbolByPdfInformation = new ()
+            _symbolByPdfInformation = new()
             {
                 { nameof(fakeInfo.Author), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20 } },
                 { nameof(fakeInfo.Creator), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },

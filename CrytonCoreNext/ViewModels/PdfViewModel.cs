@@ -51,7 +51,7 @@ namespace CrytonCoreNext.ViewModels
         public string pageMergeCountStatus;
 
         [ObservableProperty]
-        public bool hasMoreThanOnePageToMerge; 
+        public bool hasMoreThanOnePageToMerge;
 
         [ObservableProperty]
         public ObservableCollection<PDFFile> pdfFiles;
@@ -83,7 +83,7 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public PdfImageContainer? selectedPdfToSplitImage;
 
-        [ObservableProperty] 
+        [ObservableProperty]
         public ObservableCollection<ImageFile> imageFiles;
 
         [ObservableProperty]
@@ -93,7 +93,7 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ImageFiles))]
         public ImageFile selectedImageFile;
-        
+
         [ObservableProperty]
         public PDFFile selectedPdfFileToMerge;
 
@@ -148,7 +148,7 @@ namespace CrytonCoreNext.ViewModels
             _pdfToMergePagesIndexes = [];
 
             ImageFiles = [];
-            OpenedPdfFiles = []; 
+            OpenedPdfFiles = [];
             PdfToProtectFiles = [];
             OutcomeFilesFromSplit = [];
             SelectedPdfFilesToMerge = [];
@@ -272,7 +272,7 @@ namespace CrytonCoreNext.ViewModels
                     PostSuccessSnackbar("Pdf file has been protected successfully");
                 }
                 else
-                { 
+                {
                     PostWarningSnackbar("Error during protecting PDF, try other settings or password");
                 }
             }
@@ -425,7 +425,7 @@ namespace CrytonCoreNext.ViewModels
         private void PostInformations(int protectedFilesCount, int damagedFilesCount, int nofNotLoadedFiles, int nofLoadedFiles)
         {
             var message = "";
-            if (protectedFilesCount > 0 )
+            if (protectedFilesCount > 0)
             {
                 message += (protectedFilesCount > 1 ?
                     $"{protectedFilesCount} of {protectedFilesCount + PdfFiles.Count - nofNotLoadedFiles} loaded files. " :
@@ -680,7 +680,7 @@ namespace CrytonCoreNext.ViewModels
             for (var i = 0; i < value.NumberOfPages; i++)
             {
                 value.LastPage = i;
-                images.Add(new PdfImageContainer(i+1, _pdfService.LoadImage(value)));
+                images.Add(new PdfImageContainer(i + 1, _pdfService.LoadImage(value)));
             }
             PdfToSplitImages = new ObservableCollection<PdfImageContainer>(images);
             SelectedPdfToSplitImage = PdfToSplitImages.First();
@@ -740,7 +740,7 @@ namespace CrytonCoreNext.ViewModels
 
         private int LoadPdfFile(ref int protectedFilesCount, ref int damagedFilesCount, File file)
         {
-            lock(_locker)
+            lock (_locker)
             {
                 var pdfFile = _pdfService.ReadPdf(file);
                 if (pdfFile != null)
@@ -848,7 +848,7 @@ namespace CrytonCoreNext.ViewModels
                         break;
                 }
             }
-            if (image.IsVerticalSplitLineLeftVisible &&  image.IsVerticalSplitLineRightVisible)
+            if (image.IsVerticalSplitLineLeftVisible && image.IsVerticalSplitLineRightVisible)
             {
                 image.SplitDirection = EDirection.Both;
             }
@@ -859,7 +859,7 @@ namespace CrytonCoreNext.ViewModels
         private void UpdateSplitOutcomeFiles()
         {
             var splitResultFiles = new List<PdfRangeFile>();
-            var indexes = new List<(int from, int to) >();
+            var indexes = new List<(int from, int to)>();
             var index = 0;
             var tempList = new List<int>() { 0 };
             foreach (var imageFile in PdfToSplitImages)
@@ -868,7 +868,7 @@ namespace CrytonCoreNext.ViewModels
                 {
                     tempList.Add(index);
                 }
-                if (tempList.Count == 2) 
+                if (tempList.Count == 2)
                 {
                     var lastItem = tempList[1] + 1;
                     indexes.Add((tempList[0], tempList[1]));
@@ -922,7 +922,7 @@ namespace CrytonCoreNext.ViewModels
         private int LoadImageFile(File imageFile)
         {
             if (!ImageFiles.Contains(imageFile, new FileComparer()))
-            { 
+            {
                 ImageFiles.Add(new ImageFile(imageFile));
                 SelectedImageFile = ImageFiles.Last();
                 OnPdfFilesChanged();
@@ -936,9 +936,9 @@ namespace CrytonCoreNext.ViewModels
             var index = 1;
             while (PdfFiles.Any(x => x.Name == file.Name))
             {
-                file.Rename(file.Name+$"_{index}");
+                file.Rename(file.Name + $"_{index}");
                 index++;
-            }                
+            }
         }
 
         private void UpdateProtectedPdf()
@@ -954,18 +954,18 @@ namespace CrytonCoreNext.ViewModels
             else
             {
                 PostSuccessSnackbar("Pdf document has been open successfully");
-                //RefreshCollection();
+                RefreshCollection();
             }
         }
 
-        //private void RefreshCollection()
-        //{
-        //    var oldFile = SelectedPdfFile;
-        //    var oldIndex = PdfFiles.IndexOf(SelectedPdfFile);
-        //    PdfFiles.Remove(SelectedPdfFile);
-        //    PdfFiles.Insert(oldIndex, oldFile);
-        //    SelectedPdfFile = oldFile;
-        //    CheckAnyFileLoaded();
-        //}
+        private void RefreshCollection()
+        {
+            var oldFile = SelectedPdfFile;
+            var oldIndex = PdfFiles.IndexOf(SelectedPdfFile);
+            PdfFiles.Remove(SelectedPdfFile);
+            PdfFiles.Insert(oldIndex, oldFile);
+            SelectedPdfFile = oldFile;
+            OnPdfFilesChanged();
+        }
     }
 }

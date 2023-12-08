@@ -141,7 +141,7 @@ namespace CrytonCoreNext.PDF.Models
             }
             using IDocLib pdfLibrary = DocLib.Instance;
             return await Merge(pdfFiles);
-        } 
+        }
 
         private static string PrepareFileNameForMerge(List<PDFFile> pdfFiles)
         {
@@ -178,9 +178,8 @@ namespace CrytonCoreNext.PDF.Models
             using var matOut = new Mat();
 
             var nativeSplitted = Cv2.Split(bgraMat);
-            Cv2.Merge(new[] { nativeSplitted[3] }, matOut);
+            Cv2.Merge([nativeSplitted[3]], matOut);
             using Mat inversed = new Scalar(255) - matOut;
-
             using var add = new Mat();
             Cv2.CvtColor(bgraMat, bgraMat, ColorConversionCodes.BGRA2BGR);
             Cv2.CvtColor(inversed, inversed, ColorConversionCodes.GRAY2BGR);
