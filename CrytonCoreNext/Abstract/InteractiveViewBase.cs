@@ -1,15 +1,12 @@
 ﻿using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
-using CrytonCoreNext.Services;
 using CrytonCoreNext.Sound;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Media;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
-using Wpf.Ui.Mvvm.Services;
 
 namespace CrytonCoreNext.Abstract
 {

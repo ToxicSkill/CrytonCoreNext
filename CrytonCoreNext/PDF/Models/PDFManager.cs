@@ -3,38 +3,41 @@ using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.Services;
 using Docnet.Core;
-using Docnet.Core.Editors; 
+using Docnet.Core.Editors;
+using Docnet.Core.Models;
+using Docnet.Core.Readers;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using OpenCvSharp;
-using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using File = CrytonCoreNext.Models.File;
 
 namespace CrytonCoreNext.PDF.Models
 {
     public class PDFManager : IPDFManager
-    { 
+    {
         public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
             if (pdfFile.PdfStatus == Enums.EPdfStatus.Protected && string.IsNullOrEmpty(pdfFile.Password))
             {
                 return default;
-            } 
-            using var image = GetPageImage(pdfFile.LastPage, GetPageSize(pdfFile.Document, pdfFile.LastPage), pdfFile.Document, Properties.Settings.Default.PdfRenderDpi);
-            using var bitmap = new Bitmap(image);
-            using var mat = new Mat(bitmap.Height, bitmap.Width, MatType.CV_8UC3);
-            BitmapConverter.ToMat(bitmap, mat);
-            return mat.ToWriteableBitmap();
-        } 
+            }
+            using IDocLib pdfLibrary = DocLib.Instance;
+            var dimensions = pdfFile.Dimensions;
+            using var reader = pdfFile.Password.Equals(string.Empty) ?
+                pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
+                pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
+            using var docReader = reader;
+            using var pageReader = docReader.GetPageReader(pdfFile.LastPage);
+            return GetImage(pageReader);
+        }
 
         public List<string> GetAvailableEncryptionOptions()
         {
@@ -163,17 +166,26 @@ namespace CrytonCoreNext.PDF.Models
             stringBuilder.Append("SplittedFile");
             stringBuilder.Append(pdfFile.Name);
             return stringBuilder.ToString();
-        } 
-
-        private static Image GetPageImage(int lastPage, System.Drawing.Size size, PdfiumViewer.PdfDocument document, int dpi)
-        {
-            return document.Render(lastPage, size.Width, size.Height, dpi, dpi, PdfiumViewer.PdfRenderFlags.None);
         }
 
-        private static System.Drawing.Size GetPageSize(PdfiumViewer.PdfDocument document, int lastPage)
+        private static WriteableBitmap GetImage(IPageReader pageReader)
         {
-            var size = document.PageSizes[lastPage];
-            return new System.Drawing.Size((int)(size.Width), (int)(size.Height));
+            var bgrBytes = pageReader.GetImage(RenderFlags.LimitImageCacheSize);
+            var width = pageReader.GetPageWidth();
+            var height = pageReader.GetPageHeight();
+
+            using var bgraMat = new Mat(height, width, MatType.CV_8UC4, bgrBytes);
+            using var matOut = new Mat();
+
+            var nativeSplitted = Cv2.Split(bgraMat);
+            Cv2.Merge(new[] { nativeSplitted[3] }, matOut);
+            using Mat inversed = new Scalar(255) - matOut;
+
+            using var add = new Mat();
+            Cv2.CvtColor(bgraMat, bgraMat, ColorConversionCodes.BGRA2BGR);
+            Cv2.CvtColor(inversed, inversed, ColorConversionCodes.GRAY2BGR);
+            Cv2.Add(bgraMat, inversed, add);
+            return add.ToWriteableBitmap();
         }
     }
 }

@@ -1,7 +1,6 @@
 using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
-using System;
 using Xunit;
 
 namespace CrytonCoreNextTests

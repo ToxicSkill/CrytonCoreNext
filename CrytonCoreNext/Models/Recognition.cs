@@ -1,6 +1,5 @@
 ﻿using CrytonCoreNext.Crypting.Enums;
 using CrytonCoreNext.Enums;
-using System;
 
 namespace CrytonCoreNext.Models
 {

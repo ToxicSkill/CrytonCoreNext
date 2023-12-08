@@ -10,14 +10,11 @@ using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using CrytonCoreNext.Services;
-using iText.Forms.Fields;
 using iText.Kernel.Pdf;
 using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,7 +22,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using Wpf.Ui.Mvvm.Contracts;
-using File = CrytonCoreNext.Models.File; 
+using File = CrytonCoreNext.Models.File;
 
 namespace CrytonCoreNext.ViewModels
 {
