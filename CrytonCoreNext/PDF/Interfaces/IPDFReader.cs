@@ -7,6 +7,8 @@ namespace CrytonCoreNext.PDF.Interfaces
     {
         PDFFile ReadPdf(File file);
 
-        void OpenProtectedPdf(ref PDFFile pdfFile);
+        void OpenProtectedPdf(PDFFile pdfFile);
+
+        void LoadMetadata(PDFFile file);
     }
 }

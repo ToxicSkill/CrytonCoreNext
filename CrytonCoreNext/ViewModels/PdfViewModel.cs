@@ -407,6 +407,7 @@ namespace CrytonCoreNext.ViewModels
         private void ConvertSelectedImageToPdf()
         {
             var convertedPdf = _pdfManager.ImageToPdf(SelectedImageFile, ImageFiles.Max(x => x.Id) + 1);
+            _pdfReader.LoadMetadata(convertedPdf);
             if (AddPdfToPdfList(convertedPdf))
             {
                 if (PdfFiles.Count == 1)
@@ -602,7 +603,7 @@ namespace CrytonCoreNext.ViewModels
         {
             try
             {
-                _pdfReader.OpenProtectedPdf(ref pdfFile);
+                _pdfReader.OpenProtectedPdf(pdfFile);
                 CheckNameConflicts(pdfFile);
                 PdfFiles.Add(pdfFile);
                 return true;
@@ -970,7 +971,7 @@ namespace CrytonCoreNext.ViewModels
 
         private void UpdateProtectedPdf()
         {
-            _pdfReader.OpenProtectedPdf(ref selectedPdfFile);
+            _pdfReader.OpenProtectedPdf(SelectedPdfFile);
             OnSelectedPdfFileChanged(SelectedPdfFile);
             if (SelectedPdfFile.PdfStatus == EPdfStatus.Protected ||
                 SelectedPdfFile.PdfStatus == EPdfStatus.Damaged)

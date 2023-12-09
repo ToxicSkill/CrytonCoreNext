@@ -33,13 +33,7 @@ namespace CrytonCoreNext.PDF.Services
                 using var pdfReader = new PdfReader(memoryStream);
                 using var pdfDocument = new PdfDocument(pdfReader);
                 var pdfFile = new PDFFile(file, EPdfStatus.Opened);
-                if (!string.IsNullOrEmpty(file.Path))
-                {
-                    var fileInfo = new FileInfo(file.Path);
-                    pdfFile.NumberOfPages = pdfDocument.GetNumberOfPages();
-                    ReadPdfInformations(pdfFile, fileInfo, pdfDocument);
-                }
-
+                LoadMetadata(pdfFile, pdfDocument);
                 return pdfFile;
             }
             catch (BadPasswordException)
@@ -52,19 +46,14 @@ namespace CrytonCoreNext.PDF.Services
             }
         }
 
-        public void OpenProtectedPdf(ref PDFFile file)
+        public void OpenProtectedPdf(PDFFile file)
         {
             try
             {
                 var memoryStream = new MemoryStream(file.Bytes);
                 using var pdfReader = new PdfReader(memoryStream, new ReaderProperties().SetPassword(Encoding.UTF8.GetBytes(file.Password)));
                 using var pdfDocument = new PdfDocument(pdfReader);
-                if (!string.IsNullOrEmpty(file.Path))
-                {
-                    var fileInfo = new FileInfo(file.Path);
-                    file.NumberOfPages = pdfDocument.GetNumberOfPages();
-                    ReadPdfInformations(file, fileInfo, pdfDocument);
-                }
+                LoadMetadata(file, pdfDocument);
                 file.PdfStatus = EPdfStatus.Opened;
             }
             catch (BadPasswordException)
@@ -77,19 +66,34 @@ namespace CrytonCoreNext.PDF.Services
             }
         }
 
+        public void LoadMetadata(PDFFile file)
+        {
+            if (!string.IsNullOrEmpty(file.Path))
+            {
+                var memoryStream = new MemoryStream(file.Bytes);
+                using var pdfReader = new PdfReader(memoryStream, new ReaderProperties().SetPassword(Encoding.UTF8.GetBytes(file.Password)));
+                using var pdfDocument = new PdfDocument(pdfReader);
+                var fileInfo = new FileInfo(file.Path);
+                file.NumberOfPages = pdfDocument.GetNumberOfPages();
+                ReadPdfInformations(file, fileInfo, pdfDocument);
+            }
+        }
+
+        private void LoadMetadata(PDFFile file, PdfDocument pdfDocument)
+        {
+            if (!string.IsNullOrEmpty(file.Path))
+            {
+                var fileInfo = new FileInfo(file.Path);
+                file.NumberOfPages = pdfDocument.GetNumberOfPages();
+                ReadPdfInformations(file, fileInfo, pdfDocument);
+            }
+        }
+
         private void ReadPdfInformations(PDFFile file, FileInfo fileInfo, PdfDocument pdfDocument)
         {
             var documentInfo = pdfDocument.GetDocumentInfo();
-            var infos = new List<(EPdfInfo, string)>()
+            var documentInfos = new List<(EPdfInfo, string)>()
             {
-                (EPdfInfo.Name, fileInfo.Name),
-                (EPdfInfo.FullName, fileInfo.FullName),
-                (EPdfInfo.LastWriteTime, fileInfo.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
-                (EPdfInfo.LastWriteTimeUtc, fileInfo.LastWriteTimeUtc.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
-                (EPdfInfo.Attributes, fileInfo.Attributes.ToString()),
-                (EPdfInfo.CreationTime, fileInfo.CreationTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
-                (EPdfInfo.CreationTimeUtc, fileInfo.CreationTimeUtc.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
-                (EPdfInfo.Length, fileInfo.Length.ToString()),
                 (EPdfInfo.Author, documentInfo.GetAuthor()),
                 (EPdfInfo.Creator, documentInfo.GetCreator()),
                 (EPdfInfo.Keywords, documentInfo.GetKeywords()),
@@ -103,8 +107,23 @@ namespace CrytonCoreNext.PDF.Services
                        .ToPdfName()
                        .GetValue())
             };
+            if (fileInfo.Exists)
+            {
+                var fileInfos = new List<(EPdfInfo, string)>()
+                {
+                    (EPdfInfo.Name, fileInfo.Name),
+                    (EPdfInfo.FullName, fileInfo.FullName),
+                    (EPdfInfo.LastWriteTime, fileInfo.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
+                    (EPdfInfo.LastWriteTimeUtc, fileInfo.LastWriteTimeUtc.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
+                    (EPdfInfo.Attributes, fileInfo.Attributes.ToString()),
+                    (EPdfInfo.CreationTime, fileInfo.CreationTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
+                    (EPdfInfo.CreationTimeUtc, fileInfo.CreationTimeUtc.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
+                    (EPdfInfo.Length, fileInfo.Length.ToString())
+                };
+                documentInfos.AddRange(fileInfos);
+            }
             file.Metadata = [];
-            foreach (var (type, value) in infos)
+            foreach (var (type, value) in documentInfos)
             {
                 if (string.IsNullOrEmpty(value))
                 {
