@@ -39,7 +39,7 @@ namespace CrytonCoreNext.Controls
                 new PropertyMetadata(EStrength.None, new PropertyChangedCallback(StrenghtPropertyChanged)));
 
 
-        private static readonly List<Rectangle> Rectangles = new();
+        private static readonly List<Rectangle> Rectangles = [];
         
         public EStrength Strenght
         {
@@ -86,12 +86,12 @@ namespace CrytonCoreNext.Controls
                 if (iterator <= newValue && iterator > oldValue)
                 {
                     rect.Visibility = Visibility.Visible;
-                    rect.BeginAnimation(UIElement.OpacityProperty, AppearAnimation);
+                    rect.BeginAnimation(OpacityProperty, AppearAnimation);
                 }
                 else if (oldValue > newValue && iterator <= oldValue && iterator > newValue)
                 {
                     rect.Visibility = Visibility.Visible;
-                    rect.BeginAnimation(UIElement.OpacityProperty, DisappearAnimation);
+                    rect.BeginAnimation(OpacityProperty, DisappearAnimation);
                 }
             }
         }

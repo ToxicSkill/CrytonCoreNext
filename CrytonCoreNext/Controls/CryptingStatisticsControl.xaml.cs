@@ -76,9 +76,9 @@ namespace CrytonCoreNext.Controls
 
         private void root_Loaded(object sender, RoutedEventArgs e)
         {
-            SpeedGrid.BeginAnimation(UIElement.OpacityProperty, Animation);
-            StrenghtGrid.BeginAnimation(UIElement.OpacityProperty, Animation);
-            ApplicationGrid.BeginAnimation(UIElement.OpacityProperty, Animation);
+            SpeedGrid.BeginAnimation(OpacityProperty, Animation);
+            StrenghtGrid.BeginAnimation(OpacityProperty, Animation);
+            ApplicationGrid.BeginAnimation(OpacityProperty, Animation);
             SetVisibility();
         }
     }

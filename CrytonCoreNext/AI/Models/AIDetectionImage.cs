@@ -6,9 +6,12 @@ namespace CrytonCoreNext.AI.Models
     {
         public YoloPrediction Prediction { get; init; }
 
-        public AIDetectionImage(YoloPrediction yoloPrediction)
+        public AIImage Parent { get; }
+
+        public AIDetectionImage(AIImage parent, YoloPrediction yoloPrediction)
         {
             Prediction = yoloPrediction;
+            Parent = parent;
             if (Prediction != null)
             {
                 if (Prediction.Label != null)

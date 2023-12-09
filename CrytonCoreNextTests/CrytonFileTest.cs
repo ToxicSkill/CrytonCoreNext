@@ -27,19 +27,19 @@ namespace CrytonCoreNextTests
 
         private readonly IFilesManager _filesManager;
 
-        private readonly List<string> _filesToOpen = new() { "./TestingFiles/test.txt" };
+        private readonly List<string> _filesToOpen = ["./TestingFiles/test.txt"];
 
         public readonly List<CryptFile> CryptFiles;
 
         public Files()
         {
-            _cryptingRecognition = new CryptingRecognition(new(Guid.NewGuid()));
+            _cryptingRecognition = new CryptingRecognition();
             _cryptingReader = new CryptingReader();
             _cryptingService = new CryptingService(_cryptingRecognition, _cryptingReader);
             _filesSaver = new FilesSaver();
             _filesLoader = new FilesLoader();
             _filesManager = new FilesManager();
-            CryptFiles = new List<CryptFile>();
+            CryptFiles = [];
             LoadFiles();
         }
 

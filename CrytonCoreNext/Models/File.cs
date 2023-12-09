@@ -1,11 +1,12 @@
-﻿using CrytonCoreNext.Extensions;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CrytonCoreNext.Extensions;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace CrytonCoreNext.Models
 {
-    public class File : INotifyPropertyChanged
+    public partial class File : ObservableObject, INotifyPropertyChanged
     {
         public string Name { get; private set; }
 
@@ -34,9 +35,9 @@ namespace CrytonCoreNext.Models
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public File(string name, string path, DateTime date, string extension, int id, byte[] bytes)
+        public File(string path, DateTime date, string extension, int id, byte[] bytes)
         {
-            Name = name;
+            Name = System.IO.Path.GetFileNameWithoutExtension(path);
             Path = path;
             Size = bytes.GetSizeString();
             Date = date;

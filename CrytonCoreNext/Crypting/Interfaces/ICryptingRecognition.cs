@@ -1,11 +1,11 @@
-﻿using CrytonCoreNext.Crypting.Enums;
+﻿using CrytonCoreNext.Models;
 
 namespace CrytonCoreNext.Crypting.Interfaces
 {
     public interface ICryptingRecognition
     {
-        byte[] PrepareRerecognizableBytes(EMethod method, string extension);
+        RecognitionResult GetRecognitionBytes(Recognition recon);
 
-        (bool succes, (EMethod method, string extension)) RecognizeBytes(byte[] bytes);
+        Recognition RecognizeBytes(byte[] bytes);
     }
 }

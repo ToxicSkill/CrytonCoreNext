@@ -4,17 +4,15 @@ using CrytonCoreNext.Crypting.Helpers;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
-using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Interfaces.Serializers;
-using CrytonCoreNext.Models;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Text;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Crypting.ViewModels
 {
-    public partial class AESViewModel : CryptingMethodViewModel
+    public partial class AESViewModel : CryptingMethodViewModel, ICryptingViewModel
     {
         private readonly ISnackbarService _snackbarService;
 
@@ -47,8 +45,8 @@ namespace CrytonCoreNext.Crypting.ViewModels
             _snackbarService = snackbarService;
             _jsonSerializer = json;
 
-            BlockSizesComboBox = new();
-            KeySizesComboBox = new();
+            BlockSizesComboBox = [];
+            KeySizesComboBox = [];
             UpdateKeyAvailability(true);
             InitializeHelper((AESHelper)Crypting.GetHelper());
         }
@@ -64,8 +62,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
             SelectedKey = _aesHelper.GetCurrentKeySize();
         }
 
-        [RelayCommand]
-        private void ExportKeys()
+        public byte[] ExportObjects()
         {
             var serialzieObjects = new Objects()
             {
@@ -76,59 +73,36 @@ namespace CrytonCoreNext.Crypting.ViewModels
                 },
                 Name = PageName
             };
-
-            WindowDialog.SaveDialog saveDialog = new(new DialogHelper()
-            {
-                Filters = Static.Extensions.FilterToPrompt(Static.Extensions.DialogFilters.Json),
-                Multiselect = false,
-                Title = Language.Post("OpenFileDialog")
-            });
-
-            var saveDestination = saveDialog.RunDialog();
-            if (saveDestination != null)
-            {
-                _jsonSerializer.Serialize(serialzieObjects, saveDestination.First());
-                _snackbarService.Show(Language.Post("Information"), Language.Post("Exported"), SymbolRegular.Checkmark20, ControlAppearance.Success);
-            }
+            return Encoding.ASCII.GetBytes(_jsonSerializer.Serialize(serialzieObjects));
         }
 
-        [RelayCommand]
-        private void ImportKeys()
+        public bool ImportObjects(string str)
         {
-            WindowDialog.OpenDialog openDialog = new(new DialogHelper()
+            var objects = _jsonSerializer.Deserialize(str, typeof(Objects));
+            if (objects is not null)
             {
-                Filters = Static.Extensions.FilterToPrompt(Static.Extensions.DialogFilters.Json),
-                Multiselect = false,
-                Title = Language.Post("OpenFileDialog")
-            });
-
-            var saveDestination = openDialog.RunDialog();
-            if (saveDestination.Count != 0)
-            {
-                var objects = _jsonSerializer.Deserialize(saveDestination.First(), typeof(Objects));
-                if (objects is not null)
+                var castedObjects = (Objects)objects;
+                if (castedObjects.Name != PageName)
                 {
-                    var castedObjects = (Objects)objects;
-                    if (castedObjects.Name != PageName)
+                    _snackbarService.Show(Language.Post("Warning"), Language.Post("IncorrectFile"), SymbolRegular.Warning20, ControlAppearance.Caution);
+                    _aesHelper.GenerateNewKeys();
+                    return false;
+                }
+                else
+                {
+                    if (!ValidateKeys(castedObjects.ToSerialzie.IV, castedObjects.ToSerialzie.Key))
                     {
-                        _snackbarService.Show(Language.Post("Warning"), Language.Post("IncorrectFile"), SymbolRegular.Warning20, ControlAppearance.Caution);
+                        _snackbarService.Show(Language.Post("Warning"), Language.Post("IncorrectKeys"), SymbolRegular.Warning20, ControlAppearance.Caution);
                         _aesHelper.GenerateNewKeys();
-                        return;
+                        return false;
                     }
-                    else
-                    {
-                        if (!ValidateKeys(castedObjects.ToSerialzie.IV, castedObjects.ToSerialzie.Key))
-                        {
-                            _snackbarService.Show(Language.Post("Warning"), Language.Post("IncorrectKeys"), SymbolRegular.Warning20, ControlAppearance.Caution);
-                            _aesHelper.GenerateNewKeys();
-                            return;
-                        }
 
-                        _snackbarService.Show(Language.Post("Success"), Language.Post("Imported"), SymbolRegular.Checkmark20, ControlAppearance.Success);
-                    }
+                    _snackbarService.Show(Language.Post("Success"), Language.Post("Imported"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+                    return true;
                 }
             }
-        }
+            return false;
+        }  
 
         private struct ToSerialzieObjects
         {

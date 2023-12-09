@@ -51,9 +51,9 @@ namespace CrytonCoreNext.Static
                     return nameof(DialogFilters.Pdf) + " file(s) |*." +
                        Pdf + ";";
                 case DialogFilters.PdfAndImages:
-                    return nameof(DialogFilters.Images) + "and" + nameof(DialogFilters.Pdf) +
+                    return nameof(DialogFilters.Images) + " and " + nameof(DialogFilters.Pdf) +
                         " file(s) |*." +
-                       Pdf + ";" +
+                       Pdf + ";*." +
                        Jpg + ";*." +
                        Jpeg + ";*." +
                        Png + ";*." +

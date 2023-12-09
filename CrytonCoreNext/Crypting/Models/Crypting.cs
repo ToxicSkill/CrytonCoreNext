@@ -20,7 +20,7 @@ namespace CrytonCoreNext.Crypting.Models
             var aed = Cryptors.Where(x => x.name == name).Select(x => x.method).FirstOrDefault();
             if (aed != null)
                 return await aed.Encrypt(data, progress);
-            return Array.Empty<byte>();
+            return [];
         }
 
         public async Task<byte[]> Decrypt(byte[] data, string name, IProgress<string> progress)
@@ -28,7 +28,7 @@ namespace CrytonCoreNext.Crypting.Models
             var aed = Cryptors.Where(x => x.name == name).Select(x => x.method).FirstOrDefault();
             if (aed != null)
                 return await aed.Decrypt(data, progress);
-            return Array.Empty<byte>();
+            return [];
         }
     }
 }

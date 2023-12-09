@@ -61,7 +61,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
             }
             catch (Exception)
             {
-                return Array.Empty<byte>();
+                return [];
             }
             return ms.ToArray();
         }

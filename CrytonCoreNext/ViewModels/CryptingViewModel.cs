@@ -16,9 +16,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Wpf.Ui.Common;
-using Wpf.Ui.Mvvm.Contracts;
-using IDialogService = CrytonCoreNext.Interfaces.IDialogService;
+using Wpf.Ui.Mvvm.Contracts; 
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -29,8 +27,6 @@ namespace CrytonCoreNext.ViewModels
         private readonly IPasswordProvider _passwordProvider;
 
         private readonly IFileService _fileService;
-
-        private readonly List<ICryptingView<CryptingMethodViewModel>> _cryptingViews;
 
         [ObservableProperty]
         public IProgressService progressService;
@@ -66,23 +62,21 @@ namespace CrytonCoreNext.ViewModels
 
 
         public CryptingViewModel(IFileService fileService,
-            IDialogService dialogService,
             ICryptingService cryptingService,
             ISnackbarService snackbarService,
             List<ICryptingView<CryptingMethodViewModel>> cryptingViews,
-            IPasswordProvider passwordProvider)
-            : base(fileService, dialogService, snackbarService)
+            IPasswordProvider passwordProvider,
+            DialogService dialogService)
+            : base(fileService, snackbarService, dialogService)
         {
             ProgressService = new ProgressService();
 
             _fileService = fileService;
             _cryptingService = cryptingService;
-            _cryptingViews = cryptingViews;
             _passwordProvider = passwordProvider;
+            files = [];
 
-            files = new();
-
-            UpdateCryptingViews();
+            CryptingViewsItemSource = new(cryptingViews);
             RegisterFileChangedEvent();
 
             MinimalPasswordStrenght = _passwordProvider.GetPasswordValidationStrength();
@@ -91,15 +85,10 @@ namespace CrytonCoreNext.ViewModels
 
         private void RegisterFileChangedEvent()
         {
-            foreach (var view in _cryptingViews)
+            foreach (var view in CryptingViewsItemSource)
             {
                 OnFileChanged += view.ViewModel.HandleFileChanged;
             }
-        }
-
-        private void UpdateCryptingViews()
-        {
-            CryptingViewsItemSource = new(_cryptingViews);
         }
 
         partial void OnSelectedFileChanged(CryptFile value)
@@ -181,7 +170,7 @@ namespace CrytonCoreNext.ViewModels
         {
             _cryptingService.AddRecognitionBytes(SelectedFile);
             SetFileSuffix();
-            base.SaveFile(SelectedFile);
+            SaveFile(SelectedFile);
         }
 
         private void SetFileSuffix()
@@ -195,7 +184,7 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
-        private async void PerformCrypting()
+        private async Task PerformCrypting()
         {
             Lock();
             if (
@@ -213,6 +202,7 @@ namespace CrytonCoreNext.ViewModels
             if (!result.Equals(Array.Empty<byte>()) && Files.Any())
             {
                 _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedCryptingView.ViewModel.Crypting.Method);
+                SelectedFile.Recognition.SetKeys(((ICryptingViewModel)SelectedCryptingView.ViewModel).ExportObjects()); 
                 UpdateStateOfSelectedFile();
                 PostSuccessSnackbar(Language.Post("Success"));
             }

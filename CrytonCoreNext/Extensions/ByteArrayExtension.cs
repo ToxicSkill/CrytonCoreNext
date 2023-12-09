@@ -2,7 +2,7 @@
 {
     public static class ByteArrayExtension
     {
-        public static readonly string[] Sizes = { "B", "KB", "MB", "GB", "TB" };
+        public static readonly string[] Sizes = ["B", "KB", "MB", "GB", "TB"];
 
         public static string GetSizeString(this byte[] bytes)
         {

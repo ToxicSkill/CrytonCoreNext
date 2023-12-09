@@ -31,7 +31,7 @@ namespace CrytonCoreNext.Models
             }
             var fileInfo = new FileInfo(path);
             var fileExtension = fileInfo.Extension.Contains('.') ? fileInfo.Extension.Substring(1) : "N/A";
-            return new File(name: Path.GetFileNameWithoutExtension(fileInfo.FullName), path: path, date: fileInfo.CreationTimeUtc, extension: fileExtension, id: currentFilesCount, bytes: byteArray);
+            return new File(path: path, date: fileInfo.CreationTimeUtc, extension: fileExtension, id: currentFilesCount, bytes: byteArray);
         }
     }
 }

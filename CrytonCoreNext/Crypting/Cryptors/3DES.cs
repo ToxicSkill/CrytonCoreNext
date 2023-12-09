@@ -13,7 +13,7 @@ namespace CrytonCoreNext.Crypting.Cryptors
     {
         private static readonly PaddingMode _paddingMode = PaddingMode.PKCS7;
 
-        private static readonly CipherMode _cipherMode = CipherMode.ECB;
+        private static readonly CipherMode _cipherMode = CipherMode.CBC;
 
         private readonly IPasswordProvider _passwordProvider;
 

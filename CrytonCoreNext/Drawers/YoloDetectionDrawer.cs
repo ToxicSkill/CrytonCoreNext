@@ -2,7 +2,6 @@
 using CrytonCoreNext.Extensions;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
-using System;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
@@ -31,13 +30,13 @@ namespace CrytonCoreNext.Drawers
             return mat;
         }
 
-        public static WriteableBitmap DrawDetection(AIImage selectedImage, AIDetectionImage detectionImage)
+        public static WriteableBitmap DrawDetection(AIImage selectedImage, AIDetectionImage? detectionImage)
         {
             if (detectionImage == null)
             {
-                return selectedImage.Image;
+                return selectedImage.AdjusterImage;
             }
-            using var mat = selectedImage.Image.ToMat();
+            using var mat = selectedImage.AdjusterImage.ToMat();
             using var overlay = new Mat(mat.Size(), mat.Type(), new Scalar(0, 0, 0));
             using var roi = new Mat(mat, detectionImage.Prediction.Rectangle.ToRect());
             using var combined = new Mat();

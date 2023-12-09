@@ -1,41 +1,32 @@
 ﻿using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.Sound;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Media;
 using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 
 namespace CrytonCoreNext.Abstract
 {
-    public abstract class InteractiveViewBase : ViewModelBase
+    public abstract class InteractiveViewBase(IFileService fileService, ISnackbarService snackbarService, CrytonCoreNext.Services.DialogService dialogService) : ViewModelBase
     {
-        private readonly ISnackbarService _snackbarService;
-
-        private readonly Interfaces.IDialogService _dialogService;
-
-        private readonly IFileService _fileService;
-
-        public InteractiveViewBase(IFileService fileService, Interfaces.IDialogService dialogService, ISnackbarService snackbarService)
-        {
-            _fileService = fileService;
-            _dialogService = dialogService;
-            _snackbarService = snackbarService;
-        }
-
         protected void PostSuccessSnackbar(string text)
         {
-            _snackbarService.Show("Success", text, SymbolRegular.CheckmarkCircle20, ControlAppearance.Success);
+            snackbarService.Show("Success", text, SymbolRegular.CheckmarkCircle20, ControlAppearance.Success);
+            NotificationPlayer.PlayNotificationSound();
         }
 
         protected void PostErrorSnackbar(string text)
         {
-            _snackbarService.Show("Error", text, SymbolRegular.ErrorCircle20, ControlAppearance.Dark);
+            snackbarService.Show("Error", text, SymbolRegular.ErrorCircle20, ControlAppearance.Dark);
         }
 
         protected void PostWarningSnackbar(string text)
         {
-            _snackbarService.Show("Warning", text, SymbolRegular.Warning20, ControlAppearance.Caution);
+            snackbarService.Show("Warning", text, SymbolRegular.Warning20, ControlAppearance.Caution);
+            SystemSounds.Exclamation.Play();
         }
 
         protected async IAsyncEnumerable<File> LoadFiles()
@@ -46,11 +37,16 @@ namespace CrytonCoreNext.Abstract
             }
         }
 
+        protected string GetFileFromDialog(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
+        {
+            return dialogService.GetFileNameToOpen(filters, Environment.SpecialFolder.Recent); 
+        }
+
         protected async IAsyncEnumerable<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
-            var filesPaths = _dialogService.GetFilesNamesToOpen(filters, Language.Post("OpenFiles"), true);
+            var filesPaths = dialogService.GetFilesNamesToOpen(filters, Environment.SpecialFolder.Desktop);
             var loadedFilesCounter = 0;
-            await foreach (var file in _fileService.LoadFiles(filesPaths))
+            await foreach (var file in fileService.LoadFiles(filesPaths))
             {
                 if (file != null)
                 {
@@ -58,22 +54,6 @@ namespace CrytonCoreNext.Abstract
                     yield return file;
                 }
             }
-            //if ((filesPaths.Count - loadedFilesCounter) > 0 && loadedFilesCounter > 0)
-            //{
-            //    PostSnackbar("Warning", $"{Language.Post("NotAllFilesLoadedWarning")} ({filesPaths.Count - loadedFilesCounter})", SymbolRegular.Warning20, ControlAppearance.Caution);
-            //}
-            //else if (loadedFilesCounter == 1)
-            //{
-            //    PostSnackbar("Information", Language.Post("FileLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
-            //}
-            //else if (loadedFilesCounter > 1)
-            //{
-            //    PostSnackbar("Information", Language.Post("FilesLoaded"), SymbolRegular.Checkmark20, ControlAppearance.Success);
-            //}
-            //else if (loadedFilesCounter == 0 && filesPaths.Any())
-            //{
-            //    PostSnackbar("Error", Language.Post("FilesLoadingError"), SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
-            //}
         }
 
         protected void SaveFile(File? file)
@@ -83,12 +63,12 @@ namespace CrytonCoreNext.Abstract
                 return;
             }
 
-            var filePath = _dialogService.GetFilesNamesToSave(Static.Extensions.DialogFilters.All, Language.Post("SaveFile"), file);
-            if (filePath == null)
+            var filePath = dialogService.GetFileNameToSave(file.Extension, System.Environment.SpecialFolder.Recent);
+            if (filePath == string.Empty)
             {
-                return;
+                PostErrorSnackbar(Language.Post("FilesSavingError"));
             }
-            var result = _fileService.SaveFile(filePath.First(), file);
+            var result = fileService.SaveFile(filePath, file);
             if (result)
             {
                 PostSuccessSnackbar(Language.Post("FilesSaved"));

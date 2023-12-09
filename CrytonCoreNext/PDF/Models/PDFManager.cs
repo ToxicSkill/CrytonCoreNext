@@ -6,8 +6,8 @@ using Docnet.Core;
 using Docnet.Core.Editors;
 using Docnet.Core.Models;
 using Docnet.Core.Readers;
+using iText.Kernel.Pdf;
 using iText.Layout;
-using MethodTimer;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System;
@@ -23,25 +23,6 @@ namespace CrytonCoreNext.PDF.Models
 {
     public class PDFManager : IPDFManager
     {
-        //public async IAsyncEnumerable<BitmapImage> LoadAllPDFImages(PDFFile pdfFile)
-        //{
-        //    using IDocLib pdfLibrary = DocLib.Instance;
-        //    var dimensions = pdfFile.Dimensions;
-        //    var reader = pdfFile.Password.Equals(string.Empty) ?
-        //        pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
-        //        pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
-        //    using var docReader = reader;
-        //    for (int i = 0; i <= pdfFile.NumberOfPages; i++)
-        //    {
-        //        yield return await Task.Run(() =>
-        //        {
-        //            using var pageReader = docReader.GetPageReader(i);
-        //            return GetImage(pageReader);
-        //        });
-        //    }
-        //}
-
-        [Time]
         public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
             if (pdfFile.PdfStatus == Enums.EPdfStatus.Protected && string.IsNullOrEmpty(pdfFile.Password))
@@ -55,7 +36,76 @@ namespace CrytonCoreNext.PDF.Models
                 pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
             using var docReader = reader;
             using var pageReader = docReader.GetPageReader(pdfFile.LastPage);
-            return GetImage(pageReader);
+            using var mat = GetImage(pageReader);
+            return mat.ToWriteableBitmap();
+        }
+
+        public async IAsyncEnumerable<WriteableBitmap> LoadImages(PDFFile pdfFile)
+        {
+            if (pdfFile.PdfStatus == Enums.EPdfStatus.Protected && string.IsNullOrEmpty(pdfFile.Password))
+            {
+                yield return default;
+            }
+            using IDocLib pdfLibrary = DocLib.Instance;
+            var dimensions = pdfFile.Dimensions;
+            using var reader = pdfFile.Password.Equals(string.Empty) ?
+                pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
+                pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
+            using var docReader = reader;
+            for (var i = 0; i < pdfFile.NumberOfPages; i++)
+            {
+                using var pageReader = docReader.GetPageReader(i);
+                using var mat = await Task.Run(() => GetImage(pageReader));
+                yield return mat.ToWriteableBitmap();
+            }
+        }
+
+        public List<string> GetAvailableEncryptionOptions()
+        {
+            return
+            [
+                nameof(EncryptionConstants.ENCRYPTION_AES_256),
+                nameof(EncryptionConstants.ENCRYPTION_AES_128),
+                nameof(EncryptionConstants.STANDARD_ENCRYPTION_40),
+                nameof(EncryptionConstants.STANDARD_ENCRYPTION_128)
+            ];
+        }
+
+        public List<string> GetAvailableEncryptionAllowOptions()
+        {
+            return
+            [
+                nameof(EncryptionConstants.ALLOW_ASSEMBLY),
+                nameof(EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS),
+                nameof(EncryptionConstants.ALLOW_MODIFY_CONTENTS),
+                nameof(EncryptionConstants.ALLOW_COPY),
+                nameof(EncryptionConstants.ALLOW_FILL_IN),
+                nameof(EncryptionConstants.ALLOW_PRINTING),
+                nameof(EncryptionConstants.ALLOW_DEGRADED_PRINTING),
+                nameof(EncryptionConstants.ALLOW_SCREENREADERS)
+            ];
+        }
+
+        public bool ProtectFile(PDFFile pdfFile, int permissions, int encryption)
+        {
+            try
+            {
+                using var pdfReader = new PdfReader(new MemoryStream(pdfFile.Bytes));
+                using var pdfDocument = new PdfDocument(pdfReader);
+                using var stream = new MemoryStream();
+                var password = Encoding.UTF8.GetBytes(pdfFile.Password);
+                PdfEncryptor.Encrypt(new PdfReader(new MemoryStream(pdfFile.Bytes)), stream, new EncryptionProperties().SetStandardEncryption(
+                    password, password,
+                    permissions,
+                    encryption));
+                pdfFile.HasPassword = true;
+                pdfFile.Bytes = stream.ToArray();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<PDFFile> Merge(List<PDFFile> pdfFiles)
@@ -79,9 +129,9 @@ namespace CrytonCoreNext.PDF.Models
         public PDFFile ImageToPdf(ImageFile image, int newId)
         {
             var converter = new ImageConverterService();
-            byte[] bytes = default;
             var extension = image.Extension.ToLowerInvariant();
-            if (extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.png) || 
+            byte[] bytes;
+            if (extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.png) ||
                 extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.gif) ||
                 extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.bmp))
             {
@@ -97,10 +147,9 @@ namespace CrytonCoreNext.PDF.Models
                 Width = (int)image.Width,
                 Height = (int)image.Height
             };
-
             using IDocLib pdfLibrary = DocLib.Instance;
             var pdfBbytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
-            var file = new File($"{image.Name}_Converted", string.Empty, DateTime.Now, "pdf", newId, pdfBbytes);
+            var file = new File($"{image.Name}_Converted", DateTime.Now, "pdf", newId, pdfBbytes);
             return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 
@@ -113,34 +162,6 @@ namespace CrytonCoreNext.PDF.Models
             }
             using IDocLib pdfLibrary = DocLib.Instance;
             return await Merge(pdfFiles);
-            //using var memStream = new MemoryStream();
-            //using var writer = new PdfWriter(memStream);
-            //using var document = new PdfDocument(writer);
-            //using var doc = new Document(document, PageSize.A4);
-            //var size = document.GetDefaultPageSize();
-            //foreach (var imageFile in images)
-            //{
-            //    ImageData imageData = ImageDataFactory.Create(imageFile.Bytes);
-            //    var image = new Image(imageData);
-            //    doc.Add(image);
-            //    doc.Add(new AreaBreak(iText.Layout.Properties.AreaBreakType.NEXT_PAGE));
-            //}
-            //document.Close();
-            //var bytes = memStream.ToArray();
-            //var file = new File("MergedImages", string.Empty, DateTime.Now, "pdf", newId, bytes);
-            //return new PDFFile(file, Enums.EPdfStatus.Opened);
-        }
-
-        private static byte[] ReadFully(Stream input)
-        {
-            var buffer = new byte[16 * 1024];
-            using var ms = new MemoryStream();
-            int read;
-            while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                ms.Write(buffer, 0, read);
-            }
-            return ms.ToArray();
         }
 
         private static string PrepareFileNameForMerge(List<PDFFile> pdfFiles)
@@ -168,7 +189,7 @@ namespace CrytonCoreNext.PDF.Models
             return stringBuilder.ToString();
         }
 
-        private static WriteableBitmap GetImage(IPageReader pageReader)
+        private static Mat GetImage(IPageReader pageReader)
         {
             var bgrBytes = pageReader.GetImage(RenderFlags.LimitImageCacheSize);
             var width = pageReader.GetPageWidth();
@@ -178,14 +199,13 @@ namespace CrytonCoreNext.PDF.Models
             using var matOut = new Mat();
 
             var nativeSplitted = Cv2.Split(bgraMat);
-            Cv2.Merge(new[] { nativeSplitted[3] }, matOut);
+            Cv2.Merge([nativeSplitted[3]], matOut);
             using Mat inversed = new Scalar(255) - matOut;
-
-            using var add = new Mat();
+            var add = new Mat();
             Cv2.CvtColor(bgraMat, bgraMat, ColorConversionCodes.BGRA2BGR);
             Cv2.CvtColor(inversed, inversed, ColorConversionCodes.GRAY2BGR);
             Cv2.Add(bgraMat, inversed, add);
-            return add.ToWriteableBitmap();
+            return add;
         }
     }
 }

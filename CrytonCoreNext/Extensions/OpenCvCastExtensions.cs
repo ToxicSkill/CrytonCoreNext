@@ -1,6 +1,5 @@
 ﻿using OpenCvSharp;
 using System.Drawing;
-using System.Windows.Media;
 
 namespace CrytonCoreNext.Extensions
 {
@@ -12,7 +11,7 @@ namespace CrytonCoreNext.Extensions
             return new Rect((int)rectangle.X, (int)rectangle.Y, (int)rectangle.Width, (int)rectangle.Height);
         }
 
-        public static Scalar ToScalar(this System.Drawing.Color color)
+        public static Scalar ToScalar(this Color color)
         {
             return new Scalar(color.B, color.G, color.R);
         }

@@ -73,7 +73,7 @@ namespace CrytonCoreNext
 
         private void LoadScreenModeFromSettings()
         {
-            App.Current.MainWindow.WindowState = 
+            System.Windows.Application.Current.MainWindow.WindowState = 
                 Properties.Settings.Default.FullscreenOnStart ? 
                 System.Windows.WindowState.Maximized :
                 System.Windows.WindowState.Normal;

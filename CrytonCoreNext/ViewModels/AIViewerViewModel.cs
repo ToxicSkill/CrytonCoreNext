@@ -2,16 +2,43 @@
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
-using CrytonCoreNext.Models;
+using CrytonCoreNext.Drawers;
+using CrytonCoreNext.Enums;
+using CrytonCoreNext.Views;
+using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
+using System.Linq;
+using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
+using Wpf.Ui.Controls.Interfaces;
+using Wpf.Ui.Mvvm.Contracts;
+using DialogService = CrytonCoreNext.Services.DialogService;
 
 namespace CrytonCoreNext.ViewModels
 {
     public partial class AIViewerViewModel : ObservableObject
     {
+        private const int DefaultCompareSliderValue = 50;
+
         private readonly IYoloModelService _yoloModelService;
+
+        private readonly PdfViewModel _pdfViewModel;
+
+        private readonly INavigationService _navigationService;
+
+        private readonly ImageDrawer _imageDrawer;
+
+        private readonly DialogService _dialogService;
+
+        public delegate void TabControlChanged();
+
+        public event TabControlChanged OnTabControlChanged;
+
+        [ObservableProperty]
+        private ObservableCollection<INavigationControl> navigationItems = [];
 
         [ObservableProperty]
         public ObservableCollection<AIDetectionImage> detectedCurrentImages;
@@ -29,60 +56,108 @@ namespace CrytonCoreNext.ViewModels
         public AIImage selectedImage;
 
         [ObservableProperty]
-        public bool drawAllBoxSelected; 
+        public bool userMouseIsInDetectedObject;
 
-        public AIViewerViewModel(IYoloModelService yoloModelService)
+        [ObservableProperty]
+        public bool showOriginal;
+
+        [ObservableProperty]
+        public int imageCompareSliderValue = DefaultCompareSliderValue;
+
+        public AIViewerViewModel(
+            IYoloModelService yoloModelService, 
+            PdfViewModel pdfViewModel, 
+            INavigationService navigationService, 
+            ImageDrawer drawer,
+            DialogService dialogService)
         {
-            DetectedCurrentImages = new();
+            _pdfViewModel = pdfViewModel;
+            _navigationService = navigationService; 
+            _imageDrawer = drawer;
+            _dialogService = dialogService;
+            DetectedCurrentImages = [];
             _yoloModelService = yoloModelService;
-            _yoloModelService.LoadYoloModel("AI/YoloModels/yolov7-tiny.onnx");
+            _yoloModelService.LoadYoloModel();
             _yoloModelService.LoadLabels();
-            Images = new();
+            Images = [];
+            NavigationItems =
+            [
+                new NavigationItem
+                {
+                    Content = "Processes",
+                    PageTag = "processes",
+                    Icon = SymbolRegular.Apps24,
+                    PageType = typeof(PdfView)
+                }
+            ];
+        }
+
+        [RelayCommand]
+        private void ExportImageToPDF()
+        {
+            if (_pdfViewModel.ExportImageToPDF(
+                new Models.File(
+                    SelectedImage.Path, 
+                    DateTime.Now, 
+                    EImageExtensions.png.ToString(),
+                    0, SelectedImage.AdjusterImage.ToMat().ToBytes()), 
+                SelectedImage.AdjusterImage.ToMat()))
+            {
+                _navigationService.Navigate(typeof(PdfView));
+            }
+        }
+
+        [RelayCommand]
+        private void DeleteImage()
+        {
+            var index = Images.IndexOf(SelectedImage);
+            Images = new(Images.Except(new List<AIImage>() { SelectedImage }));
+            if (index > 0) 
+            {
+                SelectedImage = Images[index - 1];
+            }
+            else if (index == 0 && Images.Any())
+            {
+                SelectedImage = Images[0];
+            }
+        }
+
+        [RelayCommand]
+        private void SaveImage()
+        {
+            var outputFileName = _dialogService.GetFileNameToSave(".png", Environment.SpecialFolder.Recent);
+            if (outputFileName != string.Empty)
+            {
+                Cv2.ImWrite(outputFileName, SelectedImage.AdjusterImage.ToMat());
+            }
         }
 
         [RelayCommand]
         private void LoadImages()
         {
-            Images = new()
+            var filesToOpen = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.Images, Environment.SpecialFolder.Recent);
+            if (filesToOpen.Count != 0)
             {
-                new ("C:\\Users\\gizmo\\OneDrive\\Obrazy\\2022-02-04-test_image.jpg"),
-                new ( "C:\\Users\\gizmo\\OneDrive\\Obrazy\\tough-crowd.png")
-            };
-
-            foreach (var image in Images)
-            {
-                image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
+                var newFiles = new List<AIImage>();
+                foreach (var item in filesToOpen)
+                {
+                    newFiles.Add(new(item, _imageDrawer));
+                }
+                foreach (var image in newFiles)
+                {
+                    image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
+                }
+                var oldList = Images.ToList();
+                oldList.AddRange(newFiles);
+                Images = new(oldList);
+                SelectedImage = Images.First();
             }
-        }
-
-        partial void OnSelectedImageChanged(AIImage value)
-        {
-            OnDrawAllBoxSelectedChanged(DrawAllBoxSelected);
         }
 
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
         {
-            DrawAllBoxSelected = false;
-            if (value == null)
-            {
-                SelectedImage.DetectionImage = SelectedImage.Image;
-            }
-            else
-            {
-                SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
-            }
-        }
-
-        partial void OnDrawAllBoxSelectedChanged(bool value)
-        {
-            if (value)
-            {
-                SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawAllDetections(SelectedImage);
-            }
-            else
-            {
-                SelectedImage.DetectionImage = SelectedImage.Image;
-            }
+            SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
+            UserMouseIsInDetectedObject = value != null;
         }
     }
 }

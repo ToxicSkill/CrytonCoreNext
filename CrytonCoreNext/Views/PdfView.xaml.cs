@@ -35,25 +35,44 @@ namespace CrytonCoreNext.Views
         private void PdfPasswordBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var value = PdfPasswordBox.IsPasswordRevealed;
+            var valueSecond = PdfPasswordBoxSecond.IsPasswordRevealed;
             LeftEyeIcon.Filled = value;
             RightEyeIcon.Filled = value;
+            LeftEyeIconSecond.Filled = valueSecond;
+            RightEyeIconSecond.Filled = valueSecond;
         }
 
-        private void UpdatePasswordBox()
+        private void UpdatePasswordBox(bool isSecond = false)
         {
-            ViewModel.PdfPassword = PdfPasswordBox.Password;
+            ViewModel.SetPdfPassword(isSecond ? PdfPasswordBoxSecond.Password : PdfPasswordBox.Password);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void PasswordSecond_Click(object sender, RoutedEventArgs e)
+        {
+            UpdatePasswordBox(true);
+        }
+
+        private void Password_Click(object sender, RoutedEventArgs e)
         {
             UpdatePasswordBox();
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            LeftEyeIcon.Filled = true;
+            RightEyeIcon.Filled = true;
             PdfPasswordBox.Password = string.Empty;
         }
 
+        private void ListView_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            LeftEyeIconSecond.Filled = true;
+            RightEyeIconSecond.Filled = true;
+            if (ViewModel.PdfToProtectSelectedFile is not null)
+            {
+                PdfPasswordBoxSecond.Password = ViewModel.PdfToProtectSelectedFile.Password;
+            }
+        }
 
         private void Image_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {

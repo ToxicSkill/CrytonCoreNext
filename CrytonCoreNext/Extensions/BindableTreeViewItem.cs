@@ -57,7 +57,7 @@ public class BindableSelectedItemBehavior : Behavior<TreeView>
             "BringIndexIntoView",
             BindingFlags.Instance | BindingFlags.NonPublic,
             Type.DefaultBinder,
-            new[] { typeof(int) },
+            [typeof(int)],
             null);
         if (method == null)
         {

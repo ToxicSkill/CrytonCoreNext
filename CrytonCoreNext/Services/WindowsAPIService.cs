@@ -5,7 +5,7 @@ namespace CrytonCoreNext.Services
 {
     public static class WindowsAPIService
     {
-        public static int  GetWindowsBuild()
+        public static int GetWindowsBuild()
         {
             var registryKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
             var currentBuild = registryKey.GetValue("CurrentBuild").ToString();

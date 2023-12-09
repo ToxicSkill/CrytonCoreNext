@@ -6,13 +6,13 @@ using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Crypting.Services;
 using CrytonCoreNext.Crypting.ViewModels;
 using CrytonCoreNext.Crypting.Views;
+using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Interfaces.Serializers;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
-using CrytonCoreNext.PDF.Services;
 using CrytonCoreNext.Providers;
 using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
@@ -26,9 +26,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using Wpf.Ui.Mvvm.Contracts;
 using Wpf.Ui.Mvvm.Services;
+using DialogService = CrytonCoreNext.Services.DialogService;
 
 namespace CrytonCoreNext
 {
@@ -46,8 +48,8 @@ namespace CrytonCoreNext
             services.AddSingleton<ICustomPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ISnackbarService, SnackbarService>();
+            services.AddSingleton<DialogService>();
 
-            services.AddSingleton<Interfaces.IDialogService, Services.DialogService>();
             services.AddTransient<IProgressService, ProgressService>();
             services.AddSingleton<IFilesLoader, FilesLoader>();
             services.AddSingleton<IFilesSaver, FilesSaver>();
@@ -58,7 +60,7 @@ namespace CrytonCoreNext
             services.AddSingleton<IXmlSerializer, XmlSerializer>();
 
             // crypting
-            services.AddScoped(CreateCryptingRecognition);
+            services.AddScoped<ICryptingRecognition, CryptingRecognition>();
             services.AddScoped<ICryptingReader, CryptingReader>();
             services.AddScoped<ICryptingReader, CryptingReader>();
             services.AddScoped<IPasswordProvider, PasswordProvider>();
@@ -76,13 +78,13 @@ namespace CrytonCoreNext
             // pdf
             services.AddSingleton<IPDFManager, PDFManager>();
             services.AddSingleton<IPDFReader, PDFReader>();
-            services.AddSingleton(CreatePDFService);
             services.AddScoped(CreateFileService);
             services.AddScoped<PdfView>();
-            services.AddScoped(CreatePdfViewModel);
+            services.AddScoped<PdfViewModel>();
 
             //AI viewer
 
+            services.AddSingleton<ImageDrawer>();
             services.AddSingleton<IYoloModelService, YoloModelService>();
             services.AddScoped<AIViewerView>();
             services.AddScoped<AIViewerViewModel>();
@@ -101,9 +103,9 @@ namespace CrytonCoreNext
 
         public App()
         {
-            LanguagesDictionaries = new List<ResourceDictionary>(){
-                new ResourceDictionary() { Source = new Uri("..\\Dictionaries\\EnglishDictionary.xaml", UriKind.Relative) }
-            };
+            LanguagesDictionaries = [
+                new() { Source = new Uri("..\\Dictionaries\\EnglishDictionary.xaml", UriKind.Relative) }
+            ];
         }
 
         public static T GetService<T>()
@@ -115,12 +117,17 @@ namespace CrytonCoreNext
         private async void OnStartup(object sender, StartupEventArgs e)
         {
             await _host.StartAsync();
+            await Task.Delay(200);
             var mw = _host.Services.GetService<MainViewModel>();
             var sw = _host.Services.GetService<SettingsViewModel>();
             if (sw != null && mw != null)
             {
                 sw.ThemeStyleChanged += mw.InvokeThemeChanged;
             }
+            var pv = _host.Services.GetService<PdfView>();
+            var cv = _host.Services.GetService<CryptingView>();
+            var av = _host.Services.GetService<AIViewerView>();
+            sw?.OnStartup();
         }
 
         private void OnLoaded(object sender, System.Windows.Navigation.NavigationEventArgs e)
@@ -135,34 +142,16 @@ namespace CrytonCoreNext
             _host.Dispose();
         }
 
-        private static IPDFService CreatePDFService(IServiceProvider provider)
-        {
-            var pdfManager = provider.GetRequiredService<IPDFManager>();
-            var pdfReader = provider.GetRequiredService<IPDFReader>();
-
-            return new PDFService(pdfManager, pdfReader);
-        }
-
         private static CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
         {
             var fileService = provider.GetRequiredService<IFileService>();
-            var dialogService = provider.GetRequiredService<Interfaces.IDialogService>();
+            var dialogService = provider.GetRequiredService<DialogService>();
             var cryptingService = provider.GetRequiredService<ICryptingService>();
             var snackbar = provider.GetRequiredService<ISnackbarService>();
             var cryptors = provider.GetServices<ICryptingView<CryptingMethodViewModel>>();
             var passwordProvider = provider.GetRequiredService<IPasswordProvider>();
 
-            return new(fileService, dialogService, cryptingService, snackbar, cryptors.ToList(), passwordProvider);
-        }
-
-        private static PdfViewModel CreatePdfViewModel(IServiceProvider provider)
-        {
-            var fileService = provider.GetRequiredService<IFileService>();
-            var dialogService = provider.GetRequiredService<Interfaces.IDialogService>();
-            var pdfService = provider.GetRequiredService<IPDFService>();
-            var snackbar = provider.GetRequiredService<ISnackbarService>();
-
-            return new(pdfService, fileService, dialogService, snackbar);
+            return new(fileService, cryptingService, snackbar, cryptors.ToList(), passwordProvider, dialogService);
         }
 
         public static ICryptingService CreateCryptingService(IServiceProvider provider)
@@ -199,12 +188,6 @@ namespace CrytonCoreNext
             var snackbar = provider.GetRequiredService<ISnackbarService>();
             var rsa = provider.GetServices<ICrypting>().ToList().Where(x => x.Method == Crypting.Enums.EMethod.RSA).First();
             return new RSAViewModel(rsa, snackbar, jsonSerialzer, xmlSerialzer, rsa.Method.ToString());
-        }
-
-        private static ICryptingRecognition CreateCryptingRecognition(IServiceProvider provider)
-        {
-            var recognitionValues = new RecognitionValues(AppKey);
-            return new CryptingRecognition(recognitionValues);
         }
 
         private static IFileService CreateFileService(IServiceProvider provider)

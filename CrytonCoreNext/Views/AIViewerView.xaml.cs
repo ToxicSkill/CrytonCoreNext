@@ -25,6 +25,7 @@ namespace CrytonCoreNext.Views
             Background.Content = new FluentWaves();
         }
 
+
         private void ListViewItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var item = sender as ListViewItem;
@@ -52,6 +53,16 @@ namespace CrytonCoreNext.Views
                 scrollViewer.LineLeft();
             }
             e.Handled = true;
+        }
+
+        private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            ViewModel.ShowOriginal = true;
+        }
+
+        private void Button_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            ViewModel.ShowOriginal = false;
         }
     }
 }

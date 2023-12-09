@@ -28,7 +28,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
-            <TreeView Grid.Column="0" BorderThickness="0" Margin="0, 20, 0,0 "
+            <TreeView Grid.Column="0" BorderThickness="0" Margin="0, 20, 0,0 " 
+                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                       ItemsSource="{Binding TreeViewItemSource}" >
                 <e:Interaction.Behaviors>
                     <extensions:BindableSelectedItemBehavior SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -161,6 +162,21 @@
                             </StackPanel>
                         </ui:CardControl.Header>
                         <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
+                    </ui:CardControl>
+                    <TextBlock Text="PDF" FontSize="18" Margin="0,20,0,0" FontWeight="Light"/>
+                    <ui:CardControl Margin="15,8,15,0" Icon="PreviewLink20">
+                        <ui:CardControl.Header>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock FontSize="13" FontWeight="Medium" Text="Render DPI"/>
+                                <TextBlock FontSize="12" Text="Set DPI (dots per inch) for PDF rendering."/>
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding PdfDpiValue}" HorizontalAlignment="Center" Margin="10,0"/>
+                            <Slider Minimum="48" Maximum="480" 
+                                    Value="{Binding PdfDpiValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    HorizontalAlignment="Stretch"/>
+                        </StackPanel>
                     </ui:CardControl>
                 </StackPanel>
             </ScrollViewer>

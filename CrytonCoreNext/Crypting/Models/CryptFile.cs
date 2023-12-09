@@ -14,11 +14,14 @@ namespace CrytonCoreNext.Crypting.Models
 
         public ICrypting Crypting { get; set; }
 
-        public CryptFile(File file, CryptingStatus.Status status, EMethod method, Guid guid) : base(file)
+        public Recognition Recognition { get; set; }
+
+        public CryptFile(File file, CryptingStatus.Status status, Recognition recognition, Guid guid) : base(file)
         {
             Status = status;
-            Method = method;
+            Method = recognition.Method;
             Guid = guid;
-        }
+            Recognition = recognition;
+        } 
     }
 }

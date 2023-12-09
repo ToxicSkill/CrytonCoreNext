@@ -1,8 +1,6 @@
 ﻿using CrytonCoreNext.Enums;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Enums;
-using Docnet.Core.Models;
-using Docnet.Core.Readers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -75,9 +73,7 @@ namespace CrytonCoreNext.PDF.Models
 
         public WriteableBitmap PageImage { get => _image; set { _image = value; NotifyPropertyChanged(); } }
 
-        public PdfVersion Version { get; set; }
-
-        public IDocReader Reader { get; set; }
+        public PdfiumViewer.PdfDocument Document { get; set; } 
 
         public EFileStatus Status { get; set; }
 
@@ -107,7 +103,7 @@ namespace CrytonCoreNext.PDF.Models
             } 
         }
 
-        public Dictionary<SymbolIcon, string> Metadata { get; set; }
+        public Dictionary<SymbolIcon, string> Metadata { get; set; } = [];
 
         public bool IsOpened { get; set; }
 
@@ -119,16 +115,14 @@ namespace CrytonCoreNext.PDF.Models
         }
 
         public PDFFile(File file,
-            PdfVersion version,
-            IDocReader reader,
+            PdfiumViewer.PdfDocument document, 
             EPdfStatus pdfStatus,
             string password,
             double dimensions,
             int numberOfPages) : base(file)
         {
-            Version = version;
-            PdfStatus = pdfStatus;
-            Reader = reader;
+            Document = document; 
+            PdfStatus = pdfStatus; 
             Password = password;
             Dimensions = dimensions;
             NumberOfPages = numberOfPages;

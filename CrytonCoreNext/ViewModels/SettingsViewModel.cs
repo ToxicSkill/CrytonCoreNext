@@ -56,18 +56,45 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public bool isThemeStyleAvailable;
 
+        [ObservableProperty]    
+        public int pdfDpiValue;
+
         public bool MembersInitialized { get => TreeViewItemSource.Any(); }
 
         public SettingsViewModel(IThemeService themeService)
         {
             _themeService = themeService;
-            _elements = new();
-            _cardByTreeViewItem = new();
-            TreeViewItemSource = new();
+            _elements = [];
+            _cardByTreeViewItem = [];
+
+            TreeViewItemSource = [];
+
             InitializeThemes();
-            InitializeSettings();
+            InitializeSettings(); 
         }
-         
+
+        public void OnStartup()
+        {
+            if (Properties.Settings.Default.FirstRun)
+            {
+                Properties.Settings.Default.FirstRun = false;
+                SelectedThemeStyle = BackgroundType.Mica;
+            }
+        }
+
+        private void InitializeThemes()
+        {
+            ThemeStylesItemsSource = new ObservableCollection<BackgroundType>
+                (
+                    [
+                        BackgroundType.Acrylic,
+                        BackgroundType.Mica,
+                        BackgroundType.Tabbed
+                    ]
+                );
+            IsThemeStyleAvailable = WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber;
+        }
+
         private void InitializeSettings()
         {
             IsFullscreenOnStart = Properties.Settings.Default.FullscreenOnStart;
@@ -80,6 +107,12 @@ namespace CrytonCoreNext.ViewModels
                 SelectedThemeStyle = BackgroundType.Mica;
             }
             IsThemeSwitchChecked = Properties.Settings.Default.Theme;
+            PdfDpiValue = Properties.Settings.Default.PdfRenderDpi;
+            SetSettings();
+        }
+
+        partial void OnPdfDpiValueChanged(int value)
+        {
             SetSettings();
         }
 
@@ -156,19 +189,6 @@ namespace CrytonCoreNext.ViewModels
             return offset;
         }
 
-        private void InitializeThemes()
-        {
-            ThemeStylesItemsSource = new ObservableCollection<BackgroundType>
-                (new List<BackgroundType>()
-                    {
-                        BackgroundType.Acrylic,
-                        BackgroundType.Mica,
-                        BackgroundType.Tabbed
-                    }
-                );
-            IsThemeStyleAvailable = WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber;
-        }
-
         private void UpdateTreeView(TreeViewItemModel selectedTreeViewItem)
         {
             foreach (var treeViewItem in TreeViewItemSource)
@@ -195,7 +215,7 @@ namespace CrytonCoreNext.ViewModels
                     Title = headerTitle,
                     Symbol = mainItemSymbol,
                     IsExpanded = true,
-                    Childs = new()
+                    Childs = []
                 };
                 TreeViewItemSource.Add(newTreeViewItem);
                 _cardByTreeViewItem.Add(newTreeViewItem, card);

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Models;
 using OpenCvSharp;
@@ -6,26 +7,104 @@ using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.AI.Models
 {
     public partial class AIImage : SimpleImageItemContainer
     {
+        private readonly ImageDrawer _drawer;
+
+        public const double DefaultAutoColorValue = 0.5;
+
+        public const double DefaultExposureValue = 1.0;
+
+        public const double DefaultContrastValue = 1;
+
+        public const int DefaultBrightnessValue = 0;
+
         public List<AIDetectionImage> DetectionImages { get; set; }
 
         public List<YoloPrediction> Predictions { get; private set; }
 
+        public Mat PipelineMat { get; set; }
+
+        [ObservableProperty]
+        public System.Drawing.Size constrains;
+
+        [ObservableProperty]
+        public double contrastValue = DefaultContrastValue;
+
+        [ObservableProperty]
+        public double brightnessValue = DefaultBrightnessValue;
+
+        [ObservableProperty]
+        public double exposureValue = DefaultExposureValue;
+
+        [ObservableProperty]
+        public bool normalizeRGBHistogram;
+
+        [ObservableProperty]
+        public bool normalizeLABHistogram;
+
+        [ObservableProperty]
+        public WriteableBitmap histogram;
+
         [ObservableProperty]
         public WriteableBitmap detectionImage;
 
-        public AIImage(string path)
+        [ObservableProperty]
+        public WriteableBitmap adjusterImage;
+
+
+        public AIImage(string path, ImageDrawer drawer)
         {
-            DetectionImages = new();
-            Predictions = new ();
-            Image = Cv2.ImRead(path).ToWriteableBitmap();
-            Label = System.IO.Path.GetFileName(path);
+            _drawer = drawer;
+            DetectionImages = [];
+            Predictions = [];
+            Path = path;
+            LoadImages();
+        }
+
+        private void LoadImages()
+        {
+            Image = Cv2.ImRead(Path).ToWriteableBitmap();
+            Label = System.IO.Path.GetFileName(Path);
+            Constrains = new System.Drawing.Size((int)Image.Width, (int)Image.Height);
             DetectionImage = Image;
+            AdjusterImage = Image;
+            Task.Run(UpdateImage);
+        }
+
+        private async Task UpdateImage()
+        {
+            await _drawer.Post(this);
+        }
+
+        partial void OnExposureValueChanged(double value)
+        {
+            Task.Run(UpdateImage);
+        }
+
+        partial void OnContrastValueChanged(double value)
+        {
+            Task.Run(UpdateImage);
+        }
+
+        partial void OnBrightnessValueChanged(double value)
+        {
+            Task.Run(UpdateImage);
+        }
+
+        partial void OnNormalizeLABHistogramChanged(bool oldValue, bool newValue)
+        {
+            Task.Run(UpdateImage);
+        }
+
+        partial void OnNormalizeRGBHistogramChanged(bool oldValue, bool newValue)
+        {
+            Task.Run(UpdateImage);
         }
 
         public void SetPredicitons(List<YoloPrediction> predictions)
@@ -44,12 +123,20 @@ namespace CrytonCoreNext.AI.Models
             using var mat = Image.ToMat();
             foreach (var prediction in Predictions)
             {
+                var rectangle = prediction.Rectangle.ToRect();
+                var newWidth = Math.Clamp(rectangle.Width, 0, mat.Width - rectangle.X);
+                var newHeight = Math.Clamp(rectangle.Height, 0, mat.Height - rectangle.Y);
+                var newX = Math.Clamp(rectangle.X, 0, mat.Width);
+                var newY = Math.Clamp(rectangle.Y, 0, mat.Height);
+                var newRect = new Rect(newX, newY, newWidth, newHeight);
+                prediction.Rectangle = new RectangleF(newRect.X, newRect.Y, newRect.Width, newRect.Height);
                 DetectionImages.Add(
-                    new(prediction)
+                    new(this, prediction)
                     {
-                        Image = new Mat(mat, prediction.Rectangle.ToRect()).ToWriteableBitmap()
+                        Image = new Mat(mat, newRect).ToWriteableBitmap()
                     });
             }
         }
+
     }
 }
