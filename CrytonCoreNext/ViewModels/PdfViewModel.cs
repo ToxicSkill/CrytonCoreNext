@@ -61,9 +61,6 @@ namespace CrytonCoreNext.ViewModels
         public ObservableCollection<PDFFile> pdfFiles;
 
         [ObservableProperty]
-        public ObservableCollection<PDFFile> openedPdfFiles;
-
-        [ObservableProperty]
         public ObservableCollection<PDFFile> selectedPdfFilesToMerge;
 
         [ObservableProperty]
@@ -103,9 +100,6 @@ namespace CrytonCoreNext.ViewModels
 
         [ObservableProperty]
         public PDFFile selectedPdfFileToSplit;
-
-        [ObservableProperty]
-        public PDFFile openedPdfSelectedFile;
 
         [ObservableProperty]
         public WriteableBitmap pdfToMergeImage;
@@ -156,7 +150,6 @@ namespace CrytonCoreNext.ViewModels
             _pdfToMergePagesIndexes = [];
 
             ImageFiles = [];
-            OpenedPdfFiles = [];
             PdfToProtectFiles = [];
             OutcomeFilesFromSplit = [];
             SelectedPdfFilesToMerge = [];
@@ -164,6 +157,12 @@ namespace CrytonCoreNext.ViewModels
             PdfToSplitImages = [];
             PdfToSplitRangeFiles = [];
             PdfFiles = [];
+
+            var reader = new PdfReader(new MemoryStream(System.IO.File.ReadAllBytes(@"C:\Users\gizmo\Downloads\test(1).pdf")));
+            using (var doc = new PdfDocument(reader))
+            {
+
+            }
 
             InitializeComboBoxes();
 
@@ -175,20 +174,18 @@ namespace CrytonCoreNext.ViewModels
 
         private void OnPdfFilesChanged()
         {
-            OpenedPdfFiles = new(PdfFiles.Where(x => x.IsOpened).ToList());
-            PdfToProtectFiles = new(OpenedPdfFiles.Where(x => x.HasPassword == false).ToList());
             var splitFilesToRemove = new List<PDFFile>();
             var mergeFilesToRemove = new List<PDFFile>();
             foreach (var splitFile in SelectedPdfFilesToSplit)
             {
-                if (!OpenedPdfFiles.Contains(splitFile))
+                if (!PdfFiles.Contains(splitFile))
                 {
                     splitFilesToRemove.Add(splitFile);
                 }
             }
             foreach (var mergeFile in SelectedPdfFilesToMerge)
             {
-                if (!OpenedPdfFiles.Contains(mergeFile))
+                if (!PdfFiles.Contains(mergeFile))
                 {
                     mergeFilesToRemove.Add(mergeFile);
                 }
@@ -244,9 +241,9 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void AddFileToMergeList()
         {
-            if (!SelectedPdfFilesToMerge.Contains(OpenedPdfSelectedFile))
+            if (!SelectedPdfFilesToMerge.Contains(SelectedPdfFile))
             {
-                SelectedPdfFilesToMerge.Add(OpenedPdfSelectedFile);
+                SelectedPdfFilesToMerge.Add(SelectedPdfFile);
                 UpdatePdfToMergeImage();
             }
         }
@@ -254,9 +251,9 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private async Task AddFileToSplitList()
         {
-            if (!SelectedPdfFilesToSplit.Any() && OpenedPdfSelectedFile.NumberOfPages > 1)
+            if (!SelectedPdfFilesToSplit.Any() && SelectedPdfFile.NumberOfPages > 1)
             {
-                SelectedPdfFilesToSplit.Add(OpenedPdfSelectedFile);
+                SelectedPdfFilesToSplit.Add(SelectedPdfFile);
                 SelectedPdfFileToSplit = SelectedPdfFilesToSplit.First();
                 var index = 0;
                 PdfToSplitImages = [];
@@ -344,7 +341,7 @@ namespace CrytonCoreNext.ViewModels
                 }
                 var from = subPdfFile.From;
                 var to = subPdfFile.To;
-                var pdfFile = await _pdfManager.Split(SelectedPdfFileToSplit, from, to, OpenedPdfFiles.Max(x => x.Id) + idAdd);
+                var pdfFile = await _pdfManager.Split(SelectedPdfFileToSplit, from, to, PdfFiles.Max(x => x.Id) + idAdd);
                 if (AddPdfToPdfList(pdfFile))
                 {
                     nofSplittedFiles++;
@@ -581,7 +578,7 @@ namespace CrytonCoreNext.ViewModels
         {
             try
             {
-                _pdfReader.UpdatePdfFileInformations(ref pdfFile);
+                _pdfReader.OpenProtectedPdf(ref pdfFile);
                 CheckNameConflicts(pdfFile);
                 PdfFiles.Add(pdfFile);
                 return true;
@@ -941,8 +938,8 @@ namespace CrytonCoreNext.ViewModels
 
         private void UpdateProtectedPdf()
         {
-            SelectedPdfFile.PdfStatus = EPdfStatus.Opened;
-            _pdfReader.UpdatePdfFileInformations(ref selectedPdfFile);
+            _pdfReader.OpenProtectedPdf(ref selectedPdfFile);
+            OnSelectedPdfFileChanged(SelectedPdfFile);
             if (SelectedPdfFile.PdfStatus == EPdfStatus.Protected ||
                 SelectedPdfFile.PdfStatus == EPdfStatus.Damaged)
             {

@@ -22,6 +22,7 @@
             <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <c:ObjectToVisibility x:Key="ObjectToVisibility" />
+            <c:PdfVisilibilityMultiConverter x:Key="PdfVisilibilityMultiConverter" />
             <ContextMenu x:Key="SplitItemContextMenu">
                 <ui:MenuItem Header="Split left"
                              SymbolIcon="ArrowLeft20"
@@ -361,8 +362,8 @@
                                   CanContentScroll="True"
                                   VerticalScrollBarVisibility="Auto"
                                   Margin="0,75,5,0">
-                        <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  SelectedItem="{Binding OpenedPdfSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        <ListView ItemsSource="{Binding PdfFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedItem="{Binding SelectedPdfFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   PreviewMouseDoubleClick="ListViewMerge_PreviewMouseDoubleClick"
                                   SelectionMode="Single">
                             <ListView.Template>
@@ -375,8 +376,16 @@
                             </ListView.Template>
                             <ListView.ItemTemplate>
                                 <DataTemplate DataType="models:CryptFile">
+                                    <!--<MultiBinding Converter="{StaticResource PdfVisilibilityMultiConverter}">
+        <Binding Path="{Binding IsVisible}" />
+        <Binding Path="{Binding IsOpened}" />
+    </MultiBinding>-->
                                     <Grid Height="40"
                                           Margin="5,0,0,0">
+                                        <Grid.Visibility>
+                                            <Binding Path="IsOpened"
+                                                     Converter="{StaticResource BoolToVisibilityConverter}" />
+                                        </Grid.Visibility>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
@@ -590,8 +599,8 @@
                                       CanContentScroll="True"
                                       VerticalScrollBarVisibility="Auto"
                                       Margin="0,75,0,0">
-                            <ListView ItemsSource="{Binding OpenedPdfFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      SelectedItem="{Binding OpenedPdfSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            <ListView ItemsSource="{Binding PdfFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedItem="{Binding SelectedPdfFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       PreviewMouseDoubleClick="ListViewSplit_PreviewMouseDoubleClick"
                                       SelectionMode="Single">
                                 <ListView.Template>
@@ -606,6 +615,10 @@
                                     <DataTemplate DataType="models:CryptFile">
                                         <Grid Height="40"
                                               Margin="5,0,0,0">
+                                            <Grid.Visibility>
+                                                <Binding Path="IsOpened"
+                                                         Converter="{StaticResource BoolToVisibilityConverter}" />
+                                            </Grid.Visibility>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="*" />
@@ -985,8 +998,8 @@
                                   CanContentScroll="True"
                                   VerticalScrollBarVisibility="Auto"
                                   Margin="0,15,5,0">
-                        <ListView ItemsSource="{Binding PdfToProtectFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  SelectedItem="{Binding PdfToProtectSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        <ListView ItemsSource="{Binding PdfFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedItem="{Binding SelectedPdfFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   SelectionMode="Single"
                                   SelectionChanged="ListView_SelectionChanged_1">
                             <ListView.Template>
