@@ -1,6 +1,7 @@
 ﻿using CrytonCoreNext.Extensions;
 using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.PDF.Interfaces;
+using CrytonCoreNext.PDF.Models;
 using PdfiumViewer;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,8 @@ using System.Globalization;
 using System.IO;
 using Wpf.Ui.Controls;
 
-namespace CrytonCoreNext.PDF.Models
+
+namespace CrytonCoreNext.PDF.Services
 {
     public class PDFReader : IPDFReader
     {
@@ -25,12 +27,12 @@ namespace CrytonCoreNext.PDF.Models
             {
                 return CreateNewPdfFile(file, null, status);
             }
-            PdfDocument? document = null;
+            PdfiumViewer.PdfDocument? document = null;
             try
             {
                 document = password.Equals(string.Empty, default) ?
-                    PdfDocument.Load(file.Path) :
-                    PdfDocument.Load(file.Path, password);
+                    PdfiumViewer.PdfDocument.Load(file.Path) :
+                    PdfiumViewer.PdfDocument.Load(file.Path, password);
             }
             catch (PdfException)
             {
@@ -59,8 +61,8 @@ namespace CrytonCoreNext.PDF.Models
             {
                 var stream = new MemoryStream(file.Bytes);
                 file.Document = file.Password.Equals(string.Empty, default) ?
-                    PdfDocument.Load(stream) :
-                    PdfDocument.Load(stream, file.Password);
+                    PdfiumViewer.PdfDocument.Load(stream) :
+                    PdfiumViewer.PdfDocument.Load(stream, file.Password);
             }
             catch (PdfException)
             {
@@ -96,7 +98,6 @@ namespace CrytonCoreNext.PDF.Models
                 { { new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.ErrorCircle20 }, ex.Message} };
             }
         }
-
         private void ParseNativeMetainfo(PDFFile pdfFile)
         {
             pdfFile.Metadata = [];
@@ -130,7 +131,7 @@ namespace CrytonCoreNext.PDF.Models
             }
         }
 
-        private PDFFile CreateNewPdfFile(CrytonCoreNext.Models.File file, PdfDocument? pdfDocument, EPdfStatus status)
+        private PDFFile CreateNewPdfFile(CrytonCoreNext.Models.File file, PdfiumViewer.PdfDocument? pdfDocument, EPdfStatus status)
         {
             return pdfDocument == null
                 ? new PDFFile(file, status)

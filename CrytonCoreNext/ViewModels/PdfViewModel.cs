@@ -32,6 +32,8 @@ namespace CrytonCoreNext.ViewModels
 
         private readonly IPDFReader _pdfReader;
 
+        private readonly IPDFImageLoader _imageLoader;
+
         private List<(int pdfIndex, int pdfPage)> _pdfToMergePagesIndexes;
 
         private List<(int pdfIndex, int pdfPage)> _pdfExcludedMergeIndexes;
@@ -143,12 +145,14 @@ namespace CrytonCoreNext.ViewModels
 
         public PdfViewModel(IPDFManager pdfManager,
             IPDFReader pdfReader,
+            IPDFImageLoader pdfImageLoader,
             IFileService fileService,
             ISnackbarService snackbarService,
             DialogService dialogService) : base(fileService, snackbarService, dialogService)
         {
             _pdfManager = pdfManager;
             _pdfReader = pdfReader;
+            _imageLoader = pdfImageLoader;
             _pdfToMergePagesIndexes = [];
 
             ImageFiles = [];
@@ -256,7 +260,7 @@ namespace CrytonCoreNext.ViewModels
                 SelectedPdfFileToSplit = SelectedPdfFilesToSplit.First();
                 var index = 0;
                 PdfToSplitImages = [];
-                await foreach (var bitmap in _pdfManager.LoadImages(SelectedPdfFileToSplit))
+                await foreach (var bitmap in _imageLoader.LoadImages(SelectedPdfFileToSplit))
                 {
                     index++;
                     await System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
@@ -519,7 +523,7 @@ namespace CrytonCoreNext.ViewModels
                 return;
 
             }
-            SelectedPdfFile.PageImage = _pdfManager.LoadImage(SelectedPdfFile);
+            SelectedPdfFile.PageImage = _imageLoader.LoadImage(SelectedPdfFile);
             OnPropertyChanged(nameof(SelectedPdfFile));
         }
 
@@ -540,7 +544,7 @@ namespace CrytonCoreNext.ViewModels
                 return;
 
             }
-            SelectedPdfFile.PageImage = _pdfManager.LoadImage(SelectedPdfFile);
+            SelectedPdfFile.PageImage = _imageLoader.LoadImage(SelectedPdfFile);
             OnPropertyChanged(nameof(SelectedPdfFile));
         }
 
@@ -654,7 +658,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 var pdfFile = SelectedPdfFilesToMerge[_pdfToMergePagesIndexes[_currentPdfToMergeImageIndex].pdfIndex];
                 pdfFile.LastPage = _pdfToMergePagesIndexes[_currentPdfToMergeImageIndex].pdfPage;
-                PdfToMergeImage = _pdfManager.LoadImage(pdfFile);
+                PdfToMergeImage = _imageLoader.LoadImage(pdfFile);
                 SelectedPdfFileToMerge = pdfFile;
             }
             IsOnFirstMergePage = !_pdfToMergePagesIndexes.Any() || _currentPdfToMergeImageIndex == 0;
@@ -675,7 +679,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    value.PageImage = _pdfManager.LoadImage(value);
+                    value.PageImage = _imageLoader.LoadImage(value);
                 });
             }
         }
