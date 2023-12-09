@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
-using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
 using System;
 using System.Collections.Generic;
@@ -16,8 +15,6 @@ namespace CrytonCoreNext.PDF.Abstarct
         private int _currentPage = 0;
 
         private List<PDFImage> _images;
-
-        protected readonly IPDFService PdfService;
 
         protected readonly InteractiveViewBase PdfManagerViewModel;
 
@@ -63,39 +60,12 @@ namespace CrytonCoreNext.PDF.Abstarct
 
         public ICommand NextCommand { get; set; }
 
-        public PdfBase(InteractiveViewBase pdfManagerViewModel, IPDFService pdfService)
+        public PdfBase(InteractiveViewBase pdfManagerViewModel)
         {
             _images = [];
             Files = [];
-
-            PdfService = pdfService;
             PdfManagerViewModel = pdfManagerViewModel;
         }
-
-        //public override void SendObject(object obj)
-        //{
-        //    if (obj is bool)
-        //    {
-        //        Files.Clear();
-        //        CurrentFile = null;
-        //    }
-        //    if (obj is PDFFile file)
-        //    {
-        //        CurrentFile = file;
-        //        OnPropertyChanged(nameof(MaxPageDisplay));
-        //    }
-        //    if (obj is List<PDFImage> images)
-        //    {
-        //        _images = images;
-        //        //ImageViewerViewModel.PostImages(_images.Where(x => x.Guid == CurrentFile.Guid).First());
-        //        UpdateImages();
-        //    }
-        //    if (obj is List<PDFFile> pdfFiles)
-        //    {
-        //        Files = pdfFiles;
-        //    }
-        //    UpdateContent();
-        //}
 
         protected void ResetCurrentPage()
         {

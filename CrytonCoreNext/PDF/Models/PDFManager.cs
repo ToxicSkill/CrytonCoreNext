@@ -36,7 +36,28 @@ namespace CrytonCoreNext.PDF.Models
                 pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
             using var docReader = reader;
             using var pageReader = docReader.GetPageReader(pdfFile.LastPage);
-            return GetImage(pageReader);
+            using var mat = GetImage(pageReader);
+            return mat.ToWriteableBitmap();
+        }
+
+        public async IAsyncEnumerable<WriteableBitmap> LoadImages(PDFFile pdfFile)
+        {
+            if (pdfFile.PdfStatus == Enums.EPdfStatus.Protected && string.IsNullOrEmpty(pdfFile.Password))
+            {
+                yield return default;
+            }
+            using IDocLib pdfLibrary = DocLib.Instance;
+            var dimensions = pdfFile.Dimensions;
+            using var reader = pdfFile.Password.Equals(string.Empty) ?
+                pdfLibrary.GetDocReader(pdfFile.Bytes, new PageDimensions(dimensions)) :
+                pdfLibrary.GetDocReader(pdfFile.Bytes, pdfFile.Password, new PageDimensions(dimensions));
+            using var docReader = reader;
+            for (var i = 0; i < pdfFile.NumberOfPages; i++)
+            {
+                using var pageReader = docReader.GetPageReader(i);
+                using var mat = await Task.Run(() => GetImage(pageReader));
+                yield return mat.ToWriteableBitmap();
+            }
         }
 
         public List<string> GetAvailableEncryptionOptions()
@@ -168,7 +189,7 @@ namespace CrytonCoreNext.PDF.Models
             return stringBuilder.ToString();
         }
 
-        private static WriteableBitmap GetImage(IPageReader pageReader)
+        private static Mat GetImage(IPageReader pageReader)
         {
             var bgrBytes = pageReader.GetImage(RenderFlags.LimitImageCacheSize);
             var width = pageReader.GetPageWidth();
@@ -180,11 +201,11 @@ namespace CrytonCoreNext.PDF.Models
             var nativeSplitted = Cv2.Split(bgraMat);
             Cv2.Merge([nativeSplitted[3]], matOut);
             using Mat inversed = new Scalar(255) - matOut;
-            using var add = new Mat();
+            var add = new Mat();
             Cv2.CvtColor(bgraMat, bgraMat, ColorConversionCodes.BGRA2BGR);
             Cv2.CvtColor(inversed, inversed, ColorConversionCodes.GRAY2BGR);
             Cv2.Add(bgraMat, inversed, add);
-            return add.ToWriteableBitmap();
+            return add;
         }
     }
 }

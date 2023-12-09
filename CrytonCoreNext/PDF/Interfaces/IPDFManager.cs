@@ -12,6 +12,8 @@ namespace CrytonCoreNext.PDF.Interfaces
 
         WriteableBitmap LoadImage(PDFFile pdfFile);
 
+        IAsyncEnumerable<WriteableBitmap> LoadImages(PDFFile pdfFile);
+
         Task<PDFFile> Split(PDFFile pdfFile, int fromPage, int toPage, int newId);
 
         Task<PDFFile> Merge(List<PDFFile> pdfFiles);

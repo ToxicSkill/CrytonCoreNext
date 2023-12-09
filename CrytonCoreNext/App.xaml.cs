@@ -13,7 +13,6 @@ using CrytonCoreNext.Interfaces.Serializers;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
-using CrytonCoreNext.PDF.Services;
 using CrytonCoreNext.Providers;
 using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
@@ -79,10 +78,9 @@ namespace CrytonCoreNext
             // pdf
             services.AddSingleton<IPDFManager, PDFManager>();
             services.AddSingleton<IPDFReader, PDFReader>();
-            services.AddSingleton(CreatePDFService);
             services.AddScoped(CreateFileService);
             services.AddScoped<PdfView>();
-            services.AddScoped(CreatePdfViewModel);
+            services.AddScoped<PdfViewModel>();
 
             //AI viewer
 
@@ -144,14 +142,6 @@ namespace CrytonCoreNext
             _host.Dispose();
         }
 
-        private static IPDFService CreatePDFService(IServiceProvider provider)
-        {
-            var pdfManager = provider.GetRequiredService<IPDFManager>();
-            var pdfReader = provider.GetRequiredService<IPDFReader>();
-
-            return new PDFService(pdfManager, pdfReader);
-        }
-
         private static CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
         {
             var fileService = provider.GetRequiredService<IFileService>();
@@ -162,16 +152,6 @@ namespace CrytonCoreNext
             var passwordProvider = provider.GetRequiredService<IPasswordProvider>();
 
             return new(fileService, cryptingService, snackbar, cryptors.ToList(), passwordProvider, dialogService);
-        }
-
-        private static PdfViewModel CreatePdfViewModel(IServiceProvider provider)
-        {
-            var fileService = provider.GetRequiredService<IFileService>();
-            var pdfService = provider.GetRequiredService<IPDFService>();
-            var snackbar = provider.GetRequiredService<ISnackbarService>();
-            var dialogService = provider.GetRequiredService<DialogService>();
-
-            return new(pdfService, fileService, snackbar, dialogService);
         }
 
         public static ICryptingService CreateCryptingService(IServiceProvider provider)
