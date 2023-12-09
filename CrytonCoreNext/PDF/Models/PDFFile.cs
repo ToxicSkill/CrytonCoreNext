@@ -111,6 +111,7 @@ namespace CrytonCoreNext.PDF.Models
             EPdfStatus pdfStatus) : base(file)
         {
             PdfStatus = pdfStatus;
+            IsOpened = pdfStatus == EPdfStatus.Opened;
             Dimensions = 1.0;
         }
 

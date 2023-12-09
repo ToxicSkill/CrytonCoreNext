@@ -1,12 +1,12 @@
-﻿using CrytonCoreNext.PDF.Enums;
+﻿using CrytonCoreNext.Extensions;
+using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.PDF.Interfaces;
 using CrytonCoreNext.PDF.Models;
-using iText.Commons.Utils;
 using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Wpf.Ui.Controls;
@@ -20,6 +20,11 @@ namespace CrytonCoreNext.PDF.Services
 
         private readonly double _dimensions = 1.0d;
 
+        public PDFReader()
+        {
+            LoadSymbols();
+        }
+
         public PDFFile ReadPdf(CrytonCoreNext.Models.File file)
         {
             try
@@ -27,12 +32,15 @@ namespace CrytonCoreNext.PDF.Services
                 var memoryStream = new MemoryStream(file.Bytes);
                 using var pdfReader = new PdfReader(memoryStream);
                 using var pdfDocument = new PdfDocument(pdfReader);
+                var pdfFile = new PDFFile(file, EPdfStatus.Opened);
                 if (!string.IsNullOrEmpty(file.Path))
                 {
                     var fileInfo = new FileInfo(file.Path);
-                    ReadPdfInformations(fileInfo, pdfDocument);
+                    pdfFile.NumberOfPages = pdfDocument.GetNumberOfPages();
+                    ReadPdfInformations(pdfFile, fileInfo, pdfDocument);
                 }
-                return new(file, EPdfStatus.Opened);
+
+                return pdfFile;
             }
             catch (BadPasswordException)
             {
@@ -54,7 +62,8 @@ namespace CrytonCoreNext.PDF.Services
                 if (!string.IsNullOrEmpty(file.Path))
                 {
                     var fileInfo = new FileInfo(file.Path);
-                    ReadPdfInformations(fileInfo, pdfDocument);
+                    file.NumberOfPages = pdfDocument.GetNumberOfPages();
+                    ReadPdfInformations(file, fileInfo, pdfDocument);
                 }
                 file.PdfStatus = EPdfStatus.Opened;
             }
@@ -68,84 +77,47 @@ namespace CrytonCoreNext.PDF.Services
             }
         }
 
-        private static void ReadPdfInformations(FileInfo fileInfo, PdfDocument pdfDocument)
+        private void ReadPdfInformations(PDFFile file, FileInfo fileInfo, PdfDocument pdfDocument)
         {
             var documentInfo = pdfDocument.GetDocumentInfo();
-
-            var s = JsonUtil.SerializeToString(new
+            var infos = new List<(EPdfInfo, string)>()
             {
-                fileInfo.Name,
-                fileInfo.FullName,
-                fileInfo.LastWriteTime,
-                fileInfo.LastWriteTimeUtc,
-                Attributes = fileInfo.Attributes.ToString(),
-                fileInfo.CreationTime,
-                fileInfo.CreationTimeUtc,
-                fileInfo.Length,
-                Author = documentInfo.GetAuthor(),
-                Creator = documentInfo.GetCreator(),
-                Keywords = documentInfo.GetKeywords(),
-                Producer = documentInfo.GetProducer(),
-                Subject = documentInfo.GetSubject(),
-                Title = documentInfo.GetTitle(),
-                NumberOfPages = pdfDocument.GetNumberOfPages(),
-                NumberOfPdfObjects = pdfDocument.GetNumberOfPdfObjects(),
-                PdfVersion = pdfDocument
+                (EPdfInfo.Name, fileInfo.Name),
+                (EPdfInfo.FullName, fileInfo.FullName),
+                (EPdfInfo.LastWriteTime, fileInfo.LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
+                (EPdfInfo.LastWriteTimeUtc, fileInfo.LastWriteTimeUtc.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
+                (EPdfInfo.Attributes, fileInfo.Attributes.ToString()),
+                (EPdfInfo.CreationTime, fileInfo.CreationTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
+                (EPdfInfo.CreationTimeUtc, fileInfo.CreationTimeUtc.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture)),
+                (EPdfInfo.Length, fileInfo.Length.ToString()),
+                (EPdfInfo.Author, documentInfo.GetAuthor()),
+                (EPdfInfo.Creator, documentInfo.GetCreator()),
+                (EPdfInfo.Keywords, documentInfo.GetKeywords()),
+                (EPdfInfo.Producer, documentInfo.GetProducer()),
+                (EPdfInfo.Subject, documentInfo.GetSubject()),
+                (EPdfInfo.Title, documentInfo.GetTitle()),
+                (EPdfInfo.NumberOfPages, pdfDocument.GetNumberOfPages().ToString()),
+                (EPdfInfo.NumberOfPdfObjects, pdfDocument.GetNumberOfPdfObjects().ToString()),
+                (EPdfInfo.PdfVersion, pdfDocument
                        .GetPdfVersion()
                        .ToPdfName()
-                       .GetValue()
-            });
-        }
-
-        private void GetMetaInfo(PDFFile pdfFile)
-        {
-            if (!pdfFile.LoadMetadata)
+                       .GetValue())
+            };
+            file.Metadata = [];
+            foreach (var (type, value) in infos)
             {
-                return;
+                if (string.IsNullOrEmpty(value))
+                {
+                    continue;
+                }
+                var nameofInfoType = type.ToString();
+                if (_symbolByPdfInformation.ContainsKey(nameofInfoType))
+                {
+                    var symbol = _symbolByPdfInformation[nameofInfoType];
+                    symbol.ToolTip = nameofInfoType.ToPdfInformationString(false);
+                    file.Metadata.Add(symbol, value);
+                }
             }
-            LoadSymbols();
-            try
-            {
-                ParseNativeMetainfo(pdfFile);
-            }
-            catch (Exception ex)
-            {
-                if (Debugger.IsAttached) Debugger.Break();
-                pdfFile.Metadata = new()
-                { { new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.ErrorCircle20 }, ex.Message} };
-            }
-        }
-        private void ParseNativeMetainfo(PDFFile pdfFile)
-        {
-            //pdfFile.Metadata = [];
-            //var info = pdfFile.Informations;
-            //foreach (var key in _symbolByPdfInformation.Keys)
-            //{
-            //    string? value;
-            //    if (key.ToLowerInvariant().Contains("date"))
-            //    {
-            //        var date = (DateTime?)info.GetPropertyValue(key);
-            //        var dateTime = date ?? default;
-            //        if (dateTime != default)
-            //        {
-            //            value = dateTime.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
-            //        }
-            //        else
-            //        {
-            //            value = string.Empty;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        value = (string)info.GetPropertyValue(key);
-            //    }
-            //    if (!string.IsNullOrEmpty(value))
-            //    {
-            //        var symbol = _symbolByPdfInformation[key];
-            //        symbol.ToolTip = key.ToPdfInformationString(false);
-            //        pdfFile.Metadata.Add(symbol, value);
-            //    }
-            //}
         }
 
         private PDFFile CreateNewPdfFile(CrytonCoreNext.Models.File file, EPdfStatus status, int numberOfPages = 0)
@@ -160,18 +132,19 @@ namespace CrytonCoreNext.PDF.Services
 
         private void LoadSymbols()
         {
-            //var fakeInfo = new PdfInformation();
-            //_symbolByPdfInformation = new()
-            //{
-            //    { nameof(fakeInfo.Author), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20 } },
-            //    { nameof(fakeInfo.Creator), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },
-            //    { nameof(fakeInfo.CreationDate), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20  } },
-            //    { nameof(fakeInfo.ModificationDate), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20, Filled=true  } },
-            //    { nameof(fakeInfo.Producer), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Production20  } },
-            //    { nameof(fakeInfo.Title), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.TextCaseTitle20  } },
-            //    { nameof(fakeInfo.Subject), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Subtitles20  } },
-            //    { nameof(fakeInfo.Keywords), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Key20  } }
-            //};
+            _symbolByPdfInformation = new()
+            {
+                { nameof(EPdfInfo.Author), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20 } },
+                { nameof(EPdfInfo.Creator), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },
+                { nameof(EPdfInfo.CreationTime), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20  } },
+                { nameof(EPdfInfo.LastWriteTime), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20, Filled=true  } },
+                { nameof(EPdfInfo.Producer), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Production20  } },
+                { nameof(EPdfInfo.Title), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.TextCaseTitle20  } },
+                { nameof(EPdfInfo.Subject), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Subtitles20  } },
+                { nameof(EPdfInfo.Keywords), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Key20  } },
+                { nameof(EPdfInfo.NumberOfPdfObjects), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Cube20  } },
+                { nameof(EPdfInfo.PdfVersion), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Diversity20  } }
+            };
         }
     }
 }

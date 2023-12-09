@@ -61,6 +61,12 @@ namespace CrytonCoreNext.ViewModels
         public ObservableCollection<PDFFile> pdfFiles;
 
         [ObservableProperty]
+        public ObservableCollection<PDFFile> openedPdfFiles;
+
+        [ObservableProperty]
+        public PDFFile openedPdfSelectedFile;
+
+        [ObservableProperty]
         public ObservableCollection<PDFFile> selectedPdfFilesToMerge;
 
         [ObservableProperty]
@@ -154,15 +160,10 @@ namespace CrytonCoreNext.ViewModels
             OutcomeFilesFromSplit = [];
             SelectedPdfFilesToMerge = [];
             SelectedPdfFilesToSplit = [];
+            OpenedPdfFiles = [];
             PdfToSplitImages = [];
             PdfToSplitRangeFiles = [];
             PdfFiles = [];
-
-            var reader = new PdfReader(new MemoryStream(System.IO.File.ReadAllBytes(@"C:\Users\gizmo\Downloads\test(1).pdf")));
-            using (var doc = new PdfDocument(reader))
-            {
-
-            }
 
             InitializeComboBoxes();
 
@@ -174,18 +175,20 @@ namespace CrytonCoreNext.ViewModels
 
         private void OnPdfFilesChanged()
         {
+            OpenedPdfFiles = new(PdfFiles.Where(x => x.IsOpened).ToList());
+            PdfToProtectFiles = new(OpenedPdfFiles.Where(x => x.HasPassword == false).ToList());
             var splitFilesToRemove = new List<PDFFile>();
             var mergeFilesToRemove = new List<PDFFile>();
             foreach (var splitFile in SelectedPdfFilesToSplit)
             {
-                if (!PdfFiles.Contains(splitFile))
+                if (!OpenedPdfFiles.Contains(splitFile))
                 {
                     splitFilesToRemove.Add(splitFile);
                 }
             }
             foreach (var mergeFile in SelectedPdfFilesToMerge)
             {
-                if (!PdfFiles.Contains(mergeFile))
+                if (!OpenedPdfFiles.Contains(mergeFile))
                 {
                     mergeFilesToRemove.Add(mergeFile);
                 }
@@ -251,9 +254,9 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private async Task AddFileToSplitList()
         {
-            if (!SelectedPdfFilesToSplit.Any() && SelectedPdfFile.NumberOfPages > 1)
+            if (!SelectedPdfFilesToSplit.Any() && OpenedPdfSelectedFile.NumberOfPages > 1)
             {
-                SelectedPdfFilesToSplit.Add(SelectedPdfFile);
+                SelectedPdfFilesToSplit.Add(OpenedPdfSelectedFile);
                 SelectedPdfFileToSplit = SelectedPdfFilesToSplit.First();
                 var index = 0;
                 PdfToSplitImages = [];
@@ -341,7 +344,7 @@ namespace CrytonCoreNext.ViewModels
                 }
                 var from = subPdfFile.From;
                 var to = subPdfFile.To;
-                var pdfFile = await _pdfManager.Split(SelectedPdfFileToSplit, from, to, PdfFiles.Max(x => x.Id) + idAdd);
+                var pdfFile = await _pdfManager.Split(SelectedPdfFileToSplit, from, to, OpenedPdfFiles.Max(x => x.Id) + idAdd);
                 if (AddPdfToPdfList(pdfFile))
                 {
                     nofSplittedFiles++;

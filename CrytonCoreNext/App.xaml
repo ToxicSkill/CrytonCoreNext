@@ -14,7 +14,6 @@
                 <ui:ControlsDictionary />
                 <ResourceDictionary Source="pack://application:,,,/CrytonCoreNext;component/Styles/TabControl.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/CrytonCoreNext;component/Styles/CardExpander.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/CrytonCoreNext;component/Styles/ListView.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
             <Style x:Key="G_PathAnimatedStyle" TargetType="{x:Type Path}">
