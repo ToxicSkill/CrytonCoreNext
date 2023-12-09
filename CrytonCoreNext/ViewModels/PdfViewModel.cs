@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
@@ -28,11 +29,16 @@ namespace CrytonCoreNext.ViewModels
 {
     public partial class PdfViewModel : InteractiveViewBase
     {
+
+        private readonly SemaphoreSlim _semaphore;
+
         private readonly IPDFManager _pdfManager;
 
         private readonly IPDFReader _pdfReader;
 
         private readonly IPDFImageLoader _imageLoader;
+
+        private CancellationTokenSource _asyncImageLoadingCalncelationToken;
 
         private List<(int pdfIndex, int pdfPage)> _pdfToMergePagesIndexes;
 
@@ -169,6 +175,8 @@ namespace CrytonCoreNext.ViewModels
 
             _pdfExcludedMergeIndexes = [];
             _locker = new object();
+            _asyncImageLoadingCalncelationToken = new();
+            _semaphore = new SemaphoreSlim(1, 1);
 
             BindingOperations.EnableCollectionSynchronization(PdfFiles, _locker);
         }
@@ -260,15 +268,28 @@ namespace CrytonCoreNext.ViewModels
                 SelectedPdfFileToSplit = SelectedPdfFilesToSplit.First();
                 var index = 0;
                 PdfToSplitImages = [];
+                await _semaphore.WaitAsync();
                 await foreach (var bitmap in _imageLoader.LoadImages(SelectedPdfFileToSplit))
                 {
                     index++;
+                    if (_asyncImageLoadingCalncelationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
                     await System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
                     {
                         PdfToSplitImages.Add(new PdfImageContainer(index, bitmap));
                     });
                 }
-                SelectedPdfToSplitImage = PdfToSplitImages.First();
+                if (!_asyncImageLoadingCalncelationToken.IsCancellationRequested)
+                {
+                    SelectedPdfToSplitImage = PdfToSplitImages.First();
+                }
+                else
+                {
+                    _asyncImageLoadingCalncelationToken = new();
+                }
+                _semaphore.Release();
             }
         }
 
@@ -681,6 +702,14 @@ namespace CrytonCoreNext.ViewModels
                 {
                     value.PageImage = _imageLoader.LoadImage(value);
                 });
+            }
+        }
+
+        partial void OnSelectedPdfFileToSplitChanged(PDFFile value)
+        {
+            if (value == null)
+            {
+                _asyncImageLoadingCalncelationToken.Cancel();
             }
         }
 
