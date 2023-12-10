@@ -183,7 +183,7 @@ namespace CrytonCoreNext.ViewModels
 
         private void OnPdfFilesChanged()
         {
-            OpenedPdfFiles = new(PdfFiles.Where(x => x.IsOpened).ToList());
+            OpenedPdfFiles = new(PdfFiles.Where(x => x.IsOpened && x.HasPassword == false).ToList());
             PdfToProtectFiles = new(OpenedPdfFiles.Where(x => x.HasPassword == false).ToList());
             var splitFilesToRemove = new List<PDFFile>();
             var mergeFilesToRemove = new List<PDFFile>();
@@ -252,9 +252,9 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void AddFileToMergeList()
         {
-            if (!SelectedPdfFilesToMerge.Contains(SelectedPdfFile))
+            if (!SelectedPdfFilesToMerge.Contains(OpenedPdfSelectedFile))
             {
-                SelectedPdfFilesToMerge.Add(SelectedPdfFile);
+                SelectedPdfFilesToMerge.Add(OpenedPdfSelectedFile);
                 UpdatePdfToMergeImage();
             }
         }
@@ -354,6 +354,7 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private async Task Split()
         {
+            await _semaphore.WaitAsync();
             var idAdd = 1;
             var nofSplittedFiles = 0;
             var snackbarText = new StringBuilder();
@@ -387,7 +388,8 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private async Task Merge()
         {
-            var pdfFile = await _pdfManager.Merge(SelectedPdfFilesToMerge.ToList());
+            await _semaphore.WaitAsync();
+            var pdfFile = await _pdfManager.Merge([.. SelectedPdfFilesToMerge]);
             if (AddPdfToPdfList(pdfFile))
             {
                 PostSuccessSnackbar($"Merged {SelectedPdfFilesToMerge.Count} files into new: {pdfFile.Name}");
@@ -708,7 +710,7 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnSelectedPdfFileToSplitChanged(PDFFile value)
         {
-            if (value == null)
+            if (value == null && _semaphore.CurrentCount == 0)
             {
                 _asyncImageLoadingCalncelationToken.Cancel();
             }
