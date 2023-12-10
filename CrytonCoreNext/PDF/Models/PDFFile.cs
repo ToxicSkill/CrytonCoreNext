@@ -75,7 +75,7 @@ namespace CrytonCoreNext.PDF.Models
 
         public EFileStatus Status { get; set; }
 
-        public EPdfStatus PdfStatus { get; set; }
+        public EPdfStatus PdfStatus { get; private set; }
 
         public string Password { get => Unprotect(); set => Protect(value); }
 
@@ -91,7 +91,7 @@ namespace CrytonCoreNext.PDF.Models
 
         public bool IsOnLastPage => PdfStatus != EPdfStatus.Opened || LastPage == NumberOfPages - 1;
 
-        public bool HasPassword { get; set; }
+        public bool HasPassword { get; private set; }
 
         public bool IsVisible { get; set; } = true;
 
@@ -110,8 +110,7 @@ namespace CrytonCoreNext.PDF.Models
         public PDFFile(File file,
             EPdfStatus pdfStatus) : base(file)
         {
-            PdfStatus = pdfStatus;
-            IsOpened = pdfStatus == EPdfStatus.Opened;
+            SetPdfStatus(pdfStatus);
             Dimensions = 1.0;
         }
 
@@ -121,11 +120,17 @@ namespace CrytonCoreNext.PDF.Models
             double dimensions,
             int numberOfPages) : base(file)
         {
-            PdfStatus = pdfStatus;
             Password = password;
             Dimensions = dimensions;
             NumberOfPages = numberOfPages;
-            IsOpened = PdfStatus == EPdfStatus.Opened;
+            SetPdfStatus(pdfStatus);
+        }
+
+        public void SetPdfStatus(EPdfStatus pdfStatus)
+        {
+            PdfStatus = pdfStatus;
+            IsOpened = pdfStatus.HasFlag(EPdfStatus.Opened);
+            HasPassword = pdfStatus.HasFlag(EPdfStatus.Protected);
         }
 
         private void Protect(string password)

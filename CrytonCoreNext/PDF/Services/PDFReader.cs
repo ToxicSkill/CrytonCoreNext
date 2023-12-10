@@ -54,15 +54,15 @@ namespace CrytonCoreNext.PDF.Services
                 using var pdfReader = new PdfReader(memoryStream, new ReaderProperties().SetPassword(Encoding.UTF8.GetBytes(file.Password)));
                 using var pdfDocument = new PdfDocument(pdfReader);
                 LoadMetadata(file, pdfDocument);
-                file.PdfStatus = EPdfStatus.Opened;
+                file.SetPdfStatus(EPdfStatus.Opened | EPdfStatus.Protected);
             }
             catch (BadPasswordException)
             {
-                file.PdfStatus = EPdfStatus.Protected;
+                file.SetPdfStatus(EPdfStatus.Protected);
             }
             catch (Exception)
             {
-                file.PdfStatus = EPdfStatus.Damaged;
+                file.SetPdfStatus(EPdfStatus.Damaged);
             }
         }
 

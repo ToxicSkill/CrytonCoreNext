@@ -972,7 +972,7 @@ namespace CrytonCoreNext.ViewModels
         private void UpdateProtectedPdf()
         {
             _pdfReader.OpenProtectedPdf(SelectedPdfFile);
-            OnSelectedPdfFileChanged(SelectedPdfFile);
+            OnPdfFilesChanged();
             if (SelectedPdfFile.PdfStatus == EPdfStatus.Protected ||
                 SelectedPdfFile.PdfStatus == EPdfStatus.Damaged)
             {

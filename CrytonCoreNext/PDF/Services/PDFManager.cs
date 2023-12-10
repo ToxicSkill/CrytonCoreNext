@@ -58,8 +58,8 @@ namespace CrytonCoreNext.PDF.Services
                     password, password,
                     permissions,
                     encryption));
-                pdfFile.HasPassword = true;
                 pdfFile.Bytes = stream.ToArray();
+                pdfFile.SetPdfStatus(Enums.EPdfStatus.Protected | Enums.EPdfStatus.Opened);
                 return true;
             }
             catch (Exception)
