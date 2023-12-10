@@ -366,6 +366,7 @@ namespace CrytonCoreNext.ViewModels
                 var from = subPdfFile.From;
                 var to = subPdfFile.To;
                 var pdfFile = await _pdfManager.Split(SelectedPdfFileToSplit, from, to, OpenedPdfFiles.Max(x => x.Id) + idAdd);
+                _pdfReader.LoadMetadata(pdfFile);
                 if (AddPdfToPdfList(pdfFile))
                 {
                     nofSplittedFiles++;
@@ -603,7 +604,6 @@ namespace CrytonCoreNext.ViewModels
         {
             try
             {
-                _pdfReader.OpenProtectedPdf(pdfFile);
                 CheckNameConflicts(pdfFile);
                 PdfFiles.Add(pdfFile);
                 return true;
