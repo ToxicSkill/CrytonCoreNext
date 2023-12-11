@@ -86,16 +86,6 @@ namespace CrytonCoreNext.Views
             }
         }
 
-        private void ListViewMerge_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            ViewModel.AddFileToMergeListCommand.Execute(null);
-        }
-
-        private void ListViewSplit_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            ViewModel.AddFileToSplitListCommand.Execute(null);
-        }
-
         private void ListView_PreviewMouseDoubleClick_Merge(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             ViewModel.RemoveFileFromMergeListCommand.Execute(null);
@@ -105,7 +95,7 @@ namespace CrytonCoreNext.Views
         {
             ViewModel.RemoveFileFromSplitListCommand.Execute(null);
         }
-        
+
 
         private void Image_PreviewMouseWheel_Merge(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
@@ -131,6 +121,11 @@ namespace CrytonCoreNext.Views
                 scrollViewer.LineLeft();
             }
             e.Handled = true;
+        }
+
+        private void ListView_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ViewModel.DistributeSelectedPdfFile();
         }
     }
 }

@@ -67,12 +67,6 @@ namespace CrytonCoreNext.ViewModels
         public ObservableCollection<PDFFile> pdfFiles;
 
         [ObservableProperty]
-        public ObservableCollection<PDFFile> openedPdfFiles;
-
-        [ObservableProperty]
-        public PDFFile openedPdfSelectedFile;
-
-        [ObservableProperty]
         public ObservableCollection<PDFFile> selectedPdfFilesToMerge;
 
         [ObservableProperty]
@@ -166,7 +160,6 @@ namespace CrytonCoreNext.ViewModels
             OutcomeFilesFromSplit = [];
             SelectedPdfFilesToMerge = [];
             SelectedPdfFilesToSplit = [];
-            OpenedPdfFiles = [];
             PdfToSplitImages = [];
             PdfToSplitRangeFiles = [];
             PdfFiles = [];
@@ -183,20 +176,18 @@ namespace CrytonCoreNext.ViewModels
 
         private void OnPdfFilesChanged()
         {
-            OpenedPdfFiles = new(PdfFiles.Where(x => x.IsOpened && x.HasPassword == false).ToList());
-            PdfToProtectFiles = new(OpenedPdfFiles.Where(x => x.HasPassword == false).ToList());
             var splitFilesToRemove = new List<PDFFile>();
             var mergeFilesToRemove = new List<PDFFile>();
             foreach (var splitFile in SelectedPdfFilesToSplit)
             {
-                if (!OpenedPdfFiles.Contains(splitFile))
+                if (!PdfFiles.Contains(splitFile))
                 {
                     splitFilesToRemove.Add(splitFile);
                 }
             }
             foreach (var mergeFile in SelectedPdfFilesToMerge)
             {
-                if (!OpenedPdfFiles.Contains(mergeFile))
+                if (!PdfFiles.Contains(mergeFile))
                 {
                     mergeFilesToRemove.Add(mergeFile);
                 }
@@ -252,9 +243,9 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void AddFileToMergeList()
         {
-            if (!SelectedPdfFilesToMerge.Contains(OpenedPdfSelectedFile))
+            if (!SelectedPdfFilesToMerge.Contains(SelectedPdfFile))
             {
-                SelectedPdfFilesToMerge.Add(OpenedPdfSelectedFile);
+                SelectedPdfFilesToMerge.Add(SelectedPdfFile);
                 UpdatePdfToMergeImage();
             }
         }
@@ -262,9 +253,9 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private async Task AddFileToSplitList()
         {
-            if (!SelectedPdfFilesToSplit.Any() && OpenedPdfSelectedFile.NumberOfPages > 1)
+            if (!SelectedPdfFilesToSplit.Any() && SelectedPdfFile.NumberOfPages > 1)
             {
-                SelectedPdfFilesToSplit.Add(OpenedPdfSelectedFile);
+                SelectedPdfFilesToSplit.Add(SelectedPdfFile);
                 SelectedPdfFileToSplit = SelectedPdfFilesToSplit.First();
                 var index = 0;
                 PdfToSplitImages = [];
@@ -366,7 +357,7 @@ namespace CrytonCoreNext.ViewModels
                 }
                 var from = subPdfFile.From;
                 var to = subPdfFile.To;
-                var pdfFile = await _pdfManager.Split(SelectedPdfFileToSplit, from, to, OpenedPdfFiles.Max(x => x.Id) + idAdd);
+                var pdfFile = await _pdfManager.Split(SelectedPdfFileToSplit, from, to, PdfFiles.Max(x => x.Id) + idAdd);
                 _pdfReader.LoadMetadata(pdfFile);
                 if (AddPdfToPdfList(pdfFile))
                 {
@@ -996,6 +987,21 @@ namespace CrytonCoreNext.ViewModels
             PdfFiles.Insert(oldIndex, oldFile);
             SelectedPdfFile = oldFile;
             OnPdfFilesChanged();
+        }
+
+        public void DistributeSelectedPdfFile()
+        {
+            switch (SelectedTabIndex)
+            {
+                case (int)EPdfTabControls.Merge:
+                    AddFileToMergeList();
+                    break;
+                case (int)EPdfTabControls.Split:
+                    AddFileToSplitList();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

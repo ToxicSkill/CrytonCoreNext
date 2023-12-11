@@ -69,7 +69,7 @@ namespace CrytonCoreNext.AI.Models
 
         private void LoadImages()
         {
-            Image = Cv2.ImRead(Path).ToWriteableBitmap();
+            Image = Cv2.ImRead(Path, ImreadModes.Unchanged).ToWriteableBitmap();
             Label = System.IO.Path.GetFileName(Path);
             Constrains = new System.Drawing.Size((int)Image.Width, (int)Image.Height);
             DetectionImage = Image;
