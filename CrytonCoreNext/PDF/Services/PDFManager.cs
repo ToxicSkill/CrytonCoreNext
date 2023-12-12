@@ -68,6 +68,8 @@ namespace CrytonCoreNext.PDF.Services
             }
         }
 
+
+
         public async Task<PDFFile> Merge(List<PDFFile> pdfFiles)
         {
             using IDocLib pdfLibrary = DocLib.Instance;

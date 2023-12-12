@@ -29,7 +29,6 @@ namespace CrytonCoreNext.ViewModels
 {
     public partial class PdfViewModel : InteractiveViewBase
     {
-
         private readonly SemaphoreSlim _semaphore;
 
         private readonly IPDFManager _pdfManager;
@@ -37,6 +36,8 @@ namespace CrytonCoreNext.ViewModels
         private readonly IPDFReader _pdfReader;
 
         private readonly IPDFImageLoader _imageLoader;
+
+        private readonly Dictionary<EPdfTabControls, EPdfRequirements> _pdfRequirementsByControl;
 
         private CancellationTokenSource _asyncImageLoadingCalncelationToken;
 
@@ -163,8 +164,10 @@ namespace CrytonCoreNext.ViewModels
             PdfToSplitImages = [];
             PdfToSplitRangeFiles = [];
             PdfFiles = [];
+            _pdfRequirementsByControl = [];
 
             InitializeComboBoxes();
+            InitializePdfRequirements();
 
             _pdfExcludedMergeIndexes = [];
             _locker = new object();
@@ -172,6 +175,12 @@ namespace CrytonCoreNext.ViewModels
             _semaphore = new SemaphoreSlim(1, 1);
 
             BindingOperations.EnableCollectionSynchronization(PdfFiles, _locker);
+        }
+
+        private void InitializePdfRequirements()
+        {
+            _pdfRequirementsByControl.Add(EPdfTabControls.Merge, EPdfRequirements.Password | EPdfRequirements.Opened | EPdfRequirements.Contains);
+            _pdfRequirementsByControl.Add(EPdfTabControls.Split, EPdfRequirements.Password | EPdfRequirements.Opened | EPdfRequirements.Contains | EPdfRequirements.MoreThanOnePage);
         }
 
         private void OnPdfFilesChanged()
@@ -240,20 +249,17 @@ namespace CrytonCoreNext.ViewModels
             Unlock();
         }
 
-        [RelayCommand]
         private void AddFileToMergeList()
         {
-            if (!SelectedPdfFilesToMerge.Contains(SelectedPdfFile))
+            if (FileAddSanityCheck(EPdfTabControls.Merge))
             {
                 SelectedPdfFilesToMerge.Add(SelectedPdfFile);
                 UpdatePdfToMergeImage();
             }
         }
-
-        [RelayCommand]
         private async Task AddFileToSplitList()
         {
-            if (!SelectedPdfFilesToSplit.Any() && SelectedPdfFile.NumberOfPages > 1)
+            if (FileAddSanityCheck(EPdfTabControls.Split))
             {
                 SelectedPdfFilesToSplit.Add(SelectedPdfFile);
                 SelectedPdfFileToSplit = SelectedPdfFilesToSplit.First();
@@ -592,6 +598,61 @@ namespace CrytonCoreNext.ViewModels
             _pdfExcludedMergeIndexes.Add(_pdfToMergePagesIndexes[_currentPdfToMergeImageIndex]);
             UpdatePdfToMergeImage();
         }
+
+        public bool FileAddSanityCheck(EPdfTabControls control)
+        {
+            var predicator = GetPredicatorsByControl(control);
+            if (predicator == EPdfRequirements.Passed)
+            {
+                return true;
+            }
+            PostErrorSnackbar($"Can`t add file to {control.ToString().ToLowerInvariant()} list:\nIt requires {predicator.ToSentence()}");
+            return false;
+        }
+
+        private EPdfRequirements GetPredicatorsByControl(EPdfTabControls control)
+        {
+            EPdfRequirements notPassedRequirements = EPdfRequirements.Passed;
+            if (!_pdfRequirementsByControl.ContainsKey(control))
+            {
+                return notPassedRequirements;
+            }
+            EPdfRequirements predicators = _pdfRequirementsByControl[control];
+            if (predicators.HasFlag(EPdfRequirements.Password))
+            {
+                if (SelectedPdfFile.HasPassword)
+                {
+                    notPassedRequirements |= EPdfRequirements.Password;
+                }
+            }
+            if (predicators.HasFlag(EPdfRequirements.Opened))
+            {
+                if (!SelectedPdfFile.IsOpened)
+                {
+                    notPassedRequirements |= EPdfRequirements.Opened;
+                }
+            }
+            if (predicators.HasFlag(EPdfRequirements.Contains))
+            {
+                if (!PdfFiles.Contains(SelectedPdfFile))
+                {
+                    notPassedRequirements |= EPdfRequirements.Contains;
+                }
+            }
+            if (predicators.HasFlag(EPdfRequirements.MoreThanOnePage))
+            {
+                if (SelectedPdfFile.NumberOfPages <= 1)
+                {
+                    notPassedRequirements |= EPdfRequirements.MoreThanOnePage;
+                }
+            }
+            if (notPassedRequirements.ToString() == EPdfRequirements.Passed.ToString())
+            {
+                notPassedRequirements = EPdfRequirements.Passed;
+            }
+            return notPassedRequirements;
+        }
+
 
         private bool AddPdfToPdfList(PDFFile pdfFile)
         {
@@ -989,7 +1050,7 @@ namespace CrytonCoreNext.ViewModels
             OnPdfFilesChanged();
         }
 
-        public void DistributeSelectedPdfFile()
+        public async Task DistributeSelectedPdfFile()
         {
             switch (SelectedTabIndex)
             {
@@ -997,7 +1058,7 @@ namespace CrytonCoreNext.ViewModels
                     AddFileToMergeList();
                     break;
                 case (int)EPdfTabControls.Split:
-                    AddFileToSplitList();
+                    await AddFileToSplitList();
                     break;
                 default:
                     break;
