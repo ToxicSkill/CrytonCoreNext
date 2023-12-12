@@ -21,9 +21,9 @@ namespace CrytonCoreNext.PDF.Enums
             return requirements switch
             {
                 EPdfRequirements.Password => $"to has no password",
-                EPdfRequirements.MoreThanOnePage => $"has more than one page",
-                EPdfRequirements.Opened => $"needs to be opened",
-                EPdfRequirements.Contains => $"needs to be in main collection",
+                EPdfRequirements.MoreThanOnePage => $"to has more than one page",
+                EPdfRequirements.Opened => $"being opened",
+                EPdfRequirements.Contains => $"being in main collection",
                 _ => string.Empty,
             };
         }

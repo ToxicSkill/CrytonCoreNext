@@ -68,9 +68,9 @@ namespace CrytonCoreNext.Views
         {
             LeftEyeIconSecond.Filled = true;
             RightEyeIconSecond.Filled = true;
-            if (ViewModel.PdfToProtectSelectedFile is not null)
+            if (ViewModel.SelectedPdfFile is not null)
             {
-                PdfPasswordBoxSecond.Password = ViewModel.PdfToProtectSelectedFile.Password;
+                PdfPasswordBoxSecond.Password = ViewModel.SelectedPdfFile.Password;
             }
         }
 

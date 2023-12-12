@@ -836,69 +836,6 @@
                         </StackPanel>
                     </TabItem.Header>
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <ScrollViewer Grid.Column="0"
-                                      CanContentScroll="True"
-                                      VerticalScrollBarVisibility="Auto"
-                                      Margin="0,15,5,0">
-                            <ListView ItemsSource="{Binding PdfToProtectFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      SelectedItem="{Binding PdfToProtectSelectedFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      SelectionMode="Single"
-                                      SelectionChanged="ListView_SelectionChanged_1">
-                                <ListView.Template>
-                                    <ControlTemplate TargetType="ListBox">
-                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderBrush}">
-                                            <ItemsPresenter />
-                                        </Border>
-                                    </ControlTemplate>
-                                </ListView.Template>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate DataType="models:CryptFile">
-                                        <Grid Height="40"
-                                              Margin="5,0,0,0">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="20" />
-                                                <RowDefinition Height="20" />
-                                            </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0"
-                                                       Grid.Column="0"
-                                                       HorizontalAlignment="Left"
-                                                       FontSize="13"
-                                                       FontWeight="Medium"
-                                                       TextWrapping="WrapWithOverflow"
-                                                       Text="{Binding NameWithExtension}" />
-                                            <StackPanel Grid.Row="1"
-                                                        Grid.Column="0"
-                                                        Orientation="Horizontal"
-                                                        HorizontalAlignment="Left">
-                                                <TextBlock  FontSize="12"
-                                                            Text="Pages: " />
-                                                <TextBlock  FontSize="12"
-                                                            Text="{Binding NumberOfPages}" />
-                                            </StackPanel>
-                                            <TextBlock Grid.Row="0"
-                                                       Grid.Column="1"
-                                                       HorizontalAlignment="Right"
-                                                       FontSize="12"
-                                                       Text="{Binding Size}" />
-                                            <TextBlock Grid.Row="1"
-                                                       Grid.Column="1"
-                                                       HorizontalAlignment="Right"
-                                                       FontSize="12"
-                                                       Text="{Binding PdfStatus}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </ScrollViewer>
                         <Grid Grid.Column="1"
                               Margin="0,-350,0,0"
                               VerticalAlignment="Center"

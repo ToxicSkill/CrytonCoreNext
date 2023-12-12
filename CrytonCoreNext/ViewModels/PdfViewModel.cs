@@ -74,12 +74,6 @@ namespace CrytonCoreNext.ViewModels
         public ObservableCollection<PDFFile> selectedPdfFilesToSplit;
 
         [ObservableProperty]
-        public ObservableCollection<PDFFile> pdfToProtectFiles;
-
-        [ObservableProperty]
-        public PDFFile pdfToProtectSelectedFile;
-
-        [ObservableProperty]
         public ObservableCollection<PDFFile> outcomeFilesFromSplit;
 
         [ObservableProperty]
@@ -157,7 +151,6 @@ namespace CrytonCoreNext.ViewModels
             _pdfToMergePagesIndexes = [];
 
             ImageFiles = [];
-            PdfToProtectFiles = [];
             OutcomeFilesFromSplit = [];
             SelectedPdfFilesToMerge = [];
             SelectedPdfFilesToSplit = [];
@@ -301,11 +294,11 @@ namespace CrytonCoreNext.ViewModels
         {
             var permissions = typeof(EncryptionConstants).GetField(SelectedPermissionOption).GetValue(null);
             var encryption = typeof(EncryptionConstants).GetField(SelectedEncryptionOption).GetValue(null);
-            if (permissions != null && encryption != null && PdfToProtectSelectedFile != null)
+            if (permissions != null && encryption != null && SelectedPdfFile != null)
             {
-                if (_pdfManager.ProtectFile(PdfToProtectSelectedFile, (int)permissions, (int)encryption))
+                if (_pdfManager.ProtectFile(SelectedPdfFile, (int)permissions, (int)encryption))
                 {
-                    OnPdfFilesChanged();
+                    RefreshCollection();
                     PostSuccessSnackbar("Pdf file has been protected successfully");
                 }
                 else
@@ -379,6 +372,7 @@ namespace CrytonCoreNext.ViewModels
                 }
                 idAdd++;
             }
+            _semaphore.Release();
             PostSuccessSnackbar($"Successfully splited {nofSplittedFiles} files: \n{snackbarText}");
         }
 
@@ -606,7 +600,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 return true;
             }
-            PostErrorSnackbar($"Can`t add file to {control.ToString().ToLowerInvariant()} list:\nIt requires {predicator.ToSentence()}");
+            PostErrorSnackbar($"Can`t add file to {control.ToString().ToLowerInvariant()} list:\nIt requires from file {predicator.ToSentence()}");
             return false;
         }
 
