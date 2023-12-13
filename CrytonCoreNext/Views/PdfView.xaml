@@ -876,8 +876,7 @@
                                           SelectedItem="{Binding SelectedPermissionOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Grid>
-                        <StackPanel Grid.Column="1"
-                                    Margin="0,-100,0,0"
+                        <StackPanel Grid.Column="1" 
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center">
                             <Grid>

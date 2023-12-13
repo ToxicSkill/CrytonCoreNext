@@ -56,7 +56,7 @@ namespace CrytonCoreNext.PDF.Enums
         private static IEnumerable<Enum> GetFlags(Enum value, Enum[] values)
         {
             ulong bits = Convert.ToUInt64(value);
-            List<Enum> results = new List<Enum>();
+            List<Enum> results = [];
             for (int i = values.Length - 1; i >= 0; i--)
             {
                 ulong mask = Convert.ToUInt64(values[i]);
@@ -84,13 +84,11 @@ namespace CrytonCoreNext.PDF.Enums
             {
                 ulong bits = Convert.ToUInt64(value);
                 if (bits == 0L)
-                    //yield return value;
-                    continue; // skip the zero value
+                    continue;
                 while (flag < bits) flag <<= 1;
                 if (flag == bits)
                     yield return value;
             }
         }
-
     }
 }
