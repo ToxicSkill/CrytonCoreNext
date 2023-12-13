@@ -123,9 +123,22 @@ namespace CrytonCoreNext.Views
             e.Handled = true;
         }
 
-        private void ListView_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void ListView_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ViewModel.DistributeSelectedPdfFile();
+            await ViewModel.DistributeSelectedPdfFile();
+        }
+
+        private void CardExpander_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed && sender is FrameworkElement dep)
+            {
+                DragDrop.DoDragDrop(dep, new DataObject(DataFormats.Serializable, dep.DataContext), DragDropEffects.Move);
+            }
+        }
+
+        private async void ListView_Drop(object sender, DragEventArgs e)
+        {
+            await ViewModel.DistributeSelectedPdfFile();
         }
     }
 }

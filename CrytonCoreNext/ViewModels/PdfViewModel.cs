@@ -628,9 +628,22 @@ namespace CrytonCoreNext.ViewModels
             }
             if (predicators.HasFlag(EPdfRequirements.Contains))
             {
-                if (!PdfFiles.Contains(SelectedPdfFile))
+                switch (control)
                 {
-                    notPassedRequirements |= EPdfRequirements.Contains;
+                    case EPdfTabControls.Merge:
+                        if (SelectedPdfFilesToMerge.Contains(SelectedPdfFile))
+                        {
+                            notPassedRequirements |= EPdfRequirements.Contains;
+                        }
+                        break;
+                    case EPdfTabControls.Split:
+                        if (SelectedPdfFilesToSplit.Contains(SelectedPdfFile))
+                        {
+                            notPassedRequirements |= EPdfRequirements.Contains;
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
             if (predicators.HasFlag(EPdfRequirements.MoreThanOnePage))

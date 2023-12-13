@@ -23,7 +23,7 @@ namespace CrytonCoreNext.PDF.Enums
                 EPdfRequirements.Password => $"to has no password",
                 EPdfRequirements.MoreThanOnePage => $"to has more than one page",
                 EPdfRequirements.Opened => $"being opened",
-                EPdfRequirements.Contains => $"being in main collection",
+                EPdfRequirements.Contains => $"not already being in collection",
                 _ => string.Empty,
             };
         }

@@ -145,7 +145,8 @@
                               SelectionChanged="ListView_SelectionChanged"
                               PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick"
                               SelectionMode="Single"
-                              ScrollViewer.CanContentScroll="True">
+                              ScrollViewer.CanContentScroll="True"
+                              AllowDrop="True">
                         <ListView.Template>
                             <ControlTemplate TargetType="ListBox">
                                 <Border BorderBrush="{TemplateBinding BorderBrush}"
@@ -156,7 +157,7 @@
                         </ListView.Template>
                         <ListView.ItemTemplate>
                             <DataTemplate DataType="models:CryptFile">
-                                <ui:CardExpander>
+                                <ui:CardExpander MouseMove="CardExpander_MouseMove">
                                     <ui:CardExpander.Header>
                                         <Grid Height="40">
                                             <Grid.ColumnDefinitions>
@@ -363,16 +364,19 @@
                                        Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                         </ui:CardControl>
                         <ScrollViewer Grid.Column="0"
-                                      CanContentScroll="True"
+                                      CanContentScroll="True" 
+                                      AllowDrop="True"
                                       VerticalScrollBarVisibility="Auto"
+                                      Drop="ListView_Drop"
                                       Margin="0,75,0,0">
                             <ListView ItemsSource="{Binding SelectedPdfFilesToMerge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       SelectedItem="{Binding SelectedPdfFileToMerge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Merge"
-                                      SelectionMode="Single">
+                                      SelectionMode="Single"
+                                      AllowDrop="True" >
                                 <ListView.Template>
                                     <ControlTemplate TargetType="ListBox">
-                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}" AllowDrop="True"
                                                 BorderThickness="{TemplateBinding BorderBrush}">
                                             <ItemsPresenter />
                                         </Border>
@@ -380,7 +384,7 @@
                                 </ListView.Template>
                                 <ListView.ItemTemplate>
                                     <DataTemplate DataType="models:CryptFile">
-                                        <Grid Height="40"
+                                        <Grid Height="40" AllowDrop="True"
                                               Margin="5,0,0,0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
@@ -523,12 +527,15 @@
                                 </ui:CardControl>
                                 <ScrollViewer Grid.Row="1"
                                               CanContentScroll="True"
+                                              AllowDrop="True"
                                               VerticalScrollBarVisibility="Auto"
+                                              Drop="ListView_Drop"
                                               Margin="0,10">
                                     <ListView ItemsSource="{Binding SelectedPdfFilesToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                               SelectedItem="{Binding SelectedPdfFileToSplit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                               PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Split"
-                                              SelectionMode="Single">
+                                              SelectionMode="Single"
+                                              AllowDrop="True">
                                         <ListView.Template>
                                             <ControlTemplate TargetType="ListBox">
                                                 <Border BorderBrush="{TemplateBinding BorderBrush}"
