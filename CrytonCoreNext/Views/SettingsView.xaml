@@ -5,9 +5,10 @@
             xmlns:c="clr-namespace:CrytonCoreNext.Converters"
             xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels" 
             xmlns:models="clr-namespace:CrytonCoreNext.Models" 
-            xmlns:extensions="clr-namespace:CrytonCoreNext.Extensions" 
-            d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
-            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:extensions="clr-namespace:CrytonCoreNext.Extensions"
+           d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
+           xmlns:components="clr-namespace:CrytonCoreNext.Controls"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
             xmlns:e="http://schemas.microsoft.com/xaml/behaviors"
             Title="Dashboard"
@@ -90,6 +91,8 @@
                         </ui:CardControl.Header>
                         <ComboBox/>
                     </ui:CardControl>
+                    <!--<components:CustomNumberBoxControl Margin="0,10" Value="0" />-->
+
                     <TextBlock Text="Language" FontSize="18" Margin="0,20,0,0" FontWeight="Light"/>
                     <ui:CardControl Margin="15,8,15,0" Icon="LocalLanguage20">
                         <ui:CardControl.Header>
