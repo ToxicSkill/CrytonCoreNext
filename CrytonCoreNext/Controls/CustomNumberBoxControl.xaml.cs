@@ -11,11 +11,29 @@ namespace CrytonCoreNext.Controls
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(int), typeof(CustomNumberBoxControl), new PropertyMetadata(0));
 
+        public static readonly DependencyProperty MinProperty =
+           DependencyProperty.Register("Min", typeof(int), typeof(CustomNumberBoxControl), new PropertyMetadata(int.MinValue));
+
+        public static readonly DependencyProperty MaxProperty =
+                   DependencyProperty.Register("Max", typeof(int), typeof(CustomNumberBoxControl), new PropertyMetadata(int.MaxValue));
+
 
         public int Value
         {
             get { return (int)GetValue(ValueProperty); }
             set { SetValue(ValueProperty, value); }
+        }
+
+        public int Min
+        {
+            get { return (int)GetValue(MinProperty); }
+            set { SetValue(MinProperty, value); }
+        }
+
+        public int Max
+        {
+            get { return (int)GetValue(MaxProperty); }
+            set { SetValue(MaxProperty, value); }
         }
 
         public CustomNumberBoxControl()
@@ -25,12 +43,18 @@ namespace CrytonCoreNext.Controls
 
         private void SubtractValue(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            --Value;
+            if (Value - 1 >= Min)
+            {
+                --Value;
+            }
         }
 
         private void AddValue(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ++Value;
+            if (Value + 1 < -Max)
+            {
+                ++Value;
+            }
         }
     }
 }

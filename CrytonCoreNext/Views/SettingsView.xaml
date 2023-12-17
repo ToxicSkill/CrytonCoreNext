@@ -189,7 +189,9 @@
                             </StackPanel>
                         </ui:CardControl.Header>
                         <components:CustomNumberBoxControl Margin="0,10"
-                                                           Value="{Binding PdfRenderCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                           Value="{Binding PdfRenderCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                           Min="0"
+                                                           Max="10"/>
                     </ui:CardControl>
                 </StackPanel>
             </ScrollViewer>

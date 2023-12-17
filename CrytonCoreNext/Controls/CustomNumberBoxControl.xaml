@@ -14,7 +14,7 @@
     <Grid>
         <Rectangle RadiusX="12"
                    RadiusY="12"
-                   Fill="#503d3f43" />
+                   Fill="#903d3f43" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -43,6 +43,7 @@
                      FontSize="14"
                      HorizontalContentAlignment="Center"
                         HorizontalAlignment="Stretch"
+                     MaxLines="1"
                        Text="{Binding Value, ElementName=root}"/>
         </Grid>
     </Grid>
