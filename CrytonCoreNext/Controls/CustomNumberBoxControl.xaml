@@ -8,29 +8,41 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d"
              Height="30"
-             Width="90"
+             Width="120"
              d:DesignHeight="30"
-             d:DesignWidth="90">
+             d:DesignWidth="200">
     <Grid>
         <Rectangle RadiusX="12"
                    RadiusY="12"
-                   Fill="#323232" />
+                   Fill="#503d3f43" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="1.5*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Rectangle Grid.Column="1"
-                       RadiusX="10"
-                       RadiusY="10"
-                       Margin="-5" Fill="#151515" />
-            <ui:SymbolIcon Margin="0,0,5,0" Symbol="Subtract20" PreviewMouseLeftButtonDown="SubtractValue"/>
-            <ui:SymbolIcon Grid.Column="2" Margin="5,0,0,0" Symbol="Add20" PreviewMouseLeftButtonDown="AddValue" />
-            <TextBlock Grid.Column="1"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="26"
+            <ui:SymbolIcon Symbol="Subtract20"
+                           PreviewMouseLeftButtonDown="SubtractValue"/>
+            <ui:SymbolIcon Grid.Column="2"
+                           Symbol="Add20"
+                           PreviewMouseLeftButtonDown="AddValue" />
+            <ui:Button Appearance="Transparent"
+                       CornerRadius="10"
+                       VerticalAlignment="Stretch"
+                       HorizontalAlignment="Stretch"
+                       BorderBrush="Transparent"
+                       PreviewMouseLeftButtonDown="SubtractValue"/>
+            <ui:Button Grid.Column="2" Appearance="Transparent"
+                       CornerRadius="10" 
+                       VerticalAlignment="Stretch" 
+                       HorizontalAlignment="Stretch"
+                       BorderBrush="Transparent"
+                       PreviewMouseLeftButtonDown="AddValue"/>
+            <TextBox Grid.Column="1"
+                     Margin="0,-2"
+                     FontSize="14"
+                     HorizontalContentAlignment="Center"
+                        HorizontalAlignment="Stretch"
                        Text="{Binding Value, ElementName=root}"/>
         </Grid>
     </Grid>

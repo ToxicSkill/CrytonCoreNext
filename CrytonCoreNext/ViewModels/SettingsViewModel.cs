@@ -56,8 +56,11 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public bool isThemeStyleAvailable;
 
-        [ObservableProperty]    
+        [ObservableProperty]
         public int pdfDpiValue;
+
+        [ObservableProperty]
+        public int pdfRenderCount = 25;
 
         public bool MembersInitialized { get => TreeViewItemSource.Any(); }
 
@@ -70,7 +73,7 @@ namespace CrytonCoreNext.ViewModels
             TreeViewItemSource = [];
 
             InitializeThemes();
-            InitializeSettings(); 
+            InitializeSettings();
         }
 
         public void OnStartup()
