@@ -51,10 +51,26 @@ namespace CrytonCoreNext.Controls
 
         private void AddValue(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (Value + 1 < -Max)
+            if (Value + 1 <= Max)
             {
                 ++Value;
             }
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            SetCaret();
+        }
+
+        private void textBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            SetCaret();
+        }
+
+        private void SetCaret()
+        {
+            textBox.CaretIndex = textBox.Text.Length;
+            textBox.ScrollToEnd();
         }
     }
 }

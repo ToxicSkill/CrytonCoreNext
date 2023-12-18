@@ -38,11 +38,15 @@
                        HorizontalAlignment="Stretch"
                        BorderBrush="Transparent"
                        PreviewMouseLeftButtonDown="AddValue"/>
-            <TextBox Grid.Column="1"
+            <TextBox x:Name="textBox"
+                     FocusManager.IsFocusScope="False"
+                     Grid.Column="1"
                      Margin="0,-2"
                      FontSize="14"
                      HorizontalContentAlignment="Center"
                         HorizontalAlignment="Stretch"
+                     GotFocus="TextBox_GotFocus"
+                     PreviewMouseUp="textBox_PreviewMouseUp"
                      MaxLines="1"
                        Text="{Binding Value, ElementName=root}"/>
         </Grid>
