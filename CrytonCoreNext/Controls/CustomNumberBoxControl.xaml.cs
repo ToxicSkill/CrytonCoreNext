@@ -57,12 +57,14 @@ namespace CrytonCoreNext.Controls
             }
         }
 
+
+
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             SetCaret();
         }
 
-        private void textBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TextBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             SetCaret();
         }
@@ -71,6 +73,25 @@ namespace CrytonCoreNext.Controls
         {
             textBox.CaretIndex = textBox.Text.Length;
             textBox.ScrollToEnd();
+        }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (int.TryParse(textBox.Text, out int value))
+            {
+                if (value < Min || value > Max)
+                {
+                    rect.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    rect.Visibility = Visibility.Hidden;
+                }
+            }
+            else
+            {
+                rect.Visibility = Visibility.Hidden;
+            }
         }
     }
 }
