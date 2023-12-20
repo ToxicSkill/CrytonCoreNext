@@ -136,6 +136,9 @@
                                Appearance="Secondary"
                                HorizontalAlignment="Right" />
                 </Grid>
+                <TextBlock Grid.Row="1"
+                           Text="PDF"
+                           FontFamily="Candara Light" FontWeight="Light" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="100" Opacity="0.4"/>
                 <ScrollViewer Grid.Row="1"
                               CanContentScroll="True"
                               VerticalScrollBarVisibility="Auto"
