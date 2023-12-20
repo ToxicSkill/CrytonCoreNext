@@ -138,7 +138,23 @@
                 </Grid>
                 <TextBlock Grid.Row="1"
                            Text="PDF"
-                           FontFamily="Candara Light" FontWeight="Light" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="100" Opacity="0.4"/>
+                           FontFamily="Candara Light"
+                           FontWeight="Light"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           FontSize="100"
+                           Opacity="0.2"
+                           Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="1"
+                           Margin="0,110,0,0"
+                           Text="F I L E S"
+                           FontFamily="Candara Light"
+                           FontWeight="Light"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           FontSize="30"
+                           Opacity="0.2"
+                           Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityConverter}}" />
                 <ScrollViewer Grid.Row="1"
                               CanContentScroll="True"
                               VerticalScrollBarVisibility="Auto"
