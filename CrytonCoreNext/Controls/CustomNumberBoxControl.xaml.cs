@@ -51,9 +51,46 @@ namespace CrytonCoreNext.Controls
 
         private void AddValue(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (Value + 1 < -Max)
+            if (Value + 1 <= Max)
             {
                 ++Value;
+            }
+        }
+
+
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            SetCaret();
+        }
+
+        private void TextBox_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            SetCaret();
+        }
+
+        private void SetCaret()
+        {
+            textBox.CaretIndex = textBox.Text.Length;
+            textBox.ScrollToEnd();
+        }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (int.TryParse(textBox.Text, out int value))
+            {
+                if (value < Min || value > Max)
+                {
+                    rect.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    rect.Visibility = Visibility.Hidden;
+                }
+            }
+            else
+            {
+                rect.Visibility = Visibility.Hidden;
             }
         }
     }
