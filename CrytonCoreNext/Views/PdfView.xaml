@@ -372,7 +372,7 @@
                                         Height="50"
                                         VerticalAlignment="Top"
                                         Padding="5"
-                                        Margin="0,15"
+                                        Margin="5,15"
                                         Icon="SelectAllOn20">
                             <ui:CardControl.Header>
                                 <TextBlock Text="Selected files to merge" />
@@ -530,7 +530,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Grid Grid.Column="0"
-                                  Margin="3,15">
+                                  Margin="5,15">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="50" />
                                     <RowDefinition Height="*" />
