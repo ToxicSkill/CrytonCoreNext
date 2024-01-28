@@ -39,7 +39,8 @@ namespace CrytonCoreNext.ViewModels
 
         private readonly Queue<int> _fpsQueue;
 
-        public ObservableCollection<Camera> AvailableCameras { get; set; }
+        [ObservableProperty]
+        public ObservableCollection<Camera> availableCameras;
 
         [ObservableProperty]
         public Camera selectedCamera;
@@ -60,10 +61,6 @@ namespace CrytonCoreNext.ViewModels
             _cameraService = cameraService;
             _cancellationToken = new CancellationTokenSource();
             _fpsQueue = new Queue<int>();
-
-            AvailableCameras = new(_cameraService.GetAllCameras());
-
-            var isCameraInitialized = InitializeCamera();
         }
 
         partial void OnRunCameraChanged(bool value)
@@ -106,27 +103,36 @@ namespace CrytonCoreNext.ViewModels
         partial void OnSelectedCameraChanged(Camera value)
         {
             _cameraService.SetCurrentCamera(SelectedCamera);
-
             _cameraService.UpdateCameraInfo(SelectedCamera);
         }
 
-
-        private bool InitializeCamera()
+        internal void OnUnloaded()
         {
+            RunCamera = false;
+        }
+
+        internal async Task OnLoaded()
+        {
+            var cameras = _cameraService.GetAllCameras();
+            Camera? camera = null;
             if (_cameraService.IsCameraOpen())
             {
                 _cameraService.SetBufferSize(0);
-                SelectedCamera = _cameraService.GetCurrentCamera();
-                return true;
+                camera = _cameraService.GetCurrentCamera();
             }
-
-            return false;
+            await Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                AvailableCameras = new(cameras);
+                if (camera != null)
+                {
+                    SelectedCamera = camera;
+                }
+            });
         }
 
         private async Task PlayCamera()
         {
             var fpsMs = MilisecondsInSecond / DefaultFps;
-            var firstImage = true;
             try
             {
                 while (true)

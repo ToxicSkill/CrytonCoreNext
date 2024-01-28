@@ -8,7 +8,9 @@
            d:DataContext="{d:DesignInstance Type=viewmodels:CameraViewModel}"
            mc:Ignorable="d"
            d:DesignHeight="1080"
-           d:DesignWidth="1920">
+           d:DesignWidth="1920"
+           Loaded="UiPage_Loaded"
+           Unloaded="UiPage_Unloaded">
 
     <Grid>
         <Grid Grid.Row="1"
