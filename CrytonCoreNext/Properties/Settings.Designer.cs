@@ -118,5 +118,77 @@ namespace CrytonCoreNext.Properties {
                 this["FirstRun"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Sender {
+            get {
+                return ((string)(this["Sender"]));
+            }
+            set {
+                this["Sender"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Recipient {
+            get {
+                return ((string)(this["Recipient"]));
+            }
+            set {
+                this["Recipient"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SenderPassword {
+            get {
+                return ((string)(this["SenderPassword"]));
+            }
+            set {
+                this["SenderPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SenderSmtpPort {
+            get {
+                return ((int)(this["SenderSmtpPort"]));
+            }
+            set {
+                this["SenderSmtpPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SmptServer {
+            get {
+                return ((string)(this["SmptServer"]));
+            }
+            set {
+                this["SmptServer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ConnectionStrings {
+            get {
+                return ((string)(this["ConnectionStrings"]));
+            }
+            set {
+                this["ConnectionStrings"] = value;
+            }
+        }
     }
 }

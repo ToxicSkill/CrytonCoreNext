@@ -72,6 +72,14 @@ namespace CrytonCoreNext.ViewModels
                 Content = "AI Viewer",
                 PageType = typeof(AIViewerView)
             });
+            MenuItems.Add(new NavigationItem()
+            {
+                Icon = SymbolRegular.CameraDome20,
+                PageTag = "camera",
+                Cache = true,
+                Content = "AI Camera",
+                PageType = typeof(CameraView)
+            });
             FooterItems.Add(new NavigationSeparator());
             FooterItems.Add(new NavigationItem()
             {

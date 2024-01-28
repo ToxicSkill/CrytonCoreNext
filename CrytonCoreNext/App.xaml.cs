@@ -89,6 +89,10 @@ namespace CrytonCoreNext
             services.AddScoped<AIViewerView>();
             services.AddScoped<AIViewerViewModel>();
 
+            services.AddSingleton<ICameraService, CameraService>();
+            services.AddScoped<CameraView>();
+            services.AddScoped<CameraViewModel>();
+
             services.AddScoped<Dashboard>();
             services.AddScoped<DashboardViewModel>();
 
