@@ -4,6 +4,7 @@
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:c="clr-namespace:CrytonCoreNext.Converters"
            xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
            d:DataContext="{d:DesignInstance Type=viewmodels:CameraViewModel}"
            mc:Ignorable="d"
@@ -12,9 +13,15 @@
            Loaded="UiPage_Loaded"
            Unloaded="UiPage_Unloaded">
 
+    <ui:UiPage.Resources>
+        <ResourceDictionary>
+            <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
+            <c:CollectionToVisibilityInversionConverter x:Key="CollectionToVisibilityInversionConverter" />
+        </ResourceDictionary>
+    </ui:UiPage.Resources>
     <Grid>
-        <Grid Grid.Row="1"
-              Margin="15,15,15,15">
+        <Grid Grid.Row="1" Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Margin="15,15,15,15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300" />
                 <ColumnDefinition Width="*" />
@@ -295,6 +302,55 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </Grid>
+        </Grid>
+        <Grid Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <Frame x:Name="Background" />
+            <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                <TextBlock Grid.Column="1"
+                           FontSize="84"
+                           Text="AI Camera"
+                           FontFamily="Candara Light" />
+                <TextBlock Grid.Column="1"
+                           HorizontalAlignment="Center"
+                           FontSize="22"
+                           Text="Catch the moment"
+                           FontWeight="UltraLight"
+                           FontFamily="Candara Light" />
+            </StackPanel>
+
+            <TextBlock VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="510,120,0,0"
+                       Cursor="Hand"
+                       Width="80"
+                       Height="80"
+                       FontSize="14"
+                       ToolTip="Scan camras" 
+                       Text="Scan"/>
+            <ui:Button VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="460,0,0,0"
+                       Cursor="Hand"
+                       Width="80"
+                       Height="80"
+                       Icon="Radar20"
+                       FontSize="54"
+                       ToolTip="Scan camras" 
+                       Command="{Binding LoadImagesCommand}" />
+            <StackPanel VerticalAlignment="Bottom"
+                        HorizontalAlignment="Left"
+                        Margin="20">
+                <TextBlock FontSize="{StaticResource G_NormalFontSize}"
+                           FontWeight="UltraLight"
+                           Text="Learn more" />
+                <ui:Hyperlink Margin="8,8,0,0"
+                              Padding="4"
+                              Content="GitHub"
+                              Icon="Empty"
+                              NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
+                              ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
+            </StackPanel>
         </Grid>
     </Grid>
 </ui:UiPage>

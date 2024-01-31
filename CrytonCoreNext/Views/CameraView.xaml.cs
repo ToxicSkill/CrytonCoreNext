@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.ViewModels;
+﻿using CrytonCoreNext.BackgroundUI;
+using CrytonCoreNext.ViewModels;
 using System.Threading.Tasks;
 using Wpf.Ui.Common.Interfaces;
 
@@ -17,11 +18,12 @@ namespace CrytonCoreNext.Views
             ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;
+            Background.Content = new FluentWaves();
         }
 
         private void UiPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            Task.Run(ViewModel.OnLoaded);
+            //Task.Run(ViewModel.OnLoaded);
         }
 
         private void UiPage_Unloaded(object sender, System.Windows.RoutedEventArgs e)

@@ -61,6 +61,7 @@ namespace CrytonCoreNext.ViewModels
             _cameraService = cameraService;
             _cancellationToken = new CancellationTokenSource();
             _fpsQueue = new Queue<int>();
+            AvailableCameras = new();
         }
 
         partial void OnRunCameraChanged(bool value)
