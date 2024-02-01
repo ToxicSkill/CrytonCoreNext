@@ -318,26 +318,17 @@
                            FontWeight="UltraLight"
                            FontFamily="Candara Light" />
             </StackPanel>
-
-            <TextBlock VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       Margin="510,120,0,0"
-                       Cursor="Hand"
-                       Width="80"
-                       Height="80"
-                       FontSize="14"
-                       ToolTip="Scan camras" 
-                       Text="Scan"/>
+ 
             <ui:Button VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Margin="460,0,0,0"
                        Cursor="Hand"
                        Width="80"
                        Height="80"
-                       Icon="Radar20"
+                       Icon="Sparkle20"
                        FontSize="54"
-                       ToolTip="Scan camras" 
-                       Command="{Binding LoadImagesCommand}" />
+                       ToolTip="Create connection" 
+                       Command="{Binding ScanCamerasCommand}" />
             <StackPanel VerticalAlignment="Bottom"
                         HorizontalAlignment="Left"
                         Margin="20">

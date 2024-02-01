@@ -1,13 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using OpenCvSharp.WpfExtensions;
+using RtspClientSharp;
+using RtspClientSharp.RawFrames;
+using RtspClientSharp.RawFrames.Audio;
+using RtspClientSharp.RawFrames.Video;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -188,6 +194,38 @@ namespace CrytonCoreNext.ViewModels
         private void RestartCancelToken()
         {
             _cancellationToken = new CancellationTokenSource();
+        }
+
+        [RelayCommand]
+        private async Task ScanCameras()
+        {
+            var serverUri = new Uri("rtsp://192.168.1.77:554/ucast/11");
+            var credentials = new NetworkCredential("admin", "123456");
+            var connectionParameters = new ConnectionParameters(serverUri, credentials)
+            {
+                RtpTransport = RtpTransportProtocol.TCP
+            };
+            using var rtspClient = new RtspClient(connectionParameters);
+            rtspClient.FrameReceived += ReceiveFrame;
+            var token = new CancellationTokenSource().Token;
+            await rtspClient.ConnectAsync(token);
+            await rtspClient.ReceiveAsync(token);
+        }
+
+        private void ReceiveFrame(object? sender, RawFrame frame)
+        {
+            switch (frame)
+            {
+                case RawH264IFrame h264IFrame:
+                case RawH264PFrame h264PFrame:
+                case RawJpegFrame jpegFrame:
+                case RawAACFrame aacFrame:
+                case RawG711AFrame g711AFrame:
+                case RawG711UFrame g711UFrame:
+                case RawPCMFrame pcmFrame:
+                case RawG726Frame g726Frame:
+                    break;
+            }
         }
     }
 }
