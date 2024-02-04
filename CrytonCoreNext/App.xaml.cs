@@ -90,8 +90,8 @@ namespace CrytonCoreNext
             services.AddScoped<AIViewerViewModel>();
 
             services.AddSingleton<ICameraService, CameraService>();
+            services.AddSingleton<CameraViewModel>();
             services.AddScoped<CameraView>();
-            services.AddScoped<CameraViewModel>();
 
             services.AddScoped<Dashboard>();
             services.AddScoped<DashboardViewModel>();
@@ -122,6 +122,11 @@ namespace CrytonCoreNext
         {
             await _host.StartAsync();
             await Task.Delay(200);
+            ConfigureServices();
+        }
+
+        private static void ConfigureServices()
+        {
             var mw = _host.Services.GetService<MainViewModel>();
             var sw = _host.Services.GetService<SettingsViewModel>();
             if (sw != null && mw != null)
@@ -131,6 +136,8 @@ namespace CrytonCoreNext
             var pv = _host.Services.GetService<PdfView>();
             var cv = _host.Services.GetService<CryptingView>();
             var av = _host.Services.GetService<AIViewerView>();
+            var camerav = _host.Services.GetService<CameraView>();
+
             sw?.OnStartup();
         }
 

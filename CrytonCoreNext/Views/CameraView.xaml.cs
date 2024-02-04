@@ -7,7 +7,6 @@ namespace CrytonCoreNext.Views
 {
     public partial class CameraView : INavigableView<CameraViewModel>
     {
-
         public CameraViewModel ViewModel
         {
             get;

@@ -56,8 +56,17 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         public bool isThemeStyleAvailable;
 
-        [ObservableProperty]    
+        [ObservableProperty]
         public int pdfDpiValue;
+
+        [ObservableProperty]
+        private string connectionStrings;
+
+        [ObservableProperty]
+        private string flipVertically;
+
+        [ObservableProperty]
+        private string flipHorizontally;
 
         public bool MembersInitialized { get => TreeViewItemSource.Any(); }
 
@@ -69,8 +78,10 @@ namespace CrytonCoreNext.ViewModels
 
             TreeViewItemSource = [];
 
+            ConnectionStrings = Properties.Settings.Default.ConnectionStrings;
+
             InitializeThemes();
-            InitializeSettings(); 
+            InitializeSettings();
         }
 
         public void OnStartup()
@@ -234,6 +245,13 @@ namespace CrytonCoreNext.ViewModels
         private void HandleHoveredPicureClicked()
         {
             IsThemeSwitchChecked = !IsThemeSwitchChecked;
+        }
+
+        [RelayCommand]
+        private void OkConnectionStrings()
+        {
+            Properties.Settings.Default.ConnectionStrings = ConnectionStrings;
+            SetSettings();
         }
     }
 }

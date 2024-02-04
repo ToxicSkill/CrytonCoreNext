@@ -25,7 +25,7 @@ namespace CrytonCoreNext.Models
         }
     }
 
-    public partial class Camera(string name, VideoCapture videoCapture) : ObservableObject
+    public partial class Camera : ObservableObject
     {
         [ObservableProperty]
         public ECameraType cameraType;
@@ -37,10 +37,10 @@ namespace CrytonCoreNext.Models
         public WriteableBitmap imageSource;
 
         [ObservableProperty]
-        public string name = name;
+        public string name;
 
         [ObservableProperty]
-        public double fps = videoCapture.Fps;
+        public double fps;
 
         [ObservableProperty]
         public double currentFps;
@@ -51,6 +51,16 @@ namespace CrytonCoreNext.Models
         [ObservableProperty]
         public ObservableQueue<CameraDetection> cameraDetectionsQueue = [];
 
-        public VideoCapture VideoCapture { get; init; } = videoCapture;
+        public VideoCapture VideoCapture { get; init; }
+
+        public Camera(string name, VideoCapture videoCapture)
+        {
+            VideoCapture = videoCapture;
+            Name = name;
+            if (VideoCapture != null)
+            {
+                Fps = VideoCapture.Fps;
+            }
+        }
     }
 }

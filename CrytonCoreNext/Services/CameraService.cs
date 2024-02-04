@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.Services
@@ -18,6 +19,8 @@ namespace CrytonCoreNext.Services
 
     public class CameraService : ICameraService
     {
+        private readonly Mat _defaultWMat = new Mat(new Size(1, 1), MatType.CV_8UC1);
+
         private readonly WriteableBitmap _defaultWriteableBitmap = new Mat(new Size(1, 1), MatType.CV_8UC1).ToWriteableBitmap();
 
         private readonly List<string> _connectionStrings;
@@ -34,9 +37,7 @@ namespace CrytonCoreNext.Services
         {
             _connectionStrings = GetConnectionStrings();
             _cameras = [];
-            GetAllConnectedCameras();
-            _videoCapture = new VideoCapture();
-            SetCurrentCamera(_cameras?.Count > 0 ? _cameras.First() : null);
+            _videoCapture = new();
         }
 
         public string GetCurrentCameraName()
@@ -75,7 +76,11 @@ namespace CrytonCoreNext.Services
 
         public Mat GetLastCameraFrame()
         {
-            return _image;
+            if (!_image.Empty())
+            {
+                return _image;
+            }
+            return _defaultWMat;
         }
 
         public WriteableBitmap GetLastCameraFrameAsWriteableBitmap()
@@ -121,7 +126,7 @@ namespace CrytonCoreNext.Services
             camera.ImageSourceSize = $"{camera.VideoCapture.FrameWidth}x{camera.VideoCapture.FrameHeight}";
         }
 
-        private void GetAllConnectedCameras()
+        public async Task GetAllConnectedCameras()
         {
             _cameras = [];
             var cameraIndex = 0;
@@ -136,10 +141,17 @@ namespace CrytonCoreNext.Services
             }
             foreach (var connectionString in GetConnectionStrings())
             {
-                var videoCapture = new VideoCapture(connectionString);
-                if (videoCapture.IsOpened())
+                if (await Task.Run(() =>
                 {
-                    _cameras.Add(new Camera(videoCapture.GetBackendName(), videoCapture));
+                    var videoCapture = new VideoCapture(connectionString);
+                    if (videoCapture.IsOpened())
+                    {
+                        return true;
+                    }
+                    return false;
+                }))
+                {
+                    _cameras.Add(new Camera(connectionString, null));
                 }
             }
         }

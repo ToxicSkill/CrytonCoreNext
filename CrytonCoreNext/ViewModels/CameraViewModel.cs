@@ -4,19 +4,13 @@ using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
 using OpenCvSharp.WpfExtensions;
-using RtspClientSharp;
-using RtspClientSharp.RawFrames;
-using RtspClientSharp.RawFrames.Audio;
-using RtspClientSharp.RawFrames.Video;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Threading;
 using Wpf.Ui.Mvvm.Contracts;
 
@@ -59,6 +53,9 @@ namespace CrytonCoreNext.ViewModels
 
         [ObservableProperty]
         private int scoreThreshold = DefaultScoreThreshold;
+
+        [ObservableProperty]
+        private bool scanInProgress;
 
         public CameraViewModel(IYoloModelService yoloModelService, ICameraService cameraService, ISnackbarService snackbarService)
         {
@@ -118,25 +115,6 @@ namespace CrytonCoreNext.ViewModels
             RunCamera = false;
         }
 
-        internal async Task OnLoaded()
-        {
-            var cameras = _cameraService.GetAllCameras();
-            Camera? camera = null;
-            if (_cameraService.IsCameraOpen())
-            {
-                _cameraService.SetBufferSize(0);
-                camera = _cameraService.GetCurrentCamera();
-            }
-            await Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                AvailableCameras = new(cameras);
-                if (camera != null)
-                {
-                    SelectedCamera = camera;
-                }
-            });
-        }
-
         private async Task PlayCamera()
         {
             var fpsMs = MilisecondsInSecond / DefaultFps;
@@ -146,7 +124,7 @@ namespace CrytonCoreNext.ViewModels
                 {
                     _cancellationToken.Token.ThrowIfCancellationRequested();
                     var timestamp = Stopwatch.GetTimestamp();
-                    await Application.Current.Dispatcher.BeginInvoke(() =>
+                    await App.Current.Dispatcher.BeginInvoke(() =>
                     {
                         if (RunCamera)
                         {
@@ -199,33 +177,25 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private async Task ScanCameras()
         {
-            var serverUri = new Uri("rtsp://192.168.1.77:554/ucast/11");
-            var credentials = new NetworkCredential("admin", "123456");
-            var connectionParameters = new ConnectionParameters(serverUri, credentials)
+            ScanInProgress = true;
+            await _cameraService.GetAllConnectedCameras();
+            var cameras = _cameraService.GetAllCameras();
+            Camera? camera = null;
+            if (_cameraService.IsCameraOpen())
             {
-                RtpTransport = RtpTransportProtocol.TCP
-            };
-            using var rtspClient = new RtspClient(connectionParameters);
-            rtspClient.FrameReceived += ReceiveFrame;
-            var token = new CancellationTokenSource().Token;
-            await rtspClient.ConnectAsync(token);
-            await rtspClient.ReceiveAsync(token);
-        }
-
-        private void ReceiveFrame(object? sender, RawFrame frame)
-        {
-            switch (frame)
-            {
-                case RawH264IFrame h264IFrame:
-                case RawH264PFrame h264PFrame:
-                case RawJpegFrame jpegFrame:
-                case RawAACFrame aacFrame:
-                case RawG711AFrame g711AFrame:
-                case RawG711UFrame g711UFrame:
-                case RawPCMFrame pcmFrame:
-                case RawG726Frame g726Frame:
-                    break;
+                _cameraService.SetBufferSize(0);
+                camera = _cameraService.GetCurrentCamera();
             }
+            await App.Current.Dispatcher.BeginInvoke(() =>
+            {
+                AvailableCameras = new(cameras);
+                if (camera != null)
+                {
+                    SelectedCamera = camera;
+                }
+            });
+            _cameraService.SetCurrentCamera(AvailableCameras?.Count > 0 ? AvailableCameras.First() : null);
+            ScanInProgress = false;
         }
     }
 }

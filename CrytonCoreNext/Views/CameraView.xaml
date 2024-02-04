@@ -17,11 +17,18 @@
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
             <c:CollectionToVisibilityInversionConverter x:Key="CollectionToVisibilityInversionConverter" />
+            <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
         </ResourceDictionary>
     </ui:UiPage.Resources>
     <Grid>
-        <Grid Grid.Row="1" Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            Margin="15,15,15,15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="29*" />
+            <RowDefinition Height="25*" />
+        </Grid.RowDefinitions>
+        <Grid Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+              Margin="15,15,15,15"
+              Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300" />
                 <ColumnDefinition Width="*" />
@@ -61,7 +68,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Grid.ColumnDefinitions> 
+                                <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
@@ -117,80 +124,78 @@
                                      IsEnabled="{Binding RunCamera, Mode=TwoWay}"
                                      IsChecked="{Binding RunDetection, Mode=TwoWay}" />
                 </Grid>
-            <Grid Grid.Row="3">
+                <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" /> 
                         <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>  
-                        <Grid.RowDefinitions> 
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                        </Grid.RowDefinitions>
-                       
-                        <TextBlock Grid.Row="0"
-                                   Margin="5,0"
-                                   Opacity="0.6"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Center"
-                                   Text="Frame Rate:"
-                                   FontSize="20"
-                                   FontWeight="Thin"
-                                    />
-                        <TextBlock Grid.Row="1"
-                                   Margin="5,0"
-                                   Opacity="0.6"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Center"
-                                   Text="Resolution:"
-                                   FontSize="20"
-                                   FontWeight="Thin"
-                                     />
-                        <TextBlock Grid.Row="2"
-                                   Margin="5,0"
-                                   Opacity="0.6"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Center"
-                                   Text="Yolo type:"
-                                   FontSize="20"
-                                   FontWeight="Thin" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
 
-                        <StackPanel Grid.Row="0"
-                                    Grid.Column="2"
-                                    Margin="5,0"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Orientation="Horizontal">
-                            <TextBlock HorizontalAlignment="Center"
+                    <TextBlock Grid.Row="0"
+                               Margin="5,0"
+                               Opacity="0.6"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="Frame Rate:"
+                               FontSize="20"
+                               FontWeight="Thin" />
+                    <TextBlock Grid.Row="1"
+                               Margin="5,0"
+                               Opacity="0.6"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="Resolution:"
+                               FontSize="20"
+                               FontWeight="Thin" />
+                    <TextBlock Grid.Row="2"
+                               Margin="5,0"
+                               Opacity="0.6"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="Yolo type:"
+                               FontSize="20"
+                               FontWeight="Thin" />
+
+                    <StackPanel Grid.Row="0"
+                                Grid.Column="2"
+                                Margin="5,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <TextBlock HorizontalAlignment="Center"
                                    Margin="0,0,4,0"
                                    FontSize="20"
                                    FontWeight="Thin"
                                    Text="{Binding SelectedCamera.CurrentFps}" />
-                            <TextBlock HorizontalAlignment="Center"
-                                       FontSize="20"
-                                       Text="(" />
-                            <TextBlock HorizontalAlignment="Center"
-                                       FontSize="20"
-                                       Text="{Binding SelectedCamera.Fps, FallbackValue=0}" />
-                            <TextBlock HorizontalAlignment="Center"
-                                       FontSize="20"
-                                       Text=")" />
-                        </StackPanel>
-                        <TextBlock Grid.Row="1"
-                                   Grid.Column="2"
-                                   Margin="5,0"
+                        <TextBlock HorizontalAlignment="Center"
                                    FontSize="20"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Center"
-                                   Text="{Binding SelectedCamera.ImageSourceSize}" />
+                                   Text="(" />
+                        <TextBlock HorizontalAlignment="Center"
+                                   FontSize="20"
+                                   Text="{Binding SelectedCamera.Fps, FallbackValue=0}" />
+                        <TextBlock HorizontalAlignment="Center"
+                                   FontSize="20"
+                                   Text=")" />
+                    </StackPanel>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="2"
+                               Margin="5,0"
+                               FontSize="20"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="{Binding SelectedCamera.ImageSourceSize}" />
 
-                        <TextBlock Grid.Row="2"
-                                   Grid.Column="2"
-                                   Margin="5,0"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Center"
-                                   FontSize="20"
-                                   Text="Yolo v7" /> 
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="2"
+                               Margin="5,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               Text="Yolo v7" />
                 </Grid>
             </Grid>
             <Image Grid.Column="1"
@@ -215,20 +220,19 @@
                            HorizontalAlignment="Center"
                            Text="Detections"
                            FontSize="24" />
-                <Grid Grid.Row="1" HorizontalAlignment="Center">
+                <Grid Grid.Row="1"
+                      HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock
-                               HorizontalAlignment="Center"
+                    <TextBlock HorizontalAlignment="Center"
                                Text="Score threshold"
                                FontSize="20"
-                               FontWeight="Thin" 
-                               Margin="5,0"/>
-                    <TextBlock
-                               Grid.Column="1"
+                               FontWeight="Thin"
+                               Margin="5,0" />
+                    <TextBlock Grid.Column="1"
                                HorizontalAlignment="Center"
                                Text="{Binding ScoreThreshold}"
                                FontSize="20"
@@ -247,17 +251,17 @@
                         IsSnapToTickEnabled="True"
                         TickFrequency="10"
                         Minimum="10"
-                        Maximum="90" 
+                        Maximum="90"
                         Value="{Binding ScoreThreshold, Mode=TwoWay}"
-                           HorizontalAlignment="Stretch" 
-                           FontSize="20"
-                           FontWeight="Thin" />
+                        HorizontalAlignment="Stretch"
+                        FontSize="20"
+                        FontWeight="Thin" />
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" 
+                    <TextBlock Grid.Column="0"
                                HorizontalAlignment="Center"
                                Text="Label"
                                FontSize="20"
@@ -303,7 +307,8 @@
                 </ListView>
             </Grid>
         </Grid>
-        <Grid Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <Grid Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+              Grid.RowSpan="2">
             <Frame x:Name="Background" />
             <StackPanel VerticalAlignment="Center"
                         HorizontalAlignment="Center">
@@ -318,7 +323,11 @@
                            FontWeight="UltraLight"
                            FontFamily="Candara Light" />
             </StackPanel>
- 
+            <ui:ProgressRing VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             Margin="620,0,0,0"
+                             IsIndeterminate="True"
+                             Visibility="{Binding ScanInProgress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}"/>
             <ui:Button VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Margin="460,0,0,0"
@@ -327,7 +336,8 @@
                        Height="80"
                        Icon="Sparkle20"
                        FontSize="54"
-                       ToolTip="Create connection" 
+                       ToolTip="Create connection"
+                       IsEnabled="{Binding ScanInProgress, Converter={StaticResource BoolToVisibilityInversionConverter}}"
                        Command="{Binding ScanCamerasCommand}" />
             <StackPanel VerticalAlignment="Bottom"
                         HorizontalAlignment="Left"

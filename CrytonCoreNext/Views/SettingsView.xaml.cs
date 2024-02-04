@@ -57,10 +57,7 @@ namespace CrytonCoreNext.Views
                 return;
             }
             _firstHeaderHeight = firstHeader.ActualHeight;
-            _symbolBySymbolWithHeader.Add(SymbolRegular.DarkTheme20, SymbolRegular.Eye20);
-            _symbolBySymbolWithHeader.Add(SymbolRegular.LocalLanguage20, SymbolRegular.ReadAloud20);
-            _symbolBySymbolWithHeader.Add(SymbolRegular.StarSettings20, SymbolRegular.Rocket20);
-            _symbolBySymbolWithHeader.Add(SymbolRegular.PreviewLink20, SymbolRegular.DocumentPdf20);
+            LoadHeadersSymbols();
             var headers = FindVisualChilds<TextBlock>(stackPanel, false).ToList();
             foreach (var cardControl in FindVisualChilds<CardControl>(stackPanel, false))
             {
@@ -68,7 +65,16 @@ namespace CrytonCoreNext.Views
                 var headerText = hasHeader ? headers[_symbolBySymbolWithHeader.Keys.ToList().IndexOf(cardControl.Icon)].Text : "";
                 var symbol = hasHeader ? _symbolBySymbolWithHeader[cardControl.Icon] : cardControl.Icon;
                 ViewModel.RegisterNewUiNavigableElement(cardControl, hasHeader, _firstHeaderHeight, headerText, symbol);
-            } 
+            }
+        }
+
+        private void LoadHeadersSymbols()
+        {
+            _symbolBySymbolWithHeader.Add(SymbolRegular.DarkTheme20, SymbolRegular.Eye20);
+            _symbolBySymbolWithHeader.Add(SymbolRegular.LocalLanguage20, SymbolRegular.ReadAloud20);
+            _symbolBySymbolWithHeader.Add(SymbolRegular.StarSettings20, SymbolRegular.Rocket20);
+            _symbolBySymbolWithHeader.Add(SymbolRegular.PreviewLink20, SymbolRegular.DocumentPdf20);
+            _symbolBySymbolWithHeader.Add(SymbolRegular.Connector20, SymbolRegular.CameraDome20);
         }
 
         private void stackPanel_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)

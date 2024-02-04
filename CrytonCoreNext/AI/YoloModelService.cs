@@ -14,14 +14,21 @@ namespace CrytonCoreNext.AI
 {
     public class YoloModelService : IYoloModelService
     {
+        private const string YoloModelONNXPath = "AI/YoloModels/yolov7-tiny.onnx";
+
         private const int MaxSizeOfDetectionQueue = 10;
 
         private YoloV7 _yolov7;
 
-        public bool LoadYoloModel(string path, bool useCUDA = false)
+        public YoloModelService()
         {
-            _yolov7 = new YoloV7(path, useCUDA);
-            return _yolov7 != null;
+            LoadYoloModel();
+            LoadLabels();
+        }
+
+        public void LoadYoloModel(bool useCUDA = false)
+        {
+            _yolov7 = new YoloV7(YoloModelONNXPath, useCUDA);
         }
 
         public void LoadLabels(string pathToLabelsFile = "")

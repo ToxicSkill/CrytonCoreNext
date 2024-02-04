@@ -1,12 +1,15 @@
 ﻿using CrytonCoreNext.Models;
 using OpenCvSharp;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Interfaces
 {
     public interface ICameraService
     {
         string GetCurrentCameraName();
+
+        Task GetAllConnectedCameras();
 
         List<Camera> GetAllCameras();
 

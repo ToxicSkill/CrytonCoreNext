@@ -65,20 +65,18 @@ namespace CrytonCoreNext.ViewModels
         public int imageCompareSliderValue = DefaultCompareSliderValue;
 
         public AIViewerViewModel(
-            IYoloModelService yoloModelService, 
-            PdfViewModel pdfViewModel, 
-            INavigationService navigationService, 
+            IYoloModelService yoloModelService,
+            PdfViewModel pdfViewModel,
+            INavigationService navigationService,
             ImageDrawer drawer,
             DialogService dialogService)
         {
             _pdfViewModel = pdfViewModel;
-            _navigationService = navigationService; 
+            _navigationService = navigationService;
             _imageDrawer = drawer;
             _dialogService = dialogService;
             DetectedCurrentImages = [];
             _yoloModelService = yoloModelService;
-            _yoloModelService.LoadYoloModel();
-            _yoloModelService.LoadLabels();
             Images = [];
             NavigationItems =
             [
@@ -97,10 +95,10 @@ namespace CrytonCoreNext.ViewModels
         {
             if (_pdfViewModel.ExportImageToPDF(
                 new Models.File(
-                    SelectedImage.Path, 
-                    DateTime.Now, 
+                    SelectedImage.Path,
+                    DateTime.Now,
                     EImageExtensions.png.ToString(),
-                    0, SelectedImage.AdjusterImage.ToMat().ToBytes()), 
+                    0, SelectedImage.AdjusterImage.ToMat().ToBytes()),
                 SelectedImage.AdjusterImage.ToMat()))
             {
                 _navigationService.Navigate(typeof(PdfView));
@@ -112,7 +110,7 @@ namespace CrytonCoreNext.ViewModels
         {
             var index = Images.IndexOf(SelectedImage);
             Images = new(Images.Except(new List<AIImage>() { SelectedImage }));
-            if (index > 0) 
+            if (index > 0)
             {
                 SelectedImage = Images[index - 1];
             }
