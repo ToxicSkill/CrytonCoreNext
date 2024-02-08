@@ -63,7 +63,15 @@ namespace CrytonCoreNext.Services
             }
 
             _currentCameraIndex = _cameras.IndexOf(camera);
-            _videoCapture = _cameras[_currentCameraIndex].VideoCapture;
+            if (string.IsNullOrEmpty(camera.VideoCaptureConnectionString))
+            {
+                camera.VideoCapture = new VideoCapture(camera.VideoCaptureConnectionIndex);
+            }
+            else
+            {
+                camera.VideoCapture = new VideoCapture(camera.VideoCaptureConnectionString);
+            }
+            _videoCapture = camera.VideoCapture;
         }
 
         public void GrabCameraFrame()
@@ -130,29 +138,50 @@ namespace CrytonCoreNext.Services
         {
             _cameras = [];
             var cameraIndex = 0;
-            foreach (var cameraName in GetConnectedPnPCameras())
+            var pnpCamerasCount = 0;
+            var hasConnectionString = false;
+            var camerasName = GetConnectedPnPCameras();
+            pnpCamerasCount = camerasName.Count;
+            camerasName.AddRange(GetConnectionStrings());
+            foreach (var connectionString in camerasName)
             {
-                var videoCapture = new VideoCapture(cameraIndex);
-                if (videoCapture.IsOpened())
-                {
-                    _cameras.Add(new Camera(cameraName, videoCapture));
-                    cameraIndex++;
-                }
-            }
-            foreach (var connectionString in GetConnectionStrings())
-            {
+                var fps = 0;
+                var name = "";
                 if (await Task.Run(() =>
                 {
-                    var videoCapture = new VideoCapture(connectionString);
-                    if (videoCapture.IsOpened())
+                    VideoCapture? videoCapture = null;
+                    if (cameraIndex == pnpCamerasCount)
                     {
-                        return true;
+                        videoCapture = new VideoCapture(connectionString);
+                        hasConnectionString = true;
+                    }
+                    else
+                    {
+                        videoCapture = new VideoCapture(cameraIndex);
+                        hasConnectionString = false;
+                    }
+                    if (videoCapture != null)
+                    {
+                        if (videoCapture.IsOpened())
+                        {
+                            name = videoCapture.GetBackendName();
+                            fps = (int)videoCapture.Fps;
+                            return true;
+                        }
                     }
                     return false;
                 }))
                 {
-                    _cameras.Add(new Camera(connectionString, null));
+                    if (hasConnectionString)
+                    {
+                        _cameras.Add(new Camera(name, connectionString, fps));
+                    }
+                    else
+                    {
+                        _cameras.Add(new Camera(name, cameraIndex, fps));
+                    }
                 }
+                cameraIndex++;
             }
         }
 

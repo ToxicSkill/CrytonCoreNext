@@ -194,7 +194,6 @@ namespace CrytonCoreNext.ViewModels
                     SelectedCamera = camera;
                 }
             });
-            _cameraService.SetCurrentCamera(AvailableCameras?.Count > 0 ? AvailableCameras.First() : null);
             ScanInProgress = false;
         }
     }

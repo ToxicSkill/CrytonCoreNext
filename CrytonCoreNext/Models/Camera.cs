@@ -51,16 +51,24 @@ namespace CrytonCoreNext.Models
         [ObservableProperty]
         public ObservableQueue<CameraDetection> cameraDetectionsQueue = [];
 
-        public VideoCapture VideoCapture { get; init; }
+        public VideoCapture VideoCapture { get; set; }
 
-        public Camera(string name, VideoCapture videoCapture)
+        public string VideoCaptureConnectionString { get; set; }
+
+        public int VideoCaptureConnectionIndex { get; set; }
+
+        public Camera(string name, string connectionString, int fps)
         {
-            VideoCapture = videoCapture;
+            VideoCaptureConnectionString = connectionString;
             Name = name;
-            if (VideoCapture != null)
-            {
-                Fps = VideoCapture.Fps;
-            }
+            Fps = fps;
+        }
+
+        public Camera(string name, int connectionIndex, int fps)
+        {
+            VideoCaptureConnectionIndex = connectionIndex;
+            Name = name;
+            Fps = fps;
         }
     }
 }
