@@ -3,7 +3,7 @@ using CrytonCoreNext.Extensions;
 using CrytonCoreNext.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.Views
 {

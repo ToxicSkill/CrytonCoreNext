@@ -1,4 +1,4 @@
-﻿<ui:UiPage x:Class="CrytonCoreNext.Views.CameraView"
+﻿<Page x:Class="CrytonCoreNext.Views.CameraView"
            xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,14 +13,14 @@
            Loaded="UiPage_Loaded"
            Unloaded="UiPage_Unloaded">
 
-    <ui:UiPage.Resources>
+    <Page.Resources>
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
             <c:CollectionToVisibilityInversionConverter x:Key="CollectionToVisibilityInversionConverter" />
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
         </ResourceDictionary>
-    </ui:UiPage.Resources>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="29*" />
@@ -345,7 +345,7 @@
                 <TextBlock FontSize="{StaticResource G_NormalFontSize}"
                            FontWeight="UltraLight"
                            Text="Learn more" />
-                <ui:Hyperlink Margin="8,8,0,0"
+                <ui:HyperlinkButton Margin="8,8,0,0"
                               Padding="4"
                               Content="GitHub"
                               Icon="Empty"
@@ -354,4 +354,4 @@
             </StackPanel>
         </Grid>
     </Grid>
-</ui:UiPage>
+</Page>

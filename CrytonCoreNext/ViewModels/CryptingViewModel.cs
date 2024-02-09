@@ -16,7 +16,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using Wpf.Ui.Mvvm.Contracts; 
+using Wpf.Ui;
+
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -114,13 +115,13 @@ namespace CrytonCoreNext.ViewModels
                 var aEndValue = 255;
                 var bStep = (bEndValue - bStartValue) / 6;
                 var gStep = (gEndValue - gStartValue) / 6;
-                var rStep = (rEndValue - rStartValue) / 6; 
+                var rStep = (rEndValue - rStartValue) / 6;
                 GradientColorMat = ColorGradientGenerator.GenerateGradient(
                     new OpenCvSharp.Size(400, 20),
                     new OpenCvSharp.Scalar(
-                        bStartValue, 
-                        gStartValue, 
-                        rStartValue, 
+                        bStartValue,
+                        gStartValue,
+                        rStartValue,
                         aStartValue),
                     new OpenCvSharp.Scalar(
                         bStartValue + (bStep * (int)PasswordStrenght),
@@ -129,7 +130,7 @@ namespace CrytonCoreNext.ViewModels
                         aEndValue));
             }
             FilePassword = newFilePassword;
-        } 
+        }
 
         [RelayCommand]
         private void ClearFiles()
@@ -188,7 +189,7 @@ namespace CrytonCoreNext.ViewModels
         {
             Lock();
             if (
-                !_fileService.HasBytes(SelectedFile) || 
+                !_fileService.HasBytes(SelectedFile) ||
                 !_passwordProvider.ValidatePassword() ||
                 !_cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
             {
@@ -202,7 +203,7 @@ namespace CrytonCoreNext.ViewModels
             if (!result.Equals(Array.Empty<byte>()) && Files.Any())
             {
                 _cryptingService.ModifyFile(SelectedFile, result, _cryptingService.GetOpositeStatus(SelectedFile.Status), SelectedCryptingView.ViewModel.Crypting.Method);
-                SelectedFile.Recognition.SetKeys(((ICryptingViewModel)SelectedCryptingView.ViewModel).ExportObjects()); 
+                SelectedFile.Recognition.SetKeys(((ICryptingViewModel)SelectedCryptingView.ViewModel).ExportObjects());
                 UpdateStateOfSelectedFile();
                 PostSuccessSnackbar(Language.Post("Success"));
             }

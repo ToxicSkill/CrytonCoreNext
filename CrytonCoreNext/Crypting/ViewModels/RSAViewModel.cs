@@ -4,11 +4,14 @@ using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces.Serializers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Media;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
+
 
 namespace CrytonCoreNext.Crypting.ViewModels
 {
@@ -141,7 +144,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
                 },
                 Name = PageName
             };
-            return Encoding.ASCII.GetBytes(_jsonSerializer.Serialize(serialzieObjects)); 
+            return Encoding.ASCII.GetBytes(_jsonSerializer.Serialize(serialzieObjects));
         }
 
         public bool ImportObjects(string str)
@@ -152,7 +155,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
                 var castedObjects = (Objects)objects;
                 if (castedObjects.Name != PageName)
                 {
-                    _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
+                    _snackbarService.Show(Language.Post("Error"), Language.Post("IncorrectFile"), ControlAppearance.Danger, new SymbolIcon(SymbolRegular.ErrorCircle20), TimeSpan.FromSeconds(2));
                     return false;
                 }
                 else
@@ -160,7 +163,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
                     _rsaHelper.FromXmlString(castedObjects.ToSerialzie.Keys);
                     selectedKeySize = castedObjects.ToSerialzie.SelectedKeySize;
                     UpdateKeys();
-                    _snackbarService.Show(Language.Post("Information"), Language.Post("Imported"), Wpf.Ui.Common.SymbolRegular.Check20, Wpf.Ui.Common.ControlAppearance.Info);
+                    _snackbarService.Show(Language.Post("Information"), Language.Post("Imported"), ControlAppearance.Info, new SymbolIcon(SymbolRegular.Check20), TimeSpan.FromSeconds(2));
                     return true;
                 }
             }

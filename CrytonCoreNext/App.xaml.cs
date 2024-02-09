@@ -28,8 +28,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using Wpf.Ui.Mvvm.Contracts;
-using Wpf.Ui.Mvvm.Services;
+using Wpf.Ui;
 using DialogService = CrytonCoreNext.Services.DialogService;
 
 namespace CrytonCoreNext
@@ -47,6 +46,7 @@ namespace CrytonCoreNext
             services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<ICustomPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<IContentDialogService, ContentDialogService>();
             services.AddSingleton<ISnackbarService, SnackbarService>();
             services.AddSingleton<DialogService>();
 
@@ -100,7 +100,7 @@ namespace CrytonCoreNext
             services.AddScoped<SettingsView>();
             services.AddScoped<SettingsViewModel>();
 
-            services.AddScoped<INavigationWindow, MainWindow>();
+            services.AddScoped<IWindow, MainWindow>();
             services.AddScoped<MainViewModel>();
         }).Build();
 
@@ -130,10 +130,6 @@ namespace CrytonCoreNext
         {
             var mw = _host.Services.GetService<MainViewModel>();
             var sw = _host.Services.GetService<SettingsViewModel>();
-            if (sw != null && mw != null)
-            {
-                sw.ThemeStyleChanged += mw.InvokeThemeChanged;
-            }
             var pv = _host.Services.GetService<PdfView>();
             var cv = _host.Services.GetService<CryptingView>();
             var av = _host.Services.GetService<AIViewerView>();

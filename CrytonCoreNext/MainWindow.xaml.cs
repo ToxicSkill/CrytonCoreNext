@@ -1,90 +1,57 @@
 ﻿using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.ViewModels;
+using CrytonCoreNext.Views;
 using System;
-using System.Diagnostics;
-using System.Windows.Controls;
+using System.Windows;
 using System.Windows.Input;
-using Wpf.Ui.Appearance;
-using Wpf.Ui.Controls.Interfaces;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
+
+
 
 namespace CrytonCoreNext
 {
-    public partial class MainWindow : INavigationWindow
+    public partial class MainWindow : IWindow
     {
         public MainViewModel ViewModel
         {
             get;
         }
 
-        public MainWindow(MainViewModel viewModel,
-            INavigationService navigationService,
-            ICustomPageService pageService,
-            ISnackbarService snackbarService)
+        public MainWindow(
+                    MainViewModel viewModel,
+                    INavigationService navigationService,
+                    IServiceProvider serviceProvider,
+                    ISnackbarService snackbarService,
+                    IContentDialogService contentDialogService)
         {
-            Watcher.Watch(this);
+            Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
+
             ViewModel = viewModel;
-            DataContext = ViewModel;
+            DataContext = this;
+
             InitializeComponent();
 
-            SetPageService(pageService);
-            navigationService.SetNavigationControl(RootNavigation);
-            snackbarService.SetSnackbarControl(RootSnackbar);
+            snackbarService.SetSnackbarPresenter(SnackbarPresenter);
+            navigationService.SetNavigationControl(NavigationView);
+            contentDialogService.SetContentPresenter(RootContentDialog);
 
-            ViewModel.ThemeStyleChanged += SetTheme;
+            NavigationView.SetServiceProvider(serviceProvider);
             LoadSettings();
         }
 
-        public void SetTheme(BackgroundType value = BackgroundType.Mica)
-        {
-            try
-            {
-                this.WindowBackdropType = value;
-            }
-            catch (Exception e)
-            {
-                Trace.WriteLine(e.Message);
-            }
-        }
-
-        public Frame GetFrame()
-            => RootFrame;
-
-        public INavigation GetNavigation()
-            => RootNavigation;
-
-        public bool Navigate(Type pageType)
-            => RootNavigation.Navigate(pageType);
-
-        public void SetPageService(IPageService pageService)
-            => RootNavigation.PageService = pageService;
-
-        public void ShowWindow()
-            => Show();
-
-        public void CloseWindow()
-            => Close();
-
         private void LoadSettings()
         {
-            LoadThemeFromSettings();
             LoadScreenModeFromSettings();
         }
 
+
         private void LoadScreenModeFromSettings()
         {
-            System.Windows.Application.Current.MainWindow.WindowState = 
-                Properties.Settings.Default.FullscreenOnStart ? 
+            System.Windows.Application.Current.MainWindow.WindowState =
+                Properties.Settings.Default.FullscreenOnStart ?
                 System.Windows.WindowState.Maximized :
                 System.Windows.WindowState.Normal;
-        }
-
-        private void LoadThemeFromSettings()
-        {
-            if (Enum.TryParse(Properties.Settings.Default.Style, out BackgroundType backgroundTypeStyle))
-            {
-                SetTheme(backgroundTypeStyle);
-            }
         }
 
         private void SymbolIcon_MouseDown(object sender, MouseButtonEventArgs e)
@@ -106,6 +73,19 @@ namespace CrytonCoreNext
             {
                 this.WindowState = System.Windows.WindowState.Maximized;
             }
+        }
+
+        private void NavigationView_SelectionChanged(NavigationView sender, RoutedEventArgs args)
+        {
+            if (sender is not Wpf.Ui.Controls.NavigationView navigationView)
+            {
+                return;
+            }
+
+            NavigationView.HeaderVisibility =
+                navigationView.SelectedItem?.TargetPageType != typeof(Dashboard)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
         }
     }
 }

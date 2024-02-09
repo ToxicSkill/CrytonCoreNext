@@ -8,10 +8,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
+using Wpf.Ui;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Mvvm.Contracts;
+
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -31,15 +31,15 @@ namespace CrytonCoreNext.ViewModels
 
         private _verticalOffsetScrollUpdateDelegate VerticalOffsetScrollUpdate;
 
-        public delegate void OnThemeStyleChanged(BackgroundType value);
+        public delegate void OnThemeStyleChanged(ApplicationTheme value);
 
         public event OnThemeStyleChanged ThemeStyleChanged;
 
         [ObservableProperty]
-        public ObservableCollection<BackgroundType> themeStylesItemsSource;
+        public ObservableCollection<ApplicationTheme> themeStylesItemsSource;
 
         [ObservableProperty]
-        public BackgroundType selectedThemeStyle;
+        public ApplicationTheme selectedThemeStyle;
 
         [ObservableProperty]
         public ObservableCollection<TreeViewItemModel> treeViewItemSource;
@@ -92,18 +92,17 @@ namespace CrytonCoreNext.ViewModels
             if (Properties.Settings.Default.FirstRun)
             {
                 Properties.Settings.Default.FirstRun = false;
-                SelectedThemeStyle = BackgroundType.Mica;
+                SelectedThemeStyle = ApplicationTheme.Light;
             }
         }
 
         private void InitializeThemes()
         {
-            ThemeStylesItemsSource = new ObservableCollection<BackgroundType>
+            ThemeStylesItemsSource = new ObservableCollection<ApplicationTheme>
                 (
                     [
-                        BackgroundType.Acrylic,
-                        BackgroundType.Mica,
-                        BackgroundType.Tabbed
+                        ApplicationTheme.Light,
+                        ApplicationTheme.Dark
                     ]
                 );
             IsThemeStyleAvailable = WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber;
@@ -112,13 +111,13 @@ namespace CrytonCoreNext.ViewModels
         private void InitializeSettings()
         {
             IsFullscreenOnStart = Properties.Settings.Default.FullscreenOnStart;
-            if (Enum.TryParse(Properties.Settings.Default.Style, out BackgroundType backgroundTypeStyle))
+            if (Enum.TryParse(Properties.Settings.Default.Style, out ApplicationTheme backgroundTypeStyle))
             {
                 SelectedThemeStyle = backgroundTypeStyle;
             }
             else
             {
-                SelectedThemeStyle = BackgroundType.Mica;
+                SelectedThemeStyle = ApplicationTheme.Light;
             }
             IsThemeSwitchChecked = Properties.Settings.Default.Theme;
             PdfDpiValue = Properties.Settings.Default.PdfRenderDpi;
@@ -130,7 +129,7 @@ namespace CrytonCoreNext.ViewModels
             SetSettings();
         }
 
-        partial void OnSelectedThemeStyleChanged(BackgroundType value)
+        partial void OnSelectedThemeStyleChanged(ApplicationTheme value)
         {
             ThemeStyleChanged?.Invoke(value);
             Properties.Settings.Default.Style = value.ToString();
@@ -145,7 +144,7 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnIsThemeSwitchCheckedChanged(bool value)
         {
-            _themeService.SetTheme(value ? ThemeType.Dark : ThemeType.Light);
+            _themeService.SetTheme(value ? ApplicationTheme.Dark : ApplicationTheme.Light);
             Properties.Settings.Default.Theme = value;
             SetSettings();
         }
@@ -181,7 +180,7 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
-        public void RegisterNewUiNavigableElement(CardControl card, bool hasHeader, double headerHeight, string headerTitle, SymbolRegular mainItemSymbol)
+        public void RegisterNewUiNavigableElement(CardControl card, bool hasHeader, double headerHeight, string headerTitle, SymbolRegular? mainItemSymbol)
         {
             _elements.Add(new(card, hasHeader, headerHeight));
             RegisterTreeViewItem(card, hasHeader, headerTitle, mainItemSymbol);
@@ -220,23 +219,26 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
-        private void RegisterTreeViewItem(CardControl card, bool hasHeader, string headerTitle, SymbolRegular mainItemSymbol)
+        private void RegisterTreeViewItem(CardControl card, bool hasHeader, string headerTitle, SymbolRegular? mainItemSymbol)
         {
             if (hasHeader)
             {
                 var newTreeViewItem = new TreeViewItemModel()
                 {
                     Title = headerTitle,
-                    Symbol = mainItemSymbol,
                     IsExpanded = true,
                     Childs = []
                 };
+                if (mainItemSymbol != null)
+                {
+                    newTreeViewItem.Symbol = new SymbolIcon((SymbolRegular)mainItemSymbol);
+                }
                 TreeViewItemSource.Add(newTreeViewItem);
                 _cardByTreeViewItem.Add(newTreeViewItem, card);
             }
             var newSubTreeViewItem = new TreeViewItemModel()
             {
-                Title = ((card.Header as StackPanel)!.Children[0] as TextBlock)!.Text,
+                Title = ((card.Header as StackPanel)!.Children[0] as System.Windows.Controls.TextBlock)!.Text,
                 IsExpanded = true,
                 Symbol = card.Icon
             };

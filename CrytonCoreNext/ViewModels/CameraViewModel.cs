@@ -12,7 +12,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -98,7 +99,7 @@ namespace CrytonCoreNext.ViewModels
             }
             else
             {
-                _snackbarService.Show("Error", "No selected camera", Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
+                _snackbarService.Show("Error", "No selected camera", ControlAppearance.Danger, new SymbolIcon(SymbolRegular.ErrorCircle20), TimeSpan.FromSeconds(2));
                 runCamera = false;
                 return false;
             }

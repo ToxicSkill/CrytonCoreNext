@@ -1,10 +1,10 @@
-﻿using CrytonCoreNext.ViewModels;
-using System.Windows.Controls;
-using System.Windows;
-using Wpf.Ui.Common.Interfaces;
-using CrytonCoreNext.Extensions;
-using CrytonCoreNext.AI.Models;
+﻿using CrytonCoreNext.AI.Models;
 using CrytonCoreNext.BackgroundUI;
+using CrytonCoreNext.Extensions;
+using CrytonCoreNext.ViewModels;
+using System.Windows;
+using System.Windows.Controls;
+using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.Views
 {

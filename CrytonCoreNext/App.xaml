@@ -45,12 +45,7 @@
             <sys:Double x:Key="G_LogoTitleFontSize">54</sys:Double>
             <sys:Double x:Key="G_LogoSubtitleFontSize">16</sys:Double>
             <sys:Double x:Key="G_NormalFontSize">22</sys:Double>
-
-            <Style x:Key="ColoredNavigationStore" TargetType="{x:Type ui:NavigationStore}" BasedOn="{StaticResource {x:Type ui:NavigationStore}}">
-
-                <Setter Property="Background" Value="#66000000" />
-            </Style>
-            
+ 
         </ResourceDictionary>
     </Application.Resources>    
 </Application>

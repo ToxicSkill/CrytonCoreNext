@@ -1,4 +1,4 @@
-﻿<ui:UiPage x:Class="CrytonCoreNext.Views.AIViewerView"
+﻿<Page x:Class="CrytonCoreNext.Views.AIViewerView"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
             mc:Ignorable="d" 
             d:DesignHeight="1080" d:DesignWidth="1920">
-    <ui:UiPage.Resources>
+    <Page.Resources>
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
             <c:CollectionToVisibilityInversionConverter x:Key="CollectionToVisibilityInversionConverter"/>
@@ -18,15 +18,16 @@
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <c:ObjectToVisibility x:Key="ObjectToVisibility"/>
             <ContextMenu x:Key="ImageContextMenu">
-                <ui:MenuItem Header="Delete" SymbolIcon="Delete20" 
+                <ui:MenuItem Header="Delete" Icon="Delete20" 
                  Command="{Binding DeleteImageCommand}"/>
-                <ui:MenuItem Header="Save" SymbolIcon="Save20" 
+                <ui:MenuItem Header="Save" Icon="Save20" 
                  Command="{Binding SaveImageCommand}"/>
-                <ui:MenuItem Header="Export to PDF" SymbolIcon="ArrowExportUp20" 
+                <ui:MenuItem Header="Export to PDF"
+                             Icon="ArrowExportUp20" 
                  Command="{Binding ExportImageToPDFCommand}"/>
             </ContextMenu>
         </ResourceDictionary>
-    </ui:UiPage.Resources>
+    </Page.Resources>
     <Grid>
         <Grid Visibility="{Binding Images, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Grid.ColumnDefinitions>
@@ -264,7 +265,7 @@
                     FontSize="{StaticResource G_NormalFontSize}"
                     FontWeight="UltraLight"
                     Text="Learn more" />
-                <ui:Hyperlink
+                <ui:HyperlinkButton
                     Margin="8,8,0,0"
                     Padding="4"
                     Content="GitHub"
@@ -274,4 +275,4 @@
             </StackPanel>
         </Grid>
     </Grid>
-</ui:UiPage>
+</Page>

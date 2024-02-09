@@ -5,8 +5,9 @@ using CrytonCoreNext.Sound;
 using System;
 using System.Collections.Generic;
 using System.Media;
-using Wpf.Ui.Common;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
+
 
 namespace CrytonCoreNext.Abstract
 {
@@ -14,18 +15,18 @@ namespace CrytonCoreNext.Abstract
     {
         protected void PostSuccessSnackbar(string text)
         {
-            snackbarService.Show("Success", text, SymbolRegular.CheckmarkCircle20, ControlAppearance.Success);
+            snackbarService.Show("Success", text, ControlAppearance.Success, new SymbolIcon(SymbolRegular.CheckmarkCircle20), TimeSpan.FromSeconds(2));
             NotificationPlayer.PlayNotificationSound();
         }
 
         protected void PostErrorSnackbar(string text)
         {
-            snackbarService.Show("Error", text, SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
+            snackbarService.Show("Error", text, ControlAppearance.Danger, new SymbolIcon(SymbolRegular.ErrorCircle20), TimeSpan.FromSeconds(2));
         }
 
         protected void PostWarningSnackbar(string text)
         {
-            snackbarService.Show("Warning", text, SymbolRegular.Warning20, ControlAppearance.Caution);
+            snackbarService.Show("Warning", text, ControlAppearance.Caution, new SymbolIcon(SymbolRegular.Warning20), TimeSpan.FromSeconds(2));
             SystemSounds.Exclamation.Play();
         }
 
