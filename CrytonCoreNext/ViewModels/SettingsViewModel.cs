@@ -60,7 +60,7 @@ namespace CrytonCoreNext.ViewModels
         public int pdfDpiValue;
 
         [ObservableProperty]
-        public int pdfRenderCount = 25;
+        public int pdfRenderCount = 10;
 
         [ObservableProperty]
         private string connectionStrings;
