@@ -26,7 +26,7 @@ namespace CrytonCoreNext.PDF.Models
         public bool IsSelectedToSplit { get => _isSelectedToSplit; set { _isSelectedToSplit = value; NotifyPropertyChanged(); } }
 
         public string Description => $"From {From} to {To}";
-        
+
         public PdfRangeFile(int from, int to, string name)
         {
             From = from;
@@ -45,7 +45,7 @@ namespace CrytonCoreNext.PDF.Models
     {
         public EDirection SplitDirection { get; set; }
 
-        public bool IsVerticalSplitLineLeftVisible { get; set;}
+        public bool IsVerticalSplitLineLeftVisible { get; set; }
 
         public bool IsVerticalSplitLineRightVisible { get; set; }
 
@@ -56,7 +56,7 @@ namespace CrytonCoreNext.PDF.Models
         public PdfImageContainer(int pageNumber, WriteableBitmap writeableBitmap)
         {
             PageNumber = pageNumber;
-            Image = writeableBitmap; 
+            Image = writeableBitmap;
             IsVerticalSplitLineLeftVisible = false;
             IsVerticalSplitLineRightVisible = false;
             SplitDirection = EDirection.None;
@@ -73,11 +73,9 @@ namespace CrytonCoreNext.PDF.Models
 
         public WriteableBitmap PageImage { get => _image; set { _image = value; NotifyPropertyChanged(); } }
 
-        public PdfiumViewer.PdfDocument Document { get; set; } 
-
         public EFileStatus Status { get; set; }
 
-        public EPdfStatus PdfStatus { get; set; }
+        public EPdfStatus PdfStatus { get; private set; }
 
         public string Password { get => Unprotect(); set => Protect(value); }
 
@@ -93,14 +91,16 @@ namespace CrytonCoreNext.PDF.Models
 
         public bool IsOnLastPage => PdfStatus != EPdfStatus.Opened || LastPage == NumberOfPages - 1;
 
-        public bool HasPassword { get; set; }
+        public bool HasPassword { get; private set; }
 
-        public string PageCountStatus 
-        { 
+        public bool IsVisible { get; set; } = true;
+
+        public string PageCountStatus
+        {
             get
             {
                 return $"{LastPage + 1} / {NumberOfPages}";
-            } 
+            }
         }
 
         public Dictionary<SymbolIcon, string> Metadata { get; set; } = [];
@@ -110,23 +110,27 @@ namespace CrytonCoreNext.PDF.Models
         public PDFFile(File file,
             EPdfStatus pdfStatus) : base(file)
         {
-            PdfStatus = pdfStatus;
+            SetPdfStatus(pdfStatus);
             Dimensions = 1.0;
         }
 
         public PDFFile(File file,
-            PdfiumViewer.PdfDocument document, 
             EPdfStatus pdfStatus,
             string password,
             double dimensions,
             int numberOfPages) : base(file)
         {
-            Document = document; 
-            PdfStatus = pdfStatus; 
             Password = password;
             Dimensions = dimensions;
             NumberOfPages = numberOfPages;
-            IsOpened = PdfStatus == EPdfStatus.Opened;
+            SetPdfStatus(pdfStatus);
+        }
+
+        public void SetPdfStatus(EPdfStatus pdfStatus)
+        {
+            PdfStatus = pdfStatus;
+            IsOpened = pdfStatus.HasFlag(EPdfStatus.Opened);
+            HasPassword = pdfStatus.HasFlag(EPdfStatus.Protected);
         }
 
         private void Protect(string password)

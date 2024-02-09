@@ -2,17 +2,12 @@
 using CrytonCoreNext.PDF.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.PDF.Interfaces
 {
     public interface IPDFManager
     {
         bool ProtectFile(PDFFile pdfFile, int permissions, int encryption);
-
-        WriteableBitmap LoadImage(PDFFile pdfFile);
-
-        IAsyncEnumerable<WriteableBitmap> LoadImages(PDFFile pdfFile);
 
         Task<PDFFile> Split(PDFFile pdfFile, int fromPage, int toPage, int newId);
 

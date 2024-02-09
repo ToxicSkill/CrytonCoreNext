@@ -20,7 +20,7 @@ namespace CrytonCoreNext.Abstract
 
         protected void PostErrorSnackbar(string text)
         {
-            snackbarService.Show("Error", text, SymbolRegular.ErrorCircle20, ControlAppearance.Dark);
+            snackbarService.Show("Error", text, SymbolRegular.ErrorCircle20, ControlAppearance.Danger);
         }
 
         protected void PostWarningSnackbar(string text)
@@ -39,7 +39,7 @@ namespace CrytonCoreNext.Abstract
 
         protected string GetFileFromDialog(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
-            return dialogService.GetFileNameToOpen(filters, Environment.SpecialFolder.Recent); 
+            return dialogService.GetFileNameToOpen(filters, Environment.SpecialFolder.Recent);
         }
 
         protected async IAsyncEnumerable<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
