@@ -30,7 +30,7 @@ namespace CrytonCoreNext.Abstract
             IsBusy = false;
         }
 
-        public void SetSettings()
+        public static void SetSettings()
         {
             Properties.Settings.Default.Save();
         }

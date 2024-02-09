@@ -1,0 +1,357 @@
+﻿<ui:UiPage x:Class="CrytonCoreNext.Views.CameraView"
+           xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:c="clr-namespace:CrytonCoreNext.Converters"
+           xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
+           d:DataContext="{d:DesignInstance Type=viewmodels:CameraViewModel}"
+           mc:Ignorable="d"
+           d:DesignHeight="1080"
+           d:DesignWidth="1920"
+           Loaded="UiPage_Loaded"
+           Unloaded="UiPage_Unloaded">
+
+    <ui:UiPage.Resources>
+        <ResourceDictionary>
+            <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
+            <c:CollectionToVisibilityInversionConverter x:Key="CollectionToVisibilityInversionConverter" />
+            <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
+        </ResourceDictionary>
+    </ui:UiPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="29*" />
+            <RowDefinition Height="25*" />
+        </Grid.RowDefinitions>
+        <Grid Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+              Margin="15,15,15,15"
+              Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="180" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                           Margin="0,20"
+                           HorizontalAlignment="Center"
+                           Text="Triggers"
+                           FontSize="24" />
+                <TextBlock Grid.Row="2"
+                           Margin="0,20"
+                           HorizontalAlignment="Center"
+                           Text="Stream Properties"
+                           FontSize="24" />
+                <TextBlock Grid.Row="4"
+                           Margin="0,20"
+                           HorizontalAlignment="Center"
+                           Text="Devices"
+                           FontSize="24" />
+                <ListView Grid.Row="5"
+                          ItemsSource="{Binding AvailableCameras}"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          VirtualizingPanel.VirtualizationMode="Recycling"
+                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                          SelectedItem="{Binding SelectedCamera, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"
+                                           Margin="10,0"
+                                           Text="{Binding Name}"
+                                           FontSize="20"
+                                           FontWeight="Regular"
+                                           HorizontalAlignment="Left" />
+                                <TextBlock Grid.Column="1"
+                                           Margin="5,0"
+                                           Text="{Binding Fps}"
+                                           FontSize="20"
+                                           FontWeight="Thin"
+                                           HorizontalAlignment="Right" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Margin="5,0"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="Run camera"
+                               FontSize="20"
+                               FontWeight="Thin" />
+                    <TextBlock Grid.Row="1"
+                               Margin="5,0"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="Run inference"
+                               FontSize="20"
+                               FontWeight="Thin" />
+                    <ui:ToggleSwitch Grid.Column="2"
+                                     Margin="5,0"
+                                     HorizontalAlignment="Left"
+                                     VerticalAlignment="Center"
+                                     IsChecked="{Binding RunCamera, Mode=TwoWay}" />
+                    <ui:ToggleSwitch Grid.Row="1"
+                                     Grid.Column="2"
+                                     Margin="5,0"
+                                     HorizontalAlignment="Left"
+                                     VerticalAlignment="Center"
+                                     IsEnabled="{Binding RunCamera, Mode=TwoWay}"
+                                     IsChecked="{Binding RunDetection, Mode=TwoWay}" />
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Margin="5,0"
+                               Opacity="0.6"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="Frame Rate:"
+                               FontSize="20"
+                               FontWeight="Thin" />
+                    <TextBlock Grid.Row="1"
+                               Margin="5,0"
+                               Opacity="0.6"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="Resolution:"
+                               FontSize="20"
+                               FontWeight="Thin" />
+                    <TextBlock Grid.Row="2"
+                               Margin="5,0"
+                               Opacity="0.6"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Text="Yolo type:"
+                               FontSize="20"
+                               FontWeight="Thin" />
+
+                    <StackPanel Grid.Row="0"
+                                Grid.Column="2"
+                                Margin="5,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <TextBlock HorizontalAlignment="Center"
+                                   Margin="0,0,4,0"
+                                   FontSize="20"
+                                   FontWeight="Thin"
+                                   Text="{Binding SelectedCamera.CurrentFps}" />
+                        <TextBlock HorizontalAlignment="Center"
+                                   FontSize="20"
+                                   Text="(" />
+                        <TextBlock HorizontalAlignment="Center"
+                                   FontSize="20"
+                                   Text="{Binding SelectedCamera.Fps, FallbackValue=0}" />
+                        <TextBlock HorizontalAlignment="Center"
+                                   FontSize="20"
+                                   Text=")" />
+                    </StackPanel>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="2"
+                               Margin="5,0"
+                               FontSize="20"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="{Binding SelectedCamera.ImageSourceSize}" />
+
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="2"
+                               Margin="5,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="20"
+                               Text="Yolo v7" />
+                </Grid>
+            </Grid>
+            <Image Grid.Column="1"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   Source="{Binding SelectedCamera.ImageSource}"
+                   RenderOptions.BitmapScalingMode="HighQuality"
+                   RenderOptions.CachingHint="Cache"
+                   RenderOptions.EdgeMode="Aliased"
+                   UseLayoutRounding="True" />
+            <Grid Grid.Column="2"
+                  HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                           Margin="0,20"
+                           HorizontalAlignment="Center"
+                           Text="Detections"
+                           FontSize="24" />
+                <Grid Grid.Row="1"
+                      HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock HorizontalAlignment="Center"
+                               Text="Score threshold"
+                               FontSize="20"
+                               FontWeight="Thin"
+                               Margin="5,0" />
+                    <TextBlock Grid.Column="1"
+                               HorizontalAlignment="Center"
+                               Text="{Binding ScoreThreshold}"
+                               FontSize="20"
+                               FontWeight="Thin"
+                               Margin="5,0,0,0" />
+                    <TextBlock Grid.Column="2"
+                               HorizontalAlignment="Center"
+                               Text="%"
+                               FontSize="20"
+                               FontWeight="Thin"
+                               Margin="1,0" />
+                </Grid>
+                <Slider Grid.Row="2"
+                        Grid.Column="0"
+                        Margin="5,0"
+                        IsSnapToTickEnabled="True"
+                        TickFrequency="10"
+                        Minimum="10"
+                        Maximum="90"
+                        Value="{Binding ScoreThreshold, Mode=TwoWay}"
+                        HorizontalAlignment="Stretch"
+                        FontSize="20"
+                        FontWeight="Thin" />
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               HorizontalAlignment="Center"
+                               Text="Label"
+                               FontSize="20"
+                               FontWeight="Thin" />
+                    <TextBlock Grid.Column="1"
+                               HorizontalAlignment="Center"
+                               Text="Score (%)"
+                               FontSize="20"
+                               FontWeight="Thin" />
+                </Grid>
+                <ListView Grid.Row="4"
+                          x:Name="detectionsListView"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          VirtualizingPanel.VirtualizationMode="Recycling"
+                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                          ItemsSource="{Binding SelectedCamera.CameraDetectionsQueue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Border CornerRadius="5"
+                                        Opacity="0.5"
+                                        Background="{Binding Color, Mode=OneTime}" />
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock HorizontalAlignment="Center"
+                                               FontSize="20"
+                                               FontWeight="Thin"
+                                               Text="{Binding Label, Mode=OneTime}" />
+                                    <TextBlock HorizontalAlignment="Center"
+                                               Grid.Column="2"
+                                               FontSize="20"
+                                               FontWeight="Thin"
+                                               Text="{Binding Score, Mode=OneTime}" />
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Grid>
+        <Grid Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+              Grid.RowSpan="2">
+            <Frame x:Name="Background" />
+            <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                <TextBlock Grid.Column="1"
+                           FontSize="84"
+                           Text="AI Camera"
+                           FontFamily="Candara Light" />
+                <TextBlock Grid.Column="1"
+                           HorizontalAlignment="Center"
+                           FontSize="22"
+                           Text="Catch the moment"
+                           FontWeight="UltraLight"
+                           FontFamily="Candara Light" />
+            </StackPanel>
+            <ui:ProgressRing VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             Margin="620,0,0,0"
+                             IsIndeterminate="True"
+                             Visibility="{Binding ScanInProgress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <ui:Button VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="460,0,0,0"
+                       Cursor="Hand"
+                       Width="80"
+                       Height="80"
+                       Icon="Sparkle20"
+                       FontSize="54"
+                       ToolTip="Create connection"
+                       IsEnabled="{Binding ScanInProgress, Converter={StaticResource BoolToVisibilityInversionConverter}}"
+                       Command="{Binding ScanCamerasCommand}" />
+            <StackPanel VerticalAlignment="Bottom"
+                        HorizontalAlignment="Left"
+                        Margin="20">
+                <TextBlock FontSize="{StaticResource G_NormalFontSize}"
+                           FontWeight="UltraLight"
+                           Text="Learn more" />
+                <ui:Hyperlink Margin="8,8,0,0"
+                              Padding="4"
+                              Content="GitHub"
+                              Icon="Empty"
+                              NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
+                              ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</ui:UiPage>

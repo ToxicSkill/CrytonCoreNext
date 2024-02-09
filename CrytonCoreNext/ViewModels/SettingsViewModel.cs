@@ -60,7 +60,16 @@ namespace CrytonCoreNext.ViewModels
         public int pdfDpiValue;
 
         [ObservableProperty]
-        public int pdfRenderCount = 25;
+        public int pdfRenderCount = 10;
+
+        [ObservableProperty]
+        private string connectionStrings;
+
+        [ObservableProperty]
+        private string flipVertically;
+
+        [ObservableProperty]
+        private string flipHorizontally;
 
         public bool MembersInitialized { get => TreeViewItemSource.Any(); }
 
@@ -71,6 +80,8 @@ namespace CrytonCoreNext.ViewModels
             _cardByTreeViewItem = [];
 
             TreeViewItemSource = [];
+
+            ConnectionStrings = Properties.Settings.Default.ConnectionStrings;
 
             InitializeThemes();
             InitializeSettings();
@@ -237,6 +248,13 @@ namespace CrytonCoreNext.ViewModels
         private void HandleHoveredPicureClicked()
         {
             IsThemeSwitchChecked = !IsThemeSwitchChecked;
+        }
+
+        [RelayCommand]
+        private void OkConnectionStrings()
+        {
+            Properties.Settings.Default.ConnectionStrings = ConnectionStrings;
+            SetSettings();
         }
     }
 }
