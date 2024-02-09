@@ -22,10 +22,18 @@
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <c:ObjectToVisibility x:Key="ObjectToVisibility" />
             <ContextMenu x:Key="SplitItemContextMenu">
-                <ui:MenuItem Header="Split left"
-                             Icon="ArrowLeft20"
+                <MenuItem  
                              Command="{Binding SplitSelectedPdfImageLeftCommand}"
-                             Visibility="{Binding IsSplitImageFirst, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                             Visibility="{Binding IsSplitImageFirst, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="ArrowLeft20" />
+                            <TextBlock Margin="5,0"
+                                       Text="Split left" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
                 <ui:MenuItem Header="Split right"
                              Icon="ArrowRight20"
                              Command="{Binding SplitSelectedPdfImageRightCommand}"

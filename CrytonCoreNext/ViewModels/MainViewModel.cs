@@ -32,11 +32,11 @@ namespace CrytonCoreNext.ViewModels
             MenuItems.Add(new NavigationViewItem("Pdf", SymbolRegular.Layer20, typeof(PdfView)));
             MenuItems.Add(new NavigationViewItem("AI Viewer", SymbolRegular.Eye20, typeof(AIViewerView)));
             MenuItems.Add(new NavigationViewItem("AI Camera", SymbolRegular.CameraDome20, typeof(CameraView)));
-            MenuItems.Add(new NavigationViewItemSeparator());
-            MenuItems.Add(new NavigationViewItem("Settings", SymbolRegular.Settings20, typeof(SettingsView)));
-            MenuItems.Add(new NavigationViewItem()
+            FooterItems.Add(new NavigationViewItemSeparator());
+            FooterItems.Add(new NavigationViewItem("Settings", SymbolRegular.Settings20, typeof(SettingsView)));
+            FooterItems.Add(new NavigationViewItem()
             {
-                Name = "Quit",
+                Content = "Quit",
                 Icon = new SymbolIcon(SymbolRegular.ArrowExit20),
                 Command = ExitCommand
             });

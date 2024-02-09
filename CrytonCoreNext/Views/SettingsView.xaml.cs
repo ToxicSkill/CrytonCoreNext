@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Wpf.Ui.Controls;
-using TextBlock = Wpf.Ui.Controls.TextBlock;
+using TextBlock = System.Windows.Controls.TextBlock;
 
 namespace CrytonCoreNext.Views
 {
@@ -12,7 +12,7 @@ namespace CrytonCoreNext.Views
     {
         private double _firstHeaderHeight = 0d;
 
-        private readonly Dictionary<IconElement, SymbolRegular> _symbolBySymbolWithHeader;
+        private readonly Dictionary<SymbolRegular, SymbolRegular> _symbolBySymbolWithHeader;
 
         public SettingsViewModel ViewModel
         {
@@ -59,20 +59,23 @@ namespace CrytonCoreNext.Views
             var headers = FindVisualChilds<TextBlock>(stackPanel, false).ToList();
             foreach (var cardControl in FindVisualChilds<CardControl>(stackPanel, false))
             {
-                var hasHeader = _symbolBySymbolWithHeader.ContainsKey(cardControl.Icon);
-                var headerText = hasHeader ? headers[_symbolBySymbolWithHeader.Keys.ToList().IndexOf(cardControl.Icon)].Text : "";
-                SymbolRegular? symbol = hasHeader ? _symbolBySymbolWithHeader[cardControl.Icon] : null;
-                ViewModel.RegisterNewUiNavigableElement(cardControl, hasHeader, _firstHeaderHeight, headerText, symbol);
+                if (cardControl.Icon is SymbolIcon icon)
+                {
+                    var hasHeader = _symbolBySymbolWithHeader.ContainsKey(icon.Symbol);
+                    var headerText = hasHeader ? headers[_symbolBySymbolWithHeader.Keys.ToList().IndexOf(icon.Symbol)].Text : "";
+                    var symbol = hasHeader ? _symbolBySymbolWithHeader[icon.Symbol] : icon.Symbol;
+                    ViewModel.RegisterNewUiNavigableElement(cardControl, hasHeader, _firstHeaderHeight, headerText, symbol);
+                }
             }
         }
 
         private void LoadHeadersSymbols()
         {
-            _symbolBySymbolWithHeader.Add(new SymbolIcon(SymbolRegular.DarkTheme20), SymbolRegular.Eye20);
-            _symbolBySymbolWithHeader.Add(new SymbolIcon(SymbolRegular.LocalLanguage20), SymbolRegular.ReadAloud20);
-            _symbolBySymbolWithHeader.Add(new SymbolIcon(SymbolRegular.StarSettings20), SymbolRegular.Rocket20);
-            _symbolBySymbolWithHeader.Add(new SymbolIcon(SymbolRegular.PreviewLink20), SymbolRegular.DocumentPdf20);
-            _symbolBySymbolWithHeader.Add(new SymbolIcon(SymbolRegular.Connector20), SymbolRegular.CameraDome20);
+            _symbolBySymbolWithHeader.Add(SymbolRegular.DarkTheme20, SymbolRegular.Eye20);
+            _symbolBySymbolWithHeader.Add(SymbolRegular.LocalLanguage20, SymbolRegular.ReadAloud20);
+            _symbolBySymbolWithHeader.Add(SymbolRegular.StarSettings20, SymbolRegular.Rocket20);
+            _symbolBySymbolWithHeader.Add(SymbolRegular.PreviewLink20, SymbolRegular.DocumentPdf20);
+            _symbolBySymbolWithHeader.Add(SymbolRegular.Connector20, SymbolRegular.CameraDome20);
         }
 
         private void stackPanel_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)

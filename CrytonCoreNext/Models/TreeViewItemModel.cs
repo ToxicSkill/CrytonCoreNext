@@ -7,7 +7,7 @@ namespace CrytonCoreNext.Models
     {
         public string Title { get; set; }
 
-        public IconElement Symbol { get; set; }
+        public SymbolRegular Symbol { get; set; }
 
         public bool IsSelected { get; set; }
 

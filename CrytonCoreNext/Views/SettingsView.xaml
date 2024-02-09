@@ -54,7 +54,7 @@
             <ScrollViewer Grid.Column="1" x:Name="scrollViewer" VerticalScrollBarVisibility="Hidden">
                 <StackPanel x:Name="stackPanel" Margin="10,0,0,0" MouseMove="stackPanel_MouseMove">
                     <TextBlock x:Name="firstHeader" Text="Style &amp; apperance" Margin="0,20,0,0" FontSize="18" FontWeight="Light"/>
-                    <ui:CardControl Margin="15,8,15,0" Icon="DarkTheme20">
+                    <ui:CardControl Margin="15,8,15,0" Icon="{ui:SymbolIcon DarkTheme20}">
                         <ui:CardControl.Header>
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Theme"/>
@@ -71,7 +71,8 @@
                             </ui:SymbolIcon>
                         </Grid>
                     </ui:CardControl>
-                    <ui:CardControl Margin="15,8,15,0" Icon="StyleGuide20" 
+                    <ui:CardControl Margin="15,8,15,0"
+                                    Icon="{ui:SymbolIcon StyleGuide20}" 
                                     Visibility="{Binding IsThemeStyleAvailable, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    >
                         <ui:CardControl.Header>
@@ -82,7 +83,8 @@
                         </ui:CardControl.Header>
                         <ComboBox MinWidth="100" ItemsSource="{Binding ThemeStylesItemsSource}" SelectedItem="{Binding SelectedThemeStyle}"/>
                     </ui:CardControl>
-                    <ui:CardControl Margin="15,8,15,0" Icon="Color20">
+                    <ui:CardControl Margin="15,8,15,0"
+                                    Icon="{ui:SymbolIcon Color20}">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Color"/>
@@ -93,7 +95,8 @@
                     </ui:CardControl>
 
                     <TextBlock Text="Language" FontSize="18" Margin="0,20,0,0" FontWeight="Light"/>
-                    <ui:CardControl Margin="15,8,15,0" Icon="LocalLanguage20">
+                    <ui:CardControl Margin="15,8,15,0"
+                                    Icon="{ui:SymbolIcon LocalLanguage20}">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Language"/>
@@ -105,7 +108,9 @@
                         </ComboBox>
                     </ui:CardControl>
                     <TextBlock Text="Startup settings" FontSize="18" Margin="0,20,0,0" FontWeight="Light"/>
-                    <ui:CardControl Name="al" Margin="15,8,15,0" Icon="StarSettings20">
+                    <ui:CardControl Name="al"
+                                    Margin="15,8,15,0"
+                                    Icon="{ui:SymbolIcon StarSettings20}">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Fullscreen on start"/>
@@ -114,7 +119,8 @@
                         </ui:CardControl.Header>
                         <ui:ToggleSwitch IsChecked="{Binding IsFullscreenOnStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </ui:CardControl>
-                    <ui:CardControl Margin="15,8,15,0" Icon="Alert20">
+                    <ui:CardControl Margin="15,8,15,0"
+                                    Icon="{ui:SymbolIcon Alert20}">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Notification atuohide time"/>
@@ -123,7 +129,8 @@
                         </ui:CardControl.Header>
                         <Slider IsSnapToTickEnabled="True"/>
                     </ui:CardControl>
-                    <ui:CardControl Margin="15,8,15,0" Icon="SaveArrowRight20">
+                    <ui:CardControl Margin="15,8,15,0"
+                                    Icon="{ui:SymbolIcon SaveArrowRight20}">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Crypting keys"/>
@@ -132,7 +139,8 @@
                         </ui:CardControl.Header>
                         <ui:TextBox PlaceholderText="C:\Users\Default\Documents\Cryton\Keys" MaxWidth="300" />
                     </ui:CardControl>
-                    <ui:CardControl Margin="15,8,15,0" Icon="DocumentSave20">
+                    <ui:CardControl Margin="15,8,15,0"
+                                    Icon="{ui:SymbolIcon DocumentSave20}">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Crypted files"/>
@@ -141,7 +149,8 @@
                         </ui:CardControl.Header>
                         <ui:TextBox PlaceholderText="C:\Users\Default\Documents\Cryton\Files" MaxWidth="300" />
                     </ui:CardControl>
-                    <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl Margin="15,8,15,0"
+                                    Icon="{ui:SymbolIcon PaddingLeft20}">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Default encryption suffix"/>
@@ -150,7 +159,8 @@
                         </ui:CardControl.Header>
                         <ui:TextBox PlaceholderText="Enc" MaxWidth="300" />
                     </ui:CardControl>
-                    <ui:CardControl Margin="15,8,15,0" Icon="PaddingLeft20">
+                    <ui:CardControl Margin="15,8,15,0"
+                                    Icon="{ui:SymbolIcon PaddingLeft20}">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Default decryption suffix"/>
@@ -162,7 +172,8 @@
                     
                     
                     <TextBlock Text="PDF" FontSize="18" Margin="0,20,0,0" FontWeight="Light"/>
-                    <ui:CardControl Margin="15,8,15,0" Icon="PreviewLink20">
+                    <ui:CardControl Margin="15,8,15,0"
+                                    Icon="{ui:SymbolIcon PreviewLink20}">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                 <TextBlock FontSize="13" FontWeight="Medium" Text="Render DPI"/>
@@ -181,7 +192,7 @@
                                Margin="0,20,0,0"
                                FontWeight="Light" />
                     <ui:CardControl Margin="15,8,15,0"
-                                    Icon="Connector20">
+                                    Icon="{ui:SymbolIcon Connector20}">
                         <ui:CardControl.Header>
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock FontSize="13"
@@ -203,7 +214,7 @@
                         </StackPanel>
                     </ui:CardControl>
                     <ui:CardControl Margin="15,8,15,0"
-                                    Icon="FlipVertical20">
+                                    Icon="{ui:SymbolIcon FlipVertical20}">
                         <ui:CardControl.Header>
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock FontSize="13"
@@ -216,7 +227,7 @@
                         <ui:ToggleSwitch IsChecked="{Binding FlipVertically}" />
                     </ui:CardControl>
                     <ui:CardControl Margin="15,8,15,0"
-                                    Icon="FlipHorizontal20">
+                                    Icon="{ui:SymbolIcon FlipHorizontal20}">
                         <ui:CardControl.Header>
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock FontSize="13"
@@ -229,7 +240,7 @@
                         <ui:ToggleSwitch IsChecked="{Binding FlipHorizontally}" />
                     </ui:CardControl>
                     <ui:CardControl Margin="15,8,15,0"
-                                    Icon="DrawerPlay20">
+                                    Icon="{ui:SymbolIcon DrawerPlay20}">
                         <ui:CardControl.Header>
                             <StackPanel Grid.Column="0"
                                         VerticalAlignment="Center">

@@ -180,7 +180,7 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
-        public void RegisterNewUiNavigableElement(CardControl card, bool hasHeader, double headerHeight, string headerTitle, SymbolRegular? mainItemSymbol)
+        public void RegisterNewUiNavigableElement(CardControl card, bool hasHeader, double headerHeight, string headerTitle, SymbolRegular mainItemSymbol)
         {
             _elements.Add(new(card, hasHeader, headerHeight));
             RegisterTreeViewItem(card, hasHeader, headerTitle, mainItemSymbol);
@@ -219,7 +219,7 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
-        private void RegisterTreeViewItem(CardControl card, bool hasHeader, string headerTitle, SymbolRegular? mainItemSymbol)
+        private void RegisterTreeViewItem(CardControl card, bool hasHeader, string headerTitle, SymbolRegular mainItemSymbol)
         {
             if (hasHeader)
             {
@@ -227,12 +227,9 @@ namespace CrytonCoreNext.ViewModels
                 {
                     Title = headerTitle,
                     IsExpanded = true,
+                    Symbol = mainItemSymbol,
                     Childs = []
                 };
-                if (mainItemSymbol != null)
-                {
-                    newTreeViewItem.Symbol = new SymbolIcon((SymbolRegular)mainItemSymbol);
-                }
                 TreeViewItemSource.Add(newTreeViewItem);
                 _cardByTreeViewItem.Add(newTreeViewItem, card);
             }
@@ -240,7 +237,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 Title = ((card.Header as StackPanel)!.Children[0] as System.Windows.Controls.TextBlock)!.Text,
                 IsExpanded = true,
-                Symbol = card.Icon
+                Symbol = mainItemSymbol
             };
             TreeViewItemSource.Last().Childs.Add(newSubTreeViewItem);
             _cardByTreeViewItem.Add(newSubTreeViewItem, card);

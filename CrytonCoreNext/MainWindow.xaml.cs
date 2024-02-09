@@ -5,6 +5,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using Wpf.Ui;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 
@@ -26,7 +27,7 @@ namespace CrytonCoreNext
                     IContentDialogService contentDialogService)
         {
             Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
-
+            ApplicationThemeManager.Apply(ApplicationTheme.Light);
             ViewModel = viewModel;
             DataContext = this;
 
