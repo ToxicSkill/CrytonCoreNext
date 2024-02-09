@@ -12,7 +12,7 @@ using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Interfaces.Serializers;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Interfaces;
-using CrytonCoreNext.PDF.Models;
+using CrytonCoreNext.PDF.Services;
 using CrytonCoreNext.Providers;
 using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
@@ -78,6 +78,7 @@ namespace CrytonCoreNext
             // pdf
             services.AddSingleton<IPDFManager, PDFManager>();
             services.AddSingleton<IPDFReader, PDFReader>();
+            services.AddSingleton<IPDFImageLoader, PDFImageLoader>();
             services.AddScoped(CreateFileService);
             services.AddScoped<PdfView>();
             services.AddScoped<PdfViewModel>();

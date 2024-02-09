@@ -2,7 +2,7 @@
 {
     public enum EPdfTabControls
     {
-        Manage,
+        Preview,
         Merge,
         Split,
         Convert,

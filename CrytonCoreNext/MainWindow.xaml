@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="clr-namespace:CrytonCoreNext.Views"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    MinWidth="1300"
+    MinWidth="1365"
     MinHeight="650"
     d:DesignHeight="650"
     d:DesignWidth="900"

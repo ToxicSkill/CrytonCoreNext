@@ -5,9 +5,10 @@
             xmlns:c="clr-namespace:CrytonCoreNext.Converters"
             xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels" 
             xmlns:models="clr-namespace:CrytonCoreNext.Models" 
-            xmlns:extensions="clr-namespace:CrytonCoreNext.Extensions" 
-            d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
-            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:extensions="clr-namespace:CrytonCoreNext.Extensions"
+           d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
+           xmlns:components="clr-namespace:CrytonCoreNext.Controls"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" 
             xmlns:e="http://schemas.microsoft.com/xaml/behaviors"
             Title="Dashboard"
@@ -43,12 +44,6 @@
                     <HierarchicalDataTemplate DataType="models:TreeViewItemModel" ItemsSource="{Binding Childs}">
                         <Grid>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <Border Width="2" CornerRadius="2" Margin="0,2"
-                                        Visibility="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <Border.Background>
-                                        <SolidColorBrush Color="{DynamicResource SystemAccentColor}"/>
-                                    </Border.Background>
-                                </Border>
                                 <ui:SymbolIcon Symbol="{Binding Symbol}" Margin="10,0"/>
                                 <TextBlock Text="{Binding Title}" />
                             </StackPanel>
@@ -96,6 +91,7 @@
                         </ui:CardControl.Header>
                         <ComboBox/>
                     </ui:CardControl>
+
                     <TextBlock Text="Language" FontSize="18" Margin="0,20,0,0" FontWeight="Light"/>
                     <ui:CardControl Margin="15,8,15,0" Icon="LocalLanguage20">
                         <ui:CardControl.Header>
@@ -163,6 +159,8 @@
                         </ui:CardControl.Header>
                         <ui:TextBox PlaceholderText="Dec" MaxWidth="300" />
                     </ui:CardControl>
+                    
+                    
                     <TextBlock Text="PDF" FontSize="18" Margin="0,20,0,0" FontWeight="Light"/>
                     <ui:CardControl Margin="15,8,15,0" Icon="PreviewLink20">
                         <ui:CardControl.Header>
@@ -177,6 +175,23 @@
                                     Value="{Binding PdfDpiValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     HorizontalAlignment="Stretch"/>
                         </StackPanel>
+                    </ui:CardControl>
+                    <ui:CardControl Margin="15,8,15,0"
+                                    Icon="DrawerPlay20">
+                        <ui:CardControl.Header>
+                            <StackPanel Grid.Column="0"
+                                        VerticalAlignment="Center">
+                                <TextBlock FontSize="13"
+                                           FontWeight="Medium"
+                                           Text="Max pages rendering" />
+                                <TextBlock FontSize="12"
+                                           Text="Set maximum count of single pdf  document pages to render at once." />
+                            </StackPanel>
+                        </ui:CardControl.Header>
+                        <components:CustomNumberBoxControl Margin="0,10"
+                                                           Value="{Binding PdfRenderCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                           Min="0"
+                                                           Max="10"/>
                     </ui:CardControl>
                 </StackPanel>
             </ScrollViewer>

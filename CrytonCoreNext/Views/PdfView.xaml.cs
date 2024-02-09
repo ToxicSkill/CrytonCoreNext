@@ -68,9 +68,9 @@ namespace CrytonCoreNext.Views
         {
             LeftEyeIconSecond.Filled = true;
             RightEyeIconSecond.Filled = true;
-            if (ViewModel.PdfToProtectSelectedFile is not null)
+            if (ViewModel.SelectedPdfFile is not null)
             {
-                PdfPasswordBoxSecond.Password = ViewModel.PdfToProtectSelectedFile.Password;
+                PdfPasswordBoxSecond.Password = ViewModel.SelectedPdfFile.Password;
             }
         }
 
@@ -86,16 +86,6 @@ namespace CrytonCoreNext.Views
             }
         }
 
-        private void ListViewMerge_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            ViewModel.AddFileToMergeListCommand.Execute(null);
-        }
-
-        private void ListViewSplit_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            ViewModel.AddFileToSplitListCommand.Execute(null);
-        }
-
         private void ListView_PreviewMouseDoubleClick_Merge(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             ViewModel.RemoveFileFromMergeListCommand.Execute(null);
@@ -105,7 +95,7 @@ namespace CrytonCoreNext.Views
         {
             ViewModel.RemoveFileFromSplitListCommand.Execute(null);
         }
-        
+
 
         private void Image_PreviewMouseWheel_Merge(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
@@ -131,6 +121,24 @@ namespace CrytonCoreNext.Views
                 scrollViewer.LineLeft();
             }
             e.Handled = true;
+        }
+
+        private async void ListView_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            await ViewModel.DistributeSelectedPdfFile();
+        }
+
+        private void CardExpander_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed && sender is FrameworkElement dep)
+            {
+                DragDrop.DoDragDrop(dep, new DataObject(DataFormats.Serializable, dep.DataContext), DragDropEffects.Move);
+            }
+        }
+
+        private async void ListView_Drop(object sender, DragEventArgs e)
+        {
+            await ViewModel.DistributeSelectedPdfFile();
         }
     }
 }
