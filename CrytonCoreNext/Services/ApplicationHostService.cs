@@ -1,4 +1,5 @@
 ﻿using CrytonCoreNext.Interfaces;
+using CrytonCoreNext.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -65,7 +66,7 @@ public class ApplicationHostService : IHostedService
 
         IWindow mainWindow = _serviceProvider.GetRequiredService<IWindow>();
         mainWindow?.Show();
-
+        _navigationService.Navigate(typeof(Dashboard));
         return Task.CompletedTask;
     }
 

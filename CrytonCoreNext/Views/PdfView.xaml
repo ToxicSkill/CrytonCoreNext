@@ -1,17 +1,18 @@
 ﻿<Page x:Class="CrytonCoreNext.Views.PdfView"
-           xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-           xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
-           xmlns:models="clr-namespace:CrytonCoreNext.PDF.Models"
-           xmlns:c="clr-namespace:CrytonCoreNext.Converters"
-           d:DataContext="{d:DesignInstance Type=viewmodels:PdfViewModel}"
-           d:DesignHeight="890"
-           d:DesignWidth="1400"
-           mc:Ignorable="d"
-           Background="Transparent">
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
+      xmlns:models="clr-namespace:CrytonCoreNext.PDF.Models"
+      xmlns:c="clr-namespace:CrytonCoreNext.Converters"
+      Background="{DynamicResource ApplicationBackgroundBrush}"
+      d:DataContext="{d:DesignInstance Type=viewmodels:PdfViewModel}"
+      ScrollViewer.CanContentScroll="False"
+      d:DesignHeight="890"
+      d:DesignWidth="1400"
+      mc:Ignorable="d" >
 
     <Page.Resources>
         <ResourceDictionary>
@@ -22,9 +23,8 @@
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <c:ObjectToVisibility x:Key="ObjectToVisibility" />
             <ContextMenu x:Key="SplitItemContextMenu">
-                <MenuItem  
-                             Command="{Binding SplitSelectedPdfImageLeftCommand}"
-                             Visibility="{Binding IsSplitImageFirst, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <MenuItem Command="{Binding SplitSelectedPdfImageLeftCommand}"
+                          Visibility="{Binding IsSplitImageFirst, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
@@ -70,7 +70,7 @@
                        Cursor="Hand"
                        Width="80"
                        Height="80"
-                       Icon="Add20"
+                       Icon="{ui:SymbolIcon Add20}"
                        FontSize="54"
                        ToolTip="Load files"
                        Command="{Binding LoadPdfAndImageFilesCommand}"
@@ -87,17 +87,17 @@
                            FontWeight="UltraLight"
                            Text="Learn more" />
                 <ui:HyperlinkButton Margin="8,8,0,0"
-                              Padding="4"
-                              Content="GitHub"
-                              Icon="Empty"
-                              NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
-                              ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
+                                    Padding="4"
+                                    Content="GitHub"
+                                    Icon="Empty"
+                                    NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
+                                    ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
                 <ui:HyperlinkButton Margin="8,0,0,0"
-                              Padding="4"
-                              Content="Portable Document Format (PDF)"
-                              Icon="Empty"
-                              NavigateUri="https://en.wikipedia.org/wiki/PDF"
-                              ToolTip="https://en.wikipedia.org/wiki/PDF" />
+                                    Padding="4"
+                                    Content="Portable Document Format (PDF)"
+                                    Icon="Empty"
+                                    NavigateUri="https://en.wikipedia.org/wiki/PDF"
+                                    ToolTip="https://en.wikipedia.org/wiki/PDF" />
             </StackPanel>
         </Grid>
 
@@ -152,7 +152,7 @@
                            HorizontalAlignment="Center"
                            FontSize="100"
                            Opacity="0.2"
-                           Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityConverter}}"/>
+                           Visibility="{Binding PdfFiles, Converter={StaticResource CollectionToVisibilityConverter}}" />
                 <TextBlock Grid.Row="1"
                            Margin="0,110,0,0"
                            Text="F I L E S"
@@ -262,7 +262,7 @@
                 </ScrollViewer>
             </Grid>
             <Separator Grid.Column="1" />
-            <TabControl Grid.Column="1" 
+            <TabControl Grid.Column="1"
                         SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Visibility="{Binding AnyLoadedFile, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                 <TabItem Width="180">
@@ -324,7 +324,7 @@
                                Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                         <ui:Button HorizontalAlignment="Left"
-                                   Icon="ArrowLeft20" 
+                                   Icon="ArrowLeft20"
                                    Command="{Binding GoPreviousPageCommand}"
                                    Height="80"
                                    Margin="10,0"
@@ -333,7 +333,7 @@
                                    Visibility="{Binding SelectedPdfFile.IsOnFirstPage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 
                         <ui:Button HorizontalAlignment="Right"
-                                   Icon="ArrowRight20" 
+                                   Icon="ArrowRight20"
                                    Command="{Binding GoNextPageCommand}"
                                    Height="80"
                                    Margin="10,0"
@@ -342,7 +342,7 @@
                                    Visibility="{Binding SelectedPdfFile.IsOnLastPage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 
                         <ui:Button HorizontalAlignment="Center"
-                                   VerticalAlignment="Bottom" 
+                                   VerticalAlignment="Bottom"
                                    Content="{Binding SelectedPdfFile.PageCountStatus, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                    Width="100"
                                    Margin="0, 10"
@@ -388,7 +388,7 @@
                                        Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, ConverterParameter=2, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                         </ui:CardControl>
                         <ScrollViewer Grid.Column="0"
-                                      CanContentScroll="True" 
+                                      CanContentScroll="True"
                                       AllowDrop="True"
                                       VerticalScrollBarVisibility="Auto"
                                       Drop="ListView_Drop"
@@ -397,10 +397,11 @@
                                       SelectedItem="{Binding SelectedPdfFileToMerge, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick_Merge"
                                       SelectionMode="Single"
-                                      AllowDrop="True" >
+                                      AllowDrop="True">
                                 <ListView.Template>
                                     <ControlTemplate TargetType="ListBox">
-                                        <Border BorderBrush="{TemplateBinding BorderBrush}" AllowDrop="True"
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                AllowDrop="True"
                                                 BorderThickness="{TemplateBinding BorderBrush}">
                                             <ItemsPresenter />
                                         </Border>
@@ -408,7 +409,8 @@
                                 </ListView.Template>
                                 <ListView.ItemTemplate>
                                     <DataTemplate DataType="models:CryptFile">
-                                        <Grid Height="40" AllowDrop="True"
+                                        <Grid Height="40"
+                                              AllowDrop="True"
                                               Margin="5,0,0,0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
@@ -467,7 +469,7 @@
                                        Visibility="{Binding SelectedPdfFilesToMerge, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <ui:Button  HorizontalAlignment="Left"
-                                        Icon="ArrowLeft20" 
+                                        Icon="ArrowLeft20"
                                         Appearance="Primary"
                                         Opacity="0.7"
                                         Command="{Binding GoPreviousPagePdfToMergeIndexCommand}"
@@ -476,7 +478,7 @@
                                         Visibility="{Binding IsOnFirstMergePage ,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <ui:Button HorizontalAlignment="Right"
-                                       Icon="ArrowRight20" 
+                                       Icon="ArrowRight20"
                                        Appearance="Primary"
                                        Opacity="0.7"
                                        Command="{Binding GoNextPagePdfToMergeIndexCommand}"
@@ -488,15 +490,13 @@
                             <StackPanel VerticalAlignment="Bottom"
                                         HorizontalAlignment="Center"
                                         Orientation="Horizontal">
-                                <ui:Button 
-                                           Content="{Binding PageMergeCountStatus, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                                <ui:Button Content="{Binding PageMergeCountStatus, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                                            Width="100"
                                            Margin="0, 10"
                                            Appearance="Primary"
                                            Opacity="0.7"
                                            Visibility="{Binding HasMoreThanOnePageToMerge, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <ui:Button 
-                                           Icon="TrayItemRemove20"
+                                <ui:Button Icon="TrayItemRemove20"
                                            ToolTip="Exclude this page"
                                            Margin="0, 10"
                                            Appearance="Primary"
@@ -898,7 +898,7 @@
                                           SelectedItem="{Binding SelectedPermissionOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </Grid>
-                        <StackPanel Grid.Column="1" 
+                        <StackPanel Grid.Column="1"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center">
                             <Grid>

@@ -125,7 +125,7 @@ namespace CrytonCoreNext.ViewModels
                 {
                     _cancellationToken.Token.ThrowIfCancellationRequested();
                     var timestamp = Stopwatch.GetTimestamp();
-                    await App.Current.Dispatcher.BeginInvoke(() =>
+                    await System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
                     {
                         if (RunCamera)
                         {
@@ -187,7 +187,7 @@ namespace CrytonCoreNext.ViewModels
                 _cameraService.SetBufferSize(0);
                 camera = _cameraService.GetCurrentCamera();
             }
-            await App.Current.Dispatcher.BeginInvoke(() =>
+            await System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 AvailableCameras = new(cameras);
                 if (camera != null)

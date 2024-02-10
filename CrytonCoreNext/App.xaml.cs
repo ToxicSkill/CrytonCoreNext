@@ -128,13 +128,7 @@ namespace CrytonCoreNext
 
         private static void ConfigureServices()
         {
-            var mw = _host.Services.GetService<MainViewModel>();
             var sw = _host.Services.GetService<SettingsViewModel>();
-            var pv = _host.Services.GetService<PdfView>();
-            var cv = _host.Services.GetService<CryptingView>();
-            var av = _host.Services.GetService<AIViewerView>();
-            var camerav = _host.Services.GetService<CameraView>();
-
             sw?.OnStartup();
         }
 

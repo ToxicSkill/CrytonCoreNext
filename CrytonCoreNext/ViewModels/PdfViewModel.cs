@@ -760,7 +760,7 @@ namespace CrytonCoreNext.ViewModels
         {
             if (value != null)
             {
-                App.Current.Dispatcher.Invoke(() =>
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
                     value.PageImage = _imageLoader.LoadImage(value);
                 });

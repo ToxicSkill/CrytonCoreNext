@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Models;
-using CrytonCoreNext.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,16 +29,6 @@ namespace CrytonCoreNext.ViewModels
         private delegate void _verticalOffsetScrollUpdateDelegate(double offset);
 
         private _verticalOffsetScrollUpdateDelegate VerticalOffsetScrollUpdate;
-
-        public delegate void OnThemeStyleChanged(ApplicationTheme value);
-
-        public event OnThemeStyleChanged ThemeStyleChanged;
-
-        [ObservableProperty]
-        public ObservableCollection<ApplicationTheme> themeStylesItemsSource;
-
-        [ObservableProperty]
-        public ApplicationTheme selectedThemeStyle;
 
         [ObservableProperty]
         public ObservableCollection<TreeViewItemModel> treeViewItemSource;
@@ -83,7 +72,6 @@ namespace CrytonCoreNext.ViewModels
 
             ConnectionStrings = Properties.Settings.Default.ConnectionStrings;
 
-            InitializeThemes();
             InitializeSettings();
         }
 
@@ -92,47 +80,24 @@ namespace CrytonCoreNext.ViewModels
             if (Properties.Settings.Default.FirstRun)
             {
                 Properties.Settings.Default.FirstRun = false;
-                SelectedThemeStyle = ApplicationTheme.Light;
             }
         }
 
-        private void InitializeThemes()
-        {
-            ThemeStylesItemsSource = new ObservableCollection<ApplicationTheme>
-                (
-                    [
-                        ApplicationTheme.Light,
-                        ApplicationTheme.Dark
-                    ]
-                );
-            IsThemeStyleAvailable = WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber;
-        }
 
         private void InitializeSettings()
         {
             IsFullscreenOnStart = Properties.Settings.Default.FullscreenOnStart;
-            if (Enum.TryParse(Properties.Settings.Default.Style, out ApplicationTheme backgroundTypeStyle))
-            {
-                SelectedThemeStyle = backgroundTypeStyle;
-            }
-            else
-            {
-                SelectedThemeStyle = ApplicationTheme.Light;
-            }
             IsThemeSwitchChecked = Properties.Settings.Default.Theme;
+            IsThemeSwitchChecked = !IsThemeSwitchChecked;
+            IsThemeSwitchChecked = !IsThemeSwitchChecked;
             PdfDpiValue = Properties.Settings.Default.PdfRenderDpi;
+            OnIsFullscreenOnStartChanged(IsThemeSwitchChecked);
+            OnPdfDpiValueChanged(PdfDpiValue);
             SetSettings();
         }
 
         partial void OnPdfDpiValueChanged(int value)
         {
-            SetSettings();
-        }
-
-        partial void OnSelectedThemeStyleChanged(ApplicationTheme value)
-        {
-            ThemeStyleChanged?.Invoke(value);
-            Properties.Settings.Default.Style = value.ToString();
             SetSettings();
         }
 

@@ -26,11 +26,8 @@ namespace CrytonCoreNext
                     ISnackbarService snackbarService,
                     IContentDialogService contentDialogService)
         {
-            Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
-            ApplicationThemeManager.Apply(ApplicationTheme.Light);
             ViewModel = viewModel;
             DataContext = this;
-
             InitializeComponent();
 
             snackbarService.SetSnackbarPresenter(SnackbarPresenter);
@@ -38,6 +35,8 @@ namespace CrytonCoreNext
             contentDialogService.SetContentPresenter(RootContentDialog);
 
             NavigationView.SetServiceProvider(serviceProvider);
+
+            SystemThemeWatcher.Watch(this);
             LoadSettings();
         }
 
@@ -49,10 +48,10 @@ namespace CrytonCoreNext
 
         private void LoadScreenModeFromSettings()
         {
-            System.Windows.Application.Current.MainWindow.WindowState =
+            Application.Current.MainWindow.WindowState =
                 Properties.Settings.Default.FullscreenOnStart ?
-                System.Windows.WindowState.Maximized :
-                System.Windows.WindowState.Normal;
+                WindowState.Maximized :
+                WindowState.Normal;
         }
 
         private void SymbolIcon_MouseDown(object sender, MouseButtonEventArgs e)
@@ -66,13 +65,13 @@ namespace CrytonCoreNext
         private void SymbolIcon_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var actualState = WindowState;
-            if (actualState == System.Windows.WindowState.Maximized)
+            if (actualState == WindowState.Maximized)
             {
-                this.WindowState = System.Windows.WindowState.Normal;
+                this.WindowState = WindowState.Normal;
             }
-            else if (actualState == System.Windows.WindowState.Normal)
+            else if (actualState == WindowState.Normal)
             {
-                this.WindowState = System.Windows.WindowState.Maximized;
+                this.WindowState = WindowState.Maximized;
             }
         }
 

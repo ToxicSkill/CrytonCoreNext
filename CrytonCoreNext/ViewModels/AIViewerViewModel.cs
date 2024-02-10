@@ -148,7 +148,7 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
         {
-            SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
+            SelectedImage.DetectionImage = YoloDetectionDrawer.DrawDetection(SelectedImage, value);
             UserMouseIsInDetectedObject = value != null;
         }
     }

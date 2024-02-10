@@ -64,7 +64,7 @@ namespace CrytonCoreNext.Abstract
                 return;
             }
 
-            var filePath = dialogService.GetFileNameToSave(file.Extension, System.Environment.SpecialFolder.Recent);
+            var filePath = dialogService.GetFileNameToSave(file.Extension, Environment.SpecialFolder.Recent);
             if (filePath == string.Empty)
             {
                 PostErrorSnackbar(Language.Post("FilesSavingError"));

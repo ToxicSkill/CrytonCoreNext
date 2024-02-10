@@ -19,7 +19,7 @@
 
     <ui:FluentWindow.Resources>
         <ContextMenu x:Key="contextMenu">
-            <MenuItem Command="{Binding MinimizeCommand}">
+            <MenuItem Command="{Binding ViewModel.MinimizeCommand}">
                 <MenuItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Symbol="LineHorizontal120" />
@@ -28,7 +28,7 @@
                     </StackPanel>
                 </MenuItem.Header>
             </MenuItem>
-            <MenuItem Command="{Binding MaximizeCommand}">
+            <MenuItem Command="{Binding ViewModel.MaximizeCommand}">
                 <MenuItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Symbol="SquareMultiple20" />
@@ -37,7 +37,7 @@
                     </StackPanel>
                 </MenuItem.Header>
             </MenuItem>
-            <MenuItem Command="{Binding NormalCommand}">
+            <MenuItem Command="{Binding ViewModel.NormalCommand}">
                 <MenuItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Symbol="CenterVertical20" />
@@ -66,15 +66,15 @@
                   Background="#02000000" />
 
             <ui:NavigationView x:Name="NavigationView"
-                               Grid.Column="0"
-                               OpenPaneLength="180"
+                               Grid.Column="0"    
                                TransitionDuration="600"
                                PaneDisplayMode="Left"
+                               OpenPaneLength="150"
                                MenuItemsSource="{Binding ViewModel.MenuItems, Mode=OneWay }"
                                FooterMenuItemsSource="{Binding ViewModel.FooterItems, Mode=OneWay }"
                                Transition="FadeInWithSlide"
                                FrameMargin="0"
-                               IsBackButtonVisible="Visible"
+                               IsBackButtonVisible="Collapsed"
                                IsPaneToggleVisible="True"
                                SelectionChanged="NavigationView_SelectionChanged">
             </ui:NavigationView>
@@ -83,8 +83,7 @@
                               VerticalAlignment="Stretch" />
         </Grid>
 
-        <ui:SnackbarPresenter x:Name="SnackbarPresenter"
-                              MaxWidth="600" />
+        <ui:SnackbarPresenter x:Name="SnackbarPresenter" />
         <ui:SymbolIcon Symbol="GridDots20"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Top"
