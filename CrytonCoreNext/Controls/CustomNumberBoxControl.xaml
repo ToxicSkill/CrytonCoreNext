@@ -6,6 +6,7 @@
              xmlns:c="clr-namespace:CrytonCoreNext.Converters"
              x:Name="root"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             Background="{ui:ThemeResource ApplicationBackgroundBrush}"
              mc:Ignorable="d" >
 
     <UserControl.Resources>

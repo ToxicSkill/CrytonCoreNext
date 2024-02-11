@@ -39,7 +39,7 @@
             <Grid Grid.Column="0"
                   Margin="0, 20, 0,0">
                 
-            <TreeView
+            <TreeView ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                       BorderThickness="0"
                       ItemsSource="{Binding TreeViewItemSource}">
                 <e:Interaction.Behaviors>

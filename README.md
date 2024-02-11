@@ -22,7 +22,7 @@ Support touch & windows MICA maetrial.
 
 <div align="center">
     <a href="./">
-        <img src="./Pictures/MainPage.jpg"/>
+        <img src="./Pictures/MainPage.png"/>
     </a>
 </div>
 
@@ -30,40 +30,41 @@ Support touch & windows MICA maetrial.
 
 <div align="center">
     <a href="./">
-        <img src="./Pictures/CryptingPage.jpg"/>
+        <img src="./Pictures/CryptingPage.png"/>
     </a>
 </div>
-<div align="center">
-    <a href="./">
-        <img src="./Pictures/CryptingPage2.jpg"/>
-    </a>
-</div>
+ 
 
 ## Pdf page
 
 <div align="center">
     <a href="./">
-        <img src="./Pictures/PdfPage.jpg"/>
+        <img src="./Pictures/PdfPage.png"/>
     </a>
-</div><div align="center">
-    <a href="./">
-        <img src="./Pictures/PdfPage2.jpg"/>
-    </a>
-</div><div align="center">
-    <a href="./">
-        <img src="./Pictures/PdfPage3.jpg"/>
-    </a>
-</div>
-<div align="center">
-    <a href="./">
-        <img src="./Pictures/PdfPage4.jpg"/>
-    </a>
-</div>
+</div> 
+ 
 
 ## Settings page
 
 <div align="center">
     <a href="./">
-        <img src="./Pictures/SettingsPage.jpg"/>
+        <img src="./Pictures/SettingsPage.png"/>
+    </a>
+</div>
+ 
+
+## AI Image page
+
+<div align="center">
+    <a href="./">
+        <img src="./Pictures/AIImage.png"/>
+    </a>
+</div> 
+
+## AI Camera page
+
+<div align="center">
+    <a href="./">
+        <img src="./Pictures/AICamera.png"/>
     </a>
 </div>
