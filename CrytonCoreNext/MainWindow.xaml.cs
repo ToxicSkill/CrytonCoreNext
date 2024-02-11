@@ -60,9 +60,13 @@ namespace CrytonCoreNext
             {
                 this.DragMove();
             }
+            if (e.ClickCount == 2)
+            {
+                SymbolIcon_MouseDoubleClick();
+            }
         }
 
-        private void SymbolIcon_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void SymbolIcon_MouseDoubleClick()
         {
             var actualState = WindowState;
             if (actualState == WindowState.Maximized)
@@ -77,7 +81,7 @@ namespace CrytonCoreNext
 
         private void NavigationView_SelectionChanged(NavigationView sender, RoutedEventArgs args)
         {
-            if (sender is not Wpf.Ui.Controls.NavigationView navigationView)
+            if (sender is not NavigationView navigationView)
             {
                 return;
             }

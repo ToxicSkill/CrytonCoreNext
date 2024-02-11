@@ -11,7 +11,7 @@ using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.Abstract
 {
-    public abstract class InteractiveViewBase(IFileService fileService, ISnackbarService snackbarService, CrytonCoreNext.Services.DialogService dialogService) : ViewModelBase
+    public abstract class InteractiveViewBase(IFileService fileService, ISnackbarService snackbarService, Services.DialogService dialogService) : ViewModelBase
     {
         protected void PostSuccessSnackbar(string text)
         {

@@ -46,7 +46,7 @@
                     </StackPanel>
                 </MenuItem.Header>
             </MenuItem>
-            <MenuItem Command="{Binding ExitCommand}">
+            <MenuItem Command="{Binding ViewModel.ExitCommand}">
                 <MenuItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <ui:SymbolIcon Symbol="ArrowExit20" />
@@ -89,6 +89,6 @@
                        VerticalAlignment="Top"
                        Margin="10"
                        ContextMenu="{StaticResource contextMenu}"
-                       MouseDown="SymbolIcon_MouseDown" />
+                       MouseDown="SymbolIcon_MouseDown"/>
     </Grid>
 </ui:FluentWindow>
