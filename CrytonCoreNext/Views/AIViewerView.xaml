@@ -21,15 +21,33 @@
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <c:ObjectToVisibility x:Key="ObjectToVisibility" />
             <ContextMenu x:Key="ImageContextMenu">
-                <ui:MenuItem Header="Delete"
-                             Icon="Delete20"
-                             Command="{Binding DeleteImageCommand}" />
-                <ui:MenuItem Header="Save"
-                             Icon="Save20"
-                             Command="{Binding SaveImageCommand}" />
-                <ui:MenuItem Header="Export to PDF"
-                             Icon="ArrowExportUp20"
-                             Command="{Binding ExportImageToPDFCommand}" />
+                <ui:MenuItem  Command="{Binding DeleteImageCommand}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Delete20" />
+                            <TextBlock Margin="5,0"
+                                       Text="Delete" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </ui:MenuItem>
+                <ui:MenuItem Command="{Binding SaveImageCommand}"> 
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Save20" />
+                            <TextBlock Margin="5,0"
+                                       Text="Save" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </ui:MenuItem>
+                <ui:MenuItem Command="{Binding ExportImageToPDFCommand}"> 
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="ArrowExportUp20" />
+                            <TextBlock Margin="5,0"
+                                       Text="Export to PDF" />
+                        </StackPanel>
+                    </MenuItem.Header>
+                </ui:MenuItem>
             </ContextMenu>
         </ResourceDictionary>
     </Page.Resources>
