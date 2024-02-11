@@ -42,16 +42,7 @@ Support touch & windows MICA maetrial.
         <img src="./Pictures/PdfPage.png"/>
     </a>
 </div> 
- 
 
-## Settings page
-
-<div align="center">
-    <a href="./">
-        <img src="./Pictures/SettingsPage.png"/>
-    </a>
-</div>
- 
 
 ## AI Image page
 
@@ -67,4 +58,13 @@ Support touch & windows MICA maetrial.
     <a href="./">
         <img src="./Pictures/AICamera.png"/>
     </a>
+</div> 
+
+## Settings page
+
+<div align="center">
+    <a href="./">
+        <img src="./Pictures/SettingsPage.png"/>
+    </a>
 </div>
+ 
