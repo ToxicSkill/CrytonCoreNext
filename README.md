@@ -44,7 +44,7 @@ Support touch & windows MICA maetrial.
 </div> 
 
 
-## AI Image page
+## AI Viewer page
 
 <div align="center">
     <a href="./">
