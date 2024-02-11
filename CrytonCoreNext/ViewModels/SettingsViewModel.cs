@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
@@ -35,6 +36,12 @@ namespace CrytonCoreNext.ViewModels
 
         [ObservableProperty]
         public TreeViewItemModel selectedTreeViewItem;
+
+        [ObservableProperty]
+        public ObservableCollection<CustomColor> customColorItemource;
+
+        [ObservableProperty]
+        public CustomColor selectedCustomColorItemource;
 
         [ObservableProperty]
         public bool isThemeSwitchChecked = true;
@@ -71,7 +78,6 @@ namespace CrytonCoreNext.ViewModels
             TreeViewItemSource = [];
 
             ConnectionStrings = Properties.Settings.Default.ConnectionStrings;
-
             InitializeSettings();
         }
 
@@ -80,12 +86,32 @@ namespace CrytonCoreNext.ViewModels
             if (Properties.Settings.Default.FirstRun)
             {
                 Properties.Settings.Default.FirstRun = false;
+                _themeService.SetSystemAccent();
             }
         }
 
 
         private void InitializeSettings()
         {
+            CustomColorItemource = new ObservableCollection<CustomColor>(
+            [
+                new()
+                {
+                    Color = new SolidColorBrush(Colors.Transparent),
+                    Description = "System"
+                },
+                new()
+                {
+                    Color = new SolidColorBrush(Colors.Blue),
+                    Description = "Blue"
+                },
+                new()
+                {
+                    Color = new SolidColorBrush(Colors.Yellow),
+                    Description = "Yellow"
+                }
+            ]);
+            SelectedCustomColorItemource = CustomColorItemource.First();
             IsFullscreenOnStart = Properties.Settings.Default.FullscreenOnStart;
             IsThemeSwitchChecked = Properties.Settings.Default.Theme;
             IsThemeSwitchChecked = !IsThemeSwitchChecked;

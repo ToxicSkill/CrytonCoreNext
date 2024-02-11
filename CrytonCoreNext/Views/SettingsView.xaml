@@ -8,7 +8,7 @@
       xmlns:extensions="clr-namespace:CrytonCoreNext.Extensions"
       Background="{DynamicResource ApplicationBackgroundBrush}"
       d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
-      xmlns:components="clr-namespace:CrytonCoreNext.Controls"
+      xmlns:components="clr-namespace:CrytonCoreNext.Controls" 
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:e="http://schemas.microsoft.com/xaml/behaviors"
@@ -38,38 +38,38 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0"
                   Margin="0, 20, 0,0">
-                
-            <TreeView ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                      BorderThickness="0"
-                      ItemsSource="{Binding TreeViewItemSource}">
-                <e:Interaction.Behaviors>
-                    <extensions:BindableSelectedItemBehavior SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                </e:Interaction.Behaviors>
-                <TreeView.ItemContainerStyle>
-                    <Style TargetType="TreeViewItem"
-                           BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                        <Setter Property="IsSelected"
-                                Value="{Binding IsSelected}" />
-                    </Style>
-                </TreeView.ItemContainerStyle>
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate DataType="models:TreeViewItemModel"
-                                              ItemsSource="{Binding Childs}">
-                        <Grid>
-                            <StackPanel Orientation="Horizontal"
-                                        Margin="0,5,0,0">
-                                <ui:SymbolIcon Symbol="{Binding Symbol}"
-                                               Margin="10,0" />
-                                <TextBlock Text="{Binding Title}" />
-                            </StackPanel>
-                        </Grid>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
+
+                <TreeView ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                          BorderThickness="0"
+                          ItemsSource="{Binding TreeViewItemSource}">
+                    <e:Interaction.Behaviors>
+                        <extensions:BindableSelectedItemBehavior SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </e:Interaction.Behaviors>
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem"
+                               BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                            <Setter Property="IsSelected"
+                                    Value="{Binding IsSelected}" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="models:TreeViewItemModel"
+                                                  ItemsSource="{Binding Childs}">
+                            <Grid>
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,5,0,0">
+                                    <ui:SymbolIcon Symbol="{Binding Symbol}"
+                                                   Margin="10,0" />
+                                    <TextBlock Text="{Binding Title}" />
+                                </StackPanel>
+                            </Grid>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
 
             </Grid>
             <ScrollViewer Grid.Column="1"
-                          x:Name="scrollViewer" 
+                          x:Name="scrollViewer"
                           PanningMode="Both"
                           VerticalScrollBarVisibility="Hidden">
                 <StackPanel x:Name="stackPanel"
@@ -105,21 +105,120 @@
                                 </ui:SymbolIcon.InputBindings>
                             </ui:SymbolIcon>
                         </Grid>
-                    </ui:CardControl> 
-                    <ui:CardControl Margin="15,8,15,0"
-                                    Icon="{ui:SymbolIcon Color20}">
-                        <ui:CardControl.Header>
-                            <StackPanel Grid.Column="0"
-                                        VerticalAlignment="Center">
-                                <TextBlock FontSize="13"
-                                           FontWeight="Medium"
-                                           Text="Color" />
-                                <TextBlock FontSize="12"
-                                           Text="Set prime color of application." />
-                            </StackPanel>
-                        </ui:CardControl.Header>
-                        <ComboBox />
                     </ui:CardControl>
+                    <ui:CardExpander Margin="15,8,15,0" 
+                                     Icon="{ui:SymbolIcon Color20}">
+                        <ui:CardExpander.Header>
+                            <Grid Margin="-15,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ui:SymbolIcon Symbol="Color20" FontSize="24" />
+                                <StackPanel Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock FontSize="13"
+                                               FontWeight="Medium"
+                                               Text="Color" />
+                                    <TextBlock FontSize="12"
+                                               Text="Set prime color of application." />
+                                </StackPanel>
+                                <ComboBox  Grid.Column="2"
+                                           HorizontalAlignment="Right"
+                                           MinWidth="160"
+                                           SelectedItem="{Binding SelectedCustomColorItemource, Mode=TwoWay}"
+                                           ItemsSource="{Binding CustomColorItemource}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate DataType="models:CustomColor">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="17" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Border Background="{Binding Color}" Width="15" Height="15" CornerRadius="3"/>
+                                                <TextBlock Grid.Column="1" Margin="5,0,0,0"
+                                                           Text="{Binding Description}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </Grid>
+                            
+                        </ui:CardExpander.Header>
+                        <Grid MinHeight="60"
+                              Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0"
+                                    Background="{ui:ThemeResource AccentTextFillColorPrimaryBrush}"
+                                    CornerRadius="8,0,0,8"
+                                    TextElement.Foreground="{ui:ThemeResource TextFillColorInverseBrush}">
+                                <Grid Margin="12">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <ui:TextBlock Grid.Row="0"
+                                                  FontTypography="BodyStrong"
+                                                  Text="Accent Text / Primary" />
+                                    <ui:TextBlock Grid.Row="1"
+                                                  Text="Rest or hover" />
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="1"
+                                    Background="{ui:ThemeResource AccentTextFillColorSecondaryBrush}"
+                                    CornerRadius="0"
+                                    TextElement.Foreground="{ui:ThemeResource TextFillColorInverseBrush}">
+                                <Grid Margin="12">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <ui:TextBlock Grid.Row="0"
+                                                  FontTypography="BodyStrong"
+                                                  Text="Accent Text / Secondary" />
+                                    <ui:TextBlock Grid.Row="1"
+                                                  Text="Rest or hover" />
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="2"
+                                    Background="{ui:ThemeResource AccentTextFillColorTertiaryBrush}"
+                                    CornerRadius="0"
+                                    TextElement.Foreground="{ui:ThemeResource TextFillColorInverseBrush}">
+                                <Grid Margin="12">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <ui:TextBlock Grid.Row="0"
+                                                  FontTypography="BodyStrong"
+                                                  Text="Accent Text / Tertiary" />
+                                    <ui:TextBlock Grid.Row="1"
+                                                  Text="Pressed" />
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="3"
+                                    Background="{ui:ThemeResource AccentTextFillColorDisabledBrush}"
+                                    CornerRadius="0,8,8,0"
+                                    TextElement.Foreground="{ui:ThemeResource TextFillColorInverseBrush}">
+                                <Grid Margin="12">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <ui:TextBlock Grid.Row="0"
+                                                  FontTypography="BodyStrong"
+                                                  Text="Accent Text / Disabled" />
+                                    <ui:TextBlock Grid.Row="1"
+                                                  Text="Disabled" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </ui:CardExpander>
 
                     <TextBlock Text="Language"
                                FontSize="18"
