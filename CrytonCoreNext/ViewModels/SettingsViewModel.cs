@@ -109,9 +109,6 @@ namespace CrytonCoreNext.ViewModels
             IsThemeSwitchChecked = !IsThemeSwitchChecked;
             IsThemeSwitchChecked = !IsThemeSwitchChecked;
             PdfDpiValue = Properties.Settings.Default.PdfRenderDpi;
-            OnIsFullscreenOnStartChanged(IsThemeSwitchChecked);
-            OnPdfDpiValueChanged(PdfDpiValue);
-            SetSettings();
         }
 
         private void UpdateAvailableColors()

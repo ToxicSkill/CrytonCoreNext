@@ -106,7 +106,7 @@
                             </ui:SymbolIcon>
                         </Grid>
                     </ui:CardControl>
-                    <ui:CardExpander Margin="15,8,15,0" 
+                    <ui:CardExpander Margin="20,8,15,0" 
                                      Icon="{ui:SymbolIcon Color20}">
                         <ui:CardExpander.Header>
                             <Grid Margin="-15,0,0,0">
