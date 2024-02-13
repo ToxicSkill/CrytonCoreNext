@@ -3,6 +3,8 @@ using CrytonCoreNext.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using Wpf.Ui.Controls;
 using TextBlock = System.Windows.Controls.TextBlock;
 
@@ -42,6 +44,8 @@ namespace CrytonCoreNext.Views
             _firstHeaderHeight = firstHeader.ActualHeight;
             LoadHeadersSymbols();
             var headers = VisualHelper.FindVisualChilds<TextBlock>(stackPanel, false).ToList();
+            ScrollViewer scrollViewer = GetScrollViewer(stackPanel);
+            var verticalPositionByCard = new Dictionary<int, (CardControl card, bool hasHeader, double height, string text, SymbolRegular symbol)>();
             foreach (var cardControl in VisualHelper.FindVisualChilds<CardControl>(stackPanel, false))
             {
                 if (cardControl.Icon is SymbolIcon icon)
@@ -49,7 +53,9 @@ namespace CrytonCoreNext.Views
                     var hasHeader = _symbolBySymbolWithHeader.ContainsKey(icon.Symbol);
                     var headerText = hasHeader ? headers[_symbolBySymbolWithHeader.Keys.ToList().IndexOf(icon.Symbol)].Text : "";
                     var symbol = hasHeader ? _symbolBySymbolWithHeader[icon.Symbol] : icon.Symbol;
-                    ViewModel.RegisterNewUiNavigableElement(cardControl, hasHeader, _firstHeaderHeight, headerText, symbol);
+                    var transform = cardControl.TransformToVisual(scrollViewer);
+                    var positionInScrollViewer = transform.Transform(new Point(0, 0));
+                    verticalPositionByCard.Add((int)positionInScrollViewer.Y, (cardControl, hasHeader, _firstHeaderHeight, headerText, symbol));
                 }
             }
             foreach (var cardExpander in VisualHelper.FindVisualChilds<CardExpander>(stackPanel, false))
@@ -59,18 +65,36 @@ namespace CrytonCoreNext.Views
                     var hasHeader = _symbolBySymbolWithHeader.ContainsKey(icon.Symbol);
                     var headerText = hasHeader ? headers[_symbolBySymbolWithHeader.Keys.ToList().IndexOf(icon.Symbol)].Text : "";
                     var symbol = hasHeader ? _symbolBySymbolWithHeader[icon.Symbol] : icon.Symbol;
-                    ViewModel.RegisterNewUiNavigableElement(
-                        new CardControl()
-                        {
-                            Icon = icon,
-                            Header = new TextBlock() { Text = "" }
-                        },
-                        hasHeader,
-                        _firstHeaderHeight,
-                        headerText,
-                        symbol);
+                    var cardControl = new CardControl
+                    {
+                        Icon = icon,
+                        Header = (cardExpander.Header as Grid).Children[1]
+                    };
+
+                    var transform = cardExpander.TransformToVisual(scrollViewer);
+                    var positionInScrollViewer = transform.Transform(new Point(0, 0));
+                    verticalPositionByCard.Add((int)positionInScrollViewer.Y, (cardControl, hasHeader, _firstHeaderHeight, headerText, symbol));
                 }
             }
+            foreach (var card in verticalPositionByCard.OrderBy(x => x.Key))
+            {
+                ViewModel.RegisterNewUiNavigableElement(card.Value.card, card.Value.hasHeader, card.Value.height, card.Value.text, card.Value.symbol);
+            }
+        }
+
+        public static ScrollViewer GetScrollViewer(DependencyObject depObj)
+        {
+            var obj = depObj as ScrollViewer;
+            if (obj != null) return obj;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(depObj, i);
+
+                var result = GetScrollViewer(child);
+                if (result != null) return result;
+            }
+            return null;
         }
 
         private void LoadHeadersSymbols()
@@ -87,6 +111,14 @@ namespace CrytonCoreNext.Views
             if (e.Source is CardControl card)
             {
                 ViewModel.UpdateSelectedTreeViewItem(card);
+            }
+            if (e.Source is CardExpander cardExpander)
+            {
+                var cardControl = new CardControl
+                {
+                    Icon = cardExpander.Icon
+                };
+                ViewModel.UpdateSelectedTreeViewItem(cardControl);
             }
         }
     }

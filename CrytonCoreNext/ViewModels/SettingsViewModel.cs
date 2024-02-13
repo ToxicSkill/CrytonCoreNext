@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
-using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
@@ -153,14 +152,25 @@ namespace CrytonCoreNext.ViewModels
 
         public void UpdateSelectedTreeViewItem(CardControl card)
         {
-            var newSelectedItem = _cardByTreeViewItem.First(c => c.Value == card).Key;
-            if (newSelectedItem.Childs != null)
+            try
             {
-                newSelectedItem = newSelectedItem.Childs[0];
+                var newSelectedItem = _cardByTreeViewItem.First(c => c.Value.Icon == card.Icon).Key;
+                if (newSelectedItem == null)
+                {
+                    return;
+                };
+                if (newSelectedItem.Childs != null)
+                {
+                    newSelectedItem = newSelectedItem.Childs[0];
+                }
+                _lockTreeViewItem = true;
+                SelectedTreeViewItem = newSelectedItem;
+                _lockTreeViewItem = false;
             }
-            _lockTreeViewItem = true;
-            SelectedTreeViewItem = newSelectedItem;
-            _lockTreeViewItem = false;
+            catch (Exception)
+            {
+                return;
+            }
         }
 
         public void SetVerticalScrollUpdateFunction(Action<double> update)
@@ -235,10 +245,10 @@ namespace CrytonCoreNext.ViewModels
                 TreeViewItemSource.Add(newTreeViewItem);
                 _cardByTreeViewItem.Add(newTreeViewItem, card);
             }
-            var t = VisualHelper.FindVisualChilds<System.Windows.Controls.TextBlock>(card.Header as StackPanel, true);
+            var title = ((card.Header as StackPanel)!.Children[0] as System.Windows.Controls.TextBlock)!.Text;
             var newSubTreeViewItem = new TreeViewItemModel()
             {
-                Title = ((card.Header as StackPanel)!.Children[0] as System.Windows.Controls.TextBlock)!.Text,
+                Title = title,
                 IsExpanded = true,
                 Symbol = mainItemSymbol
             };

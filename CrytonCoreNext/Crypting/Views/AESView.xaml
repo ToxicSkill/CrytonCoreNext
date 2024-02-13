@@ -6,6 +6,7 @@
       xmlns:viewmodels="clr-namespace:CrytonCoreNext.Crypting.ViewModels"
       d:DataContext="{d:DesignInstance Type=viewmodels:AESViewModel}"
       Background="{DynamicResource ApplicationBackgroundBrush}"
+      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:components="clr-namespace:CrytonCoreNext.Controls"
       xmlns:c="clr-namespace:CrytonCoreNext.Converters"
@@ -18,10 +19,7 @@
     <Page.Resources>
         <ResourceDictionary> 
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
-            <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Dark" />
-            </ResourceDictionary.MergedDictionaries>
+            <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" /> 
         </ResourceDictionary>
     </Page.Resources>
 
