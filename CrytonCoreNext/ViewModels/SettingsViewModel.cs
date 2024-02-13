@@ -31,6 +31,8 @@ namespace CrytonCoreNext.ViewModels
 
         private _verticalOffsetScrollUpdateDelegate VerticalOffsetScrollUpdate;
 
+        private SolidColorBrush _systemColorAccent;
+
         [ObservableProperty]
         public ObservableCollection<TreeViewItemModel> treeViewItemSource;
 
@@ -76,9 +78,9 @@ namespace CrytonCoreNext.ViewModels
             _cardByTreeViewItem = [];
 
             TreeViewItemSource = [];
-
             ConnectionStrings = Properties.Settings.Default.ConnectionStrings;
             InitializeSettings();
+            ApplicationThemeManager.Changed += HandleThemeChange;
         }
 
         public void OnStartup()
@@ -90,28 +92,18 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
+        partial void OnSelectedCustomColorItemourceChanged(CustomColor value)
+        {
+            if (value == null)
+            {
+                return;
+            }
+            ApplicationAccentColorManager.Apply(value.Color.Color, ApplicationThemeManager.GetAppTheme());
+        }
 
         private void InitializeSettings()
         {
-            CustomColorItemource = new ObservableCollection<CustomColor>(
-            [
-                new()
-                {
-                    Color = new SolidColorBrush(Colors.Transparent),
-                    Description = "System"
-                },
-                new()
-                {
-                    Color = new SolidColorBrush(Colors.Blue),
-                    Description = "Blue"
-                },
-                new()
-                {
-                    Color = new SolidColorBrush(Colors.Yellow),
-                    Description = "Yellow"
-                }
-            ]);
-            SelectedCustomColorItemource = CustomColorItemource.First();
+            UpdateAvailableColors();
             IsFullscreenOnStart = Properties.Settings.Default.FullscreenOnStart;
             IsThemeSwitchChecked = Properties.Settings.Default.Theme;
             IsThemeSwitchChecked = !IsThemeSwitchChecked;
@@ -120,6 +112,24 @@ namespace CrytonCoreNext.ViewModels
             OnIsFullscreenOnStartChanged(IsThemeSwitchChecked);
             OnPdfDpiValueChanged(PdfDpiValue);
             SetSettings();
+        }
+
+        private void UpdateAvailableColors()
+        {
+            CustomColorItemource = new ObservableCollection<CustomColor>(
+                        [
+                            new()
+                            {
+                                Color = (SolidColorBrush)ApplicationAccentColorManager.PrimaryAccentBrush,
+                                Description = "System"
+                            }
+                        ]);
+            SelectedCustomColorItemource = CustomColorItemource.First();
+        }
+
+        private void HandleThemeChange(ApplicationTheme currentApplicationTheme, Color systemAccent)
+        {
+            UpdateAvailableColors();
         }
 
         partial void OnPdfDpiValueChanged(int value)
