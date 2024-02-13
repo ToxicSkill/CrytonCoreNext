@@ -22,7 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
 using File = CrytonCoreNext.Models.File;
 
 namespace CrytonCoreNext.ViewModels
@@ -760,7 +760,7 @@ namespace CrytonCoreNext.ViewModels
         {
             if (value != null)
             {
-                App.Current.Dispatcher.Invoke(() =>
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
                     value.PageImage = _imageLoader.LoadImage(value);
                 });

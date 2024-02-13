@@ -5,10 +5,12 @@ using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
 using CrytonCoreNext.Dictionaries;
 using CrytonCoreNext.Interfaces.Serializers;
+using System;
 using System.Collections.ObjectModel;
 using System.Text;
-using Wpf.Ui.Common;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
+
 
 namespace CrytonCoreNext.Crypting.ViewModels
 {
@@ -84,7 +86,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
                 var castedObjects = (Objects)objects;
                 if (castedObjects.Name != PageName)
                 {
-                    _snackbarService.Show(Language.Post("Warning"), Language.Post("IncorrectFile"), SymbolRegular.Warning20, ControlAppearance.Caution);
+                    _snackbarService.Show(Language.Post("Warning"), Language.Post("IncorrectFile"), ControlAppearance.Caution, new SymbolIcon(SymbolRegular.Warning20), TimeSpan.FromSeconds(2));
                     _aesHelper.GenerateNewKeys();
                     return false;
                 }
@@ -92,17 +94,17 @@ namespace CrytonCoreNext.Crypting.ViewModels
                 {
                     if (!ValidateKeys(castedObjects.ToSerialzie.IV, castedObjects.ToSerialzie.Key))
                     {
-                        _snackbarService.Show(Language.Post("Warning"), Language.Post("IncorrectKeys"), SymbolRegular.Warning20, ControlAppearance.Caution);
+                        _snackbarService.Show(Language.Post("Warning"), Language.Post("IncorrectKeys"), ControlAppearance.Caution, new SymbolIcon(SymbolRegular.Warning20), TimeSpan.FromSeconds(2));
                         _aesHelper.GenerateNewKeys();
                         return false;
                     }
 
-                    _snackbarService.Show(Language.Post("Success"), Language.Post("Imported"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+                    _snackbarService.Show(Language.Post("Success"), Language.Post("Imported"), ControlAppearance.Success, new SymbolIcon(SymbolRegular.Checkmark20), TimeSpan.FromSeconds(2));
                     return true;
                 }
             }
             return false;
-        }  
+        }
 
         private struct ToSerialzieObjects
         {
@@ -144,7 +146,7 @@ namespace CrytonCoreNext.Crypting.ViewModels
             _aesHelper.GenerateKey();
             _aesHelper.GenerateIV();
             UpdateKeyAvailability(true);
-            _snackbarService.Show(Language.Post("Success"), Language.Post("KeysGenerated"), SymbolRegular.Checkmark20, ControlAppearance.Success);
+            _snackbarService.Show(Language.Post("Success"), Language.Post("KeysGenerated"), ControlAppearance.Success, new SymbolIcon(SymbolRegular.Checkmark20), TimeSpan.FromSeconds(2));
         }
     }
 }

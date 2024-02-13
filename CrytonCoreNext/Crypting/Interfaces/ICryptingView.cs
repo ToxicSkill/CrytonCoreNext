@@ -1,5 +1,5 @@
 ﻿using CrytonCoreNext.Crypting.Models;
-using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.Crypting.Interfaces
 {

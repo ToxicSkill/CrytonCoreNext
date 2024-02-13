@@ -68,10 +68,11 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-
-    <Style x:Key="DefaultUiCardExpanderStyle" TargetType="{x:Type ui:CardExpander}">
+    <Style x:Key="DefaultUiCardExpanderStyle"
+           TargetType="{x:Type ui:CardExpander}">
         <!--  Universal WPF UI focus  -->
-        <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
+        <Setter Property="FocusVisualStyle"
+                Value="{DynamicResource DefaultControlFocusVisualStyle}" />
         <!--  Universal WPF UI focus  -->
         <Setter Property="Background">
             <Setter.Value>
@@ -82,44 +83,51 @@
             <Setter.Value>
                 <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
             </Setter.Value>
-        </Setter>
-        <Setter Property="IconForeground">
-            <Setter.Value>
-                <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
-        <Setter Property="BorderThickness" Value="{StaticResource CardExpanderBorderThemeThickness}" />
-        <Setter Property="Padding" Value="{StaticResource CardExpanderPadding}" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="Border.CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="IconFilled" Value="False" />
-        <Setter Property="Icon" Value="Empty" />
-        <Setter Property="IsExpanded" Value="False" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="OverridesDefaultStyle" Value="True" />
+        </Setter> 
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource ControlElevationBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="{StaticResource CardExpanderBorderThemeThickness}" />
+        <Setter Property="Padding"
+                Value="{StaticResource CardExpanderPadding}" />
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="FontSize"
+                Value="{DynamicResource ControlContentThemeFontSize}" />
+        <Setter Property="FontWeight"
+                Value="Normal" />
+        <Setter Property="Border.CornerRadius"
+                Value="{DynamicResource ControlCornerRadius}" /> 
+        <Setter Property="Icon"
+                Value="Empty" />
+        <Setter Property="IsExpanded"
+                Value="False" />
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="OverridesDefaultStyle"
+                Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ui:CardExpander}">
                     <!--  Top level border should not have padding or margin  -->
-                    <Border
-                        x:Name="ContentBorder"
-                        Width="{TemplateBinding Width}"
-                        Height="{TemplateBinding Height}"
-                        MinWidth="{TemplateBinding MinWidth}"
-                        MinHeight="{TemplateBinding MinHeight}"
-                        Padding="0"
-                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding Border.CornerRadius}">
+                    <Border x:Name="ContentBorder"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
+                            MinWidth="{TemplateBinding MinWidth}"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            Padding="0"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding Border.CornerRadius}">
                         <Grid Margin="10,0,0,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -128,60 +136,54 @@
 
                             <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
                                 </Grid.ColumnDefinitions>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <ui:SymbolIcon
-                                            x:Name="ControlIcon"
-                                            Grid.Column="0"
-                                            Margin="{StaticResource CardExpanderIconMargin}"
-                                            VerticalAlignment="Center"
-                                            Filled="{TemplateBinding IconFilled}"
-                                            FontSize="{StaticResource CardExpanderIconSize}"
-                                            Foreground="{TemplateBinding IconForeground}"
-                                            Symbol="{TemplateBinding Icon}" />
-                                    <ContentPresenter
-                                            x:Name="HeaderContentPresenter"
-                                            Grid.Column="1"
-                                            Content="{TemplateBinding Header}"
-                                            TextElement.Foreground="{TemplateBinding Foreground}" />
+                                    <ui:SymbolIcon x:Name="ControlIcon"
+                                                   Grid.Column="0"
+                                                   Margin="{StaticResource CardExpanderIconMargin}"
+                                                   VerticalAlignment="Center" 
+                                                   FontSize="{StaticResource CardExpanderIconSize}" 
+                                                   Symbol="{TemplateBinding Icon}" />
+                                    <ContentPresenter x:Name="HeaderContentPresenter"
+                                                      Grid.Column="1"
+                                                      Content="{TemplateBinding Header}"
+                                                      TextElement.Foreground="{TemplateBinding Foreground}" />
                                 </Grid>
                                 <ToggleButton Grid.Column="1"
-                                x:Name="ExpanderToggleButton"
-                                Margin="0"
-                                Padding="{TemplateBinding Padding}"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                HorizontalContentAlignment="Stretch"
-                                VerticalContentAlignment="Center"
-                                Background="Transparent"
-                                Foreground="{TemplateBinding Foreground}"
-                                IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                OverridesDefaultStyle="True"
-                                Template="{StaticResource DefaultUiCardExpanderToggleButtonStyle}">
+                                              x:Name="ExpanderToggleButton"
+                                              Margin="0"
+                                              Padding="{TemplateBinding Padding}"
+                                              HorizontalAlignment="Stretch"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Center"
+                                              Background="Transparent"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                              OverridesDefaultStyle="True"
+                                              Template="{StaticResource DefaultUiCardExpanderToggleButtonStyle}">
                                 </ToggleButton>
                             </Grid>
                             <!--  Top level controls always visible  -->
-                            
+
 
                             <!--  Collapsed content to expand  -->
-                            <Border
-                                x:Name="ContentPresenterBorder"
-                                Grid.Row="1"
-                                Background="Transparent"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                Opacity="0.0">
-                                <ContentPresenter
-                                    x:Name="ContentPresenter"
-                                    Margin="{TemplateBinding Padding}"
-                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    Content="{TemplateBinding Content}" />
+                            <Border x:Name="ContentPresenterBorder"
+                                    Grid.Row="1"
+                                    Background="Transparent"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    Opacity="0.0">
+                                <ContentPresenter x:Name="ContentPresenter"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Content="{TemplateBinding Content}" />
                                 <Border.LayoutTransform>
                                     <ScaleTransform ScaleY="0" />
                                 </Border.LayoutTransform>
@@ -189,59 +191,76 @@
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsExpanded" Value="True">
-                            <Setter TargetName="ContentPresenterBorder" Property="BorderThickness" Value="0,1,0,0" />
+                        <Trigger Property="IsExpanded"
+                                 Value="True">
+                            <Setter TargetName="ContentPresenterBorder"
+                                    Property="BorderThickness"
+                                    Value="0,1,0,0" />
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ContentPresenterBorder"
-                                            Storyboard.TargetProperty="(Border.LayoutTransform).(ScaleTransform.ScaleY)"
-                                            From="0.0"
-                                            To="1.0"
-                                            Duration="00:00:00.167" />
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ContentPresenterBorder"
-                                            Storyboard.TargetProperty="(Border.Opacity)"
-                                            From="0.0"
-                                            To="1.0"
-                                            Duration="00:00:00.167" />
+                                        <DoubleAnimation Storyboard.TargetName="ContentPresenterBorder"
+                                                         Storyboard.TargetProperty="(Border.LayoutTransform).(ScaleTransform.ScaleY)"
+                                                         From="0.0"
+                                                         To="1.0"
+                                                         Duration="00:00:00.167" />
+                                        <DoubleAnimation Storyboard.TargetName="ContentPresenterBorder"
+                                                         Storyboard.TargetProperty="(Border.Opacity)"
+                                                         From="0.0"
+                                                         To="1.0"
+                                                         Duration="00:00:00.167" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
                             <Trigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ContentPresenterBorder"
-                                            Storyboard.TargetProperty="(Border.LayoutTransform).(ScaleTransform.ScaleY)"
-                                            From="1.0"
-                                            To="0"
-                                            Duration="00:00:00.167" />
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ContentPresenterBorder"
-                                            Storyboard.TargetProperty="(Border.Opacity)"
-                                            From="1.0"
-                                            To="0.0"
-                                            Duration="00:00:00.167" />
+                                        <DoubleAnimation Storyboard.TargetName="ContentPresenterBorder"
+                                                         Storyboard.TargetProperty="(Border.LayoutTransform).(ScaleTransform.ScaleY)"
+                                                         From="1.0"
+                                                         To="0"
+                                                         Duration="00:00:00.167" />
+                                        <DoubleAnimation Storyboard.TargetName="ContentPresenterBorder"
+                                                         Storyboard.TargetProperty="(Border.Opacity)"
+                                                         From="1.0"
+                                                         To="0.0"
+                                                         Duration="00:00:00.167" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                         </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource ControlFillColorSecondaryBrush}" />
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="{DynamicResource ControlFillColorDisabledBrush}" />
-                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-                            <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
-                            <Setter TargetName="HeaderContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
-                            <Setter TargetName="ControlIcon" Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
-                            <Setter TargetName="ExpanderToggleButton" Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter Property="Background"
+                                    Value="{DynamicResource ControlFillColorDisabledBrush}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                            <Setter TargetName="ContentPresenter"
+                                    Property="TextElement.Foreground"
+                                    Value="{DynamicResource TextFillColorDisabledBrush}" />
+                            <Setter TargetName="HeaderContentPresenter"
+                                    Property="TextElement.Foreground"
+                                    Value="{DynamicResource TextFillColorDisabledBrush}" />
+                            <Setter TargetName="ControlIcon"
+                                    Property="Foreground"
+                                    Value="{DynamicResource TextFillColorDisabledBrush}" />
+                            <Setter TargetName="ExpanderToggleButton"
+                                    Property="Foreground"
+                                    Value="{DynamicResource TextFillColorDisabledBrush}" />
                         </Trigger>
-                        <Trigger Property="Icon" Value="Empty">
-                            <Setter TargetName="ControlIcon" Property="Margin" Value="0" />
-                            <Setter TargetName="ControlIcon" Property="Visibility" Value="Collapsed" />
+                        <Trigger Property="Icon"
+                                 Value="Empty">
+                            <Setter TargetName="ControlIcon"
+                                    Property="Margin"
+                                    Value="0" />
+                            <Setter TargetName="ControlIcon"
+                                    Property="Visibility"
+                                    Value="Collapsed" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -249,6 +268,7 @@
         </Setter>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultUiCardExpanderStyle}" TargetType="{x:Type ui:CardExpander}" />
+    <Style BasedOn="{StaticResource DefaultUiCardExpanderStyle}"
+           TargetType="{x:Type ui:CardExpander}" />
 
 </ResourceDictionary>

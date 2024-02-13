@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.Models
 {

@@ -1,4 +1,4 @@
-﻿<ui:UiPage xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+﻿<Page xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
            xmlns:models="clr-namespace:CrytonCoreNext.Crypting.Models"
            x:Class="CrytonCoreNext.Views.CryptingView"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,15 +8,16 @@
            xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
            xmlns:components="clr-namespace:CrytonCoreNext.Controls"
            xmlns:converterType="clr-namespace:CrytonCoreNext.Crypting.Models"
-           d:DataContext="{d:DesignInstance Type=viewmodels:CryptingViewModel}"
-           xmlns:c="clr-namespace:CrytonCoreNext.Converters"
+      d:DataContext="{d:DesignInstance Type=viewmodels:CryptingViewModel}"
+      ScrollViewer.CanContentScroll="False"
+      xmlns:c="clr-namespace:CrytonCoreNext.Converters"
            MinWidth="900"
            Background="{DynamicResource ApplicationBackgroundBrush}"
            d:DesignHeight="850"
            d:DesignWidth="1400"
            mc:Ignorable="d">
 
-    <ui:UiPage.Resources>
+    <Page.Resources>
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
             <c:ReverseCollectionToVisibilityConverter x:Key="ReverseCollectionToVisibilityConverter" />
@@ -25,7 +26,7 @@
             <SolidColorBrush x:Key="BrushBlueTransparent"
                              Color="#7F8484EF" />
         </ResourceDictionary>
-    </ui:UiPage.Resources>
+    </Page.Resources>
 
     <Grid>
         <Grid Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
@@ -51,7 +52,7 @@
                        Cursor="Hand"
                        Width="80"
                        Height="80"
-                       Icon="Add20"
+                       Icon="{ui:SymbolIcon Add20}"
                        FontSize="54"
                        ToolTip="Load files"
                        Command="{Binding LoadCryptFilesCommand}" />
@@ -66,25 +67,25 @@
                 <TextBlock FontSize="{StaticResource G_NormalFontSize}"
                            FontWeight="UltraLight"
                            Text="Learn more" />
-                <ui:Hyperlink Margin="8,8,0,0"
+                <ui:HyperlinkButton Margin="8,8,0,0"
                               Padding="4"
                               Content="GitHub"
                               Icon="Empty"
                               NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
                               ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
-                <ui:Hyperlink Margin="8,0,0,0"
+                <ui:HyperlinkButton Margin="8,0,0,0"
                               Padding="4"
                               Content="Advanced Encrypting Standard (AES)"
                               Icon="Empty"
                               NavigateUri="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard"
                               ToolTip="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" />
-                <ui:Hyperlink Margin="8,0,0,0"
+                <ui:HyperlinkButton Margin="8,0,0,0"
                               Padding="4"
                               Content="Rivest Shamir Adleman algorithm (RSA)"
                               Icon="Empty"
                               NavigateUri="https://en.wikipedia.org/wiki/RSA_(cryptosystem)"
                               ToolTip="https://en.wikipedia.org/wiki/RSA_(cryptosystem)" />
-                <ui:Hyperlink Margin="8,0,0,0"
+                <ui:HyperlinkButton Margin="8,0,0,0"
                               Padding="4"
                               Content="Fluent UI Documentation"
                               Icon="Empty"
@@ -369,4 +370,4 @@
         </Grid>
 
     </Grid>
-</ui:UiPage>
+</Page>

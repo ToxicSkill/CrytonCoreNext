@@ -153,16 +153,16 @@ namespace CrytonCoreNext.PDF.Services
         {
             _symbolByPdfInformation = new()
             {
-                { nameof(EPdfInfo.Author), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20 } },
-                { nameof(EPdfInfo.Creator), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Person20, Filled=true  } },
-                { nameof(EPdfInfo.CreationTime), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20  } },
-                { nameof(EPdfInfo.LastWriteTime), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.CalendarRtl20, Filled=true  } },
-                { nameof(EPdfInfo.Producer), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Production20  } },
-                { nameof(EPdfInfo.Title), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.TextCaseTitle20  } },
-                { nameof(EPdfInfo.Subject), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Subtitles20  } },
-                { nameof(EPdfInfo.Keywords), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Key20  } },
-                { nameof(EPdfInfo.NumberOfPdfObjects), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Cube20  } },
-                { nameof(EPdfInfo.PdfVersion), new SymbolIcon() { Symbol = Wpf.Ui.Common.SymbolRegular.Diversity20  } }
+                { nameof(EPdfInfo.Author), new SymbolIcon() { Symbol = SymbolRegular.Person20 } },
+                { nameof(EPdfInfo.Creator), new SymbolIcon() { Symbol = SymbolRegular.Person20, Filled=true  } },
+                { nameof(EPdfInfo.CreationTime), new SymbolIcon() { Symbol = SymbolRegular.CalendarRtl20  } },
+                { nameof(EPdfInfo.LastWriteTime), new SymbolIcon() { Symbol = SymbolRegular.CalendarRtl20, Filled=true  } },
+                { nameof(EPdfInfo.Producer), new SymbolIcon() { Symbol = SymbolRegular.Production20  } },
+                { nameof(EPdfInfo.Title), new SymbolIcon() { Symbol = SymbolRegular.TextCaseTitle20  } },
+                { nameof(EPdfInfo.Subject), new SymbolIcon() { Symbol = SymbolRegular.Subtitles20  } },
+                { nameof(EPdfInfo.Keywords), new SymbolIcon() { Symbol = SymbolRegular.Key20  } },
+                { nameof(EPdfInfo.NumberOfPdfObjects), new SymbolIcon() { Symbol = SymbolRegular.Cube20  } },
+                { nameof(EPdfInfo.PdfVersion), new SymbolIcon() { Symbol = SymbolRegular.Diversity20  } }
             };
         }
     }

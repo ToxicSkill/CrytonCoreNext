@@ -2,16 +2,16 @@
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
 using CrytonCoreNext.Models;
-using CrytonCoreNext.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Media;
+using Wpf.Ui;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Mvvm.Contracts;
+
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -31,21 +31,19 @@ namespace CrytonCoreNext.ViewModels
 
         private _verticalOffsetScrollUpdateDelegate VerticalOffsetScrollUpdate;
 
-        public delegate void OnThemeStyleChanged(BackgroundType value);
-
-        public event OnThemeStyleChanged ThemeStyleChanged;
-
-        [ObservableProperty]
-        public ObservableCollection<BackgroundType> themeStylesItemsSource;
-
-        [ObservableProperty]
-        public BackgroundType selectedThemeStyle;
+        private SolidColorBrush _systemColorAccent;
 
         [ObservableProperty]
         public ObservableCollection<TreeViewItemModel> treeViewItemSource;
 
         [ObservableProperty]
         public TreeViewItemModel selectedTreeViewItem;
+
+        [ObservableProperty]
+        public ObservableCollection<CustomColor> customColorItemource;
+
+        [ObservableProperty]
+        public CustomColor selectedCustomColorItemource;
 
         [ObservableProperty]
         public bool isThemeSwitchChecked = true;
@@ -80,11 +78,9 @@ namespace CrytonCoreNext.ViewModels
             _cardByTreeViewItem = [];
 
             TreeViewItemSource = [];
-
             ConnectionStrings = Properties.Settings.Default.ConnectionStrings;
-
-            InitializeThemes();
             InitializeSettings();
+            ApplicationThemeManager.Changed += HandleThemeChange;
         }
 
         public void OnStartup()
@@ -92,48 +88,52 @@ namespace CrytonCoreNext.ViewModels
             if (Properties.Settings.Default.FirstRun)
             {
                 Properties.Settings.Default.FirstRun = false;
-                SelectedThemeStyle = BackgroundType.Mica;
+                _themeService.SetSystemAccent();
             }
         }
 
-        private void InitializeThemes()
+        partial void OnSelectedCustomColorItemourceChanged(CustomColor value)
         {
-            ThemeStylesItemsSource = new ObservableCollection<BackgroundType>
-                (
-                    [
-                        BackgroundType.Acrylic,
-                        BackgroundType.Mica,
-                        BackgroundType.Tabbed
-                    ]
-                );
-            IsThemeStyleAvailable = WindowsAPIService.GetWindowsBuild() >= MinimalWindowsBuildNumber;
+            if (value == null)
+            {
+                return;
+            }
+            ApplicationAccentColorManager.Apply(value.Color.Color, ApplicationThemeManager.GetAppTheme());
         }
 
         private void InitializeSettings()
         {
+            UpdateAvailableColors();
             IsFullscreenOnStart = Properties.Settings.Default.FullscreenOnStart;
-            if (Enum.TryParse(Properties.Settings.Default.Style, out BackgroundType backgroundTypeStyle))
-            {
-                SelectedThemeStyle = backgroundTypeStyle;
-            }
-            else
-            {
-                SelectedThemeStyle = BackgroundType.Mica;
-            }
             IsThemeSwitchChecked = Properties.Settings.Default.Theme;
+            IsThemeSwitchChecked = !IsThemeSwitchChecked;
+            IsThemeSwitchChecked = !IsThemeSwitchChecked;
             PdfDpiValue = Properties.Settings.Default.PdfRenderDpi;
+            OnIsFullscreenOnStartChanged(IsThemeSwitchChecked);
+            OnPdfDpiValueChanged(PdfDpiValue);
             SetSettings();
+        }
+
+        private void UpdateAvailableColors()
+        {
+            CustomColorItemource = new ObservableCollection<CustomColor>(
+                        [
+                            new()
+                            {
+                                Color = (SolidColorBrush)ApplicationAccentColorManager.PrimaryAccentBrush,
+                                Description = "System"
+                            }
+                        ]);
+            SelectedCustomColorItemource = CustomColorItemource.First();
+        }
+
+        private void HandleThemeChange(ApplicationTheme currentApplicationTheme, Color systemAccent)
+        {
+            UpdateAvailableColors();
         }
 
         partial void OnPdfDpiValueChanged(int value)
         {
-            SetSettings();
-        }
-
-        partial void OnSelectedThemeStyleChanged(BackgroundType value)
-        {
-            ThemeStyleChanged?.Invoke(value);
-            Properties.Settings.Default.Style = value.ToString();
             SetSettings();
         }
 
@@ -145,21 +145,32 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnIsThemeSwitchCheckedChanged(bool value)
         {
-            _themeService.SetTheme(value ? ThemeType.Dark : ThemeType.Light);
+            _themeService.SetTheme(value ? ApplicationTheme.Dark : ApplicationTheme.Light);
             Properties.Settings.Default.Theme = value;
             SetSettings();
         }
 
         public void UpdateSelectedTreeViewItem(CardControl card)
         {
-            var newSelectedItem = _cardByTreeViewItem.First(c => c.Value == card).Key;
-            if (newSelectedItem.Childs != null)
+            try
             {
-                newSelectedItem = newSelectedItem.Childs[0];
+                var newSelectedItem = _cardByTreeViewItem.First(c => c.Value.Icon == card.Icon).Key;
+                if (newSelectedItem == null)
+                {
+                    return;
+                };
+                if (newSelectedItem.Childs != null)
+                {
+                    newSelectedItem = newSelectedItem.Childs[0];
+                }
+                _lockTreeViewItem = true;
+                SelectedTreeViewItem = newSelectedItem;
+                _lockTreeViewItem = false;
             }
-            _lockTreeViewItem = true;
-            SelectedTreeViewItem = newSelectedItem;
-            _lockTreeViewItem = false;
+            catch (Exception)
+            {
+                return;
+            }
         }
 
         public void SetVerticalScrollUpdateFunction(Action<double> update)
@@ -227,18 +238,19 @@ namespace CrytonCoreNext.ViewModels
                 var newTreeViewItem = new TreeViewItemModel()
                 {
                     Title = headerTitle,
-                    Symbol = mainItemSymbol,
                     IsExpanded = true,
+                    Symbol = mainItemSymbol,
                     Childs = []
                 };
                 TreeViewItemSource.Add(newTreeViewItem);
                 _cardByTreeViewItem.Add(newTreeViewItem, card);
             }
+            var title = ((card.Header as StackPanel)!.Children[0] as System.Windows.Controls.TextBlock)!.Text;
             var newSubTreeViewItem = new TreeViewItemModel()
             {
-                Title = ((card.Header as StackPanel)!.Children[0] as TextBlock)!.Text,
+                Title = title,
                 IsExpanded = true,
-                Symbol = card.Icon
+                Symbol = mainItemSymbol
             };
             TreeViewItemSource.Last().Childs.Add(newSubTreeViewItem);
             _cardByTreeViewItem.Add(newSubTreeViewItem, card);

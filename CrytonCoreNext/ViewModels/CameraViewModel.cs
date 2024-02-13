@@ -12,7 +12,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.ViewModels
 {
@@ -98,7 +99,7 @@ namespace CrytonCoreNext.ViewModels
             }
             else
             {
-                _snackbarService.Show("Error", "No selected camera", Wpf.Ui.Common.SymbolRegular.ErrorCircle20, Wpf.Ui.Common.ControlAppearance.Danger);
+                _snackbarService.Show("Error", "No selected camera", ControlAppearance.Danger, new SymbolIcon(SymbolRegular.ErrorCircle20), TimeSpan.FromSeconds(2));
                 runCamera = false;
                 return false;
             }
@@ -124,7 +125,7 @@ namespace CrytonCoreNext.ViewModels
                 {
                     _cancellationToken.Token.ThrowIfCancellationRequested();
                     var timestamp = Stopwatch.GetTimestamp();
-                    await App.Current.Dispatcher.BeginInvoke(() =>
+                    await System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
                     {
                         if (RunCamera)
                         {
@@ -186,7 +187,7 @@ namespace CrytonCoreNext.ViewModels
                 _cameraService.SetBufferSize(0);
                 camera = _cameraService.GetCurrentCamera();
             }
-            await App.Current.Dispatcher.BeginInvoke(() =>
+            await System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 AvailableCameras = new(cameras);
                 if (camera != null)

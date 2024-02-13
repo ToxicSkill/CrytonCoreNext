@@ -1,5 +1,6 @@
 ﻿using System;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+
 
 namespace CrytonCoreNext.Interfaces
 {

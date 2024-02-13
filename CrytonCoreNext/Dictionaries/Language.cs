@@ -4,7 +4,7 @@ namespace CrytonCoreNext.Dictionaries
 {
     public static class Language
     {
-        private static int DictionaryIndex = 4;
+        private static readonly int DictionaryIndex = 3;
 
         public static string Post(string key)
         {
@@ -13,8 +13,12 @@ namespace CrytonCoreNext.Dictionaries
             {
                 return string.Empty;
             }
-            var dictionary = Application.Current.Resources.MergedDictionaries[DictionaryIndex];
-            return dictionary.Contains(key) ? dictionary[key].ToString() ?? string.Empty : string.Empty;
+            if (Application.Current.Resources.MergedDictionaries.Count < DictionaryIndex)
+            {
+                var dictionary = Application.Current.Resources.MergedDictionaries[DictionaryIndex];
+                return dictionary.Contains(key) ? dictionary[key].ToString() ?? string.Empty : string.Empty;
+            }
+            return key;
         }
     }
 }

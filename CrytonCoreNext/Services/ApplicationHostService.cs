@@ -1,12 +1,14 @@
 ﻿using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+
 
 namespace CrytonCoreNext.Services;
 
@@ -55,23 +57,21 @@ public class ApplicationHostService : IHostedService
     /// <summary>
     /// Creates main window during activation.
     /// </summary>
-    private async Task HandleActivationAsync()
+    private Task HandleActivationAsync()
     {
-        await Task.CompletedTask;
-
-        if (!Application.Current.Windows.OfType<MainWindow>().Any())
+        if (Application.Current.Windows.OfType<MainWindow>().Any())
         {
-            _navigationWindow = _serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow;
-            _navigationWindow!.ShowWindow();
-
-            _navigationWindow.Navigate(typeof(Dashboard));
+            return Task.CompletedTask;
         }
 
-        await Task.CompletedTask;
+        IWindow mainWindow = _serviceProvider.GetRequiredService<IWindow>();
+        mainWindow?.Show();
+        _navigationService.Navigate(typeof(Dashboard));
+        return Task.CompletedTask;
     }
 
     private void PrepareNavigation()
     {
-        _navigationService.SetPageService(_pageService);
+        _navigationService.SetPageService((IPageService)_pageService);
     }
 }

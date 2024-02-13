@@ -11,10 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Wpf.Ui.Common;
+using Wpf.Ui;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Controls.Interfaces;
-using Wpf.Ui.Mvvm.Contracts;
+
+
 using DialogService = CrytonCoreNext.Services.DialogService;
 
 namespace CrytonCoreNext.ViewModels
@@ -38,7 +38,7 @@ namespace CrytonCoreNext.ViewModels
         public event TabControlChanged OnTabControlChanged;
 
         [ObservableProperty]
-        private ObservableCollection<INavigationControl> navigationItems = [];
+        private ObservableCollection<object> navigationItems = [];
 
         [ObservableProperty]
         public ObservableCollection<AIDetectionImage> detectedCurrentImages;
@@ -80,13 +80,7 @@ namespace CrytonCoreNext.ViewModels
             Images = [];
             NavigationItems =
             [
-                new NavigationItem
-                {
-                    Content = "Processes",
-                    PageTag = "processes",
-                    Icon = SymbolRegular.Apps24,
-                    PageType = typeof(PdfView)
-                }
+                new NavigationViewItem("Processes", SymbolRegular.Apps24, typeof(PdfView))
             ];
         }
 
@@ -154,7 +148,7 @@ namespace CrytonCoreNext.ViewModels
 
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
         {
-            SelectedImage.DetectionImage = Drawers.YoloDetectionDrawer.DrawDetection(SelectedImage, value);
+            SelectedImage.DetectionImage = YoloDetectionDrawer.DrawDetection(SelectedImage, value);
             UserMouseIsInDetectedObject = value != null;
         }
     }

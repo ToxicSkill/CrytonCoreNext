@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
+using TextBlock = Wpf.Ui.Controls.TextBlock;
 
 namespace CrytonCoreNext.Models
 {
@@ -36,7 +36,7 @@ namespace CrytonCoreNext.Models
             titleTextBlock.Text = title;
             descriptionTextBlock.Text = description;
 
-            cardControl.Icon = icon;
+            cardControl.Icon = new SymbolIcon(icon);
             cardHeader.Children.Add(titleTextBlock);
             cardHeader.Children.Add(descriptionTextBlock);
             cardControl.Header = cardHeader;

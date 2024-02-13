@@ -1,7 +1,7 @@
 ﻿using CrytonCoreNext.BackgroundUI;
 using CrytonCoreNext.Logo;
 using CrytonCoreNext.ViewModels;
-using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.Views
 {

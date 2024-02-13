@@ -1,26 +1,28 @@
-﻿<ui:UiPage x:Class="CrytonCoreNext.Views.CameraView"
-           xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-           xmlns:c="clr-namespace:CrytonCoreNext.Converters"
-           xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
-           d:DataContext="{d:DesignInstance Type=viewmodels:CameraViewModel}"
-           mc:Ignorable="d"
-           d:DesignHeight="1080"
-           d:DesignWidth="1920"
-           Loaded="UiPage_Loaded"
-           Unloaded="UiPage_Unloaded">
+﻿<Page x:Class="CrytonCoreNext.Views.CameraView"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:c="clr-namespace:CrytonCoreNext.Converters"
+      xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
+      ScrollViewer.CanContentScroll="False"
+      Background="{DynamicResource ApplicationBackgroundBrush}"
+      d:DataContext="{d:DesignInstance Type=viewmodels:CameraViewModel}"
+      mc:Ignorable="d"
+      d:DesignHeight="1080"
+      d:DesignWidth="1920"
+      Loaded="UiPage_Loaded"
+      Unloaded="UiPage_Unloaded">
 
-    <ui:UiPage.Resources>
+    <Page.Resources>
         <ResourceDictionary>
             <c:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
             <c:CollectionToVisibilityInversionConverter x:Key="CollectionToVisibilityInversionConverter" />
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
         </ResourceDictionary>
-    </ui:UiPage.Resources>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="29*" />
@@ -327,14 +329,14 @@
                              HorizontalAlignment="Center"
                              Margin="620,0,0,0"
                              IsIndeterminate="True"
-                             Visibility="{Binding ScanInProgress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                             Visibility="{Binding ScanInProgress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
             <ui:Button VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Margin="460,0,0,0"
                        Cursor="Hand"
                        Width="80"
                        Height="80"
-                       Icon="Sparkle20"
+                       Icon="{ui:SymbolIcon Sparkle20}"
                        FontSize="54"
                        ToolTip="Create connection"
                        IsEnabled="{Binding ScanInProgress, Converter={StaticResource BoolToVisibilityInversionConverter}}"
@@ -345,13 +347,13 @@
                 <TextBlock FontSize="{StaticResource G_NormalFontSize}"
                            FontWeight="UltraLight"
                            Text="Learn more" />
-                <ui:Hyperlink Margin="8,8,0,0"
-                              Padding="4"
-                              Content="GitHub"
-                              Icon="Empty"
-                              NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
-                              ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
+                <ui:HyperlinkButton Margin="8,8,0,0"
+                                    Padding="4"
+                                    Content="GitHub"
+                                    Icon="Empty"
+                                    NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
+                                    ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
             </StackPanel>
         </Grid>
     </Grid>
-</ui:UiPage>
+</Page>
