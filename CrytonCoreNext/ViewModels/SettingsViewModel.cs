@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Abstract;
+using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Models;
 using System;
 using System.Collections.Generic;
@@ -234,6 +235,7 @@ namespace CrytonCoreNext.ViewModels
                 TreeViewItemSource.Add(newTreeViewItem);
                 _cardByTreeViewItem.Add(newTreeViewItem, card);
             }
+            var t = VisualHelper.FindVisualChilds<System.Windows.Controls.TextBlock>(card.Header as StackPanel, true);
             var newSubTreeViewItem = new TreeViewItemModel()
             {
                 Title = ((card.Header as StackPanel)!.Children[0] as System.Windows.Controls.TextBlock)!.Text,

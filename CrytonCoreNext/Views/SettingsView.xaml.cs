@@ -1,8 +1,8 @@
-﻿using CrytonCoreNext.ViewModels;
+﻿using CrytonCoreNext.Helpers;
+using CrytonCoreNext.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media;
 using Wpf.Ui.Controls;
 using TextBlock = System.Windows.Controls.TextBlock;
 
@@ -28,21 +28,6 @@ namespace CrytonCoreNext.Views
             ViewModel.SetVerticalScrollUpdateFunction(SetScrollVerticalOffset);
         }
 
-        private static IEnumerable<T> FindVisualChilds<T>(DependencyObject depObj, bool deeper) where T : DependencyObject
-        {
-            if (depObj == null) yield return (T)Enumerable.Empty<T>();
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
-            {
-                DependencyObject ithChild = VisualTreeHelper.GetChild(depObj, i);
-                if (ithChild == null) continue;
-                if (ithChild is T t) yield return t;
-                if (deeper)
-                {
-                    foreach (T childOfChild in FindVisualChilds<T>(ithChild, deeper)) yield return childOfChild;
-                }
-            }
-        }
-
         private void SetScrollVerticalOffset(double offset)
         {
             scrollViewer.ScrollToVerticalOffset(offset);
@@ -56,8 +41,8 @@ namespace CrytonCoreNext.Views
             }
             _firstHeaderHeight = firstHeader.ActualHeight;
             LoadHeadersSymbols();
-            var headers = FindVisualChilds<TextBlock>(stackPanel, false).ToList();
-            foreach (var cardControl in FindVisualChilds<CardControl>(stackPanel, false))
+            var headers = VisualHelper.FindVisualChilds<TextBlock>(stackPanel, false).ToList();
+            foreach (var cardControl in VisualHelper.FindVisualChilds<CardControl>(stackPanel, false))
             {
                 if (cardControl.Icon is SymbolIcon icon)
                 {
@@ -65,6 +50,25 @@ namespace CrytonCoreNext.Views
                     var headerText = hasHeader ? headers[_symbolBySymbolWithHeader.Keys.ToList().IndexOf(icon.Symbol)].Text : "";
                     var symbol = hasHeader ? _symbolBySymbolWithHeader[icon.Symbol] : icon.Symbol;
                     ViewModel.RegisterNewUiNavigableElement(cardControl, hasHeader, _firstHeaderHeight, headerText, symbol);
+                }
+            }
+            foreach (var cardExpander in VisualHelper.FindVisualChilds<CardExpander>(stackPanel, false))
+            {
+                if (cardExpander.Icon is SymbolIcon icon)
+                {
+                    var hasHeader = _symbolBySymbolWithHeader.ContainsKey(icon.Symbol);
+                    var headerText = hasHeader ? headers[_symbolBySymbolWithHeader.Keys.ToList().IndexOf(icon.Symbol)].Text : "";
+                    var symbol = hasHeader ? _symbolBySymbolWithHeader[icon.Symbol] : icon.Symbol;
+                    ViewModel.RegisterNewUiNavigableElement(
+                        new CardControl()
+                        {
+                            Icon = icon,
+                            Header = new TextBlock() { Text = "" }
+                        },
+                        hasHeader,
+                        _firstHeaderHeight,
+                        headerText,
+                        symbol);
                 }
             }
         }
