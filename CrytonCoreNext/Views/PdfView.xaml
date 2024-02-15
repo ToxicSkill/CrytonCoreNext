@@ -12,7 +12,7 @@
       ScrollViewer.CanContentScroll="False"
       d:DesignHeight="890"
       d:DesignWidth="1400"
-      mc:Ignorable="d" >
+      mc:Ignorable="d">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -749,10 +749,15 @@
                     <Grid>
                         <Grid Margin="0,10,0,-40">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="3*" />
                             </Grid.ColumnDefinitions>
-                            <StackPanel>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="*" /> 
+                                </Grid.RowDefinitions>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*" />
@@ -773,7 +778,7 @@
                                                Appearance="Secondary"
                                                HorizontalAlignment="Right" />
                                 </Grid>
-                                <Grid>
+                                <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*" />
                                         <ColumnDefinition Width="3*" />
@@ -792,60 +797,108 @@
                                                Margin="3,3"
                                                HorizontalAlignment="Stretch" />
                                 </Grid>
-                            </StackPanel>
 
-                            <ScrollViewer CanContentScroll="True"
-                                          VerticalScrollBarVisibility="Auto"
-                                          Margin="0,80,0,0">
-                                <ListView ItemsSource="{Binding ImageFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                          SelectedItem="{Binding SelectedImageFile}"
-                                          SelectionMode="Single">
-                                    <ListView.Template>
-                                        <ControlTemplate TargetType="ListBox">
-                                            <Border BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="{TemplateBinding BorderBrush}">
-                                                <ItemsPresenter />
-                                            </Border>
-                                        </ControlTemplate>
-                                    </ListView.Template>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate DataType="models:CryptFile">
-                                            <Grid Height="40"
-                                                  Margin="5,0,0,0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="20" />
-                                                    <RowDefinition Height="20" />
-                                                </Grid.RowDefinitions>
-                                                <TextBlock Grid.Row="0"
-                                                           Grid.Column="0"
-                                                           HorizontalAlignment="Left"
-                                                           FontSize="13"
-                                                           FontWeight="Medium"
-                                                           TextWrapping="WrapWithOverflow"
-                                                           Text="{Binding NameWithExtension}" />
-                                                <StackPanel Grid.Row="1"
-                                                            Grid.Column="0"
-                                                            Orientation="Horizontal"
-                                                            HorizontalAlignment="Left">
-                                                    <TextBlock  FontSize="12"
-                                                                Text="Pages: " />
-                                                    <TextBlock  FontSize="12"
-                                                                Text="{Binding Date}" />
-                                                </StackPanel>
-                                                <TextBlock Grid.Row="0"
-                                                           Grid.Column="1"
-                                                           HorizontalAlignment="Right"
-                                                           FontSize="12"
-                                                           Text="{Binding Size}" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </ScrollViewer>
+                                <ScrollViewer Grid.Row="2"
+                                              CanContentScroll="True"
+                                              VerticalScrollBarVisibility="Auto">
+                                    <ListView ItemsSource="{Binding ImageFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              SelectedItem="{Binding SelectedImageFile}"
+                                              SelectionMode="Single">
+                                        <ListView.Template>
+                                            <ControlTemplate TargetType="ListBox">
+                                                <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderBrush}">
+                                                    <ItemsPresenter />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </ListView.Template>
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate DataType="models:CryptFile">
+                                                <ui:CardExpander>
+                                                    <ui:CardExpander.Header>
+                                                    <Grid Height="40"
+                                                          Margin="5,0,0,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="20" />
+                                                            <RowDefinition Height="20" />
+                                                        </Grid.RowDefinitions>
+                                                        <TextBlock Grid.Row="0"
+                                                                   Grid.Column="0"
+                                                                   HorizontalAlignment="Left"
+                                                                   FontSize="13"
+                                                                   FontWeight="Medium"
+                                                                   TextWrapping="WrapWithOverflow"
+                                                                   Text="{Binding NameWithExtension}" />
+                                                            <Grid Grid.Row="1">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="auto" />
+                                                                    <ColumnDefinition Width="auto" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock  FontSize="12"
+                                                                            Text="Pages: " />
+                                                                <TextBlock  FontSize="12" Grid.Column="1"
+                                                                            Text="{Binding Date}"
+                                                                            TextWrapping="Wrap" />
+                                                            </Grid> 
+                                                        <TextBlock Grid.Row="0"
+                                                                   Grid.Column="1"
+                                                                   HorizontalAlignment="Right"
+                                                                   FontSize="12"
+                                                                   Text="{Binding Size}" />
+                                                        </Grid>
+
+                                                    </ui:CardExpander.Header>
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="*" />
+                                                            <RowDefinition Height="*" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid>
+
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock FontSize="{StaticResource G_SmallFontSize}"
+                                                                       VerticalAlignment="Center"
+                                                                       Text="Format" />
+                                                            <ComboBox Grid.Column="1"
+                                                                      ItemsSource="{Binding AvailablePdfFormats}"
+                                                                      SelectedItem="{Binding SelectedPdfFormat}" />
+                                                        </Grid>
+                                                        <Grid Grid.Row="1">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <ui:SymbolIcon VerticalAlignment="Center"
+                                                                           Symbol="ErrorCircle20"
+                                                                           Foreground="Orange" />
+                                                            <TextBlock Grid.Column="1" FontSize="{StaticResource G_SmallFontSize}"
+                                                                       VerticalAlignment="Center"
+                                                                       Margin="5,0,0,0"
+                                                                       Foreground="Orange"
+                                                                       Text="Image will be resized to" />
+                                                            <TextBlock Grid.Column="2"
+                                                                       FontSize="{StaticResource G_SmallFontSize}"
+                                                                       VerticalAlignment="Center"
+                                                                       Margin="5,0,0,0"
+                                                                       Foreground="Orange"
+                                                                       Text="{Binding ExportSize}" />
+                                                        </Grid>
+
+                                                    </Grid>
+                                                </ui:CardExpander> 
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </ScrollViewer> 
+                            </Grid>
                             <Image Grid.Column="1"
                                    Margin="10"
                                    Source="{Binding SelectedImageFile.Bitmap}" />
