@@ -108,15 +108,19 @@ namespace CrytonCoreNext.Models
             var desiredSize = _sizeByPdfFormat[SelectedPdfFormat];
             var isVertical = Bitmap.Width < Bitmap.Height;
             desiredSize.Deconstruct(out int width, out int height);
-            if (isVertical)
+            if (!isVertical)
             {
-                var wRatio = Bitmap.Width / desiredSize.Width;
-                desiredSize = new Size((int)((double)width / wRatio), height);
+                var wRatio = desiredSize.Width / Bitmap.Width;
+                var ratio = Bitmap.Width / Bitmap.Height;
+                var newW = (int)((double)Bitmap.Width * wRatio);
+                desiredSize = new Size(newW, newW * (1 / ratio));
             }
             else
             {
-                var hRatio = Bitmap.Height / desiredSize.Height;
-                desiredSize = new Size(width, (int)((double)height / hRatio));
+                var hRatio = desiredSize.Height / Bitmap.Height;
+                var ratio = Bitmap.Height / Bitmap.Width;
+                var newH = (int)((double)Bitmap.Height * hRatio);
+                desiredSize = new Size(newH * (1 / ratio), newH);
             }
             ExportSize = $"{desiredSize.Width}x{desiredSize.Height}";
             NotifyPropertyChanged(nameof(ExportSize));

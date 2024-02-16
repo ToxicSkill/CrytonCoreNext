@@ -889,7 +889,7 @@
                                                                        VerticalAlignment="Center"
                                                                        Margin="5,0,0,0"
                                                                        Foreground="Orange"
-                                                                       Text="{Binding ExportSize}" />
+                                                                       Text="{Binding ExportSize, Mode=TwoWay}" />
                                                         </Grid>
 
                                                     </Grid>
