@@ -22,6 +22,7 @@
             <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <c:ObjectToVisibility x:Key="ObjectToVisibility" />
+            <c:PdfFormatToVisibilityConverter x:Key="PdfFormatToVisibilityConverter" />
             <ContextMenu x:Key="SplitItemContextMenu">
                 <MenuItem Command="{Binding SplitSelectedPdfImageLeftCommand}"
                           Visibility="{Binding IsSplitImageFirst, Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -756,7 +757,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
-                                    <RowDefinition Height="*" /> 
+                                    <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -816,23 +817,23 @@
                                             <DataTemplate DataType="models:CryptFile">
                                                 <ui:CardExpander>
                                                     <ui:CardExpander.Header>
-                                                    <Grid Height="40"
-                                                          Margin="5,0,0,0">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="auto" />
-                                                        </Grid.ColumnDefinitions>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="20" />
-                                                            <RowDefinition Height="20" />
-                                                        </Grid.RowDefinitions>
-                                                        <TextBlock Grid.Row="0"
-                                                                   Grid.Column="0"
-                                                                   HorizontalAlignment="Left"
-                                                                   FontSize="13"
-                                                                   FontWeight="Medium"
-                                                                   TextWrapping="WrapWithOverflow"
-                                                                   Text="{Binding NameWithExtension}" />
+                                                        <Grid Height="40"
+                                                              Margin="5,0,0,0">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="20" />
+                                                                <RowDefinition Height="20" />
+                                                            </Grid.RowDefinitions>
+                                                            <TextBlock Grid.Row="0"
+                                                                       Grid.Column="0"
+                                                                       HorizontalAlignment="Left"
+                                                                       FontSize="13"
+                                                                       FontWeight="Medium"
+                                                                       TextWrapping="WrapWithOverflow"
+                                                                       Text="{Binding NameWithExtension}" />
                                                             <Grid Grid.Row="1">
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="auto" />
@@ -840,64 +841,97 @@
                                                                 </Grid.ColumnDefinitions>
                                                                 <TextBlock  FontSize="12"
                                                                             Text="Pages: " />
-                                                                <TextBlock  FontSize="12" Grid.Column="1"
+                                                                <TextBlock  FontSize="12"
+                                                                            Grid.Column="1"
                                                                             Text="{Binding Date}"
                                                                             TextWrapping="Wrap" />
-                                                            </Grid> 
-                                                        <TextBlock Grid.Row="0"
-                                                                   Grid.Column="1"
-                                                                   HorizontalAlignment="Right"
-                                                                   FontSize="12"
-                                                                   Text="{Binding Size}" />
+                                                            </Grid>
+                                                            <TextBlock Grid.Row="0"
+                                                                       Grid.Column="1"
+                                                                       HorizontalAlignment="Right"
+                                                                       FontSize="12"
+                                                                       Text="{Binding Size}" />
                                                         </Grid>
 
                                                     </ui:CardExpander.Header>
                                                     <Grid>
                                                         <Grid.RowDefinitions>
-                                                            <RowDefinition Height="*" />
-                                                            <RowDefinition Height="*" />
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
                                                         </Grid.RowDefinitions>
                                                         <Grid>
-
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="20" />
+                                                                <RowDefinition Height="40" />
+                                                            </Grid.RowDefinitions>
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="20" />
                                                                 <ColumnDefinition Width="*" />
                                                             </Grid.ColumnDefinitions>
-                                                            <TextBlock FontSize="{StaticResource G_SmallFontSize}"
-                                                                       VerticalAlignment="Center"
-                                                                       Text="Format" />
-                                                            <ComboBox Grid.Column="1"
+                                                            <ComboBox Grid.Column="2"
+                                                                      Grid.Row="1"
+                                                                      VerticalAlignment="Center"
                                                                       ItemsSource="{Binding AvailablePdfFormats}"
                                                                       SelectedItem="{Binding SelectedPdfFormat}" />
-                                                        </Grid>
-                                                        <Grid Grid.Row="1">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="auto" />
-                                                                <ColumnDefinition Width="*" />
-                                                                <ColumnDefinition Width="auto" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <ui:SymbolIcon VerticalAlignment="Center"
-                                                                           Symbol="ErrorCircle20"
-                                                                           Foreground="Orange" />
-                                                            <TextBlock Grid.Column="1" FontSize="{StaticResource G_SmallFontSize}"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="5,0,0,0"
-                                                                       Foreground="Orange"
-                                                                       Text="Image will be resized to" />
+                                                            <ui:SymbolIcon Grid.Column="0"
+                                                                           Grid.Row="0"
+                                                                           Symbol="AutoFitWidth20" />
                                                             <TextBlock Grid.Column="2"
+                                                                       Grid.Row="0"
                                                                        FontSize="{StaticResource G_SmallFontSize}"
                                                                        VerticalAlignment="Center"
-                                                                       Margin="5,0,0,0"
-                                                                       Foreground="Orange"
-                                                                       Text="{Binding ExportSizeString, Mode=TwoWay}" />
+                                                                       HorizontalAlignment="Center"
+                                                                       Text="Format" />
+                                                            <ui:SymbolIcon Grid.Column="0"
+                                                                           Grid.Row="1"
+                                                                           Symbol="AutoFitHeight20" />
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock FontSize="{StaticResource G_SmallFontSize}"
+                                                                           VerticalAlignment="Center"
+                                                                           Text="Width" />
+                                                                <TextBlock Grid.Column="1"
+                                                                           FontSize="{StaticResource G_SmallFontSize}"
+                                                                           VerticalAlignment="Center"
+                                                                           HorizontalAlignment="Right"
+                                                                           Text="{Binding Bitmap.Width}" />
+                                                            </Grid>
+                                                            <Grid Grid.Row="1">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock FontSize="{StaticResource G_SmallFontSize}"
+                                                                           VerticalAlignment="Center"
+                                                                           Text="Height" />
+                                                                <TextBlock Grid.Column="1"
+                                                                           FontSize="{StaticResource G_SmallFontSize}"
+                                                                           VerticalAlignment="Center"
+                                                                           HorizontalAlignment="Right"
+                                                                           Text="{Binding Bitmap.Height}" />
+                                                            </Grid>
+
                                                         </Grid>
 
+                                                        <ui:InfoBar Grid.Row="2"
+                                                                    Visibility="{Binding SelectedPdfFormat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource PdfFormatToVisibilityConverter}}"
+                                                                    FontSize="{StaticResource G_SmallFontSize}"
+                                                                    Title="Warning"
+                                                                    Margin="0,5,0,0"
+                                                                    IsOpen="True"
+                                                                    Message="{Binding ExportSizeString, Mode=TwoWay}"
+                                                                    Severity="Warning" />
                                                     </Grid>
-                                                </ui:CardExpander> 
+
+                                                </ui:CardExpander>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
                                     </ListView>
-                                </ScrollViewer> 
+                                </ScrollViewer>
                             </Grid>
                             <Image Grid.Column="1"
                                    Margin="10"

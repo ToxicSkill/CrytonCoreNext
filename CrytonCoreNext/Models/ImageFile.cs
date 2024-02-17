@@ -77,6 +77,7 @@ namespace CrytonCoreNext.Models
             _sizeByPdfFormat.Add(EPDFFormat.A3, new(iText.Kernel.Geom.PageSize.A3.GetWidth(), iText.Kernel.Geom.PageSize.A3.GetHeight()));
             _sizeByPdfFormat.Add(EPDFFormat.A4, new(iText.Kernel.Geom.PageSize.A4.GetWidth(), iText.Kernel.Geom.PageSize.A4.GetHeight()));
             _sizeByPdfFormat.Add(EPDFFormat.A5, new(iText.Kernel.Geom.PageSize.A5.GetWidth(), iText.Kernel.Geom.PageSize.A5.GetHeight()));
+            _sizeByPdfFormat.Add(EPDFFormat.A6, new(iText.Kernel.Geom.PageSize.A6.GetWidth(), iText.Kernel.Geom.PageSize.A6.GetHeight()));
         }
 
         private void LoadImage()
@@ -105,6 +106,7 @@ namespace CrytonCoreNext.Models
         {
             if (!_sizeByPdfFormat.ContainsKey(SelectedPdfFormat))
             {
+                NotifyPropertyChanged(nameof(SelectedPdfFormat));
                 return;
             }
             var desiredSize = _sizeByPdfFormat[SelectedPdfFormat];
@@ -124,9 +126,15 @@ namespace CrytonCoreNext.Models
                 var newH = (int)((double)Bitmap.Height * hRatio);
                 desiredSize = new Size(newH * (1 / ratio), newH);
             }
+            UpdateExportSize(desiredSize);
+        }
+
+        private void UpdateExportSize(Size desiredSize)
+        {
             ExportSize = desiredSize;
-            ExportSizeString = $"{desiredSize.Width}x{desiredSize.Height}";
+            ExportSizeString = $"Image will be resized to {desiredSize.Width}x{desiredSize.Height}";
             NotifyPropertyChanged(nameof(ExportSizeString));
+            NotifyPropertyChanged(nameof(SelectedPdfFormat));
         }
     }
 }
