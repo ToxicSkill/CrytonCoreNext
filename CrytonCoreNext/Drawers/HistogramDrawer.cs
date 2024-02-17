@@ -12,7 +12,7 @@ namespace CrytonCoreNext.Drawers
 
         private const int MaxMatDimensionSize = 254;
 
-        private static readonly Size HistogramSize = new (254, 80);
+        private static readonly Size HistogramSize = new(254, 80);
 
         public static WriteableBitmap CalcualteHistogram(Mat image)
         {
@@ -37,13 +37,16 @@ namespace CrytonCoreNext.Drawers
             Cv2.CalcHist([planes[0]], [0], null, histB, 1, histSize, ranges);
             Cv2.CalcHist([planes[1]], [0], null, histG, 1, histSize, ranges);
             Cv2.CalcHist([planes[2]], [0], null, histR, 1, histSize, ranges);
+            Cv2.Normalize(histR, histR, 0, 255, NormTypes.MinMax);
+            Cv2.Normalize(histG, histG, 0, 255, NormTypes.MinMax);
+            Cv2.Normalize(histB, histB, 0, 255, NormTypes.MinMax);
 
             var r = MatToArray(histR);
             var g = MatToArray(histG);
             var b = MatToArray(histB);
             var maxValue = (new int[] { r.maxValue, g.maxValue, b.maxValue }).Max();
             maxValue = maxValue == 0 ? 1 : maxValue;
-            var xRatio = HistogramSize.Width / maxValue; 
+            var xRatio = HistogramSize.Width / maxValue;
             using var histogramMat = new Mat(new Size(MaxMatDimensionSize, maxValue), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
             var rMat = DrawColorOnHistogram(r.values, Scalar.Red, r.maxValue, maxValue);
             var gMat = DrawColorOnHistogram(g.values, Scalar.Green, g.maxValue, maxValue);
