@@ -7,6 +7,8 @@ using Docnet.Core;
 using Docnet.Core.Editors;
 using iText.Kernel.Pdf;
 using iText.Layout;
+using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,7 +79,7 @@ namespace CrytonCoreNext.PDF.Services
             var mergedFileBytes = await Task.Run(() => pdfLibrary.Merge(bytes));
             var templateFile = pdfFiles.First();
             var file = new File(pdfFiles.First(), PrepareFileNameForMerge(pdfFiles), mergedFileBytes, pdfFiles.Count() + 1);
-            return new PDFFile(file, Enums.EPdfStatus.Opened);
+            return new PDFFile(file, Enums.EPdfStatus.Opened, string.Empty, 1.0, pdfFiles.Sum(x => x.NumberOfPages));
         }
 
         public async Task<PDFFile> Split(PDFFile pdfFile, int fromPage, int toPage, int newId)
@@ -92,22 +94,27 @@ namespace CrytonCoreNext.PDF.Services
         {
             var converter = new ImageConverterService();
             var extension = image.Extension.ToLowerInvariant();
+            using var exportMat = image.Bitmap.ToMat();
+            if (image.SelectedPdfFormat != Enums.EPDFFormat.Original)
+            {
+                Cv2.Resize(exportMat, exportMat, image.ExportSize, interpolation: InterpolationFlags.Lanczos4);
+            }
             byte[] bytes;
             if (extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.png) ||
                 extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.gif) ||
                 extension == Enum.GetName(typeof(EImageExtensions), EImageExtensions.bmp))
             {
-                bytes = converter.ConvertImageToJpeg(image);
+                bytes = converter.ConvertImageToJpeg(exportMat.ToBytes());
             }
             else
             {
-                bytes = image.Bytes;
+                bytes = exportMat.ToBytes(ext: ".jpeg");
             }
             var jpegImage = new JpegImage
             {
                 Bytes = bytes,
-                Width = (int)image.Width,
-                Height = (int)image.Height
+                Width = exportMat.Width,
+                Height = exportMat.Height
             };
             using IDocLib pdfLibrary = DocLib.Instance;
             var pdfBbytes = pdfLibrary.JpegToPdf(new[] { jpegImage });

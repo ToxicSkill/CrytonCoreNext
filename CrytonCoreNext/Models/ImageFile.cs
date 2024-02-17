@@ -27,7 +27,9 @@ namespace CrytonCoreNext.Models
 
         public bool Color { get; }
 
-        public string ExportSize { get; set; }
+        public Size ExportSize { get; set; }
+
+        public string ExportSizeString { get; set; }
 
         public static List<EPDFFormat> AvailablePdfFormats { get; set; } = Enum.GetValues(typeof(EPDFFormat)).Cast<EPDFFormat>().ToList();
 
@@ -122,8 +124,9 @@ namespace CrytonCoreNext.Models
                 var newH = (int)((double)Bitmap.Height * hRatio);
                 desiredSize = new Size(newH * (1 / ratio), newH);
             }
-            ExportSize = $"{desiredSize.Width}x{desiredSize.Height}";
-            NotifyPropertyChanged(nameof(ExportSize));
+            ExportSize = desiredSize;
+            ExportSizeString = $"{desiredSize.Width}x{desiredSize.Height}";
+            NotifyPropertyChanged(nameof(ExportSizeString));
         }
     }
 }

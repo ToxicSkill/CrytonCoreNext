@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.Models;
-using MethodTimer;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System.Drawing;
@@ -10,9 +9,9 @@ namespace CrytonCoreNext.Services
 {
     public class ImageConverterService
     {
-        public byte[] ConvertImageToJpeg(ImageFile file)
+        public byte[] ConvertImageToJpeg(byte[] bytes)
         {
-            using var s = new MemoryStream(file.Bitmap.ToMat().ToBytes());
+            using var s = new MemoryStream(bytes);
             s.ReadByte();
             using (var pngImage = Image.FromStream(s))
             {
@@ -32,7 +31,6 @@ namespace CrytonCoreNext.Services
             }
         }
 
-        [Time]
         public Mat ConvertGifToMat(ImageFile file)
         {
             using var s = new MemoryStream(file.Bytes);
