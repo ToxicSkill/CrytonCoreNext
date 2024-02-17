@@ -863,6 +863,7 @@
                                                             <Grid.RowDefinitions>
                                                                 <RowDefinition Height="20" />
                                                                 <RowDefinition Height="40" />
+                                                                <RowDefinition Height="20" />
                                                             </Grid.RowDefinitions>
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="*" />
@@ -913,6 +914,26 @@
                                                                            VerticalAlignment="Center"
                                                                            HorizontalAlignment="Right"
                                                                            Text="{Binding Bitmap.Height}" />
+                                                            </Grid>
+                                                            <Grid Grid.Row="2">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock FontSize="{StaticResource G_SmallFontSize}"
+                                                                           VerticalAlignment="Center" 
+                                                                           Text="Rotate" />
+                                                                <ui:Button Grid.Column="1"
+                                                                           HorizontalAlignment="Center"
+                                                                           ToolTip="Rotate left"
+                                                                           Command="{Binding RotateLeftCommand}"
+                                                                           Icon="{ui:SymbolIcon ArrowRotateCounterclockwise20}" />
+                                                                <ui:Button Grid.Column="2"
+                                                                           HorizontalAlignment="Right"
+                                                                           ToolTip="Rotate right"
+                                                                           Command="{Binding RotateRightCommand}"
+                                                                           Icon="{ui:SymbolIcon ArrowRotateClockwise20}" />
                                                             </Grid>
 
                                                         </Grid>

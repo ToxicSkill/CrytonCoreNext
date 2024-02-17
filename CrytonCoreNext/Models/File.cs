@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace CrytonCoreNext.Models
 {
-    public partial class File : ObservableObject, INotifyPropertyChanged
+    public partial class File : ObservableObject
     {
         public string Name { get; private set; }
 
@@ -32,8 +32,6 @@ namespace CrytonCoreNext.Models
         public bool LoadMetadata { get; set; } = true;
 
         public Guid Guid { get; init; } = Guid.NewGuid();
-
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         public File(string path, DateTime date, string extension, int id, byte[] bytes)
         {
@@ -75,11 +73,6 @@ namespace CrytonCoreNext.Models
             {
                 this.Name = newName;
             }
-        }
-
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

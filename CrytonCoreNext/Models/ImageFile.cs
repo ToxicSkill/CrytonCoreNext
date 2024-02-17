@@ -1,4 +1,6 @@
-﻿using CrytonCoreNext.Enums;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.PDF.Enums;
 using CrytonCoreNext.Services;
 using OpenCvSharp;
@@ -11,15 +13,12 @@ using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.Models
 {
-    public class ImageFile : File
+    public partial class ImageFile : File
     {
-        private EPDFFormat _selectedPdfFormat;
-
-        private WriteableBitmap _bitmap;
-
         private readonly Dictionary<EPDFFormat, Size> _sizeByPdfFormat = [];
 
-        public WriteableBitmap Bitmap { get => _bitmap; set { _bitmap = value; NotifyPropertyChanged(); } }
+        [ObservableProperty]
+        public WriteableBitmap bitmap;
 
         public double Width { get; }
 
@@ -27,25 +26,20 @@ namespace CrytonCoreNext.Models
 
         public bool Color { get; }
 
-        public Size ExportSize { get; set; }
+        [ObservableProperty]
+        public Size exportSize;
 
-        public string ExportSizeString { get; set; }
+        [ObservableProperty]
+        public string exportSizeString;
 
         public static List<EPDFFormat> AvailablePdfFormats { get; set; } = Enum.GetValues(typeof(EPDFFormat)).Cast<EPDFFormat>().ToList();
 
-        public EPDFFormat SelectedPdfFormat
-        {
-            get => _selectedPdfFormat;
-            set
-            {
-                _selectedPdfFormat = value;
-                UpdateExportSize();
-            }
-        }
+        [ObservableProperty]
+        public EPDFFormat selectedPdfFormat;
 
         public ImageFile(File file, Mat image) : base(file)
         {
-            _selectedPdfFormat = AvailablePdfFormats.Last();
+            SelectedPdfFormat = AvailablePdfFormats.Last();
             InitializeDictionaries();
             if (image != null)
             {
@@ -60,7 +54,7 @@ namespace CrytonCoreNext.Models
 
         public ImageFile(File file) : base(file)
         {
-            _selectedPdfFormat = AvailablePdfFormats.Last();
+            SelectedPdfFormat = AvailablePdfFormats.Last();
             InitializeDictionaries();
             LoadImage();
             if (Bitmap != null)
@@ -68,6 +62,11 @@ namespace CrytonCoreNext.Models
                 Width = Bitmap.Width;
                 Height = Bitmap.Height;
             }
+        }
+
+        partial void OnSelectedPdfFormatChanged(EPDFFormat value)
+        {
+            UpdateExportSize();
         }
 
         private void InitializeDictionaries()
@@ -106,7 +105,6 @@ namespace CrytonCoreNext.Models
         {
             if (!_sizeByPdfFormat.ContainsKey(SelectedPdfFormat))
             {
-                NotifyPropertyChanged(nameof(SelectedPdfFormat));
                 return;
             }
             var desiredSize = _sizeByPdfFormat[SelectedPdfFormat];
@@ -133,8 +131,24 @@ namespace CrytonCoreNext.Models
         {
             ExportSize = desiredSize;
             ExportSizeString = $"Image will be resized to {desiredSize.Width}x{desiredSize.Height}";
-            NotifyPropertyChanged(nameof(ExportSizeString));
-            NotifyPropertyChanged(nameof(SelectedPdfFormat));
+        }
+
+        [RelayCommand]
+        private void RotateRight()
+        {
+            using var mat = Bitmap.ToMat();
+            Cv2.Rotate(mat, mat, RotateFlags.Rotate90Clockwise);
+            Bitmap = mat.ToWriteableBitmap();
+            UpdateExportSize();
+        }
+
+        [RelayCommand]
+        private void RotateLeft()
+        {
+            using var mat = Bitmap.ToMat();
+            Cv2.Rotate(mat, mat, RotateFlags.Rotate90Counterclockwise);
+            Bitmap = mat.ToWriteableBitmap();
+            UpdateExportSize();
         }
     }
 }

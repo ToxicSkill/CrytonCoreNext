@@ -1,4 +1,5 @@
-﻿using CrytonCoreNext.Enums;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CrytonCoreNext.Enums;
 using CrytonCoreNext.Models;
 using CrytonCoreNext.PDF.Enums;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace CrytonCoreNext.PDF.Models
         }
     }
 
-    public class PDFFile : File
+    public partial class PDFFile : File
     {
         private byte[] _password;
 
@@ -71,7 +72,8 @@ namespace CrytonCoreNext.PDF.Models
 
         private WriteableBitmap _image;
 
-        public WriteableBitmap PageImage { get => _image; set { _image = value; NotifyPropertyChanged(); } }
+        [ObservableProperty]
+        public WriteableBitmap pageImage;
 
         public EFileStatus Status { get; set; }
 
