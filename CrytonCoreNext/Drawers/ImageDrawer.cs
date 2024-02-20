@@ -14,11 +14,11 @@ namespace CrytonCoreNext.Drawers
 
         private readonly TransformBlock<AIImage, AIImage> _pipeline;
 
-        private SemaphoreSlim _semaphore;
+        private readonly SemaphoreSlim _semaphore;
 
         public ImageDrawer()
         {
-            _semaphore = new SemaphoreSlim(1, 1);
+            _semaphore = new SemaphoreSlim(1);
             _pipeline = CreatePipeline((res) => UpdateOutput(res));
         }
 
@@ -28,10 +28,10 @@ namespace CrytonCoreNext.Drawers
         }
 
         public async Task Post(AIImage image)
-        { 
-            await _semaphore.WaitAsync();
+        {
+            await _semaphore.WaitAsync(5);
             if (_pipeline.InputCount == 0)
-            { 
+            {
                 await _pipeline.SendAsync(image);
             }
         }
@@ -40,22 +40,22 @@ namespace CrytonCoreNext.Drawers
         {
             var dfBlockOptions = new ExecutionDataflowBlockOptions();
             var dfLinkOptions = new DataflowLinkOptions()
-            { 
-                PropagateCompletion = true
+            {
+                PropagateCompletion = false
             };
             var inputBlock = new TransformBlock<AIImage, AIImage>(CopyOriginalImage, dfBlockOptions);
             var step2 = new TransformBlock<AIImage, AIImage>(NormalizeLABHistogram, dfBlockOptions);
             var step3 = new TransformBlock<AIImage, AIImage>(NormalizeRGBHistogram, dfBlockOptions);
-            var step4 = new TransformBlock<AIImage, AIImage>(SetBrightness, dfBlockOptions); 
+            var step4 = new TransformBlock<AIImage, AIImage>(SetBrightness, dfBlockOptions);
             var step5 = new TransformBlock<AIImage, AIImage>(SetExposure, dfBlockOptions);
             var step6 = new TransformBlock<AIImage, AIImage>(DrawHistogram, dfBlockOptions);
-            var outputBlock = new ActionBlock<AIImage>(result);  
+            var outputBlock = new ActionBlock<AIImage>(result);
             inputBlock.LinkTo(step2, dfLinkOptions);
-            step2.LinkTo(step3, dfLinkOptions); 
+            step2.LinkTo(step3, dfLinkOptions);
             step3.LinkTo(step4, dfLinkOptions);
             step4.LinkTo(step5, dfLinkOptions);
             step5.LinkTo(step6, dfLinkOptions);
-            step6.LinkTo(outputBlock, dfLinkOptions); 
+            step6.LinkTo(outputBlock, dfLinkOptions);
             return inputBlock;
         }
 
@@ -122,10 +122,10 @@ namespace CrytonCoreNext.Drawers
             Cv2.Merge(channels, rgbColorMat);
             Cv2.AddWeighted(image.PipelineMat, 1 - AIImage.DefaultAutoColorValue, rgbColorMat, AIImage.DefaultAutoColorValue, 0, image.PipelineMat);
             return image;
-        } 
+        }
 
         private static AIImage SetBrightness(AIImage image)
-        { 
+        {
             Cv2.ConvertScaleAbs(image.PipelineMat, image.PipelineMat, image.ContrastValue, image.BrightnessValue);
             return image;
         }

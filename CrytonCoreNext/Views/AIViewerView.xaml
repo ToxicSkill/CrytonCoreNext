@@ -168,17 +168,12 @@
                                                HorizontalAlignment="Left" />
                                 </Grid>
                             </ui:CardExpander.Header>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="auto" />
-                                </Grid.ColumnDefinitions>
+                            <Grid> 
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
-                                    <RowDefinition Height="80" />
+                                    <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="DesignIdeas20"
@@ -222,11 +217,12 @@
                                                FontWeight="Thin" />
                                 </StackPanel>
                                 <Image Grid.Row="3"
-                                       HorizontalAlignment="Stretch"
-                                       VerticalAlignment="Stretch"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
                                        Source="{Binding SelectedImage.Histogram , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        RenderOptions.BitmapScalingMode="LowQuality"
-                                       RenderOptions.EdgeMode="Unspecified" />
+                                       RenderOptions.EdgeMode="Unspecified"
+                                       RenderOptions.CachingHint="Unspecified"/>
                             </Grid>
                         </ui:CardExpander>
                         <ui:CardExpander HorizontalAlignment="Stretch"
@@ -405,10 +401,10 @@
                             </ui:CardExpander.Header>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
                                     <ColumnDefinition Width="5*" />
-                                    <ColumnDefinition Width="50" />
-                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="40" />

@@ -1,5 +1,6 @@
 ﻿using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media.Imaging;
@@ -10,9 +11,15 @@ namespace CrytonCoreNext.Drawers
     {
         private const double ResizeRatio = 0.2;
 
-        private const int MaxMatDimensionSize = 254;
+        private const int MaxMatDimensionSize = 256;
 
-        private static readonly Size HistogramSize = new(254, 80);
+        private static readonly Scalar OpacityScalar = new(0, 0, 0, 0);
+
+        private static readonly Size HistogramSize = new(MaxMatDimensionSize, 80);
+
+        private static readonly int[] _histSize = [MaxMatDimensionSize];
+
+        private static readonly Rangef[] _ranges = [new(0, MaxMatDimensionSize)];
 
         public static WriteableBitmap CalcualteHistogram(Mat image)
         {
@@ -27,36 +34,54 @@ namespace CrytonCoreNext.Drawers
             }
             Cv2.Resize(image, matForHistogram, newSize);
             Cv2.Split(matForHistogram, out Mat[] planes);
+            var results = new List<(int max, int[,] values)>();
+            for (var i = 0; i < planes.Length; i++)
+            {
+                Cv2.CalcHist([planes[i]], [0], null, planes[i], 1, _histSize, _ranges);
+                Cv2.Normalize(planes[i], planes[i], 0, MaxMatDimensionSize, NormTypes.MinMax);
+                results.Add(MatToArray(planes[i]));
+            }
 
-            int[] histSize = [MaxMatDimensionSize];
-            Rangef[] ranges = [new(1, 255)];
-
-            Mat histB = new();
-            Mat histG = new();
-            Mat histR = new();
-            Cv2.CalcHist([planes[0]], [0], null, histB, 1, histSize, ranges);
-            Cv2.CalcHist([planes[1]], [0], null, histG, 1, histSize, ranges);
-            Cv2.CalcHist([planes[2]], [0], null, histR, 1, histSize, ranges);
-            Cv2.Normalize(histR, histR, 0, 255, NormTypes.MinMax);
-            Cv2.Normalize(histG, histG, 0, 255, NormTypes.MinMax);
-            Cv2.Normalize(histB, histB, 0, 255, NormTypes.MinMax);
-
-            var r = MatToArray(histR);
-            var g = MatToArray(histG);
-            var b = MatToArray(histB);
-            var maxValue = (new int[] { r.maxValue, g.maxValue, b.maxValue }).Max();
-            maxValue = maxValue == 0 ? 1 : maxValue;
-            var xRatio = HistogramSize.Width / maxValue;
-            using var histogramMat = new Mat(new Size(MaxMatDimensionSize, maxValue), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
-            var rMat = DrawColorOnHistogram(r.values, Scalar.Red, r.maxValue, maxValue);
-            var gMat = DrawColorOnHistogram(g.values, Scalar.Green, g.maxValue, maxValue);
-            var bMat = DrawColorOnHistogram(b.values, Scalar.Blue, b.maxValue, maxValue);
-            Cv2.Add(histogramMat, bMat, histogramMat);
-            Cv2.Add(histogramMat, gMat, histogramMat);
-            Cv2.Add(histogramMat, rMat, histogramMat);
+            var maxValue = results.Max(x => x.max);
+            maxValue = Math.Clamp(maxValue, 1, maxValue);
+            using var histogramMat = new Mat(new Size(MaxMatDimensionSize, maxValue), MatType.CV_8UC4, OpacityScalar);
+            for (var i = 0; i < results.Count; i++)
+            {
+                var color = new Scalar(i == 2 ? 255 : 0, i == 1 ? 255 : 0, i == 0 ? 255 : 0, 255);
+                Cv2.Add(histogramMat, DrawColorOnHistogram(results[i].values, color, results[i].max, maxValue), histogramMat);
+            }
             Cv2.Resize(histogramMat, histogramMat, HistogramSize);
-            Cv2.GaussianBlur(histogramMat, histogramMat, new Size(3, 3), 0);
             return histogramMat.ToWriteableBitmap();
+            //var polynomials = new List<Polynomial>();
+            //var range = Enumerable.Range(0, MaxMatDimensionSize).Select(c => (double)c).ToArray();
+            //int[] oDArray = new int[MaxMatDimensionSize];
+            //foreach (var color in new List<int[,]>() { r.values, g.values, b.values })
+            //{
+            //    System.Buffer.BlockCopy(color, 0, oDArray, 0, MaxMatDimensionSize * 4);
+            //    double[] result = oDArray.Select(x => (double)x).ToArray();
+            //    polynomials.Add(Polynomial.Fit(result, range, 15));
+            //}
+            //var evaluations = new List<List<Point>>();
+            //var maxes = new List<int>();
+            //foreach (var polynomial in polynomials)
+            //{
+            //    var points = new List<Point>();
+            //    for (var i = 0; i < MaxMatDimensionSize; i++)
+            //    {
+            //        points.Add(new Point(i, (int)polynomial.Evaluate(i)));
+            //    }
+            //    evaluations.Add(points);
+            //    maxes.Add(points.Max(x => x.Y));
+            //}
+            //var max = maxes.Max();
+            //for (var i = 0; i < evaluations.Count; i++)
+            //{
+            //    var color = new Scalar(i == 2 ? 255 : 0, i == 1 ? 255 : 0, i == 0 ? 255 : 0, 255);
+            //    for (var j = 0; j < evaluations[i].Count; j++)
+            //    {
+            //        Cv2.Circle(histogramMat, evaluations[i][j], 5, color);
+            //    }
+            //}
         }
 
         private static Mat DrawColorOnHistogram(int[,] values, Scalar scalar, int selfMax, int maxValue)
