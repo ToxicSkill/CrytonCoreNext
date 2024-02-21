@@ -10,7 +10,7 @@ namespace CrytonCoreNext.Drawers
 {
     public class ImageDrawer
     {
-        private const System.Windows.Threading.DispatcherPriority DispatcherPriority = System.Windows.Threading.DispatcherPriority.Send;
+        private const System.Windows.Threading.DispatcherPriority DispatcherPriority = System.Windows.Threading.DispatcherPriority.Background;
 
         private readonly TransformBlock<AIImage, AIImage> _pipeline;
 
@@ -19,7 +19,7 @@ namespace CrytonCoreNext.Drawers
         public ImageDrawer()
         {
             _semaphore = new SemaphoreSlim(1);
-            _pipeline = CreatePipeline((res) => UpdateOutput(res));
+            _pipeline = CreatePipeline(UpdateOutput);
         }
 
         private void Release()
@@ -41,7 +41,7 @@ namespace CrytonCoreNext.Drawers
             var dfBlockOptions = new ExecutionDataflowBlockOptions();
             var dfLinkOptions = new DataflowLinkOptions()
             {
-                PropagateCompletion = false
+                PropagateCompletion = true
             };
             var inputBlock = new TransformBlock<AIImage, AIImage>(CopyOriginalImage, dfBlockOptions);
             var step2 = new TransformBlock<AIImage, AIImage>(NormalizeLABHistogram, dfBlockOptions);
@@ -121,6 +121,10 @@ namespace CrytonCoreNext.Drawers
             }
             Cv2.Merge(channels, rgbColorMat);
             Cv2.AddWeighted(image.PipelineMat, 1 - AIImage.DefaultAutoColorValue, rgbColorMat, AIImage.DefaultAutoColorValue, 0, image.PipelineMat);
+            foreach (var channel in channels)
+            {
+                channel.Dispose();
+            }
             return image;
         }
 
@@ -138,6 +142,10 @@ namespace CrytonCoreNext.Drawers
             Cv2.ConvertScaleAbs(channels[2], channels[2], image.ExposureValue);
             Cv2.Merge(channels, expMat);
             Cv2.CvtColor(expMat, image.PipelineMat, ColorConversionCodes.HSV2BGR);
+            foreach (var channel in channels)
+            {
+                channel.Dispose();
+            } 
             return image;
         }
     }

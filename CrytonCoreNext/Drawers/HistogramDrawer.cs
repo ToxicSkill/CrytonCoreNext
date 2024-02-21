@@ -28,7 +28,7 @@ namespace CrytonCoreNext.Drawers
             var newSize = new Size(image.Width * ResizeRatio, image.Height * ResizeRatio);
             if (newSize.Width > MaxMatDimensionSize || newSize.Height > MaxMatDimensionSize)
             {
-                var doubles = new List<double>() { ((double)MaxMatDimensionSize / (double)newSize.Width), ((double)MaxMatDimensionSize / (double)newSize.Height) };
+                var doubles = new List<double>() { MaxMatDimensionSize / (double)newSize.Width, MaxMatDimensionSize / (double)newSize.Height };
                 var newRatio = doubles.Min();
                 newSize = new Size(newSize.Width * newRatio, newSize.Height * newRatio);
             }
@@ -51,6 +51,10 @@ namespace CrytonCoreNext.Drawers
                 Cv2.Add(histogramMat, DrawColorOnHistogram(results[i].values, color, results[i].max, maxValue), histogramMat);
             }
             Cv2.Resize(histogramMat, histogramMat, HistogramSize);
+            foreach (var plane in planes)
+            {
+                plane.Dispose();
+            }
             return histogramMat.ToWriteableBitmap();
             //var polynomials = new List<Polynomial>();
             //var range = Enumerable.Range(0, MaxMatDimensionSize).Select(c => (double)c).ToArray();
