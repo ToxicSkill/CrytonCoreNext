@@ -1,9 +1,8 @@
 ﻿using OpenCvSharp;
-using OpenCvSharp.WpfExtensions;
+using OpenCvSharp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.Drawers
 {
@@ -21,7 +20,7 @@ namespace CrytonCoreNext.Drawers
 
         private static readonly Rangef[] _ranges = [new(0, MaxMatDimensionSize)];
 
-        public static WriteableBitmap CalcualteHistogram(Mat image)
+        public static System.Drawing.Bitmap CalcualteHistogram(Mat image)
         {
             using var matForHistogram = new Mat();
             var maxDimension = new List<int>() { image.Width, image.Height }.Max();
@@ -55,7 +54,8 @@ namespace CrytonCoreNext.Drawers
             {
                 plane.Dispose();
             }
-            return histogramMat.ToWriteableBitmap();
+
+            return histogramMat.ToBitmap();
             //var polynomials = new List<Polynomial>();
             //var range = Enumerable.Range(0, MaxMatDimensionSize).Select(c => (double)c).ToArray();
             //int[] oDArray = new int[MaxMatDimensionSize];

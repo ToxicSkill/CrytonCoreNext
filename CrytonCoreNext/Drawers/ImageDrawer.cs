@@ -1,10 +1,15 @@
 ﻿using CrytonCoreNext.AI.Models;
+using CrytonCoreNext.Native;
 using OpenCvSharp;
+using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using System.Windows;
 
 namespace CrytonCoreNext.Drawers
 {
@@ -18,7 +23,7 @@ namespace CrytonCoreNext.Drawers
 
         public ImageDrawer()
         {
-            _semaphore = new SemaphoreSlim(1);
+            _semaphore = new SemaphoreSlim(1, 1);
             _pipeline = CreatePipeline(UpdateOutput);
         }
 
@@ -29,7 +34,7 @@ namespace CrytonCoreNext.Drawers
 
         public async Task Post(AIImage image)
         {
-            await _semaphore.WaitAsync(5);
+            await _semaphore.WaitAsync();
             if (_pipeline.InputCount == 0)
             {
                 await _pipeline.SendAsync(image);
@@ -61,7 +66,7 @@ namespace CrytonCoreNext.Drawers
 
         private static async Task<AIImage> CopyOriginalImage(AIImage image)
         {
-            await System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
+            await Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 image.PipelineMat = image.Image.ToMat();
             }, DispatcherPriority);
@@ -70,9 +75,19 @@ namespace CrytonCoreNext.Drawers
 
         private static async Task<AIImage> DrawHistogram(AIImage image)
         {
-            await System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
+            await Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                image.Histogram = HistogramDrawer.CalcualteHistogram(image.PipelineMat);
+                Bitmap bmp = HistogramDrawer.CalcualteHistogram(image.PipelineMat);
+                image.Histogram ??= bmp.ToMat().ToWriteableBitmap();
+                var width = bmp.Width;
+                var height = bmp.Height;
+                BitmapData data = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bmp.PixelFormat);
+                image.Histogram.Lock();
+                NativeMethods.CopyMemory(image.Histogram.BackBuffer, data.Scan0, data.Stride * height);
+                image.Histogram.AddDirtyRect(new Int32Rect(0, 0, width, height));
+                image.Histogram.Unlock();
+                bmp.UnlockBits(data);
+                bmp.Dispose();
             }, DispatcherPriority);
             return image;
         }
@@ -84,7 +99,7 @@ namespace CrytonCoreNext.Drawers
                 Release();
                 return;
             }
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 image.AdjusterImage = image.PipelineMat.ToWriteableBitmap();
             }, DispatcherPriority);
@@ -145,7 +160,7 @@ namespace CrytonCoreNext.Drawers
             foreach (var channel in channels)
             {
                 channel.Dispose();
-            } 
+            }
             return image;
         }
     }
