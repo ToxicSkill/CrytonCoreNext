@@ -174,6 +174,7 @@
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal">
                                     <ui:SymbolIcon Symbol="DesignIdeas20"
@@ -222,7 +223,12 @@
                                        Source="{Binding SelectedImage.Histogram , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        RenderOptions.BitmapScalingMode="LowQuality"
                                        RenderOptions.EdgeMode="Unspecified"
-                                       RenderOptions.CachingHint="Unspecified"/>
+                                       RenderOptions.CachingHint="Unspecified" />
+                                <Viewbox Grid.Row="4"
+                                         HorizontalAlignment="Stretch"
+                                         VerticalAlignment="Stretch">
+                                    <ContentPresenter Content="{Binding SelectedImage.Grid}"/>
+                                </Viewbox>
                             </Grid>
                         </ui:CardExpander>
                         <ui:CardExpander HorizontalAlignment="Stretch"
@@ -289,7 +295,10 @@
                                         Minimum="0"
                                         Maximum="2"
                                         VerticalAlignment="Center"
-                                        HorizontalAlignment="Stretch" />
+                                        HorizontalAlignment="Stretch"
+                                        Thumb.DragCompleted="Slider_DragCompleted"
+                                        Thumb.DragStarted="Slider_DragStarted"
+                                        ValueChanged="Slider_ValueChanged"/>
                                 <TextBlock Grid.Row="1"
                                            Grid.Column="2"
                                            Text="{Binding SelectedImage.ContrastValue, StringFormat=N2}"
@@ -328,7 +337,10 @@
                                         Minimum="-127"
                                         Maximum="127"
                                         VerticalAlignment="Center"
-                                        HorizontalAlignment="Stretch" />
+                                        HorizontalAlignment="Stretch"
+                                        Thumb.DragCompleted="Slider_DragCompleted"
+                                        Thumb.DragStarted="Slider_DragStarted"
+                                        ValueChanged="Slider_ValueChanged"/>
                                 <TextBlock Grid.Row="3"
                                            Grid.Column="2"
                                            Text="{Binding SelectedImage.BrightnessValue, StringFormat=N2}"
@@ -367,7 +379,10 @@
                                         Minimum="0"
                                         Maximum="2"
                                         VerticalAlignment="Center"
-                                        HorizontalAlignment="Stretch" />
+                                        HorizontalAlignment="Stretch"
+                                        Thumb.DragCompleted="Slider_DragCompleted"
+                                        Thumb.DragStarted="Slider_DragStarted"
+                                        ValueChanged="Slider_ValueChanged"/>
                                 <TextBlock Grid.Row="5"
                                            Grid.Column="2"
                                            Text="{Binding SelectedImage.ExposureValue, StringFormat=N2}"

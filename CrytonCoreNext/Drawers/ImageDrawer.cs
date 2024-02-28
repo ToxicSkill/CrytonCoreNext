@@ -1,15 +1,13 @@
 ﻿using CrytonCoreNext.AI.Models;
-using CrytonCoreNext.Native;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace CrytonCoreNext.Drawers
 {
@@ -23,7 +21,7 @@ namespace CrytonCoreNext.Drawers
 
         public ImageDrawer()
         {
-            _semaphore = new SemaphoreSlim(1, 1);
+            _semaphore = new SemaphoreSlim(1);
             _pipeline = CreatePipeline(UpdateOutput);
         }
 
@@ -32,12 +30,22 @@ namespace CrytonCoreNext.Drawers
             _semaphore.Release();
         }
 
-        public async Task Post(AIImage image)
+        public async Task Post(AIImage image, CancellationToken token)
         {
-            await _semaphore.WaitAsync();
-            if (_pipeline.InputCount == 0)
+            if (token.IsCancellationRequested)
             {
-                await _pipeline.SendAsync(image);
+                _pipeline.Complete();
+            }
+            try
+            {
+                await _semaphore.WaitAsync(token);
+                if (!token.IsCancellationRequested)
+                {
+                    await _pipeline.SendAsync(image);
+                }
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 
@@ -54,14 +62,38 @@ namespace CrytonCoreNext.Drawers
             var step4 = new TransformBlock<AIImage, AIImage>(SetBrightness, dfBlockOptions);
             var step5 = new TransformBlock<AIImage, AIImage>(SetExposure, dfBlockOptions);
             var step6 = new TransformBlock<AIImage, AIImage>(DrawHistogram, dfBlockOptions);
+            var step7 = new TransformBlock<AIImage, AIImage>(UpdateUI, dfBlockOptions);
             var outputBlock = new ActionBlock<AIImage>(result);
             inputBlock.LinkTo(step2, dfLinkOptions);
             step2.LinkTo(step3, dfLinkOptions);
             step3.LinkTo(step4, dfLinkOptions);
             step4.LinkTo(step5, dfLinkOptions);
             step5.LinkTo(step6, dfLinkOptions);
-            step6.LinkTo(outputBlock, dfLinkOptions);
+            step6.LinkTo(step7, dfLinkOptions);
+            step7.LinkTo(outputBlock, dfLinkOptions);
             return inputBlock;
+        }
+
+        private static AIImage UpdateUI(AIImage image)
+        {
+            App.Current?.Dispatcher.Invoke(() =>
+            {
+                var grid = new Grid();
+
+                if (image != null)
+                {
+                    if (image.Paths != null)
+                    {
+                        grid.Children.Clear();
+                        foreach (var path in image.Paths)
+                        {
+                            grid.Children.Add(path);
+                        }
+                    }
+                }
+                image.Grid = grid;
+            });
+            return image;
         }
 
         private static async Task<AIImage> CopyOriginalImage(AIImage image)
@@ -77,17 +109,20 @@ namespace CrytonCoreNext.Drawers
         {
             await Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                Bitmap bmp = HistogramDrawer.CalcualteHistogram(image.PipelineMat);
-                image.Histogram ??= bmp.ToMat().ToWriteableBitmap();
-                var width = bmp.Width;
-                var height = bmp.Height;
-                BitmapData data = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bmp.PixelFormat);
-                image.Histogram.Lock();
-                NativeMethods.CopyMemory(image.Histogram.BackBuffer, data.Scan0, data.Stride * height);
-                image.Histogram.AddDirtyRect(new Int32Rect(0, 0, width, height));
-                image.Histogram.Unlock();
-                bmp.UnlockBits(data);
-                bmp.Dispose();
+                image.Paths = HistogramDrawer.CalcualteHistogram2(image.PipelineMat);
+
+
+                //Bitmap bmp = HistogramDrawer.CalcualteHistogram(image.PipelineMat);
+                //image.Histogram ??= bmp.ToMat().ToWriteableBitmap();
+                //var width = bmp.Width;
+                //var height = bmp.Height;
+                //BitmapData data = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bmp.PixelFormat);
+                //image.Histogram.Lock();
+                //NativeMethods.CopyMemory(image.Histogram.BackBuffer, data.Scan0, data.Stride * height);
+                //image.Histogram.AddDirtyRect(new Int32Rect(0, 0, width, height));
+                //image.Histogram.Unlock();
+                //bmp.UnlockBits(data);
+                //bmp.Dispose();
             }, DispatcherPriority);
             return image;
         }

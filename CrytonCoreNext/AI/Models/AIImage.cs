@@ -7,8 +7,10 @@ using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace CrytonCoreNext.AI.Models
 {
@@ -24,11 +26,19 @@ namespace CrytonCoreNext.AI.Models
 
         public const int DefaultBrightnessValue = 0;
 
+
+        public CancellationTokenSource CancellationTokenSource { get; set; } = new();
+
         public List<AIDetectionImage> DetectionImages { get; set; }
 
         public List<YoloPrediction> Predictions { get; private set; }
 
+        public List<Path> Paths { get; set; }
+
         public Mat PipelineMat { get; set; }
+
+        [ObservableProperty]
+        public object grid;
 
         [ObservableProperty]
         public System.Drawing.Size constrains;
@@ -67,6 +77,11 @@ namespace CrytonCoreNext.AI.Models
             LoadImages();
         }
 
+        public void UpdateImage()
+        {
+            Task.Run(() => { _ = _drawer.Post(this, CancellationTokenSource.Token); });
+        }
+
         private void LoadImages()
         {
             using var image = Cv2.ImRead(Path, ImreadModes.Unchanged);
@@ -82,34 +97,29 @@ namespace CrytonCoreNext.AI.Models
             Task.Run(UpdateImage);
         }
 
-        private async Task UpdateImage()
+        partial void OnExposureValueChanging(double value)
         {
-            await _drawer.Post(this);
-        }
-
-        partial void OnExposureValueChanged(double value)
-        {
-            Task.Run(UpdateImage);
+            UpdateImage();
         }
 
         partial void OnContrastValueChanged(double value)
         {
-            Task.Run(UpdateImage);
+            UpdateImage();
         }
 
         partial void OnBrightnessValueChanged(double value)
         {
-            Task.Run(UpdateImage);
+            UpdateImage();
         }
 
         partial void OnNormalizeLABHistogramChanged(bool oldValue, bool newValue)
         {
-            Task.Run(UpdateImage);
+            UpdateImage();
         }
 
         partial void OnNormalizeRGBHistogramChanged(bool oldValue, bool newValue)
         {
-            Task.Run(UpdateImage);
+            UpdateImage();
         }
 
         public void SetPredicitons(List<YoloPrediction> predictions)
