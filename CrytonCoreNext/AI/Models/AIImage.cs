@@ -7,7 +7,7 @@ using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -18,6 +18,8 @@ namespace CrytonCoreNext.AI.Models
     {
         private readonly ImageDrawer _drawer;
 
+        private const int MaxSingleDimensionSize = 1024;
+
         public const double DefaultAutoColorValue = 0.5;
 
         public const double DefaultExposureValue = 1.0;
@@ -26,9 +28,6 @@ namespace CrytonCoreNext.AI.Models
 
         public const int DefaultBrightnessValue = 0;
 
-
-        public CancellationTokenSource CancellationTokenSource { get; set; } = new();
-
         public List<AIDetectionImage> DetectionImages { get; set; }
 
         public List<YoloPrediction> Predictions { get; private set; }
@@ -36,6 +35,8 @@ namespace CrytonCoreNext.AI.Models
         public List<Path> Paths { get; set; }
 
         public Mat PipelineMat { get; set; }
+
+        public Mat ResizedImage { get; set; }
 
         [ObservableProperty]
         public object grid;
@@ -77,9 +78,14 @@ namespace CrytonCoreNext.AI.Models
             LoadImages();
         }
 
+        public void CompletePipeline()
+        {
+            UpdateImage();
+        }
+
         public void UpdateImage()
         {
-            Task.Run(() => { _ = _drawer.Post(this, CancellationTokenSource.Token); });
+            Task.Run(() => { _ = _drawer.Post(this); });
         }
 
         private void LoadImages()
@@ -94,6 +100,26 @@ namespace CrytonCoreNext.AI.Models
             Constrains = new System.Drawing.Size((int)Image.Width, (int)Image.Height);
             DetectionImage = Image;
             AdjusterImage = Image;
+            var constrains = new List<double>() { Image.Width, Image.Height };
+            if (constrains.Any(x => x > MaxSingleDimensionSize))
+            {
+                var max = constrains.Max();
+                var ratio = MaxSingleDimensionSize / max;
+                var newHeight = Image.Height;
+                var newWidth = Image.Width;
+                if (Image.Width > Image.Height)
+                {
+                    newHeight *= ratio;
+                    newWidth = MaxSingleDimensionSize;
+                }
+                else
+                {
+                    newWidth *= ratio;
+                    newHeight = MaxSingleDimensionSize;
+                }
+                ResizedImage = Image.ToMat().EmptyClone();
+                Cv2.Resize(Image.ToMat(), ResizedImage, new OpenCvSharp.Size(newWidth, newHeight));
+            }
             Task.Run(UpdateImage);
         }
 
@@ -152,6 +178,5 @@ namespace CrytonCoreNext.AI.Models
                     });
             }
         }
-
     }
 }

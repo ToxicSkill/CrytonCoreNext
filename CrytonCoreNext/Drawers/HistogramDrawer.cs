@@ -48,12 +48,12 @@ namespace CrytonCoreNext.Drawers
 
             var maxValue = results.Max(x => x.max);
             maxValue = Math.Clamp(maxValue, 1, maxValue);
-            using var histogramMat = new Mat(new Size(MaxMatDimensionSize * InterpolationFactor, maxValue * InterpolationFactor), MatType.CV_8UC4, OpacityScalar);
+            using var histogramMat = new Mat(new Size(MaxMatDimensionSize, maxValue), MatType.CV_8UC4, OpacityScalar);
             for (var i = 0; i < results.Count; i++)
             {
                 var color = new Scalar(i == 2 ? 200 : 0, i == 1 ? 200 : 0, i == 0 ? 200 : 0, 255);
-                Cv2.Polylines(histogramMat, PrepareResults(results[i].values), false, color, 2, LineTypes.AntiAlias);
-                //Cv2.Add(histogramMat, DrawColorOnHistogram(results[i].values, color, results[i].max, maxValue), histogramMat);
+                //Cv2.Polylines(histogramMat, PrepareResults(results[i].values), false, color, 2, LineTypes.AntiAlias);
+                Cv2.Add(histogramMat, DrawColorOnHistogram(results[i].values, color, results[i].max, maxValue), histogramMat);
             }
             Cv2.Resize(histogramMat, histogramMat, HistogramSize);
             foreach (var plane in planes)
