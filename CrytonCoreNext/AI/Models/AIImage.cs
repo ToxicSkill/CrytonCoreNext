@@ -40,6 +40,8 @@ namespace CrytonCoreNext.AI.Models
 
         public Bitmap HistogramBitmap { get; set; }
 
+        public bool RenderFinal { get; set; }
+
         [ObservableProperty]
         public object grid;
 

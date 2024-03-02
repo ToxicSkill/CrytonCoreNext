@@ -13,31 +13,23 @@ using System.Windows;
 
 namespace CrytonCoreNext.Drawers
 {
-    public struct Context
+    public struct Context(AIImage image)
     {
-        public bool DrawLABHistogram { get; init; }
-        public bool DrawRGBHistogram { get; init; }
-        public double Brightness { get; init; }
-        public double Exposure { get; init; }
-        public double Contrast { get; init; }
-        public Mat Image { get; set; }
+        public bool DrawLABHistogram { get; init; } = image.NormalizeLABHistogram;
+        public bool DrawRGBHistogram { get; init; } = image.NormalizeRGBHistogram;
+        public double Brightness { get; init; } = image.BrightnessValue;
+        public double Exposure { get; init; } = image.ExposureValue;
+        public double Contrast { get; init; } = image.ContrastValue;
+        public Mat Image { get; set; } = image.RenderFinal ? image.Image.ToMat() : image.ResizedImage.Clone();
         public Bitmap Histogram { get; set; }
-        public AIImage AiImage { get; init; }
-        public Context(AIImage image)
-        {
-            DrawLABHistogram = image.NormalizeLABHistogram;
-            DrawRGBHistogram = image.NormalizeRGBHistogram;
-            Brightness = image.BrightnessValue;
-            Exposure = image.ExposureValue;
-            Contrast = image.ContrastValue;
-            Image = image.ResizedImage.Clone();
-            AiImage = image;
-        }
+        public AIImage AiImage { get; init; } = image;
     }
 
     public class ImageDrawer
     {
         private const System.Windows.Threading.DispatcherPriority DispatcherPriority = System.Windows.Threading.DispatcherPriority.Background;
+
+        private static readonly OpenCvSharp.Size? CLAHEKernelSize = new(8, 8);
 
         private readonly TransformBlock<AIImage, Context> _pipeline;
 
@@ -126,7 +118,7 @@ namespace CrytonCoreNext.Drawers
             var labColorMat = new Mat();
             Cv2.CvtColor(context.Image, labColorMat, ColorConversionCodes.BGR2Lab);
             var channels = Cv2.Split(labColorMat);
-            Cv2.CreateCLAHE(2.0, new(8, 8)).Apply(channels[0], channels[0]);
+            Cv2.CreateCLAHE(2.0, CLAHEKernelSize).Apply(channels[0], channels[0]);
             Cv2.Merge(channels, labColorMat);
             Cv2.CvtColor(labColorMat, labColorMat, ColorConversionCodes.Lab2LBGR);
             Cv2.AddWeighted(context.Image, 1 - AIImage.DefaultAutoColorValue, labColorMat, AIImage.DefaultAutoColorValue, 0, context.Image);
@@ -141,9 +133,9 @@ namespace CrytonCoreNext.Drawers
             }
             using var rgbColorMat = context.Image.Clone();
             var channels = Cv2.Split(rgbColorMat);
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; i < channels.Length; i++)
             {
-                Cv2.CreateCLAHE(2.0, new(8, 8)).Apply(channels[i], channels[i]);
+                Cv2.CreateCLAHE(2.0, CLAHEKernelSize).Apply(channels[i], channels[i]);
             }
             Cv2.Merge(channels, rgbColorMat);
             Cv2.AddWeighted(context.Image, 1 - AIImage.DefaultAutoColorValue, rgbColorMat, AIImage.DefaultAutoColorValue, 0, context.Image);
