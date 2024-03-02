@@ -1,5 +1,4 @@
-﻿using MethodTimer;
-using OpenCvSharp;
+﻿using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using System;
 using System.Collections.Generic;
@@ -24,7 +23,6 @@ namespace CrytonCoreNext.Drawers
 
         private static readonly Rangef[] _ranges = [new(0, MaxMatDimensionSize)];
 
-        [Time]
         public static System.Drawing.Bitmap CalcualteHistogram(Mat image)
         {
             using var matForHistogram = new Mat();
@@ -48,12 +46,12 @@ namespace CrytonCoreNext.Drawers
 
             var maxValue = results.Max(x => x.max);
             maxValue = Math.Clamp(maxValue, 1, maxValue);
-            using var histogramMat = new Mat(new Size(MaxMatDimensionSize, maxValue), MatType.CV_8UC4, OpacityScalar);
+            using var histogramMat = new Mat(new Size(MaxMatDimensionSize * InterpolationFactor, maxValue), MatType.CV_8UC4, OpacityScalar);
             for (var i = 0; i < results.Count; i++)
             {
                 var color = new Scalar(i == 2 ? 200 : 0, i == 1 ? 200 : 0, i == 0 ? 200 : 0, 255);
-                //Cv2.Polylines(histogramMat, PrepareResults(results[i].values), false, color, 2, LineTypes.AntiAlias);
-                Cv2.Add(histogramMat, DrawColorOnHistogram(results[i].values, color, results[i].max, maxValue), histogramMat);
+                var interpolated = MatToArrayWithInterpolation(planes[i]);
+                Cv2.Add(histogramMat, DrawColorOnHistogram(interpolated.values, color, interpolated.maxValue, maxValue), histogramMat);
             }
             Cv2.Resize(histogramMat, histogramMat, HistogramSize);
             foreach (var plane in planes)
@@ -97,31 +95,6 @@ namespace CrytonCoreNext.Drawers
             return paths;
         }
 
-        private static List<Point> InterpolateList(List<Point> originalList)
-        {
-            List<Point> interpolatedList = [];
-            var index = 0;
-            for (var i = 0; i < originalList.Count - 1; i++)
-            {
-                double startValue = originalList[i].Y;
-                double endValue = originalList[i + 1].Y;
-
-                for (var j = 0; j < InterpolationFactor; j++)
-                {
-                    double interpolatedValue = Interpolate(startValue, endValue, (double)j / InterpolationFactor);
-                    interpolatedList.Add(new(index, InterpolationFactor * (MaxMatDimensionSize - interpolatedValue)));
-                    index++;
-                }
-            }
-            interpolatedList.Add(new(index, InterpolationFactor * (MaxMatDimensionSize - originalList[originalList.Count - 1].Y)));
-
-            return interpolatedList;
-        }
-
-        private static double Interpolate(double start, double end, double ratio)
-        {
-            return start + (end - start) * ratio;
-        }
 
         private static System.Windows.Point[] PrepareResultsForBezier(int[,] values)
         {
@@ -153,13 +126,62 @@ namespace CrytonCoreNext.Drawers
             {
                 maxValue = 1;
             }
-            var color = new Mat(new Size(MaxMatDimensionSize, selfMax), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
-            for (var i = 0; i < MaxMatDimensionSize; i++)
+            var color = new Scalar(scalar.Val2, scalar.Val1, scalar.Val0, 255);
+            var colorMat = new Mat(new Size(MaxMatDimensionSize * InterpolationFactor, selfMax), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
+            for (var i = 0; i < MaxMatDimensionSize * InterpolationFactor; i++)
             {
-                Cv2.Line(color, new Point(i, selfMax), new Point(i, selfMax - values[i, 0]), new Scalar(scalar.Val2, scalar.Val1, scalar.Val0, 255));
+                Cv2.Line(colorMat, new Point(i, selfMax), new Point(i, values[i, 0]), color);
             }
-            Cv2.Resize(color, color, new Size(MaxMatDimensionSize, maxValue));
-            return color;
+            Cv2.Resize(colorMat, colorMat, new Size(MaxMatDimensionSize * InterpolationFactor, maxValue));
+            return colorMat;
+        }
+        private static List<Point> InterpolateList(List<Point> originalList)
+        {
+            List<Point> interpolatedList = [];
+            var index = 0;
+            for (var i = 0; i < originalList.Count - 1; i++)
+            {
+                double startValue = originalList[i].Y;
+                double endValue = originalList[i + 1].Y;
+
+                for (var j = 0; j < InterpolationFactor; j++)
+                {
+                    double interpolatedValue = Interpolate(startValue, endValue, (double)j / InterpolationFactor);
+                    interpolatedList.Add(new(index, InterpolationFactor * (MaxMatDimensionSize - interpolatedValue)));
+                    index++;
+                }
+            }
+            interpolatedList.Add(new(index, InterpolationFactor * (MaxMatDimensionSize - originalList[originalList.Count - 1].Y)));
+
+            return interpolatedList;
+        }
+
+        private static double Interpolate(double start, double end, double ratio)
+        {
+            return start + (end - start) * ratio;
+        }
+        private static (int maxValue, int[,] values) MatToArrayWithInterpolation(Mat image)
+        {
+            var pixelValues = new int[image.Rows * InterpolationFactor, image.Cols];
+            for (var col = 0; col < image.Cols; col++)
+            {
+                var index = 0;
+                for (var row = 0; row < image.Rows; row++)
+                {
+                    double startValue = image.At<float>(row, col);
+                    double endValue = image.At<float>(row + 1, col);
+
+                    for (var j = 0; j < InterpolationFactor; j++)
+                    {
+                        double interpolatedValue = Interpolate(startValue, endValue, (double)j / InterpolationFactor);
+                        pixelValues[index, col] = (int)(InterpolationFactor * (MaxMatDimensionSize - interpolatedValue));
+                        index++;
+                    }
+                }
+                pixelValues[index - 1, col] = (int)(InterpolationFactor * (MaxMatDimensionSize - image.At<float>(image.Rows - 1, col)));
+            }
+
+            return new(pixelValues.Cast<int>().Max(), pixelValues);
         }
 
         private static (int maxValue, int[,] values) MatToArray(Mat image)

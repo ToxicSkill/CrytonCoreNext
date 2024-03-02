@@ -84,11 +84,6 @@ namespace CrytonCoreNext.ViewModels
             ];
         }
 
-        public void CompletePipeline()
-        {
-            SelectedImage.CompletePipeline();
-        }
-
         [RelayCommand]
         private void ExportImageToPDF()
         {

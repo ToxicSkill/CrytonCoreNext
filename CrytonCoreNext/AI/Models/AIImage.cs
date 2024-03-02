@@ -38,6 +38,8 @@ namespace CrytonCoreNext.AI.Models
 
         public Mat ResizedImage { get; set; }
 
+        public Bitmap HistogramBitmap { get; set; }
+
         [ObservableProperty]
         public object grid;
 
@@ -76,11 +78,6 @@ namespace CrytonCoreNext.AI.Models
             Predictions = [];
             Path = path;
             LoadImages();
-        }
-
-        public void CompletePipeline()
-        {
-            UpdateImage();
         }
 
         public void UpdateImage()
