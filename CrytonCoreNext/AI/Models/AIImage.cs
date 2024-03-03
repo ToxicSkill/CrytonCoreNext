@@ -18,6 +18,12 @@ namespace CrytonCoreNext.AI.Models
     {
         private readonly ImageDrawer _drawer;
 
+        private static readonly (double min, double max) _minMaxContrastRange = (0, 2);
+
+        private static readonly (double min, double max) _minMaxExposureRange = (0, 2);
+
+        private static readonly (double min, double max) _minMaxBrightnessRange = (-127, 127);
+
         private const int MaxSingleDimensionSize = 1024;
 
         public const double DefaultAutoColorValue = 0.5;
@@ -42,20 +48,26 @@ namespace CrytonCoreNext.AI.Models
 
         public bool RenderFinal { get; set; }
 
+        public double TrueExposureValue { get; private set; } = DefaultExposureValue;
+
+        public double TrueContrastValue { get; private set; } = DefaultContrastValue;
+
+        public double TrueBrightnessValue { get; private set; } = DefaultBrightnessValue;
+
+        [ObservableProperty]
+        public double contrastValue = ConvertRange(_minMaxContrastRange.min, _minMaxContrastRange.max, 0, 100, DefaultContrastValue);
+
+        [ObservableProperty]
+        public double brightnessValue = ConvertRange(_minMaxBrightnessRange.min, _minMaxBrightnessRange.max, 0, 100, DefaultBrightnessValue);
+
+        [ObservableProperty]
+        public double exposureValue = ConvertRange(_minMaxExposureRange.min, _minMaxExposureRange.max, 0, 100, DefaultExposureValue);
+
         [ObservableProperty]
         public object grid;
 
         [ObservableProperty]
         public System.Drawing.Size constrains;
-
-        [ObservableProperty]
-        public double contrastValue = DefaultContrastValue;
-
-        [ObservableProperty]
-        public double brightnessValue = DefaultBrightnessValue;
-
-        [ObservableProperty]
-        public double exposureValue = DefaultExposureValue;
 
         [ObservableProperty]
         public bool normalizeRGBHistogram;
@@ -124,16 +136,22 @@ namespace CrytonCoreNext.AI.Models
 
         partial void OnExposureValueChanging(double value)
         {
+            TrueExposureValue = ConvertRange(0, 100, _minMaxExposureRange.min, _minMaxExposureRange.max, value);
+            OnPropertyChanged(nameof(TrueExposureValue));
             UpdateImage();
         }
 
         partial void OnContrastValueChanged(double value)
         {
+            TrueContrastValue = ConvertRange(0, 100, _minMaxContrastRange.min, _minMaxContrastRange.max, value);
+            OnPropertyChanged(nameof(TrueContrastValue));
             UpdateImage();
         }
 
         partial void OnBrightnessValueChanged(double value)
         {
+            TrueBrightnessValue = ConvertRange(0, 100, _minMaxBrightnessRange.min, _minMaxBrightnessRange.max, value);
+            OnPropertyChanged(nameof(TrueBrightnessValue));
             UpdateImage();
         }
 
@@ -176,6 +194,14 @@ namespace CrytonCoreNext.AI.Models
                         Image = new Mat(mat, newRect).ToWriteableBitmap()
                     });
             }
+        }
+
+        private static double ConvertRange(double originalStart, double originalEnd,
+                                        double newStart, double newEnd,
+                                        double value)
+        {
+            double scale = (double)(newEnd - newStart) / (originalEnd - originalStart);
+            return newStart + ((value - originalStart) * scale);
         }
     }
 }

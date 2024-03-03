@@ -17,9 +17,9 @@ namespace CrytonCoreNext.Drawers
     {
         public bool DrawLABHistogram { get; init; } = image.NormalizeLABHistogram;
         public bool DrawRGBHistogram { get; init; } = image.NormalizeRGBHistogram;
-        public double Brightness { get; init; } = image.BrightnessValue;
-        public double Exposure { get; init; } = image.ExposureValue;
-        public double Contrast { get; init; } = image.ContrastValue;
+        public double Brightness { get; init; } = image.TrueBrightnessValue;
+        public double Exposure { get; init; } = image.TrueExposureValue;
+        public double Contrast { get; init; } = image.TrueContrastValue;
         public Mat Image { get; set; } = image.RenderFinal ? image.Image.ToMat() : image.ResizedImage.Clone();
         public Bitmap Histogram { get; set; }
         public AIImage AiImage { get; init; } = image;
