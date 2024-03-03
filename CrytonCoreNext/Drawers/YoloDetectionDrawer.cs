@@ -38,11 +38,12 @@ namespace CrytonCoreNext.Drawers
             }
             using var mat = selectedImage.AdjusterImage.ToMat();
             using var overlay = new Mat(mat.Size(), mat.Type(), new Scalar(0, 0, 0));
-            using var roi = new Mat(mat, detectionImage.Prediction.Rectangle.ToRect());
+            var rectangle = CastPrediction(detectionImage.Prediction.Rectangle.ToRect(), mat.Size(), new Size(selectedImage.Image.Width, selectedImage.Image.Height));
+            using var roi = new Mat(mat, rectangle);
             using var combined = new Mat();
             Cv2.AddWeighted(mat, 0.5, overlay, 0.5, 0, combined);
-            using var dest = new Mat(combined, detectionImage.Prediction.Rectangle.ToRect());
-            roi.CopyTo(dest); 
+            using var dest = new Mat(combined, rectangle);
+            roi.CopyTo(dest);
             return combined.ToWriteableBitmap();
         }
 
@@ -54,6 +55,13 @@ namespace CrytonCoreNext.Drawers
                 Cv2.Rectangle(mat, detection.Rectangle.ToRect(), detection.Label.Color.ToScalar(), Thickness);
             }
             return mat.ToWriteableBitmap();
+        }
+
+        private static Rect CastPrediction(Rect rect, Size sizeNew, Size sizeOld)
+        {
+            var wRatio = (double)sizeNew.Width / (double)sizeOld.Width;
+            var hRatio = (double)sizeNew.Height / (double)sizeOld.Height;
+            return new Rect((int)(rect.X * wRatio), (int)(rect.Y * hRatio), (int)(rect.Width * wRatio), (int)(rect.Height * hRatio));
         }
     }
 }
