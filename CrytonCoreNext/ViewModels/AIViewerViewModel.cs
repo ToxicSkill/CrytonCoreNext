@@ -13,8 +13,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
-
-
 using DialogService = CrytonCoreNext.Services.DialogService;
 
 namespace CrytonCoreNext.ViewModels
@@ -103,7 +101,7 @@ namespace CrytonCoreNext.ViewModels
         private void DeleteImage()
         {
             var index = Images.IndexOf(SelectedImage);
-            Images = new(Images.Except(new List<AIImage>() { SelectedImage }));
+            Images = new(Images.Except([SelectedImage]));
             if (index > 0)
             {
                 SelectedImage = Images[index - 1];

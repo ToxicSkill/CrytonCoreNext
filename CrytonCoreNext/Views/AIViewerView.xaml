@@ -143,10 +143,51 @@
             <Grid Grid.Column="1"
                   Margin="10,10,0,0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="50" />
+                    <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
-                <ScrollViewer>
+                <Grid Grid.Row="0" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <ui:Button Content="Compare"
+                               Icon="ImageMultiple20"
+                               Margin="0,2"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
+                               FontSize="18"
+                               Background="{DynamicResource StripedBackgroundBrush}"
+                               MouseEnter="Button_MouseEnter"
+                               MouseLeave="Button_MouseLeave" />
+                    <ui:DropDownButton Grid.Column="1" 
+                                       Margin="5,2,30,2"
+                                       VerticalAlignment="Stretch"
+                                       HorizontalAlignment="Stretch"
+                                       HorizontalContentAlignment="Stretch"
+                                       Appearance="Primary"
+                                       Content="Save options">
+                        <ui:DropDownButton.Flyout>
+                            <ContextMenu>
+                                <MenuItem Header="Save" />
+                                <MenuItem Header="Save as copy" />
+                                <MenuItem Header="Copy to clipboard" />
+                            </ContextMenu>
+                        </ui:DropDownButton.Flyout>
+                    </ui:DropDownButton>
+                    <!--<ui:Button Grid.Column="1"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
+                               Cursor="Hand"
+                               Margin="2,0,0,0"
+                               Icon="Add20"
+                               Content="Save"
+                               FontSize="18"
+                               ToolTip="Load files"
+                               Command="{Binding LoadImagesCommand}" />-->
+                </Grid>
+                <ScrollViewer Grid.Row="1">
                     <StackPanel>
                         <ui:CardExpander HorizontalAlignment="Stretch"
                                          Margin="0,3"
@@ -480,28 +521,28 @@
                         </ui:CardExpander>
                     </StackPanel>
                 </ScrollViewer>
-                <Grid Grid.Row="1"
-                      Margin="0,2,15,10">
+                <Grid Grid.Row="2"
+                      Margin="0,4,0,2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
-                    <ui:Button Content="Comapre"
-                               Icon="ImageMultiple20"
-                               HorizontalAlignment="Stretch"
-                               VerticalAlignment="Stretch"
-                               FontSize="18"
-                               MouseEnter="Button_MouseEnter"
-                               MouseLeave="Button_MouseLeave" />
-                    <ui:Button Grid.Column="1"
-                               HorizontalAlignment="Stretch"
+                    <ui:Button HorizontalAlignment="Stretch"
                                VerticalAlignment="Stretch"
                                Cursor="Hand"
-                               Margin="2,0,0,0"
-                               Icon="Add20"
+                               Icon="{ui:SymbolIcon Add20}"
                                Content="Load"
                                FontSize="18"
                                ToolTip="Load files"
+                               Command="{Binding LoadImagesCommand}" />
+                    <ui:Button Grid.Column="1" Margin="5,0,0,0"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
+                               Cursor="Hand" 
+                               Icon="{ui:SymbolIcon AddSquareMultiple20}"
+                               Content="Load folder"
+                               FontSize="18"
+                               ToolTip="Load"
                                Command="{Binding LoadImagesCommand}" />
                 </Grid>
             </Grid>

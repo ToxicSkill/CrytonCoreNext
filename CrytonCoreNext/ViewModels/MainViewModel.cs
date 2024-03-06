@@ -19,8 +19,8 @@ namespace CrytonCoreNext.ViewModels
 
         public MainViewModel()
         {
-            MenuItems = new ObservableCollection<object>();
-            FooterItems = new ObservableCollection<object>();
+            MenuItems = [];
+            FooterItems = [];
             InitializeMenu();
         }
 
