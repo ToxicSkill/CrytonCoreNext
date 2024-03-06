@@ -70,8 +70,6 @@ namespace CrytonCoreNext.PDF.Services
             }
         }
 
-
-
         public async Task<PDFFile> Merge(List<PDFFile> pdfFiles)
         {
             using IDocLib pdfLibrary = DocLib.Instance;
@@ -125,9 +123,16 @@ namespace CrytonCoreNext.PDF.Services
         public async Task<PDFFile> MergeAllImagesToPDF(List<ImageFile> images, int newId)
         {
             var pdfFiles = new List<PDFFile>();
+            var index = 0;
             foreach (var imageFile in images)
             {
-                pdfFiles.Add(ImageToPdf(imageFile, 0));
+                var pdfFile = ImageToPdf(imageFile, index);
+                pdfFile.NumberOfPages = 1;
+                if (pdfFile != null)
+                {
+                    pdfFiles.Add(pdfFile);
+                }
+                index++;
             }
             using IDocLib pdfLibrary = DocLib.Instance;
             return await Merge(pdfFiles);

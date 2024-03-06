@@ -325,7 +325,7 @@
                                Source="{Binding SelectedPdfFile.PageImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                         <ui:Button HorizontalAlignment="Left"
-                                   Icon="ArrowLeft20"
+                                   Icon="{ui:SymbolIcon ArrowLeft20}"
                                    Command="{Binding GoPreviousPageCommand}"
                                    Height="80"
                                    Margin="10,0"
@@ -334,7 +334,7 @@
                                    Visibility="{Binding SelectedPdfFile.IsOnFirstPage,Converter={StaticResource BoolToVisibilityInversionConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 
                         <ui:Button HorizontalAlignment="Right"
-                                   Icon="ArrowRight20"
+                                   Icon="{ui:SymbolIcon ArrowRight20}"
                                    Command="{Binding GoNextPageCommand}"
                                    Height="80"
                                    Margin="10,0"
