@@ -147,6 +147,14 @@ namespace CrytonCoreNext.ViewModels
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
         {
             SelectedImage.DetectionImage = YoloDetectionDrawer.DrawDetection(SelectedImage, value);
+            if (value != null)
+            {
+                SelectedImage.DetectionLabel = value.Prediction.Label.Name ?? string.Empty;
+            }
+            else
+            {
+                SelectedImage.DetectionLabel = string.Empty;
+            }
             UserMouseIsInDetectedObject = value != null;
         }
     }

@@ -64,7 +64,7 @@ namespace CrytonCoreNext.AI.Models
         public double exposureValue = ConvertRange(_minMaxExposureRange.min, _minMaxExposureRange.max, 0, 100, DefaultExposureValue);
 
         [ObservableProperty]
-        public object grid;
+        public string detectionLabel;
 
         [ObservableProperty]
         public System.Drawing.Size constrains;

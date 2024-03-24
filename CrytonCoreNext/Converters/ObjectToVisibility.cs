@@ -9,6 +9,10 @@ namespace CrytonCoreNext.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value is string val)
+            {
+                return string.IsNullOrEmpty(val) ? Visibility.Collapsed : Visibility.Visible;
+            }
             return value == null ? Visibility.Collapsed : Visibility.Visible;
         }
 

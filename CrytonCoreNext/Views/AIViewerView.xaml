@@ -175,17 +175,7 @@
                                 <MenuItem Header="Copy to clipboard" />
                             </ContextMenu>
                         </ui:DropDownButton.Flyout>
-                    </ui:DropDownButton>
-                    <!--<ui:Button Grid.Column="1"
-                               HorizontalAlignment="Stretch"
-                               VerticalAlignment="Stretch"
-                               Cursor="Hand"
-                               Margin="2,0,0,0"
-                               Icon="Add20"
-                               Content="Save"
-                               FontSize="18"
-                               ToolTip="Load files"
-                               Command="{Binding LoadImagesCommand}" />-->
+                    </ui:DropDownButton> 
                 </Grid>
                 <ScrollViewer Grid.Row="1">
                     <StackPanel>
@@ -195,6 +185,7 @@
                             <ui:CardExpander.Header>
                                 <Grid VerticalAlignment="Center">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
                                         <ColumnDefinition Width="auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
@@ -207,6 +198,25 @@
                                                Text="Image"
                                                FontSize="22"
                                                HorizontalAlignment="Left" />
+                                    <StackPanel Grid.Column="2"
+                                                Visibility="{Binding SelectedImage.DetectionLabel, Converter={StaticResource ObjectToVisibility}}"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
+                                        <ui:SymbolIcon Symbol="Scan20"
+                                                       FontSize="22">
+                                            <ui:SymbolIcon.Foreground>
+                                                <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" />
+                                            </ui:SymbolIcon.Foreground>
+                                        </ui:SymbolIcon>
+                                        <TextBlock Text="{Binding SelectedImage.DetectionLabel}"
+                                                   FontSize="22"
+                                                   Margin="5,0,0,0">
+                                            <TextBlock.Foreground>
+                                                <SolidColorBrush Color="{DynamicResource SystemAccentColorPrimary}" />
+                                            </TextBlock.Foreground>
+                                        </TextBlock>
+                                    </StackPanel>
                                 </Grid>
                             </ui:CardExpander.Header>
                             <Grid> 
@@ -264,12 +274,7 @@
                                        Source="{Binding SelectedImage.Histogram , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        RenderOptions.BitmapScalingMode="LowQuality"
                                        RenderOptions.EdgeMode="Unspecified"
-                                       RenderOptions.CachingHint="Unspecified" />
-                                <Viewbox Grid.Row="4"
-                                         HorizontalAlignment="Stretch"
-                                         VerticalAlignment="Stretch">
-                                    <ContentPresenter Content="{Binding SelectedImage.Grid}"/>
-                                </Viewbox>
+                                       RenderOptions.CachingHint="Unspecified" /> 
                             </Grid>
                         </ui:CardExpander>
                         <ui:CardExpander HorizontalAlignment="Stretch"
