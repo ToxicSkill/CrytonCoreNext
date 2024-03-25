@@ -48,6 +48,15 @@ namespace CrytonCoreNext.AI
 
         public List<YoloPrediction> GetPredictions(Mat mat)
         {
+            switch (mat.Channels())
+            {
+                case 4:
+                    Cv2.CvtColor(mat, mat, ColorConversionCodes.RGBA2RGB);
+                    break;
+                case 1:
+                    Cv2.CvtColor(mat, mat, ColorConversionCodes.GRAY2BGR);
+                    break;
+            }
             using var image = mat.ToBitmap(System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             return _yolov7.Predict(image);
         }

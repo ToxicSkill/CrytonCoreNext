@@ -7,10 +7,9 @@ namespace CrytonCoreNext.Models
 {
     public class FilesLoader : IFilesLoader
     {
-
         public async IAsyncEnumerable<File> LoadFiles(List<string> filesNames, int currentIndex = 0)
         {
-            for (int i = 0; i < filesNames.Count; i++)
+            for (var i = 0; i < filesNames.Count; i++)
             {
                 currentIndex += 1;
                 var newIndex = currentIndex;
@@ -23,7 +22,7 @@ namespace CrytonCoreNext.Models
             }
         }
 
-        private File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)
+        private static File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)
         {
             if (byteArray.Length == 0)
             {

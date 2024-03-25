@@ -40,7 +40,7 @@ namespace CrytonCoreNext.Abstract
 
         protected string GetFileFromDialog(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
-            return dialogService.GetFileNameToOpen(filters, Environment.SpecialFolder.Recent);
+            return dialogService.GetFileNameToOpen(filters, Environment.SpecialFolder.Desktop);
         }
 
         protected async IAsyncEnumerable<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
@@ -64,7 +64,7 @@ namespace CrytonCoreNext.Abstract
                 return;
             }
 
-            var filePath = dialogService.GetFileNameToSave(file.Extension, Environment.SpecialFolder.Recent);
+            var filePath = dialogService.GetFileNameToSave(file.Extension, Environment.SpecialFolder.Desktop);
             if (filePath == string.Empty)
             {
                 PostErrorSnackbar(Language.Post("FilesSavingError"));

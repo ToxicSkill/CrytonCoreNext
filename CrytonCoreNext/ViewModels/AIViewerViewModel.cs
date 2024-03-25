@@ -115,7 +115,7 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void SaveImage()
         {
-            var outputFileName = _dialogService.GetFileNameToSave(".png", Environment.SpecialFolder.Recent);
+            var outputFileName = _dialogService.GetFileNameToSave(".png", Environment.SpecialFolder.Desktop);
             if (outputFileName != string.Empty)
             {
                 Cv2.ImWrite(outputFileName, SelectedImage.AdjusterImage.ToMat());
@@ -125,7 +125,7 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private void LoadImages()
         {
-            var filesToOpen = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.Images, Environment.SpecialFolder.Recent);
+            var filesToOpen = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.Images, Environment.SpecialFolder.Desktop);
             if (filesToOpen.Count != 0)
             {
                 var newFiles = new List<AIImage>();
