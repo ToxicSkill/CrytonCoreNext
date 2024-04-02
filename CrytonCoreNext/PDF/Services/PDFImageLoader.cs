@@ -13,7 +13,7 @@ namespace CrytonCoreNext.PDF.Services
 {
     public class PDFImageLoader : IPDFImageLoader
     {
-        private const int MaximalDimensionSize = 1500;
+        private const int MaximalDimensionSize = 11500;
 
         public WriteableBitmap LoadImage(PDFFile pdfFile)
         {
@@ -48,7 +48,7 @@ namespace CrytonCoreNext.PDF.Services
 
         private static Mat GetImage(IPageReader pageReader)
         {
-            var bgrBytes = pageReader.GetImage(RenderFlags.OptimizeTextForLcd | RenderFlags.LimitImageCacheSize);
+            var bgrBytes = pageReader.GetImage(RenderFlags.OptimizeTextForLcd | RenderFlags.LimitImageCacheSize | RenderFlags.RenderForPrinting);
             var width = pageReader.GetPageWidth();
             var height = pageReader.GetPageHeight();
 

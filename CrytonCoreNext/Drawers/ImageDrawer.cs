@@ -20,7 +20,7 @@ namespace CrytonCoreNext.Drawers
         public double Brightness { get; init; } = image.TrueBrightnessValue;
         public double Exposure { get; init; } = image.TrueExposureValue;
         public double Contrast { get; init; } = image.TrueContrastValue;
-        public Mat Image { get; set; } = image.RenderFinal ? image.Image.ToMat() : image.ResizedImage.Clone();
+        public Mat Image { get; set; } = image.RenderFinal ? Application.Current?.Dispatcher.Invoke(image.Image.ToMat) : image.ResizedImage.Clone();
         public Bitmap Histogram { get; set; }
         public AIImage AiImage { get; init; } = image;
     }

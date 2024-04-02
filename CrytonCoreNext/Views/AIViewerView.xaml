@@ -170,7 +170,7 @@
                                        Content="Save options">
                         <ui:DropDownButton.Flyout>
                             <ContextMenu>
-                                <MenuItem Header="Save" />
+                                <MenuItem Header="Save" Command="{Binding SaveImageCommand}" />
                                 <MenuItem Header="Save as copy" />
                                 <MenuItem Header="Copy to clipboard" />
                             </ContextMenu>

@@ -70,8 +70,6 @@ namespace CrytonCoreNext.PDF.Models
 
         private byte[] _entropy;
 
-        private WriteableBitmap _image;
-
         [ObservableProperty]
         public WriteableBitmap pageImage;
 

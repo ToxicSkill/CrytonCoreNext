@@ -118,6 +118,8 @@ namespace CrytonCoreNext.ViewModels
             var outputFileName = _dialogService.GetFileNameToSave(".png", Environment.SpecialFolder.Desktop);
             if (outputFileName != string.Empty)
             {
+                SelectedImage.RenderFinal = true;
+                SelectedImage.UpdateImage();
                 Cv2.ImWrite(outputFileName, SelectedImage.AdjusterImage.ToMat());
             }
         }
