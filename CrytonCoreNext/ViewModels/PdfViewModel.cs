@@ -212,6 +212,10 @@ namespace CrytonCoreNext.ViewModels
             {
                 SelectedTabIndex = (int)EPdfTabControls.Convert;
             }
+            if (PdfFiles.Any() && !ImageFiles.Any())
+            {
+                SelectedTabIndex = (int)EPdfTabControls.Preview;
+            }
             AnyLoadedFile = PdfFiles.Any() || ImageFiles.Any();
         }
 
@@ -426,7 +430,6 @@ namespace CrytonCoreNext.ViewModels
             ImageFiles.Remove(SelectedImageFile);
             OnImageFileDeleteAfter(oldIndex);
         }
-
 
         [RelayCommand]
         private async Task LoadPdfAndImageFiles(string param)
@@ -819,13 +822,6 @@ namespace CrytonCoreNext.ViewModels
             }
             OnPdfFilesChanged();
         }
-
-        private void OnFileDeleteBefore()
-        {
-            SelectedPdfFilesToMerge.Remove(SelectedPdfFile);
-            SelectedPdfFilesToSplit.Remove(SelectedPdfFile);
-        }
-
 
         private int LoadPdfFile(ref int protectedFilesCount, ref int damagedFilesCount, File file)
         {

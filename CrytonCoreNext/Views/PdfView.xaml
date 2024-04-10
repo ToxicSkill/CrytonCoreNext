@@ -799,9 +799,9 @@
                                                HorizontalAlignment="Stretch" />
                                 </Grid>
 
-                                <ScrollViewer Grid.Row="2"
+                                <ScrollViewer Grid.Row="2" 
                                               CanContentScroll="True"
-                                              VerticalScrollBarVisibility="Auto">
+                                              VerticalScrollBarVisibility="Visible">
                                     <ListView ItemsSource="{Binding ImageFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                               SelectedItem="{Binding SelectedImageFile}"
                                               SelectionMode="Single">
