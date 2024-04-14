@@ -2,6 +2,7 @@
 using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.Models;
+using Nito.AsyncEx;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System;
@@ -84,6 +85,7 @@ namespace CrytonCoreNext.AI.Models
         [ObservableProperty]
         public WriteableBitmap adjusterImage;
 
+        private List<Task> _tasks = new();
 
         public AIImage(string path, ImageDrawer drawer)
         {
@@ -96,12 +98,13 @@ namespace CrytonCoreNext.AI.Models
 
         public void UpdateImage()
         {
-            Task.Run(() => _drawer.Post(this));
+            _tasks.Add(Task.Run(() => _drawer.Post(this)));
+            _tasks.WhenAll();
         }
 
         public bool IsImageReady()
         {
-            return _drawer.GetIsReady();
+            return _drawer.IsReady;
         }
 
         private void LoadImages()
@@ -140,7 +143,7 @@ namespace CrytonCoreNext.AI.Models
             {
                 ResizedImage = Image.ToMat();
             }
-            Task.Run(UpdateImage);
+            UpdateImage();
         }
 
         partial void OnExposureValueChanging(double value)
@@ -183,6 +186,11 @@ namespace CrytonCoreNext.AI.Models
             }
             Predictions = predictions;
             ExtractDetectionImagesFromBitmap();
+        }
+
+        public void SetReadyState(bool isReady)
+        {
+            _drawer.IsReady = isReady;
         }
 
         private void ExtractDetectionImagesFromBitmap()

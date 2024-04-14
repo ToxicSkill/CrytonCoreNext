@@ -22,7 +22,7 @@ namespace CrytonCoreNext.ViewModels
     {
         private const int MaxImageSavingRepeatCount = 5;
 
-        private const int ImageSavingTriesDelayInMiliseconds = 200;
+        private const int ImageSavingTriesDelayInMiliseconds = 500;
 
         private const int DefaultCompareSliderValue = 50;
 
@@ -124,12 +124,12 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private async Task SaveImage()
         {
+            SelectedImage.RenderFinal = true;
+            SelectedImage.UpdateImage();
+            var isReady = false;
             var outputFileName = _dialogService.GetFileNameToSave(".png", Environment.SpecialFolder.Desktop);
             if (outputFileName != string.Empty)
             {
-                SelectedImage.RenderFinal = true;
-                SelectedImage.UpdateImage();
-                var isReady = false;
                 for (var i = 0; i < MaxImageSavingRepeatCount; i++)
                 {
                     await Task.Delay(ImageSavingTriesDelayInMiliseconds);
@@ -149,6 +149,7 @@ namespace CrytonCoreNext.ViewModels
                     _snackbarService.Show("Error", "Error occured during image saving", ControlAppearance.Danger, new SymbolIcon(SymbolRegular.ErrorCircle20), TimeSpan.FromSeconds(2));
                 }
             }
+            SelectedImage.RenderFinal = false;
         }
 
         [RelayCommand]

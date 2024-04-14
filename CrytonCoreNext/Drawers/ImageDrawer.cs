@@ -4,7 +4,6 @@ using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
@@ -36,6 +35,18 @@ namespace CrytonCoreNext.Drawers
 
         private readonly SemaphoreSlim _semaphore;
 
+        private int _threadSafeBoolBackValue = 0;
+
+        public bool IsReady
+        {
+            get { return (Interlocked.CompareExchange(ref _threadSafeBoolBackValue, 1, 1) == 1); }
+            set
+            {
+                if (value) Interlocked.CompareExchange(ref _threadSafeBoolBackValue, 1, 0);
+                else Interlocked.CompareExchange(ref _threadSafeBoolBackValue, 0, 1);
+            }
+        }
+
         public ImageDrawer()
         {
             _semaphore = new SemaphoreSlim(1);
@@ -46,7 +57,7 @@ namespace CrytonCoreNext.Drawers
         {
             try
             {
-                Trace.WriteLine($"{_semaphore.CurrentCount}", "IMAGE PIPELINE");
+                IsReady = false;
                 await _semaphore.WaitAsync();
                 await _pipeline.SendAsync(image);
             }
@@ -55,13 +66,9 @@ namespace CrytonCoreNext.Drawers
             }
             finally
             {
+                IsReady = true;
                 _semaphore.Release();
             }
-        }
-
-        public bool GetIsReady()
-        {
-            return _semaphore.CurrentCount == 1;
         }
 
         public static TransformBlock<AIImage, Context> CreatePipeline(Action<Context> result)
