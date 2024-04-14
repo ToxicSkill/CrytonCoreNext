@@ -174,6 +174,25 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
+        [RelayCommand]
+        private void SetDefaultValue(string parameter)
+        {
+            //switch (parameter)
+            //{
+            //    case "Exposure":
+            //        SelectedImage.ExposureValue = AIImage.DefaultExposureValue;
+            //        break;
+            //    case "Contrast":
+            //        SelectedImage.ContrastValue = AIImage.DefaultContrastValue;
+            //        break;
+            //    case "Brightness":
+            //        SelectedImage.BrightnessValue = AIImage.DefaultBrightnessValue;
+            //        break;
+            //    default:
+            //        break;
+            //}
+        }
+
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
         {
             SelectedImage.DetectionImage = YoloDetectionDrawer.DrawDetection(SelectedImage, value);

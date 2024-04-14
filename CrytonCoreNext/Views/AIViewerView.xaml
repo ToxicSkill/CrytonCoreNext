@@ -30,7 +30,7 @@
                         </StackPanel>
                     </MenuItem.Header>
                 </ui:MenuItem>
-                <ui:MenuItem Command="{Binding SaveImageCommand}"> 
+                <ui:MenuItem Command="{Binding SaveImageCommand}">
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="Save20" />
@@ -39,7 +39,7 @@
                         </StackPanel>
                     </MenuItem.Header>
                 </ui:MenuItem>
-                <ui:MenuItem Command="{Binding ExportImageToPDFCommand}"> 
+                <ui:MenuItem Command="{Binding ExportImageToPDFCommand}">
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="ArrowExportUp20" />
@@ -147,7 +147,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" >
+                <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1.5*" />
                         <ColumnDefinition Width="2*" />
@@ -161,7 +161,7 @@
                                Background="{DynamicResource StripedBackgroundBrush}"
                                MouseEnter="Button_MouseEnter"
                                MouseLeave="Button_MouseLeave" />
-                    <ui:DropDownButton Grid.Column="1" 
+                    <ui:DropDownButton Grid.Column="1"
                                        Margin="5,2,30,2"
                                        VerticalAlignment="Stretch"
                                        HorizontalAlignment="Stretch"
@@ -170,12 +170,13 @@
                                        Content="Save options">
                         <ui:DropDownButton.Flyout>
                             <ContextMenu>
-                                <MenuItem Header="Save" Command="{Binding SaveImageCommand}" />
+                                <MenuItem Header="Save"
+                                          Command="{Binding SaveImageCommand}" />
                                 <MenuItem Header="Save as copy" />
                                 <MenuItem Header="Copy to clipboard" />
                             </ContextMenu>
                         </ui:DropDownButton.Flyout>
-                    </ui:DropDownButton> 
+                    </ui:DropDownButton>
                 </Grid>
                 <ScrollViewer Grid.Row="1">
                     <StackPanel>
@@ -219,7 +220,7 @@
                                     </StackPanel>
                                 </Grid>
                             </ui:CardExpander.Header>
-                            <Grid> 
+                            <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="40" />
@@ -274,7 +275,7 @@
                                        Source="{Binding SelectedImage.Histogram , Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                        RenderOptions.BitmapScalingMode="LowQuality"
                                        RenderOptions.EdgeMode="Unspecified"
-                                       RenderOptions.CachingHint="Unspecified" /> 
+                                       RenderOptions.CachingHint="Unspecified" />
                             </Grid>
                         </ui:CardExpander>
                         <ui:CardExpander HorizontalAlignment="Stretch"
@@ -352,6 +353,12 @@
                                            FontWeight="Thin"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center" />
+                                <ui:Button Grid.Row="1"
+                                           Grid.Column="3"
+                                           Icon="{ui:SymbolIcon Circle20}"
+                                           ToolTip="Set default value"
+                                           Command="{Binding SetDefaultValueCommand}"
+                                           CommandParameter="Contrast" />
 
                                 <ui:SymbolIcon Grid.Row="2"
                                                Symbol="Lightbulb20"
@@ -394,6 +401,12 @@
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center" />
 
+                                <ui:Button Grid.Row="3"
+                                           Grid.Column="3"
+                                           Icon="{ui:SymbolIcon Circle20}"
+                                           ToolTip="Set default value"
+                                           Command="{Binding SetDefaultValueCommand}"
+                                           CommandParameter="Brightness" />
                                 <ui:SymbolIcon Grid.Row="4"
                                                Symbol="AddSubtractCircle20"
                                                Filled="True"
@@ -434,6 +447,12 @@
                                            FontWeight="Thin"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center" />
+                                <ui:Button Grid.Row="5"
+                                           Grid.Column="3"
+                                           Icon="{ui:SymbolIcon Circle20}"
+                                           ToolTip="Set default value"
+                                           Command="{Binding SetDefaultValueCommand}"
+                                           CommandParameter="Exposure" />
 
                             </Grid>
                         </ui:CardExpander>
@@ -540,10 +559,11 @@
                                FontSize="18"
                                ToolTip="Load files"
                                Command="{Binding LoadImagesCommand}" />
-                    <ui:Button Grid.Column="1" Margin="5,0,0,0"
+                    <ui:Button Grid.Column="1"
+                               Margin="5,0,0,0"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Stretch"
-                               Cursor="Hand" 
+                               Cursor="Hand"
                                Icon="{ui:SymbolIcon AddSquareMultiple20}"
                                Content="Load folder"
                                FontSize="18"
