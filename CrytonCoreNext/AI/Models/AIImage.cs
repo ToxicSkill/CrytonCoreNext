@@ -96,7 +96,12 @@ namespace CrytonCoreNext.AI.Models
 
         public void UpdateImage()
         {
-            Task.Run(() => { _ = _drawer.Post(this); });
+            Task.Run(() => _drawer.Post(this));
+        }
+
+        public bool IsImageReady()
+        {
+            return _drawer.GetIsReady();
         }
 
         private void LoadImages()
@@ -130,6 +135,10 @@ namespace CrytonCoreNext.AI.Models
                 }
                 ResizedImage = Image.ToMat().EmptyClone();
                 Cv2.Resize(Image.ToMat(), ResizedImage, new OpenCvSharp.Size(newWidth, newHeight));
+            }
+            else
+            {
+                ResizedImage = Image.ToMat();
             }
             Task.Run(UpdateImage);
         }

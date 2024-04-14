@@ -4,6 +4,7 @@ using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
@@ -45,6 +46,7 @@ namespace CrytonCoreNext.Drawers
         {
             try
             {
+                Trace.WriteLine($"{_semaphore.CurrentCount}", "IMAGE PIPELINE");
                 await _semaphore.WaitAsync();
                 await _pipeline.SendAsync(image);
             }
@@ -55,6 +57,11 @@ namespace CrytonCoreNext.Drawers
             {
                 _semaphore.Release();
             }
+        }
+
+        public bool GetIsReady()
+        {
+            return _semaphore.CurrentCount == 1;
         }
 
         public static TransformBlock<AIImage, Context> CreatePipeline(Action<Context> result)

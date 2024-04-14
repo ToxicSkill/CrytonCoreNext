@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using DialogService = CrytonCoreNext.Services.DialogService;
@@ -19,11 +20,17 @@ namespace CrytonCoreNext.ViewModels
 {
     public partial class AIViewerViewModel : ObservableObject
     {
+        private const int MaxImageSavingRepeatCount = 5;
+
+        private const int ImageSavingTriesDelayInMiliseconds = 200;
+
         private const int DefaultCompareSliderValue = 50;
 
         private readonly IYoloModelService _yoloModelService;
 
         private readonly PdfViewModel _pdfViewModel;
+
+        private readonly ISnackbarService _snackbarService;
 
         private readonly INavigationService _navigationService;
 
@@ -66,9 +73,11 @@ namespace CrytonCoreNext.ViewModels
             IYoloModelService yoloModelService,
             PdfViewModel pdfViewModel,
             INavigationService navigationService,
+            ISnackbarService snackbarService,
             ImageDrawer drawer,
             DialogService dialogService)
         {
+            _snackbarService = snackbarService;
             _pdfViewModel = pdfViewModel;
             _navigationService = navigationService;
             _imageDrawer = drawer;
@@ -113,14 +122,32 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
-        private void SaveImage()
+        private async Task SaveImage()
         {
             var outputFileName = _dialogService.GetFileNameToSave(".png", Environment.SpecialFolder.Desktop);
             if (outputFileName != string.Empty)
             {
                 SelectedImage.RenderFinal = true;
                 SelectedImage.UpdateImage();
-                Cv2.ImWrite(outputFileName, SelectedImage.AdjusterImage.ToMat());
+                var isReady = false;
+                for (var i = 0; i < MaxImageSavingRepeatCount; i++)
+                {
+                    await Task.Delay(ImageSavingTriesDelayInMiliseconds);
+                    isReady = SelectedImage.IsImageReady();
+                    if (isReady)
+                    {
+                        break;
+                    }
+                }
+                if (isReady)
+                {
+                    Cv2.ImWrite(outputFileName, SelectedImage.AdjusterImage.ToMat());
+                    _snackbarService.Show("Success", "Image has been successfully saved", ControlAppearance.Success, new SymbolIcon(SymbolRegular.CheckmarkCircle20), TimeSpan.FromSeconds(2));
+                }
+                else
+                {
+                    _snackbarService.Show("Error", "Error occured during image saving", ControlAppearance.Danger, new SymbolIcon(SymbolRegular.ErrorCircle20), TimeSpan.FromSeconds(2));
+                }
             }
         }
 
