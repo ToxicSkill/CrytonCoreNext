@@ -410,7 +410,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 if (PdfFiles.Count == 1)
                 {
-                    SelectedTabIndex = 0;
+                    SelectedTabIndex = (int)EPdfTabControls.Preview;
                 }
                 PostSuccessSnackbar($"Converted image into PDF: {convertedPdf.Name}");
             }
@@ -1062,6 +1062,9 @@ namespace CrytonCoreNext.ViewModels
                     break;
                 case (int)EPdfTabControls.Split:
                     await AddFileToSplitList();
+                    break;
+                case (int)EPdfTabControls.Convert:
+                    SelectedTabIndex = (int)EPdfTabControls.Preview;
                     break;
                 default:
                     break;
