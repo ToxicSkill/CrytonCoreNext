@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace CrytonCoreNext.AI.Models
 {
@@ -79,7 +80,13 @@ namespace CrytonCoreNext.AI.Models
 
         private const int MaxSingleDimensionSize = 1024;
 
+        private const int HighQualityImageRenderDelayInSeconds = 2;
+
         private readonly List<Task> _tasks = [];
+
+        private readonly DispatcherFrame _frame;
+
+        private readonly DispatcherTimer _timer;
 
         [ObservableProperty]
         private ImageParameter contrast = new(nameof(Contrast), 0, 2, 1);
@@ -132,20 +139,38 @@ namespace CrytonCoreNext.AI.Models
 
         public AIImage(string path, ImageDrawer drawer)
         {
+            _timer = new DispatcherTimer(TimeSpan.FromSeconds(HighQualityImageRenderDelayInSeconds), DispatcherPriority.Render, (s, e) => RenderHighQuality(), App.Current?.Dispatcher);
             _drawer = drawer;
+
+            Path = path;
+
             DetectionImages = [];
             Predictions = [];
-            Path = path;
+
             Exposure.RegisterValueUpdateAction(UpdateImage);
             Brightness.RegisterValueUpdateAction(UpdateImage);
             Contrast.RegisterValueUpdateAction(UpdateImage);
+
             LoadImages();
+        }
+
+        private void RenderHighQuality()
+        {
+            RenderFinal = true;
+            UpdateImage();
         }
 
         public void UpdateImage()
         {
+            AbortHighQualityRender();
             _tasks.Add(Task.Run(() => _drawer.Post(this)));
             _tasks.WhenAll();
+            _timer.Start();
+        }
+
+        public void AbortHighQualityRender()
+        {
+            _timer.Stop();
         }
 
         public bool IsImageReady()
@@ -212,11 +237,6 @@ namespace CrytonCoreNext.AI.Models
             }
             Predictions = predictions;
             ExtractDetectionImagesFromBitmap();
-        }
-
-        public void SetReadyState(bool isReady)
-        {
-            _drawer.IsReady = isReady;
         }
 
         private void ExtractDetectionImagesFromBitmap()

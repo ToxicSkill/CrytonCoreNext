@@ -109,6 +109,7 @@ namespace CrytonCoreNext.Drawers
                 context.Histogram.UnlockBits(data);
                 context.Histogram.Dispose();
                 context.AiImage.AdjusterImage = context.Image.ToWriteableBitmap();
+                context.AiImage.RenderFinal = false;
             }, DispatcherPriority);
         }
 
