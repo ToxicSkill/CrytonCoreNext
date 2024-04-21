@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Extensions;
+using CrytonCoreNext.Helpers;
 using CrytonCoreNext.Models;
 using Nito.AsyncEx;
 using OpenCvSharp;
@@ -15,25 +16,84 @@ using System.Windows.Shapes;
 
 namespace CrytonCoreNext.AI.Models
 {
+    public partial class ImageParameter : ObservableObject
+    {
+        private Action _valueChangedAction;
+
+        [ObservableProperty]
+        private string name;
+
+        public double Value { get; private set; }
+
+        public double MinValue { get; set; }
+
+        public double MaxValue { get; set; }
+
+        public double DefaultValue { get; init; }
+
+        [ObservableProperty]
+        private double rangeValue;
+
+        public ImageParameter(string name, double minValue, double maxValue, double defaultValue)
+        {
+            this.name = name;
+            MinValue = minValue;
+            MaxValue = maxValue;
+            DefaultValue = defaultValue;
+            SanityCheck();
+            SetDefault();
+        }
+
+        private void SanityCheck()
+        {
+            if (MaxValue < MinValue)
+            {
+                throw new ArgumentException("MinValue can not be greater than MaxValue");
+            }
+            if (DefaultValue > MaxValue || DefaultValue < MinValue)
+            {
+                throw new ArgumentException("DefaultValue is not in given min-max range");
+            }
+        }
+
+        partial void OnRangeValueChanged(double value)
+        {
+            Value = value.ConvertForRange(0, 100, MinValue, MaxValue);
+            _valueChangedAction?.Invoke();
+        }
+
+        public void RegisterValueUpdateAction(Action action)
+        {
+            _valueChangedAction = action;
+        }
+
+        public void SetDefault()
+        {
+            RangeValue = DefaultValue.ConvertForRange(MinValue, MaxValue, 0, 100);
+        }
+    }
+
     public partial class AIImage : SimpleImageItemContainer
     {
         private readonly ImageDrawer _drawer;
 
-        private static readonly (double min, double max) _minMaxContrastRange = (0, 2);
-
-        private static readonly (double min, double max) _minMaxExposureRange = (0, 2);
-
-        private static readonly (double min, double max) _minMaxBrightnessRange = (-127, 127);
-
         private const int MaxSingleDimensionSize = 1024;
 
-        public const double DefaultAutoColorValue = 0.5;
+        private readonly List<Task> _tasks = [];
 
-        public const double DefaultExposureValue = 1.0;
+        [ObservableProperty]
+        private ImageParameter contrast = new(nameof(Contrast), 0, 2, 1);
 
-        public const double DefaultContrastValue = 1;
+        [ObservableProperty]
+        private ImageParameter autoColor = new(nameof(AutoColor), 0, 2, 0.5);
 
-        public const int DefaultBrightnessValue = 0;
+        [ObservableProperty]
+        private ImageParameter exposure = new(nameof(Exposure), 0, 2, 1);
+
+        [ObservableProperty]
+        private ImageParameter brightness = new(nameof(Brightness), -127, 127, 0);
+
+        public static double DefaultAutoColorValue = 0.5;
 
         public List<AIDetectionImage> DetectionImages { get; set; }
 
@@ -48,21 +108,6 @@ namespace CrytonCoreNext.AI.Models
         public Bitmap HistogramBitmap { get; set; }
 
         public bool RenderFinal { get; set; }
-
-        public double TrueExposureValue { get; private set; } = DefaultExposureValue;
-
-        public double TrueContrastValue { get; private set; } = DefaultContrastValue;
-
-        public double TrueBrightnessValue { get; private set; } = DefaultBrightnessValue;
-
-        [ObservableProperty]
-        public double contrastValue = ConvertRange(_minMaxContrastRange.min, _minMaxContrastRange.max, 0, 100, DefaultContrastValue);
-
-        [ObservableProperty]
-        public double brightnessValue = ConvertRange(_minMaxBrightnessRange.min, _minMaxBrightnessRange.max, 0, 100, DefaultBrightnessValue);
-
-        [ObservableProperty]
-        public double exposureValue = ConvertRange(_minMaxExposureRange.min, _minMaxExposureRange.max, 0, 100, DefaultExposureValue);
 
         [ObservableProperty]
         public string detectionLabel;
@@ -85,14 +130,15 @@ namespace CrytonCoreNext.AI.Models
         [ObservableProperty]
         public WriteableBitmap adjusterImage;
 
-        private List<Task> _tasks = new();
-
         public AIImage(string path, ImageDrawer drawer)
         {
             _drawer = drawer;
             DetectionImages = [];
             Predictions = [];
             Path = path;
+            Exposure.RegisterValueUpdateAction(UpdateImage);
+            Brightness.RegisterValueUpdateAction(UpdateImage);
+            Contrast.RegisterValueUpdateAction(UpdateImage);
             LoadImages();
         }
 
@@ -146,26 +192,6 @@ namespace CrytonCoreNext.AI.Models
             UpdateImage();
         }
 
-        partial void OnExposureValueChanging(double value)
-        {
-            TrueExposureValue = ConvertRange(0, 100, _minMaxExposureRange.min, _minMaxExposureRange.max, value);
-            OnPropertyChanged(nameof(TrueExposureValue));
-            UpdateImage();
-        }
-
-        partial void OnContrastValueChanged(double value)
-        {
-            TrueContrastValue = ConvertRange(0, 100, _minMaxContrastRange.min, _minMaxContrastRange.max, value);
-            OnPropertyChanged(nameof(TrueContrastValue));
-            UpdateImage();
-        }
-
-        partial void OnBrightnessValueChanged(double value)
-        {
-            TrueBrightnessValue = ConvertRange(0, 100, _minMaxBrightnessRange.min, _minMaxBrightnessRange.max, value);
-            OnPropertyChanged(nameof(TrueBrightnessValue));
-            UpdateImage();
-        }
 
         partial void OnNormalizeLABHistogramChanged(bool oldValue, bool newValue)
         {
@@ -211,14 +237,6 @@ namespace CrytonCoreNext.AI.Models
                         Image = new Mat(mat, newRect).ToWriteableBitmap()
                     });
             }
-        }
-
-        private static double ConvertRange(double originalStart, double originalEnd,
-                                        double newStart, double newEnd,
-                                        double value)
-        {
-            double scale = (double)(newEnd - newStart) / (originalEnd - originalStart);
-            return newStart + ((value - originalStart) * scale);
         }
     }
 }

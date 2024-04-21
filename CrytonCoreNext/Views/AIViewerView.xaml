@@ -337,7 +337,7 @@
                                                Symbol="Circle20" />
                                 <Slider Grid.Row="1"
                                         Grid.Column="1"
-                                        Value="{Binding SelectedImage.ContrastValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Value="{Binding SelectedImage.Contrast.RangeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         IsMoveToPointEnabled="True"
                                         IsSnapToTickEnabled="True"
                                         TickFrequency="1"
@@ -347,7 +347,7 @@
                                         HorizontalAlignment="Stretch" />
                                 <TextBlock Grid.Row="1"
                                            Grid.Column="2"
-                                           Text="{Binding SelectedImage.TrueContrastValue, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"
+                                           Text="{Binding SelectedImage.Contrast.RangeValue, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"
                                            FontSize="18"
                                            RenderOptions.EdgeMode="Aliased"
                                            FontWeight="Thin"
@@ -355,6 +355,8 @@
                                            HorizontalAlignment="Center" />
                                 <ui:Button Grid.Row="1"
                                            Grid.Column="3"
+                                           Padding="1"
+                                           HorizontalAlignment="Right"
                                            Icon="{ui:SymbolIcon Circle20}"
                                            ToolTip="Set default value"
                                            Command="{Binding SetDefaultValueCommand}"
@@ -384,7 +386,7 @@
                                                Symbol="Circle20" />
                                 <Slider Grid.Row="3"
                                         Grid.Column="1"
-                                        Value="{Binding SelectedImage.BrightnessValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Value="{Binding SelectedImage.Brightness.RangeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         IsMoveToPointEnabled="True"
                                         IsSnapToTickEnabled="True"
                                         TickFrequency="1"
@@ -394,7 +396,7 @@
                                         HorizontalAlignment="Stretch" />
                                 <TextBlock Grid.Row="3"
                                            Grid.Column="2"
-                                           Text="{Binding SelectedImage.TrueBrightnessValue, StringFormat=N2}"
+                                           Text="{Binding SelectedImage.Brightness.RangeValue, StringFormat=N0}"
                                            FontSize="18"
                                            RenderOptions.EdgeMode="Aliased"
                                            FontWeight="Thin"
@@ -403,6 +405,8 @@
 
                                 <ui:Button Grid.Row="3"
                                            Grid.Column="3"
+                                           Padding="1"
+                                           HorizontalAlignment="Right"
                                            Icon="{ui:SymbolIcon Circle20}"
                                            ToolTip="Set default value"
                                            Command="{Binding SetDefaultValueCommand}"
@@ -431,7 +435,7 @@
                                                Symbol="Circle20" />
                                 <Slider Grid.Row="5"
                                         Grid.Column="1"
-                                        Value="{Binding SelectedImage.ExposureValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Value="{Binding SelectedImage.Exposure.RangeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         IsMoveToPointEnabled="True"
                                         IsSnapToTickEnabled="True"
                                         TickFrequency="1"
@@ -441,7 +445,7 @@
                                         HorizontalAlignment="Stretch" />
                                 <TextBlock Grid.Row="5"
                                            Grid.Column="2"
-                                           Text="{Binding SelectedImage.TrueExposureValue, StringFormat=N2}"
+                                           Text="{Binding SelectedImage.Exposure.RangeValue, StringFormat=N0}"
                                            FontSize="18"
                                            RenderOptions.EdgeMode="Aliased"
                                            FontWeight="Thin"
@@ -449,8 +453,10 @@
                                            HorizontalAlignment="Center" />
                                 <ui:Button Grid.Row="5"
                                            Grid.Column="3"
+                                           Padding="1"
+                                           HorizontalAlignment="Right"
                                            Icon="{ui:SymbolIcon Circle20}"
-                                           ToolTip="Set default value"
+                                           ToolTip="Set default value" 
                                            Command="{Binding SetDefaultValueCommand}"
                                            CommandParameter="Exposure" />
 

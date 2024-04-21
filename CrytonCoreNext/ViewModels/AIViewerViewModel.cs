@@ -170,27 +170,27 @@ namespace CrytonCoreNext.ViewModels
                 var oldList = Images.ToList();
                 oldList.AddRange(newFiles);
                 Images = new(oldList);
-                SelectedImage = Images.First();
+                SelectedImage = Images.Last();
             }
         }
 
         [RelayCommand]
         private void SetDefaultValue(string parameter)
         {
-            //switch (parameter)
-            //{
-            //    case "Exposure":
-            //        SelectedImage.ExposureValue = AIImage.DefaultExposureValue;
-            //        break;
-            //    case "Contrast":
-            //        SelectedImage.ContrastValue = AIImage.DefaultContrastValue;
-            //        break;
-            //    case "Brightness":
-            //        SelectedImage.BrightnessValue = AIImage.DefaultBrightnessValue;
-            //        break;
-            //    default:
-            //        break;
-            //}
+            switch (parameter)
+            {
+                case "Exposure":
+                    SelectedImage.Exposure.SetDefault();
+                    break;
+                case "Contrast":
+                    SelectedImage.Contrast.SetDefault();
+                    break;
+                case "Brightness":
+                    SelectedImage.Brightness.SetDefault();
+                    break;
+                default:
+                    break;
+            }
         }
 
         partial void OnSelectedDetectionImageChanged(AIDetectionImage? value)
