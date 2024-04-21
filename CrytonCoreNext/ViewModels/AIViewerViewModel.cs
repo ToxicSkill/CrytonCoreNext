@@ -179,13 +179,13 @@ namespace CrytonCoreNext.ViewModels
         {
             switch (parameter)
             {
-                case "Exposure":
+                case nameof(SelectedImage.Exposure):
                     SelectedImage.Exposure.SetDefault();
                     break;
-                case "Contrast":
+                case nameof(SelectedImage.Contrast):
                     SelectedImage.Contrast.SetDefault();
                     break;
-                case "Brightness":
+                case nameof(SelectedImage.Brightness):
                     SelectedImage.Brightness.SetDefault();
                     break;
                 default:
