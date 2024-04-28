@@ -116,7 +116,7 @@ namespace CrytonCoreNext.PDF.Services
             };
             using IDocLib pdfLibrary = DocLib.Instance;
             var pdfBbytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
-            var file = new File($"{image.Name}_Converted", DateTime.Now, "pdf", newId, pdfBbytes);
+            var file = new File($"{image.Name}_Converted", newId, pdfBbytes);
             return new PDFFile(file, Enums.EPdfStatus.Opened);
         }
 

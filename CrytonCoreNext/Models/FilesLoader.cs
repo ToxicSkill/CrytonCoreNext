@@ -1,36 +1,35 @@
 ﻿using CrytonCoreNext.Interfaces.Files;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Models
 {
     public class FilesLoader : IFilesLoader
     {
-        public async IAsyncEnumerable<File> LoadFiles(List<string> filesNames, int currentIndex = 0)
+        public async IAsyncEnumerable<File> LoadFiles(List<string> filesNames, IProgress<double> progress, int currentIndex = 0)
         {
             for (var i = 0; i < filesNames.Count; i++)
             {
+                progress.Report(i + 1 / filesNames.Count);
                 currentIndex += 1;
                 var newIndex = currentIndex;
                 var fileName = filesNames[i];
                 yield return await Task.Run(() =>
                 {
                     var byteArray = System.IO.File.ReadAllBytes(fileName);
-                    return InitializeNewFile(newIndex, fileName, byteArray);
+                    return CreateNewFile(newIndex, fileName, byteArray);
                 });
             }
         }
 
-        private static File InitializeNewFile(int currentFilesCount, string path, byte[] byteArray)
+        private static File CreateNewFile(int currentFilesCount, string path, byte[] byteArray)
         {
             if (byteArray.Length == 0)
             {
                 return default!;
             }
-            var fileInfo = new FileInfo(path);
-            var fileExtension = fileInfo.Extension.Contains('.') ? fileInfo.Extension.Substring(1) : "N/A";
-            return new File(path: path, date: fileInfo.CreationTimeUtc, extension: fileExtension, id: currentFilesCount, bytes: byteArray);
+            return new File(path: path, id: currentFilesCount, bytes: byteArray);
         }
     }
 }

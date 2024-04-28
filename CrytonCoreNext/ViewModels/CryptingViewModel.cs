@@ -27,7 +27,9 @@ namespace CrytonCoreNext.ViewModels
 
         private readonly IPasswordProvider _passwordProvider;
 
-        private readonly IFileService _fileService;
+        private readonly IProgress<double> _progress;
+
+        private readonly IFilesManager _filesManager;
 
         [ObservableProperty]
         public IProgressService progressService;
@@ -62,19 +64,24 @@ namespace CrytonCoreNext.ViewModels
         public event HandleFileChanged OnFileChanged;
 
 
-        public CryptingViewModel(IFileService fileService,
+        public CryptingViewModel(
             ICryptingService cryptingService,
             ISnackbarService snackbarService,
+            IFilesSaver filesSaver,
+            IFilesLoader filesLoader,
+            IFilesManager filesManager,
             List<ICryptingView<CryptingMethodViewModel>> cryptingViews,
             IPasswordProvider passwordProvider,
             DialogService dialogService)
-            : base(fileService, snackbarService, dialogService)
+            : base(filesLoader, filesSaver, snackbarService, dialogService)
         {
             ProgressService = new ProgressService();
 
-            _fileService = fileService;
             _cryptingService = cryptingService;
             _passwordProvider = passwordProvider;
+            _filesManager = filesManager;
+
+            _progress = new Progress<double>(UpdateProgress);
             files = [];
 
             CryptingViewsItemSource = new(cryptingViews);
@@ -154,7 +161,7 @@ namespace CrytonCoreNext.ViewModels
         {
             Lock();
             ProgressService.ClearProgress();
-            await foreach (var file in LoadFiles())
+            await foreach (var file in LoadFiles(_progress))
             {
                 Files.Add(_cryptingService.ReadCryptFile(file));
                 SelectedFile = Files.Last();
@@ -189,7 +196,7 @@ namespace CrytonCoreNext.ViewModels
         {
             Lock();
             if (
-                !_fileService.HasBytes(SelectedFile) ||
+                !_filesManager.HasBytes(SelectedFile) ||
                 !_passwordProvider.ValidatePassword() ||
                 !_cryptingService.IsCorrectMethod(SelectedFile, SelectedCryptingView))
             {

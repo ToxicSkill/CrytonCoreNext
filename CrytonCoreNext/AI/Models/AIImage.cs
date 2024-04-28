@@ -9,7 +9,6 @@ using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -78,8 +77,6 @@ namespace CrytonCoreNext.AI.Models
     {
         private readonly ImageDrawer _drawer;
 
-        private const int MaxSingleDimensionSize = 1024;
-
         private const int HighQualityImageRenderDelayInSeconds = 2;
 
         private readonly List<Task> _tasks = [];
@@ -141,17 +138,14 @@ namespace CrytonCoreNext.AI.Models
         {
             _timer = new DispatcherTimer(TimeSpan.FromSeconds(HighQualityImageRenderDelayInSeconds), DispatcherPriority.Render, (s, e) => RenderHighQuality(), App.Current?.Dispatcher);
             _drawer = drawer;
-
             Path = path;
-
+            Label = System.IO.Path.GetFileName(path);
             DetectionImages = [];
             Predictions = [];
 
             Exposure.RegisterValueUpdateAction(UpdateImage);
             Brightness.RegisterValueUpdateAction(UpdateImage);
             Contrast.RegisterValueUpdateAction(UpdateImage);
-
-            LoadImages();
         }
 
         private void RenderHighQuality()
@@ -176,45 +170,6 @@ namespace CrytonCoreNext.AI.Models
         public bool IsImageReady()
         {
             return _drawer.IsReady;
-        }
-
-        private void LoadImages()
-        {
-            using var image = Cv2.ImRead(Path, ImreadModes.Unchanged);
-            if (image.Empty())
-            {
-                return;
-            }
-            Image = image.ToWriteableBitmap();
-            Label = System.IO.Path.GetFileName(Path);
-            Constrains = new System.Drawing.Size((int)Image.Width, (int)Image.Height);
-            DetectionImage = Image;
-            AdjusterImage = Image;
-            var constrains = new List<double>() { Image.Width, Image.Height };
-            if (constrains.Any(x => x > MaxSingleDimensionSize))
-            {
-                var max = constrains.Max();
-                var ratio = MaxSingleDimensionSize / max;
-                var newHeight = Image.Height;
-                var newWidth = Image.Width;
-                if (Image.Width > Image.Height)
-                {
-                    newHeight *= ratio;
-                    newWidth = MaxSingleDimensionSize;
-                }
-                else
-                {
-                    newWidth *= ratio;
-                    newHeight = MaxSingleDimensionSize;
-                }
-                ResizedImage = Image.ToMat().EmptyClone();
-                Cv2.Resize(Image.ToMat(), ResizedImage, new OpenCvSharp.Size(newWidth, newHeight));
-            }
-            else
-            {
-                ResizedImage = Image.ToMat();
-            }
-            UpdateImage();
         }
 
 

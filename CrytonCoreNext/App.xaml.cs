@@ -1,5 +1,6 @@
 ﻿using CrytonCoreNext.AI;
 using CrytonCoreNext.AI.Interfaces;
+using CrytonCoreNext.AI.Services;
 using CrytonCoreNext.Crypting.Cryptors;
 using CrytonCoreNext.Crypting.Interfaces;
 using CrytonCoreNext.Crypting.Models;
@@ -54,7 +55,8 @@ namespace CrytonCoreNext
             services.AddSingleton<IFilesLoader, FilesLoader>();
             services.AddSingleton<IFilesSaver, FilesSaver>();
             services.AddSingleton<IFilesManager, FilesManager>();
-            services.AddSingleton(CreateFileService);
+
+            services.AddSingleton<AIImageLoader>();
 
             services.AddSingleton<IJsonSerializer, JsonSerializer>();
             services.AddSingleton<IXmlSerializer, XmlSerializer>();
@@ -79,7 +81,6 @@ namespace CrytonCoreNext
             services.AddSingleton<IPDFManager, PDFManager>();
             services.AddSingleton<IPDFReader, PDFReader>();
             services.AddSingleton<IPDFImageLoader, PDFImageLoader>();
-            services.AddScoped(CreateFileService);
             services.AddScoped<PdfView>();
             services.AddScoped<PdfViewModel>();
 
@@ -113,8 +114,9 @@ namespace CrytonCoreNext
             ];
         }
 
+
         public static T GetService<T>()
-        where T : class
+            where T : class
         {
             return _host.Services.GetService(typeof(T)) as T;
         }
@@ -144,23 +146,24 @@ namespace CrytonCoreNext
             _host.Dispose();
         }
 
-        private static CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
-        {
-            var fileService = provider.GetRequiredService<IFileService>();
-            var dialogService = provider.GetRequiredService<DialogService>();
-            var cryptingService = provider.GetRequiredService<ICryptingService>();
-            var snackbar = provider.GetRequiredService<ISnackbarService>();
-            var cryptors = provider.GetServices<ICryptingView<CryptingMethodViewModel>>();
-            var passwordProvider = provider.GetRequiredService<IPasswordProvider>();
-
-            return new(fileService, cryptingService, snackbar, cryptors.ToList(), passwordProvider, dialogService);
-        }
-
         public static ICryptingService CreateCryptingService(IServiceProvider provider)
         {
             var cryptingRecognition = provider.GetRequiredService<ICryptingRecognition>();
             var cryptingReader = provider.GetRequiredService<ICryptingReader>();
             return new CryptingService(cryptingRecognition, cryptingReader);
+        }
+        private static CryptingViewModel CreateCryptingViewModel(IServiceProvider provider)
+        {
+            var dialogService = provider.GetRequiredService<DialogService>();
+            var filesLoader = provider.GetRequiredService<IFilesLoader>();
+            var filesSaver = provider.GetRequiredService<IFilesSaver>();
+            var filesManager = provider.GetRequiredService<IFilesManager>();
+            var cryptingService = provider.GetRequiredService<ICryptingService>();
+            var snackbar = provider.GetRequiredService<ISnackbarService>();
+            var cryptors = provider.GetServices<ICryptingView<CryptingMethodViewModel>>();
+            var passwordProvider = provider.GetRequiredService<IPasswordProvider>();
+
+            return new(cryptingService, snackbar, filesSaver, filesLoader, filesManager, cryptors.ToList(), passwordProvider, dialogService);
         }
 
         private static ICryptingView<CryptingMethodViewModel> CreateAESView(IServiceProvider provider)
@@ -190,14 +193,6 @@ namespace CrytonCoreNext
             var snackbar = provider.GetRequiredService<ISnackbarService>();
             var rsa = provider.GetServices<ICrypting>().ToList().Where(x => x.Method == Crypting.Enums.EMethod.RSA).First();
             return new RSAViewModel(rsa, snackbar, jsonSerialzer, xmlSerialzer, rsa.Method.ToString());
-        }
-
-        private static IFileService CreateFileService(IServiceProvider provider)
-        {
-            var fileLoader = provider.GetRequiredService<IFilesLoader>();
-            var fileSaver = provider.GetRequiredService<IFilesSaver>();
-            var fileManager = provider.GetRequiredService<IFilesManager>();
-            return new FileService(fileSaver, fileLoader, fileManager);
         }
 
         private void InitializeDictionary()

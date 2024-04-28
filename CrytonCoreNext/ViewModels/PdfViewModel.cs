@@ -39,6 +39,8 @@ namespace CrytonCoreNext.ViewModels
 
         private readonly Dictionary<EPdfTabControls, EPdfRequirements> _pdfRequirementsByControl;
 
+        private readonly IProgress<double> _progress;
+
         private CancellationTokenSource _asyncImageLoadingCalncelationToken;
 
         private List<(int pdfIndex, int pdfPage)> _pdfToMergePagesIndexes;
@@ -141,14 +143,16 @@ namespace CrytonCoreNext.ViewModels
         public PdfViewModel(IPDFManager pdfManager,
             IPDFReader pdfReader,
             IPDFImageLoader pdfImageLoader,
-            IFileService fileService,
             ISnackbarService snackbarService,
-            DialogService dialogService) : base(fileService, snackbarService, dialogService)
+            IFilesSaver filesSaver,
+            IFilesLoader filesLoader,
+            DialogService dialogService) : base(filesLoader, filesSaver, snackbarService, dialogService)
         {
             _pdfManager = pdfManager;
             _pdfReader = pdfReader;
             _imageLoader = pdfImageLoader;
             _pdfToMergePagesIndexes = [];
+            _progress = new Progress<double>(UpdateProgress);
 
             ImageFiles = [];
             OutcomeFilesFromSplit = [];
@@ -440,7 +444,7 @@ namespace CrytonCoreNext.ViewModels
             var nofNotLoadedFiles = 0;
             var nofFilesBefore = PdfFiles.Count + ImageFiles.Count;
             var withImages = param.ToLowerInvariant() == true.ToString().ToLowerInvariant();
-            await foreach (var file in LoadFiles(withImages ? Static.Extensions.DialogFilters.PdfAndImages : Static.Extensions.DialogFilters.Pdf))
+            await foreach (var file in LoadFiles(_progress, withImages ? Static.Extensions.DialogFilters.PdfAndImages : Static.Extensions.DialogFilters.Pdf))
             {
                 if (file.Extension.ToLower().Contains("pdf"))
                 {
@@ -501,7 +505,7 @@ namespace CrytonCoreNext.ViewModels
             Lock();
             var nofNotLoadedFiles = 0;
             var nofFilesBefore = ImageFiles.Count;
-            await foreach (var imageFile in LoadFiles(Static.Extensions.DialogFilters.Images))
+            await foreach (var imageFile in LoadFiles(_progress, Static.Extensions.DialogFilters.Images))
             {
                 nofNotLoadedFiles += LoadImageFile(imageFile);
             }

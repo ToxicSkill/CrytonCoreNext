@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CrytonCoreNext.Abstract;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.AI.Models;
+using CrytonCoreNext.AI.Services;
 using CrytonCoreNext.Drawers;
-using CrytonCoreNext.Enums;
+using CrytonCoreNext.Interfaces.Files;
 using CrytonCoreNext.Views;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
@@ -18,7 +20,7 @@ using DialogService = CrytonCoreNext.Services.DialogService;
 
 namespace CrytonCoreNext.ViewModels
 {
-    public partial class AIViewerViewModel : ObservableObject
+    public partial class AIViewerViewModel : InteractiveViewBase
     {
         private const int MaxImageSavingRepeatCount = 5;
 
@@ -34,13 +36,20 @@ namespace CrytonCoreNext.ViewModels
 
         private readonly INavigationService _navigationService;
 
-        private readonly ImageDrawer _imageDrawer;
-
         private readonly DialogService _dialogService;
+
+        private readonly AIImageLoader _aiImageLoader;
+
+        private readonly IProgress<double> _progress;
+
+        private readonly IProgress<double> _aiProgress;
 
         public delegate void TabControlChanged();
 
         public event TabControlChanged OnTabControlChanged;
+
+        [ObservableProperty]
+        private int aiProgressValue;
 
         [ObservableProperty]
         private ObservableCollection<object> navigationItems = [];
@@ -74,16 +83,20 @@ namespace CrytonCoreNext.ViewModels
             PdfViewModel pdfViewModel,
             INavigationService navigationService,
             ISnackbarService snackbarService,
-            ImageDrawer drawer,
-            DialogService dialogService)
+            IFilesSaver filesSaver,
+            IFilesLoader filesLoader,
+            AIImageLoader aiImageLoader,
+            DialogService dialogService) : base(filesLoader, filesSaver, snackbarService, dialogService)
         {
             _snackbarService = snackbarService;
             _pdfViewModel = pdfViewModel;
             _navigationService = navigationService;
-            _imageDrawer = drawer;
             _dialogService = dialogService;
             DetectedCurrentImages = [];
+            _aiImageLoader = aiImageLoader;
             _yoloModelService = yoloModelService;
+            _progress = new Progress<double>(UpdateProgress);
+            _aiProgress = new Progress<double>(UpdateAiProgress);
             Images = [];
             NavigationItems =
             [
@@ -97,8 +110,6 @@ namespace CrytonCoreNext.ViewModels
             if (_pdfViewModel.ExportImageToPDF(
                 new Models.File(
                     SelectedImage.Path,
-                    DateTime.Now,
-                    EImageExtensions.png.ToString(),
                     0, SelectedImage.AdjusterImage.ToMat().ToBytes()),
                 SelectedImage.AdjusterImage.ToMat()))
             {
@@ -153,25 +164,24 @@ namespace CrytonCoreNext.ViewModels
         }
 
         [RelayCommand]
-        private void LoadImages()
+        private async Task LoadImages()
         {
-            var filesToOpen = _dialogService.GetFilesNamesToOpen(Static.Extensions.DialogFilters.Images, Environment.SpecialFolder.Desktop);
-            if (filesToOpen.Count != 0)
+            var newFiles = new List<AIImage>();
+            await foreach (var file in LoadFiles(_progress, Static.Extensions.DialogFilters.Images))
             {
-                var newFiles = new List<AIImage>();
-                foreach (var item in filesToOpen)
-                {
-                    newFiles.Add(new(item, _imageDrawer));
-                }
-                foreach (var image in newFiles)
-                {
-                    image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
-                }
-                var oldList = Images.ToList();
-                oldList.AddRange(newFiles);
-                Images = new(oldList);
-                SelectedImage = Images.Last();
+                newFiles.Add(_aiImageLoader.InitializeFile(file));
             }
+            var iterator = 0;
+            foreach (var image in newFiles)
+            {
+                image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
+                iterator++;
+                _aiProgress.Report(iterator / newFiles.Count);
+            }
+            var oldList = Images.ToList();
+            oldList.AddRange(newFiles);
+            Images = new(oldList);
+            SelectedImage = Images.Last();
         }
 
         [RelayCommand]
@@ -205,6 +215,11 @@ namespace CrytonCoreNext.ViewModels
                 SelectedImage.DetectionLabel = string.Empty;
             }
             UserMouseIsInDetectedObject = value != null;
+        }
+
+        private void UpdateAiProgress(double value)
+        {
+            AiProgressValue = (int)(value * 100);
         }
     }
 }

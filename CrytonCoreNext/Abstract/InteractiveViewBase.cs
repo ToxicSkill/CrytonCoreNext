@@ -11,7 +11,7 @@ using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.Abstract
 {
-    public abstract class InteractiveViewBase(IFileService fileService, ISnackbarService snackbarService, Services.DialogService dialogService) : ViewModelBase
+    public abstract class InteractiveViewBase(IFilesLoader filesLoader, IFilesSaver filesSaver, ISnackbarService snackbarService, Services.DialogService dialogService) : ViewModelBase
     {
         protected void PostSuccessSnackbar(string text)
         {
@@ -30,9 +30,9 @@ namespace CrytonCoreNext.Abstract
             SystemSounds.Exclamation.Play();
         }
 
-        protected async IAsyncEnumerable<File> LoadFiles()
+        protected async IAsyncEnumerable<File> LoadFiles(IProgress<double> progress)
         {
-            await foreach (var file in LoadFiles(Static.Extensions.DialogFilters.All))
+            await foreach (var file in LoadFiles(progress, Static.Extensions.DialogFilters.All))
             {
                 yield return file;
             }
@@ -43,11 +43,12 @@ namespace CrytonCoreNext.Abstract
             return dialogService.GetFileNameToOpen(filters, Environment.SpecialFolder.Desktop);
         }
 
-        protected async IAsyncEnumerable<File> LoadFiles(Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
+
+        protected async IAsyncEnumerable<File> LoadFiles(IProgress<double> progress, Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
             var filesPaths = dialogService.GetFilesNamesToOpen(filters, Environment.SpecialFolder.Desktop);
             var loadedFilesCounter = 0;
-            await foreach (var file in fileService.LoadFiles(filesPaths))
+            await foreach (var file in filesLoader.LoadFiles(filesPaths, progress))
             {
                 if (file != null)
                 {
@@ -69,7 +70,7 @@ namespace CrytonCoreNext.Abstract
             {
                 PostErrorSnackbar(Language.Post("FilesSavingError"));
             }
-            var result = fileService.SaveFile(filePath, file);
+            var result = filesSaver.SaveFile(filePath, file);
             if (result)
             {
                 PostSuccessSnackbar(Language.Post("FilesSaved"));

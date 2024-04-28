@@ -20,7 +20,7 @@
             <c:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
             <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <c:ObjectToVisibility x:Key="ObjectToVisibility" />
-            <ContextMenu x:Key="ImageContextMenu">
+            <ContextMenu x:Key="ImageSaveContextMenu">
                 <ui:MenuItem  Command="{Binding DeleteImageCommand}">
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
@@ -48,7 +48,7 @@
                         </StackPanel>
                     </MenuItem.Header>
                 </ui:MenuItem>
-            </ContextMenu>
+            </ContextMenu> 
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -94,7 +94,7 @@
                     <ListView ItemsSource="{Binding Images, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               SelectedItem="{Binding SelectedImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                              ContextMenu="{StaticResource ImageContextMenu}"
+                              ContextMenu="{StaticResource ImageSaveContextMenu}"
                               PreviewMouseWheel="ListView_PreviewMouseWheel"
                               HorizontalAlignment="Center">
 
@@ -141,7 +141,7 @@
 
             </Grid>
             <Grid Grid.Column="1"
-                  Margin="10,10,0,0">
+                  Margin="10,1,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40" />
                     <RowDefinition Height="*" />
@@ -152,17 +152,18 @@
                         <ColumnDefinition Width="1.5*" />
                         <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
-                    <ui:Button Content="Compare"
-                               Icon="ImageMultiple20"
-                               Margin="0,2"
+                    <ui:Button Margin="0,2" 
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Stretch"
+                               Cursor="Hand"
+                               Icon="{ui:SymbolIcon Add20}"
+                               Content="Load"
                                FontSize="18"
-                               Background="{DynamicResource StripedBackgroundBrush}"
-                               MouseEnter="Button_MouseEnter"
-                               MouseLeave="Button_MouseLeave" />
+                               ToolTip="Load files"
+                               Command="{Binding LoadImagesCommand}" />
                     <ui:DropDownButton Grid.Column="1"
                                        Margin="5,2,30,2"
+                                       Icon="{ui:SymbolIcon Save20}"
                                        VerticalAlignment="Stretch"
                                        HorizontalAlignment="Stretch"
                                        HorizontalContentAlignment="Stretch"
@@ -551,31 +552,17 @@
                         </ui:CardExpander>
                     </StackPanel>
                 </ScrollViewer>
-                <Grid Grid.Row="2"
-                      Margin="0,4,0,2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.5*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-                    <ui:Button HorizontalAlignment="Stretch"
-                               VerticalAlignment="Stretch"
-                               Cursor="Hand"
-                               Icon="{ui:SymbolIcon Add20}"
-                               Content="Load"
-                               FontSize="18"
-                               ToolTip="Load files"
-                               Command="{Binding LoadImagesCommand}" />
-                    <ui:Button Grid.Column="1"
-                               Margin="5,0,0,0"
-                               HorizontalAlignment="Stretch"
-                               VerticalAlignment="Stretch"
-                               Cursor="Hand"
-                               Icon="{ui:SymbolIcon AddSquareMultiple20}"
-                               Content="Load folder"
-                               FontSize="18"
-                               ToolTip="Load"
-                               Command="{Binding LoadImagesCommand}" />
-                </Grid>
+
+                <ui:Button Grid.Row="2"
+                           Content="Compare"
+                           Icon="ImageMultiple20"
+                           Margin="0,2"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch"
+                           FontSize="18"
+                           Background="{DynamicResource StripedBackgroundBrush}"
+                           MouseEnter="Button_MouseEnter"
+                           MouseLeave="Button_MouseLeave" />
             </Grid>
         </Grid>
 
@@ -593,6 +580,12 @@
                            Text="Improve your sight"
                            FontWeight="UltraLight"
                            FontFamily="Candara Light" />
+                <ProgressBar Maximum="100"
+                             Minimum="0"
+                             Value="{Binding ProgressValue}" />
+                <ProgressBar Maximum="100"
+                             Minimum="0"
+                             Value="{Binding AiProgressValue}" />
             </StackPanel>
 
             <ui:Button VerticalAlignment="Center"

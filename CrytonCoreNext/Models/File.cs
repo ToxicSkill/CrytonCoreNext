@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CrytonCoreNext.Extensions;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace CrytonCoreNext.Models
 {
@@ -33,13 +31,13 @@ namespace CrytonCoreNext.Models
 
         public Guid Guid { get; init; } = Guid.NewGuid();
 
-        public File(string path, DateTime date, string extension, int id, byte[] bytes)
+        public File(string path, int id, byte[] bytes)
         {
             Name = System.IO.Path.GetFileNameWithoutExtension(path);
             Path = path;
             Size = bytes.GetSizeString();
-            Date = date;
-            Extension = extension;
+            Date = DateTime.Now;
+            Extension = System.IO.Path.GetExtension(path);
             Id = id;
             Bytes = bytes;
         }

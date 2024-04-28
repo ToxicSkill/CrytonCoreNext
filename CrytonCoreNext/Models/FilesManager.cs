@@ -167,6 +167,11 @@ namespace CrytonCoreNext.Models
             }
         }
 
+        public bool HasBytes(File? file)
+        {
+            return file != null && file.Bytes.Length > 0;
+        }
+
         private File? GetFileByGuid(ObservableCollection<File> files, Guid guid)
         {
             return files.Where(x => x.Guid == guid).Select(x => x).FirstOrDefault();

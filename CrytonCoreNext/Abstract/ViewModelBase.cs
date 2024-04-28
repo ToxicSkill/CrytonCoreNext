@@ -8,7 +8,15 @@ namespace CrytonCoreNext.Abstract
         public string pageName = "";
 
         [ObservableProperty]
+        public int progressValue;
+
+        [ObservableProperty]
         public bool isBusy;
+
+        public void UpdateProgress(double value)
+        {
+            ProgressValue = (int)(value * 100);
+        }
 
         public ViewModelBase(string name = "")
         {
