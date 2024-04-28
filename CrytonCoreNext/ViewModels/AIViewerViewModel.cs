@@ -174,10 +174,12 @@ namespace CrytonCoreNext.ViewModels
             var iterator = 0;
             foreach (var image in newFiles)
             {
-                image.SetPredicitons(_yoloModelService.GetPredictions(image.Image.ToMat()));
+                image.SetPredicitons(await _yoloModelService.GetPredictions(image.Image.ToMat()));
                 iterator++;
-                _aiProgress.Report(iterator / newFiles.Count);
+                _aiProgress.Report((double)iterator / (double)newFiles.Count);
             }
+            _aiProgress.Report(0);
+            _progress.Report(0);
             var oldList = Images.ToList();
             oldList.AddRange(newFiles);
             Images = new(oldList);

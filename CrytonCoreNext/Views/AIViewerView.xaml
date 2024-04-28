@@ -580,12 +580,33 @@
                            Text="Improve your sight"
                            FontWeight="UltraLight"
                            FontFamily="Candara Light" />
-                <ProgressBar Maximum="100"
-                             Minimum="0"
-                             Value="{Binding ProgressValue}" />
-                <ProgressBar Maximum="100"
-                             Minimum="0"
-                             Value="{Binding AiProgressValue}" />
+                <Grid Margin="-200,5,-200,0" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Loading images"
+                               FontWeight="Thin"
+                               FontSize="14" />
+                    <TextBlock Grid.Row="1"
+                               Text="AI detecting"
+                               FontWeight="Thin"
+                               FontSize="14" />
+                    <ProgressBar Grid.Column="1"
+                                 Maximum="100"
+                                 Minimum="0"
+                                 Value="{Binding ProgressValue}" />
+                    <ProgressBar Grid.Row="1"
+                                 Grid.Column="1"
+                                 Maximum="100"
+                                 Minimum="0"
+                                 Margin="0,10,0,0"
+                                 Value="{Binding AiProgressValue}" />
+                </Grid>
             </StackPanel>
 
             <ui:Button VerticalAlignment="Center"

@@ -11,7 +11,7 @@ namespace CrytonCoreNext.Models
         {
             for (var i = 0; i < filesNames.Count; i++)
             {
-                progress.Report(i + 1 / filesNames.Count);
+                progress.Report((double)(i + 1) / (double)filesNames.Count);
                 currentIndex += 1;
                 var newIndex = currentIndex;
                 var fileName = filesNames[i];

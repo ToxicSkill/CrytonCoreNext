@@ -2,13 +2,14 @@
 using CrytonCoreNext.Models;
 using OpenCvSharp;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.AI.Interfaces
 {
     public interface IYoloModelService
     {
-        List<YoloPrediction> GetPredictions(Mat mat);
+        Task<List<YoloPrediction>> GetPredictions(Mat mat);
 
         WriteableBitmap PredictAndDraw(Mat image);
 
