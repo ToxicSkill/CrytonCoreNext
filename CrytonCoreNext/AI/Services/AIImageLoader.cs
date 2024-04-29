@@ -40,7 +40,6 @@ namespace CrytonCoreNext.AI.Services
             var image = Cv2.ImDecode(file.Bytes, ImreadModes.Unchanged);
             aiImage.Image = image.ToWriteableBitmap();
             aiImage.Constrains = new System.Drawing.Size((int)aiImage.Image.Width, (int)aiImage.Image.Height);
-            aiImage.DetectionImage = aiImage.Image;
             aiImage.AdjusterImage = aiImage.Image;
             var constrains = new List<double>() { aiImage.Image.Width, aiImage.Image.Height };
             if (constrains.Any(x => x > MaxSingleDimensionSize))

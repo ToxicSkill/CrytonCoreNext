@@ -32,16 +32,21 @@ namespace CrytonCoreNext.Drawers
 
         public static WriteableBitmap DrawDetection(AIImage selectedImage, AIDetectionImage? detectionImage)
         {
+            var scale = 2;
             if (detectionImage == null)
             {
                 return selectedImage.AdjusterImage;
             }
             using var mat = selectedImage.AdjusterImage.ToMat();
-            using var overlay = new Mat(mat.Size(), mat.Type(), new Scalar(0, 0, 0));
-            var rectangle = CastPrediction(detectionImage.Prediction.Rectangle.ToRect(), mat.Size(), new Size(selectedImage.Image.Width, selectedImage.Image.Height));
-            using var roi = new Mat(mat, rectangle);
+            var size = mat.Size();
+            var newSize = new Size(size.Width / scale, size.Height / scale);
+            using var resized = new Mat();
+            Cv2.Resize(mat, resized, newSize);
+            using var overlay = new Mat(newSize, resized.Type(), new Scalar(0, 0, 0));
+            var rectangle = CastPrediction(detectionImage.Prediction.Rectangle.ToRect(scale), newSize, new Size(selectedImage.Image.Width / scale, selectedImage.Image.Height / scale));
+            using var roi = new Mat(resized, rectangle);
             using var combined = new Mat();
-            Cv2.AddWeighted(mat, 0.5, overlay, 0.5, 0, combined);
+            Cv2.AddWeighted(resized, 0.5, overlay, 0.5, 0, combined);
             using var dest = new Mat(combined, rectangle);
             roi.CopyTo(dest);
             return combined.ToWriteableBitmap();

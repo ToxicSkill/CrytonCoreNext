@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace CrytonCoreNext.AI.Models
@@ -101,13 +100,7 @@ namespace CrytonCoreNext.AI.Models
 
         public List<YoloPrediction> Predictions { get; private set; }
 
-        public List<Path> Paths { get; set; }
-
-        public Mat PipelineMat { get; set; }
-
         public Mat ResizedImage { get; set; }
-
-        public Bitmap HistogramBitmap { get; set; }
 
         public bool RenderFinal { get; set; }
 

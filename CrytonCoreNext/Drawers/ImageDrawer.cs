@@ -110,9 +110,10 @@ namespace CrytonCoreNext.Drawers
                 context.AiImage.Histogram.AddDirtyRect(new Int32Rect(0, 0, width, height));
                 context.AiImage.Histogram.Unlock();
                 context.Histogram.UnlockBits(data);
-                context.Histogram.Dispose();
                 context.AiImage.AdjusterImage = context.Image.ToWriteableBitmap();
                 context.AiImage.RenderFinal = false;
+                context.Histogram.Dispose();
+                context.Image.Dispose();
             }, DispatcherPriority);
         }
 
