@@ -63,7 +63,6 @@ namespace CrytonCoreNext.ViewModels
 
         public event HandleFileChanged OnFileChanged;
 
-
         public CryptingViewModel(
             ICryptingService cryptingService,
             ISnackbarService snackbarService,

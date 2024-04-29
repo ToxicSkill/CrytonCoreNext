@@ -17,6 +17,7 @@ namespace CrytonCoreNext.Drawers
     {
         public bool DrawLABHistogram { get; init; } = image.NormalizeLABHistogram;
         public bool DrawRGBHistogram { get; init; } = image.NormalizeRGBHistogram;
+        public bool DrawGrayscale { get; init; } = image.DrawGrayscale;
         public double Brightness { get; init; } = image.Brightness.Value;
         public double Exposure { get; init; } = image.Exposure.Value;
         public double Contrast { get; init; } = image.Contrast.Value;
@@ -84,13 +85,15 @@ namespace CrytonCoreNext.Drawers
             var step4 = new TransformBlock<Context, Context>(SetBrightness, dfBlockOptions);
             var step5 = new TransformBlock<Context, Context>(SetExposure, dfBlockOptions);
             var step6 = new TransformBlock<Context, Context>(DrawHistogram, dfBlockOptions);
+            var step7 = new TransformBlock<Context, Context>(DrawGrayscale, dfBlockOptions);
             var outputBlock = new ActionBlock<Context>(result);
             inputBlock.LinkTo(step2, dfLinkOptions);
             step2.LinkTo(step3, dfLinkOptions);
             step3.LinkTo(step4, dfLinkOptions);
             step4.LinkTo(step5, dfLinkOptions);
             step5.LinkTo(step6, dfLinkOptions);
-            step6.LinkTo(outputBlock, dfLinkOptions);
+            step6.LinkTo(step7, dfLinkOptions);
+            step7.LinkTo(outputBlock, dfLinkOptions);
             return inputBlock;
         }
 
@@ -121,6 +124,26 @@ namespace CrytonCoreNext.Drawers
         private static Context DrawHistogram(Context context)
         {
             context.Histogram = HistogramDrawer.CalcualteHistogram(context.Image);
+            return context;
+        }
+
+        private static Context DrawGrayscale(Context context)
+        {
+            if (!context.DrawGrayscale)
+            {
+                return context;
+            }
+            switch (context.Image.Channels())
+            {
+                case 3:
+                    Cv2.CvtColor(context.Image, context.Image, ColorConversionCodes.BGR2GRAY);
+                    break;
+                case 4:
+                    Cv2.CvtColor(context.Image, context.Image, ColorConversionCodes.BGRA2GRAY);
+                    break;
+                default:
+                    break;
+            }
             return context;
         }
 

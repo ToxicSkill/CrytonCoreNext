@@ -488,9 +488,11 @@
                                     <ColumnDefinition Width="auto" />
                                     <ColumnDefinition Width="5*" />
                                     <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" /> 
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="20" />
                                     <RowDefinition Height="40" />
                                     <RowDefinition Height="20" />
                                     <RowDefinition Height="40" />
@@ -522,6 +524,7 @@
                                                  Grid.Column="1"
                                                  IsChecked="{Binding SelectedImage.NormalizeLABHistogram}" />
 
+                                
                                 <ui:SymbolIcon Grid.Row="2"
                                                Symbol="DataHistogram20"
                                                Filled="True"
@@ -547,7 +550,33 @@
                                 <ui:ToggleSwitch Grid.Row="3"
                                                  Grid.Column="1"
                                                  IsChecked="{Binding SelectedImage.NormalizeRGBHistogram}" />
-
+                                
+                                
+                                <ui:SymbolIcon Grid.Row="4"
+                                               Symbol="Blur20"
+                                               Filled="True"
+                                               FontSize="22"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center" />
+                                <TextBlock Grid.Row="4"
+                                           Grid.Column="1"
+                                           Margin="5,0"
+                                           Text="Grayscale"
+                                           FontSize="18"
+                                           RenderOptions.EdgeMode="Aliased"
+                                           FontWeight="Thin"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" />
+                                <ui:SymbolIcon Grid.Row="5"
+                                               Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               FontSize="8"
+                                               Filled="True"
+                                               Symbol="Circle20" />
+                                <ui:ToggleSwitch Grid.Row="5"
+                                                 Grid.Column="1"
+                                                 IsChecked="{Binding SelectedImage.DrawGrayscale}" />
                             </Grid>
                         </ui:CardExpander>
                     </StackPanel>

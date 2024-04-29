@@ -75,13 +75,13 @@ namespace CrytonCoreNext.AI.Models
 
     public partial class AIImage : SimpleImageItemContainer
     {
+        public static double DefaultAutoColorValue = 0.5;
+
         private readonly ImageDrawer _drawer;
 
         private const int HighQualityImageRenderDelayInSeconds = 2;
 
         private readonly List<Task> _tasks = [];
-
-        private readonly DispatcherFrame _frame;
 
         private readonly DispatcherTimer _timer;
 
@@ -96,8 +96,6 @@ namespace CrytonCoreNext.AI.Models
 
         [ObservableProperty]
         private ImageParameter brightness = new(nameof(Brightness), -127, 127, 0);
-
-        public static double DefaultAutoColorValue = 0.5;
 
         public List<AIDetectionImage> DetectionImages { get; set; }
 
@@ -124,6 +122,9 @@ namespace CrytonCoreNext.AI.Models
 
         [ObservableProperty]
         public bool normalizeLABHistogram;
+
+        [ObservableProperty]
+        public bool drawGrayscale;
 
         [ObservableProperty]
         public WriteableBitmap histogram;
@@ -179,6 +180,11 @@ namespace CrytonCoreNext.AI.Models
         }
 
         partial void OnNormalizeRGBHistogramChanged(bool oldValue, bool newValue)
+        {
+            UpdateImage();
+        }
+
+        partial void OnDrawGrayscaleChanged(bool value)
         {
             UpdateImage();
         }
