@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
+using static CrytonCoreNext.Static.Extensions;
 using DialogService = CrytonCoreNext.Services.DialogService;
 
 namespace CrytonCoreNext.ViewModels
@@ -138,7 +139,11 @@ namespace CrytonCoreNext.ViewModels
             SelectedImage.RenderFinal = true;
             SelectedImage.UpdateImage();
             var isReady = false;
-            var outputFileName = _dialogService.GetFileNameToSave(".png", Environment.SpecialFolder.Desktop);
+            var outputFileName = _dialogService.GetFileNameToSave(
+                System.IO.Path.GetFileNameWithoutExtension(SelectedImage.Path),
+                ".png",
+                Environment.SpecialFolder.Desktop,
+                DialogFilters.Images);
             if (outputFileName != string.Empty)
             {
                 for (var i = 0; i < MaxImageSavingRepeatCount; i++)

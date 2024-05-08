@@ -7,12 +7,15 @@ namespace CrytonCoreNext.Services
 {
     public class DialogService
     {
-        public string GetFileNameToSave(string extension, Environment.SpecialFolder specialFolder)
+        public string GetFileNameToSave(string filename, string extension, Environment.SpecialFolder specialFolder, Static.Extensions.DialogFilters filters = Static.Extensions.DialogFilters.All)
         {
             var fileDialog = new SaveFileDialog()
             {
                 Title = "Save file",
-                InitialDirectory = Environment.GetFolderPath(specialFolder)
+                FileName = filename,
+                InitialDirectory = Environment.GetFolderPath(specialFolder),
+                AddExtension = true,
+                Filter = Static.Extensions.FilterToPrompt(filters)
             };
             if (fileDialog.ShowDialog() == true)
             {
