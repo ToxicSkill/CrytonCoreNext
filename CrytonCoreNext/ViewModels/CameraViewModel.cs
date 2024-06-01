@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.Interfaces;
-using CrytonCoreNext.Models;
 using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
@@ -36,15 +35,17 @@ namespace CrytonCoreNext.ViewModels
 
         private readonly ICameraService _cameraService;
 
+        private readonly INavigationService _navigationService;
+
         private CancellationTokenSource _cancellationToken;
 
         private readonly Queue<int> _fpsQueue;
 
         [ObservableProperty]
-        public ObservableCollection<Camera> availableCameras;
+        public ObservableCollection<Models.Camera> availableCameras;
 
         [ObservableProperty]
-        public Camera selectedCamera;
+        public Models.Camera selectedCamera;
 
         [ObservableProperty]
         private bool runCamera;
@@ -58,15 +59,23 @@ namespace CrytonCoreNext.ViewModels
         [ObservableProperty]
         private bool scanInProgress;
 
-        public CameraViewModel(IYoloModelService yoloModelService, ICameraService cameraService, ISnackbarService snackbarService)
+
+        public CameraViewModel(IYoloModelService yoloModelService, IServiceProvider serviceProvider, ICameraService cameraService, ISnackbarService snackbarService)
         {
             _snackbarService = snackbarService;
             _yoloModelService = yoloModelService;
             _cameraService = cameraService;
             _cancellationToken = new CancellationTokenSource();
             _fpsQueue = new Queue<int>();
+            _navigationService = new NavigationService(serviceProvider);
             AvailableCameras = [];
         }
+
+        public void SetNavigationControl(INavigationView navigation)
+        {
+            _navigationService.SetNavigationControl(navigation);
+        }
+
 
         partial void OnRunCameraChanged(bool value)
         {
@@ -105,7 +114,7 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
-        partial void OnSelectedCameraChanged(Camera value)
+        partial void OnSelectedCameraChanged(Models.Camera value)
         {
             _cameraService.SetCurrentCamera(SelectedCamera);
             _cameraService.UpdateCameraInfo(SelectedCamera);
@@ -181,7 +190,7 @@ namespace CrytonCoreNext.ViewModels
             ScanInProgress = true;
             await _cameraService.GetAllConnectedCameras();
             var cameras = _cameraService.GetAllCameras();
-            Camera? camera = null;
+            Models.Camera? camera = null;
             if (_cameraService.IsCameraOpen())
             {
                 _cameraService.SetBufferSize(0);

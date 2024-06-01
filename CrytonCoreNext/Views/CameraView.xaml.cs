@@ -1,5 +1,4 @@
-﻿using CrytonCoreNext.BackgroundUI;
-using CrytonCoreNext.ViewModels;
+﻿using CrytonCoreNext.ViewModels;
 using System.Threading.Tasks;
 using Wpf.Ui.Controls;
 
@@ -17,7 +16,8 @@ namespace CrytonCoreNext.Views
             ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;
-            Background.Content = new FluentWaves();
+            ViewModel.SetNavigationControl(CameraNavigationView);
+            //Background.Content = new FluentWaves();
         }
 
         private void UiPage_Loaded(object sender, System.Windows.RoutedEventArgs e)

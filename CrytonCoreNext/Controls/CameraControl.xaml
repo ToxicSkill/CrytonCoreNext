@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="CrytonCoreNext.Controls.CameraControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             Background="{ui:ThemeResource ApplicationBackgroundBrush}"
+             x:Name="root"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d"
+             d:DesignHeight="800"
+             d:DesignWidth="500"
+             Loaded="root_Loaded">
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch"> 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                       Opacity="0.5"
+                       FontSize="34"
+                       FontWeight="Thin"
+                       SnapsToDevicePixels="True"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{Binding CameraType, ElementName=root}" />
+            <TextBlock Grid.Row="1"
+                       FontSize="28"
+                       FontWeight="Thin"
+                       SnapsToDevicePixels="True"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{Binding CameraName, ElementName=root}" />
+            <TextBlock Grid.Row="2"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{Binding Description, ElementName=root}" />
+        </Grid>
+    </Grid>
+</UserControl>

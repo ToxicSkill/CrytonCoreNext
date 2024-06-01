@@ -6,6 +6,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:c="clr-namespace:CrytonCoreNext.Converters"
       xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
+      xmlns:views="clr-namespace:CrytonCoreNext.Views.Camera"
+      xmlns:components="clr-namespace:CrytonCoreNext.Controls"
       ScrollViewer.CanContentScroll="False"
       Background="{DynamicResource ApplicationBackgroundBrush}"
       d:DataContext="{d:DesignInstance Type=viewmodels:CameraViewModel}"
@@ -24,11 +26,24 @@
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="29*" />
-            <RowDefinition Height="25*" />
-        </Grid.RowDefinitions>
-        <Grid Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+        <ui:NavigationView x:Name="CameraNavigationView" MinHeight="300"
+                           Margin="0"  
+                           IsBackButtonVisible="Auto"
+                           IsPaneToggleVisible="False" 
+                           PaneDisplayMode="Top"> 
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="Preview"
+                                       Icon="{ui:SymbolIcon Play20}"
+                                       TargetPageType="{x:Type views:CameraPreviewPage}" />
+                <ui:NavigationViewItem Content="Cameras"
+                                       Icon="{ui:SymbolIcon Camera20}"
+                                       TargetPageType="{x:Type views:CamerasManagerPage}" />
+                <ui:NavigationViewItem Content="Arranger"
+                                       Icon="{ui:SymbolIcon Home20}"
+                                       TargetPageType="{x:Type views:CameraDetectionArrangerPage}" />
+            </ui:NavigationView.MenuItems>
+        </ui:NavigationView>
+        <!--<Grid Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
               Margin="15,15,15,15"
               Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
@@ -200,6 +215,20 @@
                                Text="Yolo v7" />
                 </Grid>
             </Grid>
+            <ListView Grid.Column="1"
+                      ItemsSource="{Binding AvailableCameras}"
+                      SelectedItem="{Binding SelectedCamera}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="components:CameraControl">
+                        <components:CameraControl Width="200" Height="300" CameraType="{Binding CameraType}" CameraName="{Binding Name}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
             <Image Grid.Column="1"
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Stretch"
@@ -354,6 +383,6 @@
                                     NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
                                     ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
             </StackPanel>
-        </Grid>
+        </Grid>-->
     </Grid>
 </Page>

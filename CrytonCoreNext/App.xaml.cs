@@ -18,7 +18,9 @@ using CrytonCoreNext.Providers;
 using CrytonCoreNext.Serializers;
 using CrytonCoreNext.Services;
 using CrytonCoreNext.ViewModels;
+using CrytonCoreNext.ViewModels.Camera;
 using CrytonCoreNext.Views;
+using CrytonCoreNext.Views.Camera;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -84,14 +86,20 @@ namespace CrytonCoreNext
             services.AddScoped<PdfView>();
             services.AddScoped<PdfViewModel>();
 
-            //AI viewer
-
+            //AI viewer 
             services.AddSingleton<ImageDrawer>();
             services.AddSingleton<IYoloModelService, YoloModelService>();
             services.AddScoped<AIViewerView>();
             services.AddScoped<AIViewerViewModel>();
 
+            //Camera
             services.AddSingleton<ICameraService, CameraService>();
+            services.AddScoped<CameraPreviewPage>();
+            services.AddScoped<CameraPreviewPageViewModel>();
+            services.AddScoped<CameraDetectionArrangerPage>();
+            services.AddScoped<CameraDetectionArrangerPageViewModel>();
+            services.AddScoped<CamerasManagerPage>();
+            services.AddScoped<CamerasManagerPageViewModel>();
             services.AddSingleton<CameraViewModel>();
             services.AddScoped<CameraView>();
 

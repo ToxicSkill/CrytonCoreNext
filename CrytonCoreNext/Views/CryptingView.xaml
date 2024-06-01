@@ -1,21 +1,20 @@
 ﻿<Page xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-           xmlns:models="clr-namespace:CrytonCoreNext.Crypting.Models"
-           x:Class="CrytonCoreNext.Views.CryptingView"
-           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-           xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
-           xmlns:components="clr-namespace:CrytonCoreNext.Controls"
-           xmlns:converterType="clr-namespace:CrytonCoreNext.Crypting.Models"
+      xmlns:models="clr-namespace:CrytonCoreNext.Crypting.Models"
+      x:Class="CrytonCoreNext.Views.CryptingView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
+      xmlns:components="clr-namespace:CrytonCoreNext.Controls" 
       d:DataContext="{d:DesignInstance Type=viewmodels:CryptingViewModel}"
       ScrollViewer.CanContentScroll="False"
       xmlns:c="clr-namespace:CrytonCoreNext.Converters"
-           MinWidth="900"
-           Background="{DynamicResource ApplicationBackgroundBrush}"
-           d:DesignHeight="850"
-           d:DesignWidth="1400"
-           mc:Ignorable="d">
+      MinWidth="900"
+      Background="{DynamicResource ApplicationBackgroundBrush}"
+      d:DesignHeight="850"
+      d:DesignWidth="1400"
+      mc:Ignorable="d">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -68,29 +67,29 @@
                            FontWeight="UltraLight"
                            Text="Learn more" />
                 <ui:HyperlinkButton Margin="8,8,0,0"
-                              Padding="4"
-                              Content="GitHub"
-                              Icon="Empty"
-                              NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
-                              ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
+                                    Padding="4"
+                                    Content="GitHub"
+                                    Icon="Empty"
+                                    NavigateUri="https://github.com/ToxicSkill/CrytonCoreNext"
+                                    ToolTip="https://github.com/ToxicSkill/CrytonCoreNext" />
                 <ui:HyperlinkButton Margin="8,0,0,0"
-                              Padding="4"
-                              Content="Advanced Encrypting Standard (AES)"
-                              Icon="Empty"
-                              NavigateUri="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard"
-                              ToolTip="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" />
+                                    Padding="4"
+                                    Content="Advanced Encrypting Standard (AES)"
+                                    Icon="Empty"
+                                    NavigateUri="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard"
+                                    ToolTip="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" />
                 <ui:HyperlinkButton Margin="8,0,0,0"
-                              Padding="4"
-                              Content="Rivest Shamir Adleman algorithm (RSA)"
-                              Icon="Empty"
-                              NavigateUri="https://en.wikipedia.org/wiki/RSA_(cryptosystem)"
-                              ToolTip="https://en.wikipedia.org/wiki/RSA_(cryptosystem)" />
+                                    Padding="4"
+                                    Content="Rivest Shamir Adleman algorithm (RSA)"
+                                    Icon="Empty"
+                                    NavigateUri="https://en.wikipedia.org/wiki/RSA_(cryptosystem)"
+                                    ToolTip="https://en.wikipedia.org/wiki/RSA_(cryptosystem)" />
                 <ui:HyperlinkButton Margin="8,0,0,0"
-                              Padding="4"
-                              Content="Fluent UI Documentation"
-                              Icon="Empty"
-                              NavigateUri="https://wpfui.lepo.co/"
-                              ToolTip="https://wpfui.lepo.co/" />
+                                    Padding="4"
+                                    Content="Fluent UI Documentation"
+                                    Icon="Empty"
+                                    NavigateUri="https://wpfui.lepo.co/"
+                                    ToolTip="https://wpfui.lepo.co/" />
             </StackPanel>
         </Grid>
         <!--<ui:Button Grid.Row="0" Icon="Add20" Visibility="{Binding Files, Converter={StaticResource CollectionToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding LoadCryptFilesCommand}" Content="Add" Padding="6" Margin="0, 10, 10, 10" Appearance="Primary" HorizontalAlignment="Stretch" Cursor="Hand" />-->

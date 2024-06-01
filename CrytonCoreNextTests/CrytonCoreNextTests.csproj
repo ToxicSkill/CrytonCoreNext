@@ -15,10 +15,14 @@
     <None Remove="TestingFiles\test.pdf" />
     <None Remove="TestingFiles\test.txt" />
     <None Remove="TestingFiles\testPDF.pdf" />
+    <None Remove="TestingFiles\usb.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="TestingFiles\test.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestingFiles\usb.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
