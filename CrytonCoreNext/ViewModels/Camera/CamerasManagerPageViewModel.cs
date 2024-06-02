@@ -34,6 +34,7 @@ namespace CrytonCoreNext.ViewModels.Camera
             {
                 return;
             }
+            OnPropertyChanged(nameof(AvailableCameras));
             value.IsSelected = true;
         }
 

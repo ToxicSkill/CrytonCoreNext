@@ -8,19 +8,12 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d"
              d:DesignHeight="800"
-             d:DesignWidth="500">
+             d:DesignWidth="500"
+             Loaded="root_Loaded">
 
     <Grid MouseEnter="Grid_MouseEnter"
           MouseLeave="Grid_MouseLeave">
-        <Border CornerRadius="20">
-            <Border.Background>
-                <LinearGradientBrush EndPoint="0.5,1"
-                                     StartPoint="0.5,0">
-                    <GradientStop Color="#FFFDAE8E" />
-                    <GradientStop Color="Transparent"
-                                  Offset="1" />
-                </LinearGradientBrush>
-            </Border.Background>
+        <Border x:Name="border" CornerRadius="20"> 
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*" />
@@ -50,8 +43,7 @@
                     <ui:SymbolIcon x:Name="symbol"
                                    Grid.Column="1"
                                    FontSize="120"
-                                   Symbol="TvUsb20"
-                                   Filled="False" />
+                                   Filled="{Binding IsSelected, Mode=TwoWay, ElementName=root}" />
                 </Grid>
 
                 <Border Grid.Row="2"
