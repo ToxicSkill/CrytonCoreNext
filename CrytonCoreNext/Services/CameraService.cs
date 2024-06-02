@@ -1,5 +1,6 @@
 ﻿using CrytonCoreNext.Interfaces;
 using CrytonCoreNext.Models;
+using CrytonCoreNext.ViewModels.Camera;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System;
@@ -19,7 +20,7 @@ namespace CrytonCoreNext.Services
 
     public class CameraService : ICameraService
     {
-        private readonly Mat _defaultWMat = new Mat(new Size(1, 1), MatType.CV_8UC1);
+        private readonly Mat _defaultWMat = new(new Size(1, 1), MatType.CV_8UC1);
 
         private readonly WriteableBitmap _defaultWriteableBitmap = new Mat(new Size(1, 1), MatType.CV_8UC1).ToWriteableBitmap();
 
@@ -27,32 +28,18 @@ namespace CrytonCoreNext.Services
 
         private int _currentCameraIndex;
 
-        private VideoCapture _videoCapture;
+        private readonly CameraContext _cameraContext;
 
-        private List<Camera> _cameras;
+        private VideoCapture _videoCapture;
 
         private Mat _image = new();
 
-        public CameraService()
+        public CameraService(CameraContext cameraContext)
         {
             _connectionStrings = GetConnectionStrings();
-            _cameras = [];
+            _cameraContext = cameraContext;
+            _cameraContext.AvailableCameras = [];
             _videoCapture = new();
-        }
-
-        public string GetCurrentCameraName()
-        {
-            return _cameras[_currentCameraIndex].Name;
-        }
-
-        public List<Camera> GetAllCameras()
-        {
-            return _cameras;
-        }
-
-        public Camera GetCurrentCamera()
-        {
-            return _cameras[_currentCameraIndex];
         }
 
         public void SetCurrentCamera(Camera? camera)
@@ -62,7 +49,6 @@ namespace CrytonCoreNext.Services
                 return;
             }
 
-            _currentCameraIndex = _cameras.IndexOf(camera);
             if (string.IsNullOrEmpty(camera.VideoCaptureConnectionString))
             {
                 camera.VideoCapture = new VideoCapture(camera.VideoCaptureConnectionIndex);
@@ -136,7 +122,7 @@ namespace CrytonCoreNext.Services
 
         public async Task GetAllConnectedCameras()
         {
-            _cameras = [];
+            _cameraContext.AvailableCameras = [];
             var cameraIndex = 0;
             var pnpCamerasCount = 0;
             var hasConnectionString = false;
@@ -174,11 +160,11 @@ namespace CrytonCoreNext.Services
                 {
                     if (hasConnectionString)
                     {
-                        _cameras.Add(new Camera(name, connectionString, fps));
+                        _cameraContext.AvailableCameras.Add(new Camera(name, connectionString, fps));
                     }
                     else
                     {
-                        _cameras.Add(new Camera(name, cameraIndex, fps));
+                        _cameraContext.AvailableCameras.Add(new Camera(name, cameraIndex, fps));
                     }
                 }
                 cameraIndex++;

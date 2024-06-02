@@ -5,12 +5,69 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:camera="clr-namespace:CrytonCoreNext.ViewModels.Camera"
+      d:DataContext="{d:DesignInstance Type=camera:CameraPreviewPageViewModel}"
       ScrollViewer.CanContentScroll="False"
       Background="{DynamicResource ApplicationBackgroundBrush}"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="CameraPreviewPage">
 
     <Grid>
-        <TextBlock Text="Hello from preview"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="70" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.Background>
+                <SolidColorBrush Color="Black"
+                                 Opacity="0.4" />
+            </Grid.Background>
+            <Grid HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="70" />
+                </Grid.ColumnDefinitions>
+                <ui:Button Icon="{ui:SymbolIcon Play20}"
+                           Command="{Binding StartCameraCommand}" /> 
+                <ui:SymbolIcon Grid.Column="1" Symbol="Stop20" />
+                <ui:SymbolIcon Grid.Column="2" Symbol="Screenshot20" />
+            </Grid>
+        </Grid>
+
+        <Image Grid.Row="1"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               Source="{Binding CameraContext.Camera.ImageSource}"
+               RenderOptions.BitmapScalingMode="LowQuality"
+               RenderOptions.CachingHint="Unspecified"
+               RenderOptions.EdgeMode="Unspecified"
+               UseLayoutRounding="False" />
+
+
+        <Grid Grid.Row="2">
+            <Grid.Background>
+                <SolidColorBrush Color="Black"
+                                 Opacity="0.4" />
+            </Grid.Background>
+            <Grid.ColumnDefinitions >
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{Binding CameraContext.Camera.Name}" />
+            <TextBlock Grid.Column="1"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{Binding CameraContext.Camera.ImageSourceSize}" />
+            <TextBlock Grid.Column="2"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{Binding CameraContext.Camera.CurrentFps}" />
+        </Grid>
     </Grid>
 </Page>

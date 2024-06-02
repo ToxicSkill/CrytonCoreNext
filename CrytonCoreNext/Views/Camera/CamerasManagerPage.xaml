@@ -18,8 +18,8 @@
                       Margin="20,10"
                       FontSize="42"
                       Text="Available cameras"/>
-        <ListView ItemsSource="{Binding AvailableCameras}"
-                  SelectedItem="{Binding SelectedCamera}"
+        <ListView ItemsSource="{Binding CameraContext.AvailableCameras}"
+                  SelectedItem="{Binding CameraContext.Camera}"
                   Height="400"
                   HorizontalAlignment="Center">
             <ListView.Resources>

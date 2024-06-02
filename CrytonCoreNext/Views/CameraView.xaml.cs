@@ -1,5 +1,4 @@
 ﻿using CrytonCoreNext.ViewModels;
-using System.Threading.Tasks;
 using Wpf.Ui.Controls;
 
 namespace CrytonCoreNext.Views
@@ -23,11 +22,6 @@ namespace CrytonCoreNext.Views
         {
             ViewModel.SetNavigationControl(CameraNavigationView);
             //Task.Run(ViewModel.OnLoaded);
-        }
-
-        private void UiPage_Unloaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Task.Run(ViewModel.OnUnloaded);
         }
     }
 }

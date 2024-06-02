@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.Interfaces;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace CrytonCoreNext.ViewModels.Camera
@@ -14,28 +13,12 @@ namespace CrytonCoreNext.ViewModels.Camera
         private bool _scanInProgress;
 
         [ObservableProperty]
-        public ObservableCollection<Models.Camera> availableCameras;
+        private CameraContext _cameraContext;
 
-        [ObservableProperty]
-        public Models.Camera selectedCamera;
-
-        public CamerasManagerPageViewModel(ICameraService cameraService)
+        public CamerasManagerPageViewModel(CameraContext cameraContext, ICameraService cameraService)
         {
             _cameraService = cameraService;
-        }
-
-        partial void OnSelectedCameraChanged(Models.Camera value)
-        {
-            foreach (var camera in AvailableCameras)
-            {
-                camera.IsSelected = false;
-            }
-            if (value == null)
-            {
-                return;
-            }
-            OnPropertyChanged(nameof(AvailableCameras));
-            value.IsSelected = true;
+            CameraContext = cameraContext;
         }
 
         [RelayCommand]
@@ -43,19 +26,16 @@ namespace CrytonCoreNext.ViewModels.Camera
         {
             ScanInProgress = true;
             await _cameraService.GetAllConnectedCameras();
-            var cameras = _cameraService.GetAllCameras();
             Models.Camera? camera = null;
             if (_cameraService.IsCameraOpen())
             {
                 _cameraService.SetBufferSize(0);
-                camera = _cameraService.GetCurrentCamera();
             }
             await System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                AvailableCameras = new(cameras);
                 if (camera != null)
                 {
-                    SelectedCamera = camera;
+                    CameraContext.Camera = camera;
                 }
             });
             ScanInProgress = false;

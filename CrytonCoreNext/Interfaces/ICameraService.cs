@@ -7,15 +7,10 @@ namespace CrytonCoreNext.Interfaces
 {
     public interface ICameraService
     {
-        string GetCurrentCameraName();
 
         Task GetAllConnectedCameras();
 
-        List<Camera> GetAllCameras();
-
         void UpdateCameraInfo(Camera camera);
-
-        Camera GetCurrentCamera();
 
         void SetCurrentCamera(Camera? camera);
 

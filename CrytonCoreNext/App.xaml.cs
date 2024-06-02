@@ -94,13 +94,14 @@ namespace CrytonCoreNext
 
             //Camera
             services.AddSingleton<ICameraService, CameraService>();
+            services.AddSingleton<CameraContext>();
             services.AddScoped<CameraPreviewPage>();
             services.AddScoped<CameraPreviewPageViewModel>();
             services.AddScoped<CameraDetectionArrangerPage>();
             services.AddScoped<CameraDetectionArrangerPageViewModel>();
             services.AddScoped<CamerasManagerPage>();
             services.AddScoped<CamerasManagerPageViewModel>();
-            services.AddSingleton<CameraViewModel>();
+            services.AddScoped<CameraViewModel>();
             services.AddScoped<CameraView>();
 
             services.AddScoped<Dashboard>();
