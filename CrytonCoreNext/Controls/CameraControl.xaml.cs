@@ -1,10 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CrytonCoreNext.Models;
+using CrytonCoreNext.BackgroundUI;
 using CrytonCoreNext.Services;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using Size = OpenCvSharp.Size;
 
 namespace CrytonCoreNext.Controls
 {
@@ -17,14 +15,38 @@ namespace CrytonCoreNext.Controls
         public static readonly DependencyProperty CameraNameProperty =
             DependencyProperty.Register("CameraName", typeof(string), typeof(CameraControl), new PropertyMetadata(default(string)));
 
+
+        public static readonly DependencyProperty CameraTypeProperty =
+            DependencyProperty.Register("CameraType", typeof(ECameraType), typeof(CameraControl), new PropertyMetadata(null));
+
+
+        public static readonly DependencyProperty DescriptionProperty =
+            DependencyProperty.Register("Description", typeof(string), typeof(CameraControl), new PropertyMetadata(default(string)));
+
+        public static readonly DependencyProperty FpsProperty =
+            DependencyProperty.Register("Fps", typeof(double), typeof(CameraControl), new PropertyMetadata(default(double)));
+
+        public static readonly DependencyProperty IsSelectedProperty =
+            DependencyProperty.Register("IsSelected", typeof(bool), typeof(CameraControl), new PropertyMetadata(default(bool)));
+
+
         public string CameraName
         {
             get { return (string)GetValue(CameraNameProperty); }
             set { SetValue(CameraNameProperty, value); }
         }
 
-        public static readonly DependencyProperty CameraTypeProperty =
-            DependencyProperty.Register("CameraType", typeof(ECameraType), typeof(CameraControl), new PropertyMetadata(null));
+        public bool IsSelected
+        {
+            get { return (bool)GetValue(IsSelectedProperty); }
+            set { SetValue(IsSelectedProperty, value); }
+        }
+
+        public double Fps
+        {
+            get { return (double)GetValue(FpsProperty); }
+            set { SetValue(FpsProperty, value); }
+        }
 
         public ECameraType CameraType
         {
@@ -32,63 +54,33 @@ namespace CrytonCoreNext.Controls
             set { SetValue(CameraTypeProperty, value); }
         }
 
-        public static readonly DependencyProperty DescriptionProperty =
-            DependencyProperty.Register("Description", typeof(string), typeof(CameraControl), new PropertyMetadata(default(string)));
-
         public string Description
         {
             get { return (string)GetValue(DescriptionProperty); }
             set { SetValue(DescriptionProperty, value); }
         }
 
-        private BackgroudDeepEffectStruct _effectStruct;
-
-        private Size _size;
-
-        [ObservableProperty]
-        private WriteableBitmap backgroundImage;
-
         public CameraControl()
         {
             InitializeComponent();
-            _size = new Size(250, 400);
-            _effectStruct = new BackgroudDeepEffectStruct(_size, 20);
+        }
+
+        private void Grid_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            symbol.Filled = true;
+        }
+
+        private void Grid_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!IsSelected)
+            {
+                symbol.Filled = false;
+            }
         }
 
         private void root_Loaded(object sender, RoutedEventArgs e)
         {
-            //for (var i = 1; i < 4; i++)
-            //{
-            //    var image = new Image
-            //    {
-            //        Source = new BitmapImage(new Uri(@"E:\\Code\\C#\\CrytonCoreNext\\CrytonCoreNextTests\\TestingFiles\\stars.png")),
-            //        Margin = new Thickness(10 * i)
-            //    };
-            //    _size = new(image.Source.Width, image.Source.Height);
-            //    canvas.Children.Add(image);
-            //}
-        }
-
-        private void UpdateBackgroundImage(Point point, Size refSize)
-        {
-            //var stem = 1;
-            //var xSign = point.X < refSize.Width ? 1 * stem : -1 * stem;
-            //var ySign = point.Y < refSize.Height ? 1 * stem : -1 * stem;
-
-            //foreach (Image item in canvas.Children)
-            //{
-            //    var oldThickness = item.Margin;
-            //    item.Margin = new Thickness(
-            //        oldThickness.Left + xSign,
-            //        oldThickness.Top + ySign,
-            //        oldThickness.Right + xSign,
-            //        oldThickness.Bottom + ySign);
-            //}
-        }
-
-        private void canvas_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            //UpdateBackgroundImage(e.GetPosition(sender as IInputElement), _size);
+            Background.Content = new FluentWave();
         }
     }
 }

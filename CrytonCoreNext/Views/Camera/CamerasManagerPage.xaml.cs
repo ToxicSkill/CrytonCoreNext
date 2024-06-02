@@ -19,5 +19,10 @@ namespace CrytonCoreNext.Views.Camera
             InitializeComponent();
             DataContext = ViewModel;
         }
+
+        private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ViewModel.ScanCamerasCommand.Execute(this);
+        }
     }
 }

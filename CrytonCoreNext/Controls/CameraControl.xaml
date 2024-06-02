@@ -7,36 +7,60 @@
              x:Name="root"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d"
+             Loaded="root_Loaded"
              d:DesignHeight="800"
-             d:DesignWidth="500"
-             Loaded="root_Loaded">
+             d:DesignWidth="500">
 
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch"> 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0"
-                       Opacity="0.5"
-                       FontSize="34"
-                       FontWeight="Thin"
-                       SnapsToDevicePixels="True"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Text="{Binding CameraType, ElementName=root}" />
-            <TextBlock Grid.Row="1"
-                       FontSize="28"
-                       FontWeight="Thin"
-                       SnapsToDevicePixels="True"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Text="{Binding CameraName, ElementName=root}" />
-            <TextBlock Grid.Row="2"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Text="{Binding Description, ElementName=root}" />
-        </Grid>
+    <Grid Background="Transparent" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+        <Frame x:Name="Background" />
+        <Border CornerRadius="20"> 
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                           FontSize="36"
+                           Opacity="0.8"
+                           SnapsToDevicePixels="True"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="{Binding CameraName, ElementName=root}" />
+                <Grid Grid.Row="1" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Opacity="0.5"
+                               FontSize="34"
+                               FontWeight="Thin"
+                               SnapsToDevicePixels="True"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Text="{Binding Fps, ElementName=root}" />
+                    <ui:SymbolIcon x:Name="symbol" 
+                                   Grid.Column="1"
+                                   FontSize="120" 
+                                   Symbol="TvUsb20"
+                                   Filled="False" />
+                </Grid>
+                 
+                <Border Grid.Row="2"
+                        CornerRadius="0 0 20 20">
+                    <Border.Background>
+                        <SolidColorBrush Color="Black"
+                                         Opacity="0.4" />
+                    </Border.Background>
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Opacity="0.7"
+                               FontSize="24"
+                               FontWeight="Thin"
+                               SnapsToDevicePixels="True"
+                               Text="{Binding CameraType, ElementName=root}" />
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

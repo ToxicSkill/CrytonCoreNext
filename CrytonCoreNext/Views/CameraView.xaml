@@ -7,7 +7,6 @@
       xmlns:c="clr-namespace:CrytonCoreNext.Converters"
       xmlns:viewmodels="clr-namespace:CrytonCoreNext.ViewModels"
       xmlns:views="clr-namespace:CrytonCoreNext.Views.Camera"
-      xmlns:components="clr-namespace:CrytonCoreNext.Controls"
       ScrollViewer.CanContentScroll="False"
       Background="{DynamicResource ApplicationBackgroundBrush}"
       d:DataContext="{d:DesignInstance Type=viewmodels:CameraViewModel}"

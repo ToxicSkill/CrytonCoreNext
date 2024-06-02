@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CrytonCoreNext.AI.Interfaces;
 using CrytonCoreNext.Interfaces;
 using OpenCvSharp.WpfExtensions;
@@ -182,29 +181,6 @@ namespace CrytonCoreNext.ViewModels
         private void RestartCancelToken()
         {
             _cancellationToken = new CancellationTokenSource();
-        }
-
-        [RelayCommand]
-        private async Task ScanCameras()
-        {
-            ScanInProgress = true;
-            await _cameraService.GetAllConnectedCameras();
-            var cameras = _cameraService.GetAllCameras();
-            Models.Camera? camera = null;
-            if (_cameraService.IsCameraOpen())
-            {
-                _cameraService.SetBufferSize(0);
-                camera = _cameraService.GetCurrentCamera();
-            }
-            await System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                AvailableCameras = new(cameras);
-                if (camera != null)
-                {
-                    SelectedCamera = camera;
-                }
-            });
-            ScanInProgress = false;
         }
     }
 }

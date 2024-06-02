@@ -16,12 +16,12 @@ namespace CrytonCoreNext.Views
             ViewModel = viewModel;
             InitializeComponent();
             DataContext = ViewModel;
-            ViewModel.SetNavigationControl(CameraNavigationView);
             //Background.Content = new FluentWaves();
         }
 
         private void UiPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            ViewModel.SetNavigationControl(CameraNavigationView);
             //Task.Run(ViewModel.OnLoaded);
         }
 

@@ -8,6 +8,9 @@ namespace CrytonCoreNext.Models
     public partial class Camera : ObservableObject
     {
         [ObservableProperty]
+        private bool _isSelected; 
+
+        [ObservableProperty]
         public ECameraType cameraType;
 
         [ObservableProperty]
