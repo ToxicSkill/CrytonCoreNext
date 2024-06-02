@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CrytonCoreNext.BackgroundUI;
 using CrytonCoreNext.Services;
 using System.Windows;
 using System.Windows.Controls;
@@ -76,11 +75,6 @@ namespace CrytonCoreNext.Controls
             {
                 symbol.Filled = false;
             }
-        }
-
-        private void root_Loaded(object sender, RoutedEventArgs e)
-        {
-            Background.Content = new FluentWave();
         }
     }
 }
