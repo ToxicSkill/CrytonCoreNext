@@ -801,7 +801,8 @@
 
                                 <ScrollViewer Grid.Row="2" 
                                               CanContentScroll="True"
-                                              VerticalScrollBarVisibility="Visible">
+                                              PanningMode="VerticalOnly"
+                                              VerticalScrollBarVisibility="Auto">
                                     <ListView ItemsSource="{Binding ImageFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                               SelectedItem="{Binding SelectedImageFile}"
                                               SelectionMode="Single">
