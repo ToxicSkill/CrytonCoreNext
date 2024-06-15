@@ -37,11 +37,6 @@ namespace CrytonCoreNext
             NavigationView.SetServiceProvider(serviceProvider);
 
             SystemThemeWatcher.Watch(this);
-            LoadSettings();
-        }
-
-        private void LoadSettings()
-        {
             LoadScreenModeFromSettings();
         }
 

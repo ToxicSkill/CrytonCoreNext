@@ -5,6 +5,7 @@
       ScrollViewer.CanContentScroll="False"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       Background="{DynamicResource ApplicationBackgroundBrush}"
+      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
       xmlns:components="clr-namespace:CrytonCoreNext.Controls"
       xmlns:camera="clr-namespace:CrytonCoreNext.ViewModels.Camera" 
       d:DataContext="{d:DesignInstance Type=camera:CamerasManagerPageViewModel}"

@@ -9,6 +9,7 @@
       xmlns:views="clr-namespace:CrytonCoreNext.Views.Camera"
       ScrollViewer.CanContentScroll="False"
       Background="{DynamicResource ApplicationBackgroundBrush}"
+      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
       d:DataContext="{d:DesignInstance Type=viewmodels:CameraViewModel}"
       mc:Ignorable="d"
       d:DesignHeight="1080"
