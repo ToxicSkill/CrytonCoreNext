@@ -10,7 +10,7 @@ namespace CrytonCoreNext.Views
 {
     public partial class AIViewerView : INavigableView<AIViewerViewModel>
     {
-        private ListViewItem _currentItem = null;
+        private readonly ListViewItem _currentItem;
 
         public AIViewerViewModel ViewModel
         {
