@@ -5,11 +5,9 @@ using CrytonCoreNext.Drawers;
 using CrytonCoreNext.Models;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
-using OpenCvSharp.WpfExtensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 
 namespace CrytonCoreNext.AI
 {
@@ -40,11 +38,11 @@ namespace CrytonCoreNext.AI
             }
         }
 
-        public WriteableBitmap PredictAndDraw(Mat mat)
+        public Mat PredictAndDraw(Mat mat)
         {
             using var image = mat.ToBitmap(System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             var predicitons = _yolov7.Predict(image);
-            return YoloDetectionDrawer.DrawPredicitons(mat, predicitons).ToWriteableBitmap();
+            return YoloDetectionDrawer.DrawPredicitons(mat, predicitons);
         }
 
         public async Task<List<YoloPrediction>> GetPredictions(Mat mat)
@@ -62,10 +60,10 @@ namespace CrytonCoreNext.AI
             return await Task.Run(() => { return _yolov7.Predict(image); });
         }
 
-        public WriteableBitmap PredictAndDraw(Camera camera, Mat mat, int scoreThreshold)
+        public Mat PredictAndDraw(Camera camera, Mat mat, int scoreThreshold)
         {
             Draw(camera, mat, _yolov7.Predict(mat.ToBitmap(System.Drawing.Imaging.PixelFormat.Format24bppRgb)), scoreThreshold);
-            return mat.ToWriteableBitmap();
+            return mat;
         }
 
         private static void Draw(Camera camera, Mat mat, List<YoloPrediction> predictions, int scoreThreshold)

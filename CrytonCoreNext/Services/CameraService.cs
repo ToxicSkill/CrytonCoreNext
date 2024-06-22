@@ -20,7 +20,7 @@ namespace CrytonCoreNext.Services
 
     public class CameraService : ICameraService
     {
-        private readonly Mat _defaultWMat = new(new Size(1, 1), MatType.CV_8UC1);
+        private readonly Mat _defaultMat = new(new Size(1, 1), MatType.CV_8UC1);
 
         private readonly WriteableBitmap _defaultWriteableBitmap = new Mat(new Size(1, 1), MatType.CV_8UC1).ToWriteableBitmap();
 
@@ -60,22 +60,16 @@ namespace CrytonCoreNext.Services
             _videoCapture = camera.VideoCapture;
         }
 
-        public void GrabCameraFrame()
+        public bool GrabCameraFrame()
         {
             if (_videoCapture.Grab())
             {
                 _image = _videoCapture.RetrieveMat();
             }
+            return !_image.Empty();
         }
 
-        public Mat GetLastCameraFrame()
-        {
-            if (!_image.Empty())
-            {
-                return _image;
-            }
-            return _defaultWMat;
-        }
+        public Mat GetLastCameraFrame() => _image;
 
         public WriteableBitmap GetLastCameraFrameAsWriteableBitmap()
         {

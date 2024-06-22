@@ -27,13 +27,12 @@
             <Grid HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="70" />
-                    <ColumnDefinition Width="70" />
-                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="70" /> 
                 </Grid.ColumnDefinitions>
-                <ui:Button Icon="{ui:SymbolIcon Play20}"
-                           Command="{Binding StartCameraCommand}" /> 
-                <ui:SymbolIcon Grid.Column="1" Symbol="Stop20" />
-                <ui:SymbolIcon Grid.Column="2" Symbol="Screenshot20" />
+                <ui:Button Icon="{Binding CurrentCameraIcon}"
+                           Command="{Binding StartCameraCommand}" />
+                <ui:Button Grid.Column="1" Icon="{ui:SymbolIcon Camera20}"
+                           Command="{Binding SnapshotCameraCommand}" />
             </Grid>
         </Grid>
 

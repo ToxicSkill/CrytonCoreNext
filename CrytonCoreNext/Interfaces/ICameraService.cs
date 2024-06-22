@@ -14,7 +14,7 @@ namespace CrytonCoreNext.Interfaces
 
         void SetCurrentCamera(Camera? camera);
 
-        void GrabCameraFrame();
+        bool GrabCameraFrame();
 
         Mat GetLastCameraFrame();
 

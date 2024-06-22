@@ -11,8 +11,8 @@ namespace CrytonCoreNext.AI.Interfaces
     {
         Task<List<YoloPrediction>> GetPredictions(Mat mat);
 
-        WriteableBitmap PredictAndDraw(Mat image);
+        Mat PredictAndDraw(Mat image);
 
-        WriteableBitmap PredictAndDraw(Camera camera, Mat mat, int scoreThreshold);
+        Mat PredictAndDraw(Camera camera, Mat mat, int scoreThreshold);
     }
 }
