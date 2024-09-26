@@ -24,11 +24,7 @@ namespace CrytonCoreNext.Services
                 {
                     return string.Empty;
                 }
-                else if (Path.GetExtension(outputFilePath) == string.Empty)
-                {
-                    outputFilePath = Path.ChangeExtension(outputFilePath, extension);
-                }
-                return outputFilePath;
+                return Path.ChangeExtension(outputFilePath, extension);
             }
             return string.Empty;
         }

@@ -29,6 +29,8 @@ namespace CrytonCoreNext.ViewModels
 {
     public partial class PdfViewModel : InteractiveViewBase
     {
+        private const string PdfExtension = "pdf";
+
         private readonly SemaphoreSlim _semaphore;
 
         private readonly IPDFManager _pdfManager;
@@ -520,6 +522,7 @@ namespace CrytonCoreNext.ViewModels
             {
                 return;
             }
+            SelectedPdfFile.Extension = PdfExtension;
             SaveFile(SelectedPdfFile);
         }
 
