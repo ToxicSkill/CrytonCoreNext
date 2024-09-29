@@ -1,12 +1,12 @@
 ﻿using CrytonCoreNext.Models;
 using OpenCvSharp;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CrytonCoreNext.Interfaces
 {
     public interface ICameraService
     {
+        public Mat CurrentImage { get; }
 
         Task GetAllConnectedCameras();
 
@@ -15,8 +15,6 @@ namespace CrytonCoreNext.Interfaces
         void SetCurrentCamera(Camera? camera);
 
         bool GrabCameraFrame();
-
-        Mat GetLastCameraFrame();
 
         void SetFps(int fps);
 

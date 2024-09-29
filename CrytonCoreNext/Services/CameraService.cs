@@ -32,7 +32,7 @@ namespace CrytonCoreNext.Services
 
         private VideoCapture _videoCapture;
 
-        private Mat _image = new();
+        public Mat CurrentImage { get; set; }
 
         public CameraService(CameraContext cameraContext)
         {
@@ -64,23 +64,9 @@ namespace CrytonCoreNext.Services
         {
             if (_videoCapture.Grab())
             {
-                _image = _videoCapture.RetrieveMat();
+                CurrentImage = _videoCapture.RetrieveMat();
             }
-            return !_image.Empty();
-        }
-
-        public Mat GetLastCameraFrame() => _image;
-
-        public WriteableBitmap GetLastCameraFrameAsWriteableBitmap()
-        {
-            if (_image != null)
-            {
-                if (!_image.Empty())
-                {
-                    return _image.ToWriteableBitmap();
-                }
-            }
-            return _defaultWriteableBitmap;
+            return !CurrentImage.Empty();
         }
 
         public void SetFps(int fps)

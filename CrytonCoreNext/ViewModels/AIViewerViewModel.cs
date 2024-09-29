@@ -176,6 +176,10 @@ namespace CrytonCoreNext.ViewModels
             {
                 newFiles.Add(_aiImageLoader.InitializeFile(file));
             }
+            if (newFiles.Count == 0)
+            {
+                return;
+            }
             var iterator = 0;
             foreach (var image in newFiles)
             {

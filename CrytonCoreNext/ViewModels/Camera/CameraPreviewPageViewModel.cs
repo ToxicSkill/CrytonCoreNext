@@ -41,7 +41,7 @@ namespace CrytonCoreNext.ViewModels.Camera
 
     public partial class CameraPreviewPageViewModel : ObservableObject
     {
-        private const int MaxFpsQueueCount = 100;
+        private const int MaxFpsQueueCount = 5;
 
         private const int DefaultScoreThreshold = 50;
 
@@ -129,18 +129,23 @@ namespace CrytonCoreNext.ViewModels.Camera
                             {
                                 if (CameraContext.Camera.ImageSource != null)
                                 {
-                                    var mat = RunDetection ? _yoloModelService.PredictAndDraw(CameraContext.Camera, _cameraService.GetLastCameraFrame(), ScoreThreshold) : _cameraService.GetLastCameraFrame();
                                     CameraContext.Camera.ImageSource.Lock();
-                                    CameraContext.Camera.ImageSource.WritePixels(rect, mat.Data, bufferSize, (int)mat.Step());
+                                    CameraContext.Camera.ImageSource.WritePixels(
+                                        rect,
+                                        RunDetection ?
+                                        _yoloModelService.PredictAndDraw(CameraContext.Camera, _cameraService.CurrentImage, ScoreThreshold).Data :
+                                        _cameraService.CurrentImage.Data,
+                                        bufferSize,
+                                        (int)_cameraService.CurrentImage.Step());
                                     CameraContext.Camera.ImageSource.Unlock();
                                 }
                                 if (CameraContext.Camera.ImageSource == null)
                                 {
-                                    var mat = _cameraService.GetLastCameraFrame();
-                                    CameraContext.Camera!.ImageSource = mat.ToWriteableBitmap();
-                                    rect = new Int32Rect(0, 0, mat.Width, mat.Height);
-                                    bufferSize = mat.Width * mat.Height * mat.Channels();
+                                    CameraContext.Camera!.ImageSource = _cameraService.CurrentImage.ToWriteableBitmap();
+                                    rect = new Int32Rect(0, 0, _cameraService.CurrentImage.Width, _cameraService.CurrentImage.Height);
+                                    bufferSize = _cameraService.CurrentImage.Width * _cameraService.CurrentImage.Height * _cameraService.CurrentImage.Channels();
                                 }
+                                OnPropertyChanged(nameof(CameraContext.Camera.ImageSource));
                             }
                         }
                     }, DispatcherPriority);
