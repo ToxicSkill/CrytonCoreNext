@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using static CrytonCoreNext.Static.Extensions;
@@ -133,12 +134,46 @@ namespace CrytonCoreNext.ViewModels
             }
         }
 
+        private async Task<bool> RenderFinal()
+        {
+            var isReady = false;
+            SelectedImage.RenderFinal = true;
+            SelectedImage.UpdateImage();
+
+            for (var i = 0; i < MaxImageSavingRepeatCount; i++)
+            {
+                await Task.Delay(ImageSavingTriesDelayInMiliseconds);
+                isReady = SelectedImage.IsImageReady();
+                if (isReady)
+                {
+                    break;
+                }
+            }
+            if (!isReady)
+            {
+
+                _snackbarService.Show("Error", "Error occured during image rendering", ControlAppearance.Danger, new SymbolIcon(SymbolRegular.ErrorCircle20), TimeSpan.FromSeconds(2));
+            }
+            return isReady;
+        }
+
+        [RelayCommand]
+        private async Task CoptyImageToClipboard()
+        {
+            if (await RenderFinal())
+            {
+                Clipboard.SetImage(SelectedImage.Image.ToMat().ToBitmapSource());
+                _snackbarService.Show("Success", "Image has been copied to clipboard", ControlAppearance.Success, new SymbolIcon(SymbolRegular.CheckmarkCircle20), TimeSpan.FromSeconds(2));
+            }
+        }
+
         [RelayCommand]
         private async Task SaveImage()
         {
-            SelectedImage.RenderFinal = true;
-            SelectedImage.UpdateImage();
-            var isReady = false;
+            if (!await RenderFinal())
+            {
+                return;
+            }
             var outputFileName = _dialogService.GetFileNameToSave(
                 System.IO.Path.GetFileNameWithoutExtension(SelectedImage.Path),
                 ".png",
@@ -146,26 +181,9 @@ namespace CrytonCoreNext.ViewModels
                 DialogFilters.Images);
             if (outputFileName != string.Empty)
             {
-                for (var i = 0; i < MaxImageSavingRepeatCount; i++)
-                {
-                    await Task.Delay(ImageSavingTriesDelayInMiliseconds);
-                    isReady = SelectedImage.IsImageReady();
-                    if (isReady)
-                    {
-                        break;
-                    }
-                }
-                if (isReady)
-                {
-                    Cv2.ImWrite(outputFileName, SelectedImage.AdjusterImage.ToMat());
-                    _snackbarService.Show("Success", "Image has been successfully saved", ControlAppearance.Success, new SymbolIcon(SymbolRegular.CheckmarkCircle20), TimeSpan.FromSeconds(2));
-                }
-                else
-                {
-                    _snackbarService.Show("Error", "Error occured during image saving", ControlAppearance.Danger, new SymbolIcon(SymbolRegular.ErrorCircle20), TimeSpan.FromSeconds(2));
-                }
+                Cv2.ImWrite(outputFileName, SelectedImage.AdjusterImage.ToMat());
+                _snackbarService.Show("Success", "Image has been successfully saved", ControlAppearance.Success, new SymbolIcon(SymbolRegular.CheckmarkCircle20), TimeSpan.FromSeconds(2));
             }
-            SelectedImage.RenderFinal = false;
         }
 
         [RelayCommand]

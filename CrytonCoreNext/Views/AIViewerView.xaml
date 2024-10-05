@@ -173,8 +173,10 @@
                             <ContextMenu>
                                 <MenuItem Header="Save"
                                           Command="{Binding SaveImageCommand}" />
-                                <MenuItem Header="Save as copy" />
-                                <MenuItem Header="Copy to clipboard" />
+                                <MenuItem Header="Save as copy"
+                                          Command="{Binding SaveImageCommand}" />
+                                <MenuItem Header="Copy to clipboard"
+                                          Command="{Binding CoptyImageToClipboardCommand}" />
                             </ContextMenu>
                         </ui:DropDownButton.Flyout>
                     </ui:DropDownButton>
