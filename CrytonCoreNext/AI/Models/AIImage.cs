@@ -182,35 +182,37 @@ namespace CrytonCoreNext.AI.Models
             UpdateImage();
         }
 
-        public void SetPredicitons(List<YoloPrediction> predictions)
+        public void SetPredicitons(List<YoloPrediction> predictions, Mat mat)
         {
+            var random = new Random();
+            Predictions.Clear();
+            Predictions.AddRange(predictions);
             foreach (var prediction in Predictions)
             {
-                var random = new Random();
+                if (prediction == null || prediction.Label == null)
+                {
+                    continue;
+                }
                 prediction.Label.Color = Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
+                ExtractDetectionImagesFromBitmap(prediction, mat);
             }
-            Predictions = predictions;
-            ExtractDetectionImagesFromBitmap();
         }
 
-        private void ExtractDetectionImagesFromBitmap()
+        private void ExtractDetectionImagesFromBitmap(YoloPrediction prediction, Mat mat)
         {
-            using var mat = Image.ToMat();
-            foreach (var prediction in Predictions)
-            {
-                var rectangle = prediction.Rectangle.ToRect();
-                var newWidth = Math.Clamp(rectangle.Width, 0, mat.Width - rectangle.X);
-                var newHeight = Math.Clamp(rectangle.Height, 0, mat.Height - rectangle.Y);
-                var newX = Math.Clamp(rectangle.X, 0, mat.Width);
-                var newY = Math.Clamp(rectangle.Y, 0, mat.Height);
-                var newRect = new Rect(newX, newY, newWidth, newHeight);
-                prediction.Rectangle = new RectangleF(newRect.X, newRect.Y, newRect.Width, newRect.Height);
-                DetectionImages.Add(
-                    new(this, prediction)
-                    {
-                        Image = new Mat(mat, newRect).ToWriteableBitmap()
-                    });
-            }
+            if (prediction == null) return;
+            var rectangle = prediction.Rectangle.ToRect();
+            var newX = Math.Clamp(rectangle.X, 0, mat.Width);
+            var newY = Math.Clamp(rectangle.Y, 0, mat.Height);
+            var newWidth = Math.Clamp(rectangle.Width, 0, mat.Width - newX);
+            var newHeight = Math.Clamp(rectangle.Height, 0, mat.Height - newY);
+            var newRect = new Rect(newX, newY, newWidth, newHeight);
+            prediction.Rectangle = new RectangleF(newRect.X, newRect.Y, newRect.Width, newRect.Height);
+            DetectionImages.Add(
+                new(this, prediction)
+                {
+                    Image = new Mat(mat, newRect).ToWriteableBitmap()
+                });
         }
     }
 }

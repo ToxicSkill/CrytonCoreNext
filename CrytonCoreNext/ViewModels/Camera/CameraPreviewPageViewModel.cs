@@ -20,10 +20,15 @@ namespace CrytonCoreNext.ViewModels.Camera
     public partial class CameraContext : ObservableObject
     {
         [ObservableProperty]
-        public ObservableCollection<Models.Camera> availableCameras;
+        private ObservableCollection<Models.Camera> _availableCameras;
 
         [ObservableProperty]
         private Models.Camera _camera;
+
+        public CameraContext()
+        {
+            AvailableCameras = [];
+        }
 
         partial void OnCameraChanged(Models.Camera value)
         {

@@ -31,7 +31,7 @@ namespace CrytonCoreNext.AI.Utils
                 SessionOptions opts = new();
                 _inferenceSession = new InferenceSession(modelPath, opts);
             }
-             
+
             get_input_details();
             get_output_details();
         }
@@ -68,7 +68,7 @@ namespace CrytonCoreNext.AI.Utils
             var (xGain, yGain) = (_model.Width / (float)w, _model.Height / (float)h);
             var gain = Math.Min(xGain, yGain);
 
-            var (xPad, yPad) = ((_model.Width - w * gain) / 2, (_model.Height - h * gain) / 2); 
+            var (xPad, yPad) = ((_model.Width - w * gain) / 2, (_model.Height - h * gain) / 2);
 
             Parallel.For(0, output.Dimensions[0], i =>
             {
@@ -85,7 +85,7 @@ namespace CrytonCoreNext.AI.Utils
                 result.Add(prediction);
             });
 
-            return result.ToList();
+            return [.. result];
         }
 
         private DenseTensor<float>[] Inference(Image img)

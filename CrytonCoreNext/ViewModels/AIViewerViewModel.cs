@@ -172,7 +172,7 @@ namespace CrytonCoreNext.ViewModels
         private async Task LoadImages()
         {
             var newFiles = new List<AIImage>();
-            await foreach (var file in LoadFiles(_progress, Static.Extensions.DialogFilters.Images))
+            await foreach (var file in LoadFiles(_progress, DialogFilters.Images))
             {
                 newFiles.Add(_aiImageLoader.InitializeFile(file));
             }
@@ -183,7 +183,10 @@ namespace CrytonCoreNext.ViewModels
             var iterator = 0;
             foreach (var image in newFiles)
             {
-                image.SetPredicitons(await _yoloModelService.GetPredictions(image.Image.ToMat()));
+                using (var mat = image.Image.ToMat())
+                {
+                    image.SetPredicitons(await _yoloModelService.GetPredictions(mat), mat);
+                }
                 iterator++;
                 _aiProgress.Report((double)iterator / (double)newFiles.Count);
             }
