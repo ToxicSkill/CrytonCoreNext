@@ -2,6 +2,7 @@
 using CrytonCoreNext.BackgroundUI;
 using CrytonCoreNext.Extensions;
 using CrytonCoreNext.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Controls;
@@ -10,6 +11,8 @@ namespace CrytonCoreNext.Views
 {
     public partial class AIViewerView : INavigableView<AIViewerViewModel>
     {
+        private const int MagnifyValue = 15;
+
         private readonly ListViewItem _currentItem;
 
         public AIViewerViewModel ViewModel
@@ -112,11 +115,12 @@ namespace CrytonCoreNext.Views
                 Right = 0
             };
             point = new Point(point.X * scaleX, point.Y * scaleY);
+            var region = MagnifyValue * Math.Max(BeforeImage.Source.Width, BeforeImage.Source.Height) / Math.Max(BeforeImage.ActualWidth, BeforeImage.ActualHeight);
             zoomImage.Viewbox = new Rect(
-                point.X - zoomGrid.ActualWidth / 2,
-                point.Y - zoomGrid.ActualHeight / 2,
-                zoomGrid.ActualWidth,
-                zoomGrid.ActualHeight);
+                point.X - region,
+                point.Y - region,
+                region * 2,
+                region * 2);
         }
     }
 }

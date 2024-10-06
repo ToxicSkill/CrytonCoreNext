@@ -64,15 +64,15 @@
                 </Grid.RowDefinitions>
                 <Image x:Name="BeforeImage"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center" 
-                       PreviewMouseMove="BeforeImage_PreviewMouseMove" 
+                       VerticalAlignment="Center"
+                       PreviewMouseMove="BeforeImage_PreviewMouseMove"
                        Visibility="{Binding ShowOriginal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityInversionConverter}}"
                        Source="{Binding SelectedImage.AdjusterImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        RenderOptions.EdgeMode="Aliased" />
                 <Image x:Name="OriginalImage"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center" 
+                       VerticalAlignment="Center"
                        Visibility="{Binding ShowOriginal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter }}"
                        Source="{Binding SelectedImage.Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        RenderOptions.BitmapScalingMode="HighQuality"
@@ -84,19 +84,21 @@
                        Source="{Binding SelectedImage.DetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        RenderOptions.BitmapScalingMode="LowQuality"
                        RenderOptions.EdgeMode="Unspecified" />
-                <Grid Name="zoomGrid" 
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"  
-                      Width="100"
-                      Height="100">
-                    <Grid.Background>
-                        <ImageBrush x:Name="zoomImage" 
+                <Border CornerRadius="50"
+                        Name="zoomGrid"
+                        Visibility="Collapsed"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Width="100"
+                        Height="100">
+                    <Border.Background>
+                        <ImageBrush x:Name="zoomImage"
                                     RenderOptions.BitmapScalingMode="LowQuality"
                                     RenderOptions.EdgeMode="Unspecified"
                                     ImageSource="{Binding SelectedImage.Image}"
                                     ViewboxUnits="Absolute" />
-                    </Grid.Background>
-                </Grid>
+                    </Border.Background>
+                </Border>
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="3*" />
@@ -117,7 +119,9 @@
 
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <Image Source="{Binding Image}"
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       RenderOptions.EdgeMode="Aliased" />
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
