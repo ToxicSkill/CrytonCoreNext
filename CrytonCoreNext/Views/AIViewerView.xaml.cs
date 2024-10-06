@@ -64,5 +64,59 @@ namespace CrytonCoreNext.Views
         {
             ViewModel.ShowOriginal = false;
         }
+
+        private void BeforeImage_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            var point = e.GetPosition(BeforeImage);
+            var offset = 5;
+
+            if (point.X < offset ||
+                point.Y < offset ||
+                point.X > BeforeImage.ActualWidth - offset ||
+                point.Y > BeforeImage.ActualHeight - offset)
+            {
+                zoomGrid.Visibility = Visibility.Collapsed;
+                return;
+            }
+            else
+            {
+                zoomGrid.Visibility = Visibility.Visible;
+            }
+            var scaleX = (double)zoomImage.ImageSource.Width / BeforeImage.ActualWidth;
+            var scaleY = (double)zoomImage.ImageSource.Height / BeforeImage.ActualHeight;
+            double marginX;
+            double marginY;
+            if (point.X < BeforeImage.ActualWidth / 2)
+            {
+                marginX = -BeforeImage.ActualWidth + point.X * 2;
+            }
+            else
+            {
+                marginX = point.X * 2 - BeforeImage.ActualWidth - (zoomGrid.ActualWidth + offset) * 2;
+            }
+            if (point.Y < BeforeImage.ActualHeight / 2)
+            {
+                marginY = -BeforeImage.ActualHeight + point.Y * 2;
+            }
+            else
+            {
+                marginY = point.Y * 2 - BeforeImage.ActualHeight - (zoomGrid.ActualHeight + offset) * 2;
+            }
+            marginX += zoomGrid.ActualWidth + offset;
+            marginY += zoomGrid.ActualHeight + offset;
+            zoomGrid.Margin = new Thickness()
+            {
+                Left = marginX,
+                Top = marginY,
+                Bottom = 0,
+                Right = 0
+            };
+            point = new Point(point.X * scaleX, point.Y * scaleY);
+            zoomImage.Viewbox = new Rect(
+                point.X - zoomGrid.ActualWidth / 2,
+                point.Y - zoomGrid.ActualHeight / 2,
+                zoomGrid.ActualWidth,
+                zoomGrid.ActualHeight);
+        }
     }
 }

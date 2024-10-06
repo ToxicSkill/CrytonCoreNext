@@ -48,7 +48,7 @@
                         </StackPanel>
                     </MenuItem.Header>
                 </ui:MenuItem>
-            </ContextMenu> 
+            </ContextMenu>
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -57,35 +57,46 @@
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid>
+            <Grid Margin="0,20,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="200" />
                 </Grid.RowDefinitions>
                 <Image x:Name="BeforeImage"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Margin="0,20,0,0"
+                       VerticalAlignment="Center" 
+                       PreviewMouseMove="BeforeImage_PreviewMouseMove" 
                        Visibility="{Binding ShowOriginal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityInversionConverter}}"
                        Source="{Binding SelectedImage.AdjusterImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                       RenderOptions.BitmapScalingMode="LowQuality"
-                       RenderOptions.EdgeMode="Unspecified" />
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       RenderOptions.EdgeMode="Aliased" />
                 <Image x:Name="OriginalImage"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Margin="0,20,0,0"
+                       VerticalAlignment="Center" 
                        Visibility="{Binding ShowOriginal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter }}"
                        Source="{Binding SelectedImage.Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                       RenderOptions.BitmapScalingMode="LowQuality"
+                       RenderOptions.BitmapScalingMode="HighQuality"
                        RenderOptions.EdgeMode="Unspecified" />
                 <Image x:Name="DetectionImage"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Margin="0,20,0,0"
                        Visibility="{Binding UserMouseIsInDetectedObject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter }}"
                        Source="{Binding SelectedImage.DetectionImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                        RenderOptions.BitmapScalingMode="LowQuality"
                        RenderOptions.EdgeMode="Unspecified" />
+                <Grid Name="zoomGrid" 
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"  
+                      Width="100"
+                      Height="100">
+                    <Grid.Background>
+                        <ImageBrush x:Name="zoomImage" 
+                                    RenderOptions.BitmapScalingMode="LowQuality"
+                                    RenderOptions.EdgeMode="Unspecified"
+                                    ImageSource="{Binding SelectedImage.Image}"
+                                    ViewboxUnits="Absolute" />
+                    </Grid.Background>
+                </Grid>
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="3*" />
@@ -152,7 +163,7 @@
                         <ColumnDefinition Width="1.5*" />
                         <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
-                    <ui:Button Margin="0,2" 
+                    <ui:Button Margin="0,2"
                                HorizontalAlignment="Stretch"
                                VerticalAlignment="Stretch"
                                Cursor="Hand"
@@ -459,7 +470,7 @@
                                            Padding="1"
                                            HorizontalAlignment="Right"
                                            Icon="{ui:SymbolIcon Circle20}"
-                                           ToolTip="Set default value" 
+                                           ToolTip="Set default value"
                                            Command="{Binding SetDefaultValueCommand}"
                                            CommandParameter="Exposure" />
 
@@ -490,7 +501,7 @@
                                     <ColumnDefinition Width="auto" />
                                     <ColumnDefinition Width="5*" />
                                     <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition Width="auto" /> 
+                                    <ColumnDefinition Width="auto" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="40" />
@@ -526,7 +537,7 @@
                                                  Grid.Column="1"
                                                  IsChecked="{Binding SelectedImage.NormalizeLABHistogram}" />
 
-                                
+
                                 <ui:SymbolIcon Grid.Row="2"
                                                Symbol="DataHistogram20"
                                                Filled="True"
@@ -552,8 +563,8 @@
                                 <ui:ToggleSwitch Grid.Row="3"
                                                  Grid.Column="1"
                                                  IsChecked="{Binding SelectedImage.NormalizeRGBHistogram}" />
-                                
-                                
+
+
                                 <ui:SymbolIcon Grid.Row="4"
                                                Symbol="Blur20"
                                                Filled="True"
@@ -611,7 +622,8 @@
                            Text="Improve your sight"
                            FontWeight="UltraLight"
                            FontFamily="Candara Light" />
-                <Grid Margin="-200,5,-200,0" HorizontalAlignment="Stretch">
+                <Grid Margin="-200,5,-200,0"
+                      HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="*" />
