@@ -31,11 +31,15 @@ namespace CrytonCoreNext.Views
 
         private void ListViewItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            var item = sender as ListViewItem;
-            var detectionImage = (AIDetectionImage)item.Content;
-            if (!Equals(_currentItem, item) && detectionImage != null)
+            if (sender is ListViewItem item)
             {
-                ViewModel.SelectedDetectionImage = detectionImage;
+                if (item.Content is AIDetectionImage image)
+                {
+                    if (image != null && !Equals(_currentItem, item))
+                    {
+                        ViewModel.SelectedDetectionImage = image;
+                    }
+                }
             }
         }
 
