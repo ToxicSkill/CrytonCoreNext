@@ -95,7 +95,7 @@
                         <ImageBrush x:Name="zoomImage"
                                     RenderOptions.BitmapScalingMode="LowQuality"
                                     RenderOptions.EdgeMode="Unspecified"
-                                    ImageSource="{Binding SelectedImage.Image}"
+                                    ImageSource="{Binding SelectedImage.AdjusterImage}"
                                     ViewboxUnits="Absolute" />
                     </Border.Background>
                 </Border>
@@ -156,7 +156,7 @@
 
             </Grid>
             <Grid Grid.Column="1"
-                  Margin="10,1,0,0">
+                  Margin="10,10,0,10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40" />
                     <RowDefinition Height="*" />
@@ -197,7 +197,7 @@
                     </ui:DropDownButton>
                 </Grid>
                 <ScrollViewer Grid.Row="1">
-                    <StackPanel>
+                    <StackPanel Margin="0,0,10,0">
                         <ui:CardExpander HorizontalAlignment="Stretch"
                                          Margin="0,3"
                                          IsExpanded="True">
@@ -602,7 +602,7 @@
                 <ui:Button Grid.Row="2"
                            Content="Compare"
                            Icon="ImageMultiple20"
-                           Margin="0,2"
+                           Margin="0,5,10,0"
                            HorizontalAlignment="Stretch"
                            VerticalAlignment="Stretch"
                            FontSize="18"

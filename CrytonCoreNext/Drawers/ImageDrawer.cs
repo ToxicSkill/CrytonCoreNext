@@ -1,11 +1,8 @@
 ﻿using CrytonCoreNext.AI.Models;
-using CrytonCoreNext.Native;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.WpfExtensions;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -22,7 +19,6 @@ namespace CrytonCoreNext.Drawers
         public double Exposure { get; init; } = image.Exposure.Value;
         public double Contrast { get; init; } = image.Contrast.Value;
         public Mat Image { get; set; } = image.RenderFinal ? Application.Current?.Dispatcher.Invoke(image.Image.ToMat) : image.ResizedImage.Clone();
-        public Bitmap Histogram { get; set; }
         public AIImage AiImage { get; init; } = image;
     }
 
@@ -84,16 +80,14 @@ namespace CrytonCoreNext.Drawers
             var step3 = new TransformBlock<Context, Context>(NormalizeRGBHistogram, dfBlockOptions);
             var step4 = new TransformBlock<Context, Context>(SetBrightness, dfBlockOptions);
             var step5 = new TransformBlock<Context, Context>(SetExposure, dfBlockOptions);
-            var step6 = new TransformBlock<Context, Context>(DrawHistogram, dfBlockOptions);
-            var step7 = new TransformBlock<Context, Context>(DrawGrayscale, dfBlockOptions);
+            var step6 = new TransformBlock<Context, Context>(DrawGrayscale, dfBlockOptions);
             var outputBlock = new ActionBlock<Context>(result);
             inputBlock.LinkTo(step2, dfLinkOptions);
             step2.LinkTo(step3, dfLinkOptions);
             step3.LinkTo(step4, dfLinkOptions);
             step4.LinkTo(step5, dfLinkOptions);
             step5.LinkTo(step6, dfLinkOptions);
-            step6.LinkTo(step7, dfLinkOptions);
-            step7.LinkTo(outputBlock, dfLinkOptions);
+            step6.LinkTo(outputBlock, dfLinkOptions);
             return inputBlock;
         }
 
@@ -101,18 +95,13 @@ namespace CrytonCoreNext.Drawers
         {
             await Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                context.AiImage.Histogram ??= context.Histogram.ToMat().ToWriteableBitmap();
-                var width = context.Histogram.Width;
-                var height = context.Histogram.Height;
-                BitmapData data = context.Histogram.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, context.Histogram.PixelFormat);
+                using var data = HistogramDrawer.CalcualteHistogram(context.Image);
+                context.AiImage.Histogram ??= new Mat(new OpenCvSharp.Size(data.Width, data.Height), MatType.CV_8UC4).ToWriteableBitmap();
                 context.AiImage.Histogram.Lock();
-                NativeMethods.CopyMemory(context.AiImage.Histogram.BackBuffer, data.Scan0, data.Stride * height);
-                context.AiImage.Histogram.AddDirtyRect(new Int32Rect(0, 0, width, height));
+                context.AiImage.Histogram.WritePixels(new Int32Rect(0, 0, data.Width, data.Height), data.Data, data.Width * data.Height * 4, data.Width * 4);
                 context.AiImage.Histogram.Unlock();
-                context.Histogram.UnlockBits(data);
                 context.AiImage.AdjusterImage = context.Image.ToWriteableBitmap();
                 context.AiImage.RenderFinal = false;
-                context.Histogram.Dispose();
                 context.Image.Dispose();
             }, DispatcherPriority);
         }
@@ -120,12 +109,6 @@ namespace CrytonCoreNext.Drawers
         private static Context CopyOriginalImage(AIImage image)
         {
             return new Context(image);
-        }
-
-        private static Context DrawHistogram(Context context)
-        {
-            context.Histogram = HistogramDrawer.CalcualteHistogram(context.Image);
-            return context;
         }
 
         private static Context DrawGrayscale(Context context)

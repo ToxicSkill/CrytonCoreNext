@@ -115,7 +115,7 @@ namespace CrytonCoreNext.PDF.Services
                 Height = exportMat.Height
             };
             using IDocLib pdfLibrary = DocLib.Instance;
-            var pdfBbytes = pdfLibrary.JpegToPdf(new[] { jpegImage });
+            var pdfBbytes = pdfLibrary.JpegToPdf([jpegImage]);
             var file = new File($"{image.Name}_Converted", newId, pdfBbytes);
             return new PDFFile(file, Enums.EPdfStatus.Opened);
         }

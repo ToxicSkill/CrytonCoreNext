@@ -1,5 +1,4 @@
 ﻿using OpenCvSharp;
-using OpenCvSharp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace CrytonCoreNext.Drawers
             { 2, new Scalar(255, 0, 0, 255) }
         };
 
-        public static System.Drawing.Bitmap CalcualteHistogram(Mat image)
+        public static Mat CalcualteHistogram(Mat image)
         {
             using var matForHistogram = new Mat();
             var maxDimension = new List<int>() { image.Width, image.Height }.Max();
@@ -52,7 +51,7 @@ namespace CrytonCoreNext.Drawers
 
             var maxValue = results.Max(x => x.max);
             maxValue = Math.Clamp(maxValue, 1, maxValue);
-            using var histogramMat = new Mat(new Size(MaxMatDimensionSize * InterpolationFactor, maxValue), MatType.CV_8UC4, OpacityScalar);
+            var histogramMat = new Mat(new Size(MaxMatDimensionSize * InterpolationFactor, maxValue), MatType.CV_8UC4, OpacityScalar);
             for (var i = 0; i < results.Count; i++)
             {
                 Cv2.Add(histogramMat, DrawColorOnHistogram(results[i].values, _scalarByPlane[i], results[i].max, maxValue), histogramMat);
@@ -63,7 +62,7 @@ namespace CrytonCoreNext.Drawers
                 plane.Dispose();
             }
 
-            return histogramMat.ToBitmap();
+            return histogramMat;
         }
 
         private static Mat DrawColorOnHistogram(int[,] values, Scalar scalar, int selfMax, int maxValue)

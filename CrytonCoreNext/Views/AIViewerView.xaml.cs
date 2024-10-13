@@ -119,7 +119,10 @@ namespace CrytonCoreNext.Views
                 Right = 0
             };
             point = new Point(point.X * scaleX, point.Y * scaleY);
-            var region = MagnifyValue * Math.Max(BeforeImage.Source.Width, BeforeImage.Source.Height) / Math.Max(BeforeImage.ActualWidth, BeforeImage.ActualHeight);
+            var region =
+                MagnifyValue *
+                Math.Max(BeforeImage.Source.Width, BeforeImage.Source.Height) /
+                Math.Max(BeforeImage.ActualWidth, BeforeImage.ActualHeight);
             zoomImage.Viewbox = new Rect(
                 point.X - region,
                 point.Y - region,
