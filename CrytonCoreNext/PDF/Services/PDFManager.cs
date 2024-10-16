@@ -92,7 +92,7 @@ namespace CrytonCoreNext.PDF.Services
         {
             var converter = new ImageConverterService();
             var extension = image.Extension.ToLowerInvariant();
-            using var exportMat = image.Bitmap.ToMat();
+            using var exportMat = image.AdjusterBitmap.ToMat();
             if (image.SelectedPdfFormat != Enums.EPDFFormat.Original)
             {
                 Cv2.Resize(exportMat, exportMat, image.ExportSize, interpolation: InterpolationFlags.Lanczos4);

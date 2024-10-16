@@ -85,16 +85,16 @@ namespace CrytonCoreNext.AI.Models
         private readonly DispatcherTimer _timer;
 
         [ObservableProperty]
-        private ImageParameter contrast = new(nameof(Contrast), 0, 2, 1);
+        private ImageParameter _contrast = new(nameof(Contrast), 0, 2, 1);
 
         [ObservableProperty]
-        private ImageParameter autoColor = new(nameof(AutoColor), 0, 2, 0.5);
+        private ImageParameter _autoColor = new(nameof(AutoColor), 0, 2, 0.5);
 
         [ObservableProperty]
-        private ImageParameter exposure = new(nameof(Exposure), 0, 2, 1);
+        private ImageParameter _exposure = new(nameof(Exposure), 0, 2, 1);
 
         [ObservableProperty]
-        private ImageParameter brightness = new(nameof(Brightness), -127, 127, 0);
+        private ImageParameter _brightness = new(nameof(Brightness), -127, 127, 0);
 
         public List<AIDetectionImage> DetectionImages { get; set; }
 
@@ -165,7 +165,6 @@ namespace CrytonCoreNext.AI.Models
         {
             return _drawer.IsReady;
         }
-
 
         partial void OnNormalizeLABHistogramChanged(bool oldValue, bool newValue)
         {

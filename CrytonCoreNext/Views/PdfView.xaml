@@ -799,7 +799,7 @@
                                                HorizontalAlignment="Stretch" />
                                 </Grid>
 
-                                <ScrollViewer Grid.Row="2" 
+                                <ScrollViewer Grid.Row="2"
                                               CanContentScroll="True"
                                               PanningMode="VerticalOnly"
                                               VerticalScrollBarVisibility="Auto">
@@ -865,6 +865,7 @@
                                                                 <RowDefinition Height="20" />
                                                                 <RowDefinition Height="40" />
                                                                 <RowDefinition Height="20" />
+                                                                <RowDefinition Height="40" />
                                                             </Grid.RowDefinitions>
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="*" />
@@ -876,6 +877,20 @@
                                                                       VerticalAlignment="Center"
                                                                       ItemsSource="{Binding AvailablePdfFormats}"
                                                                       SelectedItem="{Binding SelectedPdfFormat}" />
+                                                            <Grid Grid.Row="3">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock FontSize="{StaticResource G_SmallFontSize}"
+                                                                           VerticalAlignment="Center"
+                                                                           Text="Grayscale" />
+                                                                <ui:ToggleSwitch Grid.Column="1"
+                                                                                 Grid.Row="1"
+                                                                                 VerticalAlignment="Center"
+                                                                                 HorizontalAlignment="Right" 
+                                                                                 IsChecked="{Binding Grayscale}" />
+                                                            </Grid>
                                                             <ui:SymbolIcon Grid.Column="0"
                                                                            Grid.Row="0"
                                                                            Symbol="AutoFitWidth20" />
@@ -900,7 +915,7 @@
                                                                            FontSize="{StaticResource G_SmallFontSize}"
                                                                            VerticalAlignment="Center"
                                                                            HorizontalAlignment="Right"
-                                                                           Text="{Binding Bitmap.Width}" />
+                                                                           Text="{Binding AdjusterBitmap.Width}" />
                                                             </Grid>
                                                             <Grid Grid.Row="1">
                                                                 <Grid.ColumnDefinitions>
@@ -914,7 +929,7 @@
                                                                            FontSize="{StaticResource G_SmallFontSize}"
                                                                            VerticalAlignment="Center"
                                                                            HorizontalAlignment="Right"
-                                                                           Text="{Binding Bitmap.Height}" />
+                                                                           Text="{Binding AdjusterBitmap.Height}" />
                                                             </Grid>
                                                             <Grid Grid.Row="2">
                                                                 <Grid.ColumnDefinitions>
@@ -923,7 +938,7 @@
                                                                     <ColumnDefinition Width="*" />
                                                                 </Grid.ColumnDefinitions>
                                                                 <TextBlock FontSize="{StaticResource G_SmallFontSize}"
-                                                                           VerticalAlignment="Center" 
+                                                                           VerticalAlignment="Center"
                                                                            Text="Rotate" />
                                                                 <ui:Button Grid.Column="1"
                                                                            HorizontalAlignment="Center"
@@ -955,9 +970,11 @@
                                     </ListView>
                                 </ScrollViewer>
                             </Grid>
-                            <Image Grid.Column="1"
-                                   Margin="10"
-                                   Source="{Binding SelectedImageFile.Bitmap}" />
+                            <Grid Grid.Column="1" > 
+                                <Image Margin="10"
+                                       VerticalAlignment="Center"
+                                       Source="{Binding SelectedImageFile.AdjusterBitmap}" />
+                            </Grid>
                         </Grid>
                     </Grid>
 
@@ -985,7 +1002,7 @@
                             <Grid Grid.Column="0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" /> 
                                 </Grid.RowDefinitions>
                                 <TextBlock HorizontalAlignment="Center"
                                            Text="Encryption" />

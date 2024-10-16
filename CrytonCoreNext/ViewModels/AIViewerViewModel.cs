@@ -51,34 +51,34 @@ namespace CrytonCoreNext.ViewModels
         public event TabControlChanged OnTabControlChanged;
 
         [ObservableProperty]
-        private int aiProgressValue;
+        private int _aiProgressValue;
 
         [ObservableProperty]
-        private ObservableCollection<object> navigationItems = [];
+        private ObservableCollection<object> _navigationItems = [];
 
         [ObservableProperty]
-        public ObservableCollection<AIDetectionImage> detectedCurrentImages;
+        private ObservableCollection<AIDetectionImage> _detectedCurrentImages;
 
         [ObservableProperty]
-        public AIDetectionImage detectedCurrentImage;
+        private AIDetectionImage _detectedCurrentImage;
 
         [ObservableProperty]
-        public AIDetectionImage? selectedDetectionImage;
+        private AIDetectionImage? _selectedDetectionImage;
 
         [ObservableProperty]
-        public ObservableCollection<AIImage> images;
+        private ObservableCollection<AIImage> _images;
 
         [ObservableProperty]
-        public AIImage selectedImage;
+        private AIImage _selectedImage;
 
         [ObservableProperty]
-        public bool userMouseIsInDetectedObject;
+        private bool _userMouseIsInDetectedObject;
 
         [ObservableProperty]
-        public bool showOriginal;
+        private bool _showOriginal;
 
         [ObservableProperty]
-        public int imageCompareSliderValue = DefaultCompareSliderValue;
+        private int _imageCompareSliderValue = DefaultCompareSliderValue;
 
         public AIViewerViewModel(
             IYoloModelService yoloModelService,

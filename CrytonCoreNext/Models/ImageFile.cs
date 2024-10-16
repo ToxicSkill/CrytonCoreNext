@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Media.Imaging;
+using Size = OpenCvSharp.Size;
 
 namespace CrytonCoreNext.Models
 {
@@ -17,25 +18,26 @@ namespace CrytonCoreNext.Models
     {
         private readonly Dictionary<EPDFFormat, Size> _sizeByPdfFormat = [];
 
-        [ObservableProperty]
-        public WriteableBitmap bitmap;
+        private Mat _image;
 
-        public double Width { get; }
-
-        public double Height { get; }
-
-        public bool Color { get; }
+        private int _rotationCount = 0;
 
         [ObservableProperty]
-        public Size exportSize;
+        private EPDFFormat _selectedPdfFormat;
 
         [ObservableProperty]
-        public string exportSizeString;
+        private Size _exportSize;
+
+        [ObservableProperty]
+        private WriteableBitmap _adjusterBitmap;
+
+        [ObservableProperty]
+        private string _exportSizeString;
+
+        [ObservableProperty]
+        private bool _grayscale;
 
         public static List<EPDFFormat> AvailablePdfFormats { get; set; } = Enum.GetValues(typeof(EPDFFormat)).Cast<EPDFFormat>().ToList();
-
-        [ObservableProperty]
-        public EPDFFormat selectedPdfFormat;
 
         public ImageFile(File file, Mat image) : base(file)
         {
@@ -43,12 +45,7 @@ namespace CrytonCoreNext.Models
             InitializeDictionaries();
             if (image != null)
             {
-                Bitmap = image.ToWriteableBitmap();
-                if (Bitmap != null)
-                {
-                    Width = Bitmap.Width;
-                    Height = Bitmap.Height;
-                }
+                _image = image;
             }
         }
 
@@ -57,16 +54,38 @@ namespace CrytonCoreNext.Models
             SelectedPdfFormat = AvailablePdfFormats.Last();
             InitializeDictionaries();
             LoadImage();
-            if (Bitmap != null)
-            {
-                Width = Bitmap.Width;
-                Height = Bitmap.Height;
-            }
         }
 
         partial void OnSelectedPdfFormatChanged(EPDFFormat value)
         {
             UpdateExportSize();
+        }
+
+        partial void OnGrayscaleChanged(bool value)
+        {
+            using var mat = _image.Clone();
+            if (value)
+            {
+                switch (mat.Channels())
+                {
+                    case 3:
+                        Cv2.CvtColor(mat, mat, ColorConversionCodes.BGR2GRAY);
+                        break;
+                    case 4:
+                        Cv2.CvtColor(mat, mat, ColorConversionCodes.BGRA2GRAY);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            _rotationCount %= 4;
+            var rotates = _rotationCount < 0 ? _rotationCount + 4 : _rotationCount;
+            for (var i = 0; i < rotates; i++)
+            {
+                Cv2.Rotate(mat, mat, RotateFlags.Rotate90Clockwise);
+            }
+            AdjusterBitmap = mat.ToWriteableBitmap();
         }
 
         private void InitializeDictionaries()
@@ -86,18 +105,20 @@ namespace CrytonCoreNext.Models
                 if (Extension.ToLowerInvariant() == Enum.GetName(typeof(EImageExtensions), EImageExtensions.gif))
                 {
                     var converter = new ImageConverterService();
-                    Bitmap = converter.ConvertGifToMat(this).ToWriteableBitmap();
+                    _image = converter.ConvertGifToMat(this);
                 }
                 else
                 {
-                    using var mat = new Mat(Path);
-                    Bitmap = mat.ToWriteableBitmap();
+                    _image = new Mat(Path);
                 }
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
-                Bitmap = null;
+            }
+            finally
+            {
+                AdjusterBitmap = _image.ToWriteableBitmap();
             }
         }
 
@@ -108,20 +129,20 @@ namespace CrytonCoreNext.Models
                 return;
             }
             var desiredSize = _sizeByPdfFormat[SelectedPdfFormat];
-            var isVertical = Bitmap.Width < Bitmap.Height;
+            var isVertical = _image.Width < _image.Height;
             desiredSize.Deconstruct(out int width, out int height);
             if (!isVertical)
             {
-                var wRatio = desiredSize.Width / Bitmap.Width;
-                var ratio = Bitmap.Width / Bitmap.Height;
-                var newW = (int)((double)Bitmap.Width * wRatio);
+                var wRatio = desiredSize.Width / (double)_image.Width;
+                var ratio = _image.Width / (double)_image.Height;
+                var newW = (int)((double)_image.Width * wRatio);
                 desiredSize = new Size(newW, newW * (1 / ratio));
             }
             else
             {
-                var hRatio = desiredSize.Height / Bitmap.Height;
-                var ratio = Bitmap.Height / Bitmap.Width;
-                var newH = (int)((double)Bitmap.Height * hRatio);
+                var hRatio = desiredSize.Height / _image.Height;
+                var ratio = _image.Height / _image.Width;
+                var newH = (int)((double)_image.Height * hRatio);
                 desiredSize = new Size(newH * (1 / ratio), newH);
             }
             UpdateExportSize(desiredSize);
@@ -136,19 +157,21 @@ namespace CrytonCoreNext.Models
         [RelayCommand]
         private void RotateRight()
         {
-            using var mat = Bitmap.ToMat();
+            using var mat = AdjusterBitmap.ToMat();
             Cv2.Rotate(mat, mat, RotateFlags.Rotate90Clockwise);
-            Bitmap = mat.ToWriteableBitmap();
+            AdjusterBitmap = mat.ToWriteableBitmap();
             UpdateExportSize();
+            _rotationCount++;
         }
 
         [RelayCommand]
         private void RotateLeft()
         {
-            using var mat = Bitmap.ToMat();
+            using var mat = AdjusterBitmap.ToMat();
             Cv2.Rotate(mat, mat, RotateFlags.Rotate90Counterclockwise);
-            Bitmap = mat.ToWriteableBitmap();
+            AdjusterBitmap = mat.ToWriteableBitmap();
             UpdateExportSize();
+            _rotationCount--;
         }
     }
 }
