@@ -75,6 +75,9 @@ namespace CrytonCoreNext.ViewModels
         private bool _userMouseIsInDetectedObject;
 
         [ObservableProperty]
+        private bool _isLoadingInProgress;
+
+        [ObservableProperty]
         private bool _showOriginal;
 
         [ObservableProperty]
@@ -104,6 +107,11 @@ namespace CrytonCoreNext.ViewModels
             [
                 new NavigationViewItem("Processes", SymbolRegular.Apps24, typeof(PdfView))
             ];
+        }
+
+        partial void OnImagesChanged(ObservableCollection<AIImage> value)
+        {
+            IsLoadingInProgress = false;
         }
 
         [RelayCommand]
@@ -189,6 +197,7 @@ namespace CrytonCoreNext.ViewModels
         [RelayCommand]
         private async Task LoadImages()
         {
+            IsLoadingInProgress = true;
             var newFiles = new List<AIImage>();
             await foreach (var file in LoadFiles(_progress, DialogFilters.Images))
             {
