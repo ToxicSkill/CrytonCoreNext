@@ -14,7 +14,7 @@
       mc:Ignorable="d"
       d:DesignHeight="1080"
       d:DesignWidth="1920"
-      Loaded="UiPage_Loaded" >
+      Loaded="UiPage_Loaded">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -25,11 +25,12 @@
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
-        <ui:NavigationView x:Name="CameraNavigationView" MinHeight="300"
-                           Margin="0"  
+        <!--<ui:NavigationView x:Name="CameraNavigationView"
+                           MinHeight="300"
+                           Margin="0"
                            IsBackButtonVisible="Auto"
-                           IsPaneToggleVisible="False" 
-                           PaneDisplayMode="Top"> 
+                           IsPaneToggleVisible="False"
+                           PaneDisplayMode="Top">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="Preview"
                                        Icon="{ui:SymbolIcon Play20}"
@@ -41,7 +42,16 @@
                                        Icon="{ui:SymbolIcon Home20}"
                                        TargetPageType="{x:Type views:CameraDetectionArrangerPage}" />
             </ui:NavigationView.MenuItems>
-        </ui:NavigationView>
+        </ui:NavigationView>-->
+
+        <Border x:Name="canvasBorder"
+                BorderThickness="1"
+                CornerRadius="20"
+                BorderBrush="Beige">
+            <Canvas x:Name="canvas"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch" />
+        </Border>
         <!--<Grid Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
               Margin="15,15,15,15"
               Grid.RowSpan="2">
