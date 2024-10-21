@@ -45,12 +45,10 @@
         </ui:NavigationView>-->
 
         <Border x:Name="canvasBorder"
-                BorderThickness="1"
-                CornerRadius="20"
-                BorderBrush="Beige">
-            <Canvas x:Name="canvas"
+                CornerRadius="20">
+            <Canvas x:Name="canvas" 
                     HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch" />
+                    VerticalAlignment="Stretch" /> 
         </Border>
         <!--<Grid Visibility="{Binding AvailableCameras, Converter={StaticResource CollectionToVisibilityInversionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
               Margin="15,15,15,15"
