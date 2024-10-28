@@ -140,8 +140,8 @@ namespace CrytonCoreNext.Models
             }
             else
             {
-                var hRatio = desiredSize.Height / _image.Height;
-                var ratio = _image.Height / _image.Width;
+                var hRatio = desiredSize.Height / (double)_image.Height;
+                var ratio = _image.Height / (double)_image.Width;
                 var newH = (int)((double)_image.Height * hRatio);
                 desiredSize = new Size(newH * (1 / ratio), newH);
             }
